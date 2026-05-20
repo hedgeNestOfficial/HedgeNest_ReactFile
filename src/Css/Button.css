@@ -1,0 +1,8 @@
+button {
+  height: 50px;
+  width: 200px;
+  border: none;
+  border-radius: 10px;
+  color: var(--text-color-neutral);
+  background-color: var(--button-primaryColor);
+}

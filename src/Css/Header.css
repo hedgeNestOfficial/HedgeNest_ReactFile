@@ -1,0 +1,23 @@
+header {
+  height: 139px;
+  width: 100%;
+  background-color: var(--primaryWhite);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-btn {
+  background-color: var(--primaryWhite);
+  color: var(--primaryBlack);
+  width: 90px;
+}
+
+.header-wrapper {
+  width: 90%;
+  height: 100%;
+  background-color: var(--primarywhite);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
