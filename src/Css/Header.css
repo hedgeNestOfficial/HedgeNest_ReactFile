@@ -1,23 +1,63 @@
-header {
-  height: 139px;
-  width: 100%;
+.header-container {
+ width:100%;
+ height:20vh;
   background-color: var(--primaryWhite);
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.nav-btn {
-  background-color: var(--primaryWhite);
-  color: var(--primaryBlack);
-  width: 90px;
 }
-
 .header-wrapper {
   width: 90%;
   height: 100%;
   background-color: var(--primarywhite);
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.logo{
+  width:132px;
+  height:29px;
+  
+  
+}
+
+.navigation {
+  width:30%;
+  height:100%;
+display: flex;
+
+justify-content: space-between;
+align-items: center;
+font-size: 16px;
+font-weight: 500;
+}
+
+.navigation li{
+  list-style-type: none;
+}
+.logs{
+  display: flex;
+  
+}
+.login{
+  width: 152px;
+  height:59px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+   padding:20px 10px 20px 10px;
+  color:#181739;
+  background-color: var(--primaryWhite);
+}
+.create{
+  width: 181px;
+  height:59px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  padding:20px;
+  background-color: var(--button-primaryColor);
 }
