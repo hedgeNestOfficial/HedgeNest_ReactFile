@@ -1,29 +1,25 @@
 import React from "react";
 import "../Css/Header.css";
-import logo from "../assets/Headgenestlogo.png";
-import { headerButton, headerLogBtn } from "../JS/HeaderButton";
+import logo from "../assets/HedgeNest.png";
+
+
 import Button from "./Button";
 
 const Header = () => {
   return (
-    <header>
+    <header className="header-container">
       <section className="header-wrapper">
-        <div className="logo-Container">
-          <img src={logo} alt="" />
-        </div>
-        <div className="navigation">
-          {headerButton.map((btn, index) => (
-            <Button className="nav-btn" key={index}>
-              {btn}
-            </Button>
-          ))}
-        </div>
+        <img src={logo} alt="" className="logo" />
+
+        <ul className="navigation">
+          <li>Shield</li>
+          <li> Save</li>
+          <li> Invest </li>
+        </ul>
+
         <div className="logs">
-          {headerLogBtn.map((button, index) => (
-            <Button className="log-btn" key={index}>
-              {button}
-            </Button>
-          ))}
+          <Button text="Log in" className="login" />
+          <Button text="Create an account" className="create" />
         </div>
       </section>
     </header>
