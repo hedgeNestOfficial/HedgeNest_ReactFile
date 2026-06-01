@@ -1,8 +1,15 @@
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 :root {
   --Hero-backgroundSecondary: #181739;
   --Hero-backgroundSecondary2: #42409c;
   --text-color-primary: #c9922a;
-  --text-color-neutral: #ffffff;
+
   --button-primaryColor: #c9922a;
   --side-Bar: #181739;
   --primaryWhite: #ffffff;
