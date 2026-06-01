@@ -2,6 +2,7 @@ import React from "react";
 import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import { inputTex } from "../../JS/signupCard";
+import Input from "../../Components/Input";
 
 const SignupPage = () => {
   return (
@@ -19,6 +20,7 @@ const SignupPage = () => {
                 label={item.label}
                 type={item.type}
                 placeholder={item.placeholder}
+                className="input-Card"
               />
             ))}
 
