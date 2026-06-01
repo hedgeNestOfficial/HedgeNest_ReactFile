@@ -2,7 +2,7 @@ export const inputTex = [
   {
     type: "text",
     placeholder: "Name",
-    label: "Kid Name",
+    label: "first Name",
   },
   {
     type: "text",
