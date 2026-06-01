@@ -13,10 +13,11 @@ const Footer = () => {
   return (
     <footer className="footer-container">
       <section className="footer-holder">
+        {/* TOP SECTION: Logo, Description, and Link Columns */}
         <article className="footer-up">
           <div className="Footer-logo-con">
             <div className="footer-logo">
-              <img src={WhiteLogo} alt="HedgeNestlogo" />
+              <img src={WhiteLogo} alt="HedgeNest logo" />
               <h3>HedgeNest</h3>
             </div>
             <p>
@@ -26,12 +27,13 @@ const Footer = () => {
               all in one secure platform.
             </p>
             <div className="socials">
-              <FaFacebook />
-              <FaXTwitter />
-              <FaInstagram />
-              <FaLinkedinIn />
+              <FaFacebook aria-label="Facebook" />
+              <FaXTwitter aria-label="X (Twitter)" />
+              <FaInstagram aria-label="Instagram" />
+              <FaLinkedinIn aria-label="LinkedIn" />
             </div>
           </div>
+
           <div className="footer-box">
             <h4>Company</h4>
             <ul>
@@ -41,22 +43,26 @@ const Footer = () => {
               <li>Currency Conversion</li>
             </ul>
           </div>
+
           <div className="footer-box">
             <h4>Business</h4>
             <ul>
               <li>Stable Coin</li>
               <li>Savings Vault</li>
-              <li>Tired Investments</li>
+              <li>Tiered Investments</li>
             </ul>
           </div>
+
           <div className="footer-box">
             <h4>Legal</h4>
             <ul>
               <li>Privacy Policy</li>
               <li>Terms Of Service</li>
+              <li>Cookie Policy</li>
               <li>Compliance</li>
             </ul>
           </div>
+
           <div className="footer-box">
             <h4>Support</h4>
             <ul>
@@ -65,19 +71,20 @@ const Footer = () => {
             </ul>
           </div>
         </article>
-        <hr />
-        <article className="footer-down">
-          <div className="down-con">
-            <p>
-              HedgeNest works with trusted partners to deliver secure financial
-              services. Investments outcomes may vary, always review details
-              before proceeding
-            </p>
 
-            <div className="copyright">
-              <FaRegCopyright style={{ fontSize: "17px", color: "white" }} />
-              <p>2026 HedgeNest. All Rights Reserved</p>
-            </div>
+        <hr className="footer-divider" />
+
+        {/* BOTTOM SECTION: Disclaimers and Legal Copy */}
+        <article className="footer-down">
+          <p className="down-disclaimer">
+            HedgeNest works with trusted partners to deliver secure financial
+            services. Investments outcomes may vary, always review details
+            before proceeding
+          </p>
+
+          <div className="copyright">
+            <FaRegCopyright style={{ fontSize: "16px", color: "white" }} />
+            <p>2026 HedgeNest. All Rights Reserved</p>
           </div>
         </article>
       </section>

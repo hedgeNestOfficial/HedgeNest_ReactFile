@@ -1,6 +1,7 @@
 import React from "react";
 import "../Css/Header.css";
 import logo from "../assets/HedgeNest.png";
+import { CiMenuBurger } from "react-icons/ci";
 
 
 import Button from "./Button";
@@ -21,6 +22,7 @@ const Header = () => {
           <Button text="Log in" className="login" />
           <Button text="Create an account" className="create" />
         </div>
+        <CiMenuBurger className="menu"/>
       </section>
     </header>
   );

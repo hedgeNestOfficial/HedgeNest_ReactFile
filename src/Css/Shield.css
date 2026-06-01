@@ -1,0 +1,197 @@
+/* Container Base Setup */
+.shield-container {
+  width: 100%;
+  min-height: 70vh;
+  background-color: #1a193a; /* Dark deep navy/purple matching your mockup */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.hero-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* --- LEFT TEXT AREA --- */
+.hero-content {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.hero-content h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e5b324; /* Golden yellow accent */
+  margin: 0 0 16px 0;
+}
+
+.hero-content p {
+  font-size: 16px;
+  color: #b3b2ca; /* Muted text fallback */
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 0 32px 0;
+}
+
+/* Call To Action Buttons */
+.hero-cta-group {
+  display: flex;
+  gap: 16px;
+}
+
+.hero-cta-group button {
+  height: 48px;
+  padding: 0 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background-color: #e5b324;
+  color: #1a193a;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #cd9f1d;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-secondary:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- RIGHT IMAGERY AREA --- */
+.hero-graphics {
+  flex: 1 1 50%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+  position: relative;
+}
+
+.graphic-wrapper {
+  width: 45%;
+  max-width: 220px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.graphic-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Subtle depth placement adjustment from original image context */
+.right-img {
+  margin-bottom: -10px; 
+}
+
+.desktop-only {
+  display: inline;
+}
+
+.why-usdt-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.why-usdt-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111127; /* Dark text matching company identity specs */
+  margin: 0;
+  text-align: left;
+}
+
+* Flex Container for the Feature Array Elements */
+.features-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Individual Feature Card Design */
+.feature-card {
+  flex: 1; /* Ensures cards occupy equal structural widths across the row container */
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  
+  /* Subtle soft shadow to match the floating box aesthetics of the layout */
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04), 
+              0px 1px 3px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.01);
+}
+
+/* Circular Icon Container Asset */
+.icon-container {
+  width: 64px;
+  height: 64px;
+  background-color: #fdf8e7; /* Light golden tinted accent base */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.feature-icon {
+  color: #dca31f; /* Primary Gold Theme Color */
+}
+
+.feature-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111127;
+  margin: 0 0 12px 0;
+}
+.feature-card p {
+  font-size: 15px;
+  color: #555468; /* Balanced readability tone text scale */
+  line-height: 1.6;
+  margin: 0;
+  max-width: 280px; /* Limits copy tracking lines length to match design structure layout */
+}
