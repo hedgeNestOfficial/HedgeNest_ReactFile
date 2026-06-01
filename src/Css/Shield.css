@@ -1,9 +1,16 @@
 /* Container Base Setup */
 .shield-container {
   width: 100%;
-  min-height: 70vh;
-  background-color: #1a193a; /* Dark deep navy/purple matching your mockup */
-  display: flex;
+  min-height: 80vh;
+  background-color: #1a193a;
+}
+
+ 
+
+.shield-holder{
+width:100%;
+height:100%;
+ display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -15,7 +22,7 @@
 
 .hero-wrapper {
   width: 90%;
-  max-width: 1200px;
+  height:40%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -122,45 +129,54 @@
 .desktop-only {
   display: inline;
 }
-
+.features-section {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 80px 0;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
 .why-usdt-wrapper {
   width: 90%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 60px 20px;
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 40px;
+  background-color: #ffffff;
+  box-sizing: border-box;
 }
 
 .why-usdt-heading {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
-  color: #111127; /* Dark text matching company identity specs */
+  color: #0b0f19;
   margin: 0;
   text-align: left;
 }
 
-* Flex Container for the Feature Array Elements */
+/* Flex Container for the Feature Array Elements */
 .features-grid {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Divides space into 3 equal columns */
   gap: 24px;
 }
 
 /* Individual Feature Card Design */
 .feature-card {
-  flex: 1; /* Ensures cards occupy equal structural widths across the row container */
-  background: #ffffff;
+  background: #ffffff; /* Clean white background matching the image */
   border-radius: 12px;
-  padding: 40px 24px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   box-sizing: border-box;
   
-  /* Subtle soft shadow to match the floating box aesthetics of the layout */
+  /* Soft shadow to match the floating box aesthetics */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04), 
               0px 1px 3px rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(0, 0, 0, 0.01);
@@ -170,7 +186,7 @@
 .icon-container {
   width: 64px;
   height: 64px;
-  background-color: #fdf8e7; /* Light golden tinted accent base */
+  background-color: #FFFDF0; /* Light soft golden tinted accent base */
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -179,19 +195,289 @@
 }
 
 .feature-icon {
-  color: #dca31f; /* Primary Gold Theme Color */
+  color: #E5A93C; /* Balanced Gold Theme Color */
 }
 
 .feature-card h3 {
   font-size: 18px;
   font-weight: 700;
-  color: #111127;
+  color: #0b0f19;
   margin: 0 0 12px 0;
 }
+
 .feature-card p {
   font-size: 15px;
-  color: #555468; /* Balanced readability tone text scale */
-  line-height: 1.6;
+  color: #4a5568; /* Balanced readability tone */
+  line-height: 1.5;
   margin: 0;
-  max-width: 280px; /* Limits copy tracking lines length to match design structure layout */
+  max-width: 260px; 
 }
+.how-it-works-section {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #EAECEF; /* Subtle grey background */
+  width: 100%;
+  padding: 80px 0;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.how-it-works-container {
+  width: 90%;
+  
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-sizing: border-box;
+  
+}
+
+.section-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0b0f19;
+  margin: 0;
+  text-align: left;
+}
+
+.steps-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.step-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.03), 
+              0px 1px 4px rgba(0, 0, 0, 0.01);
+  box-sizing: border-box;
+}
+
+.step-icon-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #FFFCEB; /* Warm gold tint circle background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.feature-icon {
+  color: #E5A93C; /* Icon color matching reference image */
+}
+
+.step-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0b0f19;
+  margin: 0 0 16px 0;
+}
+
+.step-card-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333F51;
+  margin: 0;
+  max-width: 220px;
+}
+.cta-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.convert-now-btn {
+  background: linear-gradient(135deg, #DCA31F 0%, #F5C453 100%);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 48px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0px 4px 12px rgba(220, 163, 31, 0.2);
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.convert-now-btn:hover {
+  opacity: 0.95;
+}
+.convert-now-btn:active {
+  transform: scale(0.98);
+}
+
+/* Section Wrapper */
+.hn-trust-section {
+  width:100%;
+  background-color: #FAF6EB; /* Warm cream canvas */
+  padding: 100px 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+/* Outer Container */
+.hn-container {
+  width: 90%;
+  
+}
+
+/* Section Header */
+.hn-title {
+  font-size: 2.1rem;
+  color: #0F161E; /* Deep dark tone */
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 56px;
+  letter-spacing: -0.02em;
+}
+
+/* Layout Grid */
+.hn-grid {
+  display: flex;
+  /* grid-template-columns: repeat(1, 1fr); */
+  gap: 20px;
+}
+
+/* Card Styling */
+.hn-card {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0px 4px 24px rgba(15, 22, 30, 0.02), 
+              0px 1px 4px rgba(15, 22, 30, 0.04);
+}
+
+/* Inner Yellow Circle Wrapper */
+.hn-icon-wrapper {
+  width: 84px;
+  height: 84px;
+  background-color: #FEF8E7; /* Soft yellow circle background */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+/* Emoji Icon Size styling */
+.hn-icon {
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+/* Typography elements */
+.hn-card-title {
+  font-size: 1.15rem;
+  color: #0F161E;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+
+.hn-card-description {
+  font-size: 0.95rem;
+  color: #333F4E; /* Balanced gray-blue text */
+  line-height: 1.5;
+  margin: 0;
+  max-width: 250px; /* Aligns line breaks naturally like the original card */
+}
+
+/* Center wrapper container */
+.inflation-section {
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background-color: #fcfaf2; /* Soft canvas tone matching the outer area */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Main Split Card Layout */
+.inflation-card {
+  width:90%;
+  display: flex;
+   /* Stacked layout for mobile */
+  width: 100%;
+  max-width: 1000px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.04), 
+              0px 1px 8px rgba(0, 0, 0, 0.02);
+}
+
+/* Left Graphic Panel */
+.inflation-image-side {
+  width: 100%;
+  height: 250px;
+  background-color: #032117; /* Dark green fallback color */
+ 
+  background-size: cover;
+  background-position: center;
+}
+
+/* Right Content Panel */
+.inflation-content-side {
+  width: 100%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Typography styles */
+.inflation-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0c141d;
+  margin: 0 0 16px 0;
+  max-width: 480px;
+}
+
+.inflation-subtext {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #1a2530;
+  margin: 0 0 32px 0;
+}
+
+/* Gradient Call to Action Button */
+.inflation-btn {
+  width: fit-content;
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  /* Replicating the warm golden gradient from the design */
+  background: linear-gradient(90deg, #d4af37 0%, #f3c152 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover & Active Feedback States */
+.inflation-btn:hover {
+  opacity: 0.95;
+}
+
+.inflation-btn:active {
+  transform: scale(0.98);
+}
+

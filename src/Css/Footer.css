@@ -2,7 +2,7 @@
   width: 100%;
   
   min-height: 60vh;
-  padding: 60px 0 30px 0;
+  /* padding: 60px 0 30px 0; */
   background-color: var(--Hero-backgroundSecondary);
   display: flex;
   justify-content: center;
@@ -12,7 +12,8 @@
 
 .footer-holder {
   width: 90%;
-  max-width: 1200px;
+  height:90%;
+  /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
   color: var(--primaryWhite);
