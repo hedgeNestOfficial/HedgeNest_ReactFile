@@ -2,8 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-  
+  font-family: "Inter", sans-serif;
 }
 
 :root {
@@ -11,10 +10,10 @@
   --Hero-backgroundSecondary2: #42409c;
   --text-color-primary: #c9922a;
 
-  --button-primaryColor: #c9922a;
+  --button-primaryColor: linear-gradient(#fbbf24, #f59e0b);
   --side-Bar: #181739;
   --primaryWhite: #ffffff;
-  --primaryBlack: #0A0917;
+  --primaryBlack: #0a0917;
   --primaryGray: #9ca3af;
 
   @media (max-width: 1024px) {

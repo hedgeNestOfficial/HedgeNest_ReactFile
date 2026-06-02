@@ -1,10 +1,10 @@
 import React from "react";
-import HeroCard from "../R/HeroCard";
+import HeroCard from "../static/HeroCard.jsx";
 import { HeroCardData } from "../JS/HeroCrad.js";
 import "../Style/HerocardComp.css";
 import Button from "./Button.jsx";
 
-const HerocardComp = () => {
+const OurCore = () => {
   return (
     <section className="features-section">
       <div className="features-container">
@@ -30,4 +30,4 @@ const HerocardComp = () => {
   );
 };
 
-export default HerocardComp;
+export default OurCore;

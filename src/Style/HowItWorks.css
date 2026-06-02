@@ -1,0 +1,110 @@
+.how-section {
+  width: 100%;
+  background-color: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  padding: 100px 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.how-container {
+  width: 85%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.how-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.how-header h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.how-header p {
+  font-size: 1.1rem;
+  color: #475569;
+  margin: 0;
+}
+
+.how-flex-deck {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.how-card-wrapper {
+  width: calc((100% - 60px) / 4);
+  display: flex;
+  box-sizing: border-box;
+}
+
+.how-card-wrapper > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.how-action-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.how-button {
+  height: 54px;
+  padding: 0 44px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+  background-color: #eab308;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1100px) {
+  .how-card-wrapper {
+    width: calc((100% - 20px) / 2);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .how-section {
+    padding: 60px 0;
+  }
+
+  .how-container {
+    width: 88%;
+    gap: 36px;
+  }
+
+  .how-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .how-flex-deck {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .how-card-wrapper {
+    width: 100%;
+  }
+
+  .how-button {
+    width: 100%;
+  }
+}
