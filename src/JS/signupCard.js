@@ -1,3 +1,5 @@
+import { FaChevronDown } from "react-icons/fa6";
+
 export const inputTex = [
   {
     label: "First Name",
@@ -38,18 +40,18 @@ export const inputTex = [
   },
 ];
 
-export const inputTex2 = [
+export const BvnAuthData = [
   {
-    label: "First Name",
+    label: "BVN",
     type: "text",
-    placeholder: "Enter name",
+    placeholder: "Enter BVN number ",
     name: "firstName",
   },
   {
-    label: "Last Name",
+    label: "Upload Photo Of NIN ID",
     type: "text",
-    placeholder: "Enter name",
-    name: "lastName",
+    placeholder: "Attach File",
+    // note: <FaChevronDown />,
   },
   {
     label: "Phone number",
@@ -57,23 +59,18 @@ export const inputTex2 = [
     placeholder: "Enter phone number",
     name: "phoneNumber",
   },
+];
+export const LoginData = [
   {
     label: "Email address",
-    type: "email",
-    placeholder: "Enter email",
-    name: "email",
+    type: "text",
+    placeholder: "Enter email  ",
+    name: "firstName",
   },
   {
     label: "Password",
-    type: "password",
-    placeholder: "Enter password",
-    name: "password",
-    note: "Minimum of 8 characters, must contain numbers and symbols: @, $, _, #",
-  },
-  {
-    label: "Confirm Password",
-    type: "password",
-    placeholder: "Enter password",
-    name: "confirmPassword",
+    type: "text",
+    placeholder: "Enter password ",
+    // note: <FaChevronDown />,
   },
 ];

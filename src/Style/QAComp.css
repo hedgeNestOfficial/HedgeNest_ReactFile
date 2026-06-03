@@ -36,6 +36,9 @@
   flex-direction: column;
   /* justify-content: flex-end; */
   gap: 8px;
+  h2 {
+    margin: 0px;
+  }
 
   p {
     margin: 0;
@@ -66,4 +69,7 @@
   border: 1px solid #1e293b;
   font-weight: 200;
   cursor: pointer;
+}
+
+@media (max-width: 945px) {
 }

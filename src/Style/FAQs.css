@@ -1,0 +1,210 @@
+/* =========================
+   FAQ PAGE
+========================= */
+
+.faq-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   WRAPPER
+========================= */
+
+.faq-page-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.faq-Header {
+  width: 100%;
+  min-height: 300px;
+
+  background: radial-gradient(#42409c, #181739);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  text-align: center;
+
+  padding: 40px 20px;
+}
+
+.faq-Icon {
+  width: 90px;
+  height: 90px;
+
+  margin-bottom: 16px;
+}
+
+.faq-Header h4 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.faq-Header p {
+  font-size: 1rem;
+}
+
+/* =========================
+   FAQ SECTION
+========================= */
+
+.faqs-Question {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 70px 20px;
+}
+
+/* =========================
+   FAQ HEADER
+========================= */
+
+.faq-header {
+  width: 100%;
+  max-width: 850px;
+
+  margin-bottom: 30px;
+}
+
+.faq-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+
+  color: #0f172a;
+}
+
+.faq-header p {
+  color: #64748b;
+}
+
+/* =========================
+   DROPDOWNS
+========================= */
+
+.faq-dropdowns-wrapper {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =========================
+   CONTACT CARD
+========================= */
+
+.faq-card-holder {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 20px;
+  margin-bottom: 80px;
+}
+
+.Contact-Card {
+  width: 100%;
+  max-width: 600px;
+
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 40px 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  gap: 12px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.faq-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+
+.faq-card-subject {
+  font-size: 1rem;
+  line-height: 1.6;
+
+  color: #475569;
+}
+
+.Contact-Card span {
+  color: #1734f4;
+  font-weight: 700;
+  line-height: 1.8;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media screen and (max-width: 768px) {
+  .faq-Header {
+    min-height: 240px;
+  }
+
+  .faq-Header h4 {
+    font-size: 1.6rem;
+  }
+
+  .faq-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .faq-card-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .faqs-Question {
+    padding: 50px 16px;
+  }
+
+  .faq-Icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .faq-Header h4 {
+    font-size: 1.3rem;
+  }
+
+  .faq-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .faq-card-title {
+    font-size: 1.3rem;
+  }
+
+  .faq-card-subject {
+    font-size: 0.95rem;
+  }
+}
