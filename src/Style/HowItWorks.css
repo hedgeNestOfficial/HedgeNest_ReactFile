@@ -68,8 +68,8 @@
   padding: 0 44px;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #0f172a;
-  background-color: #eab308;
+  color: primary-white;
+  background: var(--button-primaryColor);
   border: none;
   border-radius: 6px;
   cursor: pointer;

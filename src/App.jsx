@@ -6,6 +6,7 @@ import Dashboard from "./Pages/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
 import Landing from "./Pages/Landing";
+import OtpPage from "./Pages/Auth/Otp";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/otp" element={<OtpPage />} />
         {/* <Route path="/login" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>

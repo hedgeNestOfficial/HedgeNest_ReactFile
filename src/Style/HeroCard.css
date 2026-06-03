@@ -5,7 +5,7 @@
   border: 1px solid #f1f5f9;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 4px grey;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -36,16 +36,17 @@
 }
 
 .HeroCard-title {
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   color: #0f172a;
   margin: 0;
   letter-spacing: -0.01em;
 }
 
 .HeroCard-text {
-  font-size: 0.95rem;
+  font-size: 15px;
   line-height: 1.6;
+  font-weight: 400;
   color: #475569;
   margin: 0;
   font-weight: 400;

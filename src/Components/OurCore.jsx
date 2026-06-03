@@ -23,7 +23,6 @@ const OurCore = () => {
               />
             </div>
           ))}
-          <Button text="See all features" className="features-button" />
         </div>
       </div>
     </section>

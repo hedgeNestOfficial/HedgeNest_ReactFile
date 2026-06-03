@@ -18,7 +18,6 @@ const FeaturesCard = () => {
             />
           </div>
         ))}
-        <Button text="See all features" className="features-button" />
       </div>
     </div>
   );

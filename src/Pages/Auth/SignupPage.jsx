@@ -3,6 +3,9 @@ import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import { inputTex } from "../../JS/signupCard";
 import Input from "../../Components/Input";
+import Button from "../../Components/Button";
+import { FcGoogle } from "react-icons/fc";
+import { LuArrowLeft } from "react-icons/lu";
 
 const SignupPage = () => {
   return (
@@ -20,19 +23,7 @@ const SignupPage = () => {
             className="back-arrow-btn"
             onClick={() => window.history.back()}
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
+            <LuArrowLeft className="back-arrow-icon" />
           </button>
 
           <h2>Create Your Account</h2>
@@ -58,20 +49,18 @@ const SignupPage = () => {
               </label>
             </div>
 
-            <button type="submit" className="signup-submit-btn">
-              Sign Up
-            </button>
+            <Button
+              text="Sign Up"
+              type="submit"
+              className="signup-submit-btn"
+            ></Button>
 
             <div className="form-divider">
               <span>Or</span>
             </div>
 
             <button type="button" className="google-oauth-btn">
-              <img
-                src="https://i.postimg.cc/906D76gG/google-icon.png"
-                alt="Google Logo"
-                className="google-icon"
-              />
+              <FcGoogle className="google-icon" />
               Sign Up with Google
             </button>
 

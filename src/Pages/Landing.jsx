@@ -7,7 +7,8 @@ import HowItWorks from "../Components/HowitWork";
 import WhyChooseUs from "../Components/WhyChoose";
 import SecurityCompliance from "../Components/SecurityCompliance";
 import OurCore from "../Components/OurCore";
-
+import "../Style/Landing.css";
+import QAcomponent from "../Components/QAcomponent";
 const Landing = () => {
   return (
     <section className="Hero-wrapper">
@@ -17,6 +18,7 @@ const Landing = () => {
       <HowItWorks />
       <WhyChooseUs />
       <SecurityCompliance />
+      <QAcomponent />
       <Footer />
     </section>
   );
