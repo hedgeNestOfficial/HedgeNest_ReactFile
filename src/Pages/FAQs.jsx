@@ -10,7 +10,6 @@ import Footer from "../Components/Footer";
 const FAQs = () => {
   return (
     <section className="faq-page">
-      <Header />
       <section className="faq-page-wrapper">
         <div className="faq-Header">
           <AiOutlineQuestionCircle className="faq-Icon" />
@@ -44,7 +43,6 @@ const FAQs = () => {
           </div>
         </section>
       </section>
-      <Footer />
     </section>
   );
 };
