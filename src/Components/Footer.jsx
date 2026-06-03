@@ -13,7 +13,6 @@ const Footer = () => {
   return (
     <footer className="footer-container">
       <section className="footer-holder">
-        {/* TOP SECTION: Logo, Description, and Link Columns */}
         <article className="footer-up">
           <div className="Footer-logo-con">
             <div className="footer-logo">
@@ -73,8 +72,6 @@ const Footer = () => {
         </article>
 
         <hr className="footer-divider" />
-
-        {/* BOTTOM SECTION: Disclaimers and Legal Copy */}
         <article className="footer-down">
           <p className="down-disclaimer">
             HedgeNest works with trusted partners to deliver secure financial
