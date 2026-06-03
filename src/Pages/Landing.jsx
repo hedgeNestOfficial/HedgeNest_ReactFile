@@ -12,14 +12,12 @@ import QAcomponent from "../Components/QAcomponent";
 const Landing = () => {
   return (
     <section className="Hero-wrapper">
-      <Header />
       <Hero />
       <OurCore />
       <HowItWorks />
       <WhyChooseUs />
       <SecurityCompliance />
       <QAcomponent />
-      <Footer />
     </section>
   );
 };

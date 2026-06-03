@@ -18,23 +18,26 @@ import ReadyComp from "./Pages/Auth/ReadyComp";
 import ResetPass from "./Pages/Auth/ResetPass";
 import NewPass from "./Pages/Auth/NewPass";
 import ResetSucessful from "./Pages/Auth/ResetSuccessful";
+import MainLayout from "./Layout/MainLayout";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/faqs" element={<FAQs />} />
+          <Route path="/shield" element={<Shield />} />
+          <Route path="/save" element={<Save />} />
+          <Route path="/invest" element={<Invest />} />
+        </Route>
+
+        <Route path="/save" element={<Save />} />
+        <Route path="pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/otp" element={<OtpPage />} />
-        <Route path="/bvn" element={<BvnAuth />} />
-        <Route path="/faqs" element={<FAQs />} />
-        <Route path="/shield" element={<Shield />} />
-        <Route path="/save" element={<Save />} />
-        <Route path="/invest" element={<Invest />} />
-        <Route path="pin" element={<Pin />} />
         <Route path="ReadyComp" element={<ReadyComp />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="ResetPass" element={<ResetPass />} />
         <Route path="NewPass" element={<NewPass />} />
         <Route path="ResetSucessful" element={<ResetSucessful />} />

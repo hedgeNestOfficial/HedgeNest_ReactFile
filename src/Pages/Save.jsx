@@ -12,7 +12,6 @@ import { MdOutlineCheck } from "react-icons/md";
 const Save = () => {
   return (
     <div className="hn-page-wrapper">
-      <Header />
       <section className="sc-save-section">
         <div className="sc-container">
           <div className="sc-content-block">
@@ -147,7 +146,6 @@ const Save = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   );
 };

@@ -30,11 +30,15 @@
   align-items: center;
   font-size: 16px;
   font-weight: 500;
-  color:#0A0917;
+  color: #0a0917;
 }
 
 .navigation li {
   list-style-type: none;
+  cursor: pointer;
+}
+.navigation li:hover {
+  color: var(--button-primaryColor);
 }
 .logs {
   display: flex;
@@ -47,7 +51,8 @@
   font-weight: 500;
   padding: 20px 10px 20px 10px;
   color: #181739;
-  background-color: var(--primaryWhite);
+  background: var(--primaryWhite);
+  cursor: pointer;
 }
 .create {
   width: 181px;
@@ -60,6 +65,7 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  cursor: pointer;
   background-color: var(--button-primaryColor);
 }
 .menu {

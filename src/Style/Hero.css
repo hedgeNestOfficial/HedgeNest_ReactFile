@@ -7,13 +7,14 @@
 
   background: radial-gradient(#352e97, #181739);
 
-  padding: 90px 20px 70px;
+  /* padding: 90px 20px 70px; */
 
   box-sizing: border-box;
 
   overflow: hidden;
 
   font-family: "Inter", sans-serif;
+  min-height: 550px;
 }
 
 /* =========================
@@ -63,7 +64,7 @@
 
   line-height: 1.8;
 
-  color: #e2e8f0;
+  color: #ffffff;
 
   margin-bottom: 40px;
 
@@ -135,7 +136,7 @@
   }
 
   .hero-content {
-    align-items: flex-start;
+    /* align-items: flex-start; */
     justify-content: flex-start;
   }
 

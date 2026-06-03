@@ -17,8 +17,6 @@ import { FaPeopleCarry } from "react-icons/fa";
 const Invest = () => {
   return (
     <div className="invest-page-wrapper">
-      <Header />
-
       <section className="inv-hero">
         <div className="inv-container">
           <div className="inv-content">
@@ -232,7 +230,6 @@ const Invest = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   );
 };
