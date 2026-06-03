@@ -1,20 +1,18 @@
-.HeroCard-wrapper {
+.feature-card {
   width: 100%;
-  max-width: 360px;
   background: #ffffff;
   border: 1px solid #f1f5f9;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 4px 4px grey;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
 }
 
-.HeroCard-icon-container {
+.feature-card-icon-box {
   width: 56px;
   height: 56px;
   background-color: #fef8e8;
@@ -24,30 +22,33 @@
   align-items: center;
 }
 
-.HeroCard-icon {
+.feature-card-icon-box img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.feature-card-icon-box svg {
   font-size: 24px;
   color: #eab308;
 }
 
-.HeroCard-content {
+.feature-card-info {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.HeroCard-title {
-  font-size: 20px;
-  font-weight: 600;
+.feature-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #0f172a;
   margin: 0;
-  letter-spacing: -0.01em;
 }
 
-.HeroCard-text {
-  font-size: 15px;
+.feature-card-text {
+  font-size: 0.95rem;
   line-height: 1.6;
-  font-weight: 400;
-  color: #475569;
+  color: #334155;
   margin: 0;
-  font-weight: 400;
 }

@@ -11,10 +11,10 @@
   --Hero-backgroundSecondary2: #42409c;
   --text-color-primary: #c9922a;
 
-  --button-primaryColor: #c9922a;
+  --button-primaryColor: linear-gradient(#f6c15c, #d2af26);
   --side-Bar: #181739;
   --primaryWhite: #ffffff;
-  --primaryBlack: #0A0917;
+  --primaryBlack: #0a0917;
   --primaryGray: #9ca3af;
 
   @media (max-width: 1024px) {
