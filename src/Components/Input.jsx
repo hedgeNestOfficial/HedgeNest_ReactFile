@@ -9,6 +9,7 @@ const Input = (props) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
       />
+      <span className="input-note">{props.note}</span>
     </div>
   );
 };

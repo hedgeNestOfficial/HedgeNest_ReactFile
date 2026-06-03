@@ -1,16 +1,14 @@
-.features-section {
+.why-section {
   width: 100%;
-  background-color: #ffffff;
+  background-color: #fdfbf7;
   display: flex;
   justify-content: center;
-  padding: 80px 0;
-  flex-direction: column;
-  align-items: center;
+  padding: 100px 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
 
-.features-container {
+.why-container {
   width: 85%;
   max-width: 1200px;
   display: flex;
@@ -18,28 +16,15 @@
   gap: 48px;
 }
 
-.features-header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.features-header h2 {
-  font-size: 2rem;
+.why-header h2 {
+  font-size: 2.25rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
   letter-spacing: -0.02em;
 }
 
-.features-header p {
-  font-size: 1.1rem;
-  color: #475569;
-  margin: 0;
-}
-
-.features-flex-deck {
+.why-flex-deck {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -47,48 +32,43 @@
   width: 100%;
 }
 
-.features-card-item-wrapper {
+.why-card-wrapper {
   width: calc((100% - 48px) / 3);
   display: flex;
   box-sizing: border-box;
 }
 
-.features-card-item-wrapper > * {
+.why-card-wrapper > * {
   width: 100% !important;
   max-width: 100% !important;
 }
 
 @media screen and (max-width: 1024px) {
-  .features-card-item-wrapper {
+  .why-card-wrapper {
     width: calc((100% - 24px) / 2);
   }
 }
 
 @media screen and (max-width: 768px) {
-  .features-section {
+  .why-section {
     padding: 60px 0;
   }
 
-  .features-container {
+  .why-container {
     width: 88%;
     gap: 36px;
   }
 
-  .features-header h2 {
+  .why-header h2 {
     font-size: 1.75rem;
   }
 
-  .features-header p {
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-
-  .features-flex-deck {
+  .why-flex-deck {
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
 
-  .features-card-item-wrapper {
+  .why-card-wrapper {
     width: 100%;
   }
 }

@@ -1,0 +1,73 @@
+.select-dropdown-wrapper {
+  /* Changed from min-width to 100% to lock dimensions when p tags render */
+  width: 850px;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: #ffffff;
+  max-height: 100px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.select-dropdown-header {
+  width: 100%;
+  min-height: 58px;
+  padding: 16px 24px;
+  display: flex;
+  /* flex-direction: row; */
+  justify-content: space-between;
+  max-width: 850px;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.select-dropdown-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  padding-right: 16px;
+}
+
+.select-dropdown-arrow {
+  font-size: 22px;
+  color: #0f172a;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.select-dropdown-arrow.rotate-arrow {
+  transform: rotate(180deg);
+}
+
+.select-dropdown-body {
+  width: 100%;
+  padding: 0 24px 20px 24px;
+  background: #ffffff;
+}
+
+.select-dropdown-body p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #475569;
+  margin: 0;
+}
+
+.ontact-support-btn {
+  width: 200px;
+  height: 50px;
+  background: #ffff;
+  color: #1e293b;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}

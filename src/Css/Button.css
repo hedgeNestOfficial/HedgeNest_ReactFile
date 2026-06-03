@@ -3,6 +3,6 @@ button {
   width: 200px;
   border: none;
   border-radius: 10px;
-  color: var(--text-color-neutral);
-  background-color: var(--button-primaryColor);
+  color: var(--primaryWhite);
+  background: var(--button-primaryColor);
 }

@@ -2,14 +2,23 @@ import React from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Hero from "../Components/Hero";
-import HerocardComp from "../Components/HerocardComp";
-
+// import HerocardComp from "../Components/OurCore";
+import HowItWorks from "../Components/HowitWork";
+import WhyChooseUs from "../Components/WhyChoose";
+import SecurityCompliance from "../Components/SecurityCompliance";
+import OurCore from "../Components/OurCore";
+import "../Style/Landing.css";
+import QAcomponent from "../Components/QAcomponent";
 const Landing = () => {
   return (
     <section className="Hero-wrapper">
       <Header />
       <Hero />
-      <HerocardComp />
+      <OurCore />
+      <HowItWorks />
+      <WhyChooseUs />
+      <SecurityCompliance />
+      <QAcomponent />
       <Footer />
     </section>
   );
