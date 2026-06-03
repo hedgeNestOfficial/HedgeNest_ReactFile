@@ -37,4 +37,6 @@
   width: 80%;
   height: 40px;
   background-color: aqua;
+  border-radius: 1px;
+  border: 1px solid #ccc;
 }
