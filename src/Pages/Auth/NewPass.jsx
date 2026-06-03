@@ -8,7 +8,7 @@ import Input from "../../Components/Input";
 import { FaChevronDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
 
-const BvnAuth = () => {
+const NewPass = () => {
   return (
     <section className="signup-section">
       <div className="image-container">
@@ -25,31 +25,23 @@ const BvnAuth = () => {
             <LuArrowLeft className="back-arrow-icon" />
           </button>
 
-          <h2>Enter BVN or Upload NIN ID</h2>
-
+          <h2>Create Your New Password</h2>
           <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
             <div className="Auth-inputs-row">
-              <label htmlFor="">BVN</label>
+              <label htmlFor="">New Password</label>
 
               <div className="input-tag">
-                <input type="text" placeholder="Enter BVN number" />
-              </div>
-            </div>
-            or
-            <div className="Auth-inputs-row">
-              <label htmlFor="">Upload Photo Of NIN ID</label>
-              <div className="input-tag">
-                <input type="text" placeholder="Attch File" />
-                <CiFileOn className="icon1" />
+                <input type="text" placeholder="Enter password" />
               </div>
             </div>
             <div className="Auth-inputs-row">
-              <label htmlFor="">What best describes you</label>
+              <label htmlFor="">Confirm adrress</label>
+
               <div className="input-tag">
-                <input type="text" placeholder="Enter" />
-                <FaChevronDown className="icon" />
+                <input type="text" placeholder="Confirm password" />
               </div>
             </div>
+
             <Button text="Next" type="submit" className="otp-submit-btn" />
           </form>
         </div>
@@ -58,4 +50,4 @@ const BvnAuth = () => {
   );
 };
 
-export default BvnAuth;
+export default NewPass;

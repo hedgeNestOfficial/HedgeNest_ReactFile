@@ -1,74 +1,115 @@
+/* =========================
+   WHY SECTION
+========================= */
+
 .why-section {
   width: 100%;
-  background-color: #fdfbf7;
+
+  background: #f7f3e8;
+
+  padding: 80px 20px;
+
   display: flex;
   justify-content: center;
-  padding: 100px 0;
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
 }
 
+/* =========================
+   CONTAINER
+========================= */
+
 .why-container {
-  width: 85%;
+  width: 100%;
   max-width: 1200px;
+
   display: flex;
   flex-direction: column;
-  gap: 48px;
+
+  gap: 40px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.why-header {
+  width: 100%;
 }
 
 .why-header h2 {
-  font-size: 2.25rem;
+  font-size: 2.2rem;
   font-weight: 700;
+
   color: #0f172a;
+
   margin: 0;
-  letter-spacing: -0.02em;
 }
+
+/* =========================
+   CARD FLEX LAYOUT
+========================= */
 
 .why-flex-deck {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 24px;
   width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 24px;
+
+  justify-content: space-between;
 }
+
+/* =========================
+   CARD WRAPPER
+========================= */
 
 .why-card-wrapper {
-  width: calc((100% - 48px) / 3);
-  display: flex;
-  box-sizing: border-box;
+  flex: 1 1 320px;
+
+  min-width: 280px;
 }
 
-.why-card-wrapper > * {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-@media screen and (max-width: 1024px) {
-  .why-card-wrapper {
-    width: calc((100% - 24px) / 2);
-  }
-}
+/* =========================
+   TABLET
+========================= */
 
 @media screen and (max-width: 768px) {
   .why-section {
-    padding: 60px 0;
-  }
-
-  .why-container {
-    width: 88%;
-    gap: 36px;
+    padding: 60px 16px;
   }
 
   .why-header h2 {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
+    text-align: center;
   }
 
   .why-flex-deck {
-    flex-direction: column;
-    gap: 16px;
+    justify-content: center;
   }
 
   .why-card-wrapper {
     width: 100%;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media screen and (max-width: 480px) {
+  .why-section {
+    padding: 50px 14px;
+  }
+
+  .why-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .why-flex-deck {
+    gap: 18px;
+  }
+
+  .why-card-wrapper {
+    min-width: 100%;
   }
 }

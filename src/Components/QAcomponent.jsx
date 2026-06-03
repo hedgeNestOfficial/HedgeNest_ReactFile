@@ -13,7 +13,7 @@ const QAcomponent = () => {
           <p>Get answers to your questions about HedgeNest</p>
         </article>
         <article className="faq-dropdowns-wrapper">
-          {QAData.map((item, index) => (
+          {QAData.slice(1, 2).map((item, index) => (
             <SelectDropdown key={index} data={item} />
           ))}
           <Button text="See all FAQs" className="contact-support-btn" />
