@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import Button from "./Components/Button";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HeroPage from "./Pages/HeroPage";
@@ -7,6 +7,8 @@ import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
 import Landing from "./Pages/Landing";
 import OtpPage from "./Pages/Auth/Otp";
+
+
 
 const App = () => {
   return (
@@ -20,6 +22,7 @@ const App = () => {
         {/* <Route path="/login" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
+
   );
 };
 
