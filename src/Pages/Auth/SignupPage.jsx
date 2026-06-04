@@ -20,9 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import axios from "axios";
-
-import { ENDPOINTS } from "../../config/apiConfig";
-
+import { ENDPOINTS } from "../../Config/apiConfig";
 import { signup } from "../../Store/UserSlice";
 
 /* =========================
