@@ -6,9 +6,11 @@ import Dashboard from "./Pages/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
 
+import AboutUs from './Pages/AboutUs';
 
 
 const App = () => {
+
   return (
     <BrowserRouter>
       <Routes>
@@ -19,6 +21,7 @@ const App = () => {
         
       </Routes>
     </BrowserRouter>
+
 
   );
 };

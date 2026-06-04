@@ -30,7 +30,7 @@
   align-items: center;
   font-size: 16px;
   font-weight: 500;
-  color:#0A0917;
+  color: #0a0917;
 }
 
 .navigation li {
@@ -55,7 +55,6 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
-  /* padding: 20px 15px 20px 15px; */
   display: flex;
   align-items: center;
   justify-content: center;
