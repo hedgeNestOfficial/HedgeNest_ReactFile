@@ -8,13 +8,14 @@ import SecurityCompliance from "../Components/SecurityCompliance";
 import OurCore from "../Components/OurCore";
 import "../Style/Landing.css";
 import QAcomponent from "../Components/QAcomponent";
+import WhyChoose from "../Components/WhyChoose";
 const Landing = () => {
   return (
     <section className="Hero-wrapper">
       <Hero />
       <OurCore />
       <HowItWorks />
-      <WhyChooseUs />
+      <WhyChoose />
       <SecurityCompliance />
       <QAcomponent />
     </section>
