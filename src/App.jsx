@@ -19,9 +19,9 @@ import ResetPass from "./Pages/Auth/ResetPass";
 import NewPass from "./Pages/Auth/NewPass";
 import ResetSucessful from "./Pages/Auth/ResetSuccessful";
 import MainLayout from "./Layout/MainLayout";
+import WalletDashboard from "./Pages/WalletDashboard";
 
 const App = () => {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -42,6 +42,7 @@ const App = () => {
         <Route path="ResetPass" element={<ResetPass />} />
         <Route path="NewPass" element={<NewPass />} />
         <Route path="ResetSucessful" element={<ResetSucessful />} />
+        <Route path="wallet" element={<WalletDashboard />} />
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>

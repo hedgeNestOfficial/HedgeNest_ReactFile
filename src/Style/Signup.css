@@ -1,3 +1,6 @@
+/* ==========================================================================
+   Base Layout Structure
+   ========================================================================== */
 .signup-section {
   width: 100%;
   min-height: 100vh;
@@ -8,7 +11,7 @@
   box-sizing: border-box;
 }
 
-/* Left Column Styling */
+/* Left Column Styling: Sticky Media Banner */
 .image-container {
   flex: 1;
   height: 100vh;
@@ -27,7 +30,7 @@
   object-fit: cover;
 }
 
-/* Right Column Styling */
+/* Right Column Styling: Form Canvas Scroll Plane */
 .form-container {
   flex: 1;
   min-height: 100vh;
@@ -41,13 +44,16 @@
 
 .signup-form-wrapper {
   width: 100%;
-  max-width: 480px;
+  max-width: 440px; /* Locked optimal line-width for clean readability */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
 }
 
+/* ==========================================================================
+   Navigation Elements
+   ========================================================================== */
 .back-arrow-btn {
   background: none;
   border: none;
@@ -66,18 +72,17 @@
 }
 
 .back-arrow-icon {
-  /* font-size: 60px; */
   font-weight: 100;
   width: 50px;
   height: 35px;
-  /* angle: 0 deg; */
   opacity: 1;
 }
+
 .signup-form-wrapper h2 {
   font-size: 1.85rem;
   font-weight: 700;
   color: #1e293b;
-  margin: 0 0 32px 0;
+  margin: 0 0 16px 0;
   letter-spacing: -0.02em;
 }
 
@@ -88,41 +93,45 @@
   gap: 20px;
 }
 
+/* ==========================================================================
+   Dynamic Input Component Field Styles (Fixed Component Tag Mapping)
+   ========================================================================== */
 .input-group-wrapper {
   width: 100%;
-  height: 86px;
   display: flex;
-  /* background: #000; */
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
-.input-label {
+/* TARGETED FIX: Direct tag mapping since your component has no label class */
+.input-group-wrapper label {
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
 }
 
-.input-field {
+/* TARGETED FIX: Safe standard CSS syntax path mapped directly to input tag */
+.input-group-wrapper input {
   width: 100%;
   height: 48px;
-  /* border: 1px solid #cbd5e1; */
-  border-radius: 8px;
-  padding: 0 16px;
+  border-radius: 4px;
+  border: 1px solid #181739;
+  box-sizing: border-box;
   font-size: 0.95rem;
   color: #0f172a;
-  /* background: green; */
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
 }
 
-.input-field:focus {
+.input-group-wrapper input:focus {
   outline: none;
   border-color: #eab308;
+  box-shadow: 0 0 0 1px #eab308;
 }
 
-.input-field::placeholder {
+.input-group-wrapper input::placeholder {
   color: #94a3b8;
 }
 
@@ -133,7 +142,9 @@
   margin: 2px 0 0 0;
 }
 
-/* Checkbox Alignment */
+/* ==========================================================================
+   Interactive Checkbox Controls
+   ========================================================================== */
 .checkbox-container {
   display: flex;
   flex-direction: row;
@@ -157,7 +168,6 @@
   user-select: none;
 }
 
-/* Interactive typography links */
 .highlight-link {
   color: #dfa712;
   cursor: pointer;
@@ -172,16 +182,18 @@
   font-weight: 700;
 }
 
-/* Functional Authentication Action Buttons */
+/* ==========================================================================
+   Action & OAuth Button Architecture
+   ========================================================================== */
 .signup-submit-btn {
   width: 100%;
-  height: 59px;
-  background: #c4c4c4; /* Matches gray unsubmitted state in Figma illustration */
+  height: 54px;
+  background: #c4c4c4; /* Gray unsubmitted baseline layout profile state */
   color: #ffffff;
   border: none;
   border-radius: 4px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 12px;
   transition: background-color 0.2s ease;
@@ -191,14 +203,18 @@
   background-color: #b3b3b3;
 }
 
-/* Separation Rules */
+/* Centered Line Content Separator */
 .form-divider {
   width: 100%;
   text-align: center;
   position: relative;
-  margin: 12px 0;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* FIXED: Activated background rule to render line structure correctly */
 .form-divider::before {
   content: "";
   position: absolute;
@@ -206,16 +222,15 @@
   left: 0;
   width: 100%;
   height: 1px;
-  /* background-color: #e2e8f0; */
+  background-color: #e2e8f0;
   z-index: 1;
 }
 
 .form-divider span {
   background-color: #ffffff;
   padding: 0 16px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  /* font-style: s; */
   color: #181739;
   position: relative;
   z-index: 2;
@@ -223,13 +238,13 @@
 
 .google-oauth-btn {
   width: 100%;
-  height: 59px;
+  height: 54px;
   background: #ffffff;
   color: #181739;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,7 +260,6 @@
 .google-icon {
   width: 20px;
   height: 20px;
-  object-fit: contain;
 }
 
 .auth-switch-footer {
@@ -256,58 +270,43 @@
   margin: 16px 0 0 0;
 }
 
-.input-group-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* border: 1px solid #cbd5e1; */
-  height: 86px;
-  /* width: ; */
-  gap: 6px;
+/* ==========================================================================
+   Responsive Fluid Layout Engine Breakpoints
+   ========================================================================== */
 
-  input {
-    height: 80%;
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid #181739;
-    /* background: #000; */
-    /* width: 433px;
-    height: 59px; */
-    gap: 10px;
-    /* angle: 0 deg; */
-    opacity: 1;
-    border-radius: 4px;
-    border-width: 1px;
-    padding-top: 20px;
-    padding-right: 10px;
-    padding-bottom: 20px;
-    padding-left: 10px;
-  }
-}
-
-/* Responsive Fluid Breakdowns */
-@media screen and (max-width: 1024px) {
+/* FIXED: Instant drop threshold targeted specifically at 950px down */
+@media screen and (max-width: 950px) {
   .image-container {
-    display: none; /* Emphasize clean onboarding flow on limited viewports */
+    display: none;
   }
 
   .form-container {
-    padding: 40px 24px;
+    padding: 60px 32px;
+    width: 100%;
+  }
+
+  .signup-form-wrapper {
+    max-width: 100%; /* Form expands contextually into viewport padding safely */
   }
 }
 
-@media screen and (max-width: 480px) {
-  .signup-form-wrapper h2 {
-    font-size: 1.6rem;
-    margin-bottom: 24px;
+/* Smooth layout scaling optimization handling 750px down to mobile devices */
+@media screen and (max-width: 750px) {
+  .form-container {
+    padding: 40px 24px;
   }
 
-  .input-field {
-    height: 46px;
+  .signup-form-wrapper h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
   }
 
   .input-note {
-    display: none; /* Hide auxiliary notes on very small screens for cleaner layout */
+    font-size: 0.7rem; /* Reduces text size instead of a sudden drop to keep tips legible */
+  }
+
+  .signup-submit-btn,
+  .google-oauth-btn {
+    height: 50px; /* Slight height reduction for standard mobile thumb-targets */
   }
 }

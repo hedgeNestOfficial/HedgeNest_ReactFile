@@ -1,57 +1,40 @@
 .hero {
   width: 100%;
-
+  /* min-height: 350px; */
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
 
   background: radial-gradient(#352e97, #181739);
-
-  /* padding: 90px 20px 70px; */
-
+  /* background: #000; */
+  padding: 80px 24px;
   box-sizing: border-box;
-
   overflow: hidden;
-
   font-family: "Inter", sans-serif;
-  min-height: 550px;
 }
-
-/* =========================
-   WRAPPER
-========================= */
 
 .hero-wrapper {
   width: 100%;
-  max-width: 1300px;
-
+  max-width: 1200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 40px;
 }
 
-/* =========================
-   CONTENT
-========================= */
-
 .hero-content {
   flex: 1;
-
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; /* Aligns text & button to the left on desktop */
 }
 
 .hero-title {
   font-size: 3.2rem;
   font-weight: 700;
-
   color: #ffffff;
-
-  line-height: 1.15;
-
+  line-height: 1.2;
   margin-bottom: 24px;
 }
 
@@ -60,36 +43,23 @@
 }
 
 .hero-description {
-  font-size: 1.05rem;
-
-  line-height: 1.8;
-
+  font-size: 1.1rem;
+  line-height: 1.7;
   color: #ffffff;
-
   margin-bottom: 40px;
-
   max-width: 520px;
 }
-
-/* =========================
-   BUTTON
-========================= */
 
 .hero-button {
   width: 170px;
   height: 56px;
-
   border: none;
   border-radius: 6px;
-
-  background: var(--button-primaryColor);
+  background: var(--button-primaryColor, #d2af26);
   color: white;
-
   font-size: 1rem;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.3s ease;
 }
 
@@ -97,13 +67,8 @@
   background: #ca8a04;
 }
 
-/* =========================
-   IMAGE SECTION
-========================= */
-
 .hero-image-container {
   flex: 1;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,33 +76,25 @@
 
 .hero-display-img {
   width: 100%;
-  min-width: 550px;
-
+  min-width: 500px;
   height: auto;
-
   object-fit: contain;
 }
 
-/* =========================
-   LARGE TABLETS
-========================= */
-
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 1005px) {
   .hero {
-    padding: 80px 20px 60px;
+    padding: 60px 20px;
   }
 
   .hero-wrapper {
-    flex-direction: column;
-
+    flex-direction: column; /* Stacks text on top, image on bottom */
     text-align: center;
-
-    gap: 50px;
+    gap: 40px;
   }
 
   .hero-content {
-    /* align-items: flex-start; */
-    justify-content: flex-start;
+    /* background: #000; */
+    align-items: flex-start;
   }
 
   .hero-title {
@@ -145,81 +102,51 @@
   }
 
   .hero-description {
-    max-width: 100%;
-  }
-
-  .hero-image-container {
-    width: 100%;
+    max-width: 600px; /* Prevents the paragraph from stretching too wide */
   }
 
   .hero-display-img {
-    min-width: 550px;
+    width: 100%;
+    /* min-width: auto; */
+    /* height: auto; */
+    object-fit: contain;
   }
 }
 
 /* =========================
-   TABLETS
+   MOBILE DEVICES (Max width: 750px)
 ========================= */
-
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 750px) {
   .hero {
-    padding: 70px 18px 50px;
+    padding: 50px 16px;
+    /* max-height: auto; */
+    height: auto;
   }
 
-  .hero-content {
-    justify-content: flex-start;
-  }
   .hero-title {
-    font-size: 2.2rem;
-
-    line-height: 1.25;
+    font-size: 2rem;
+    line-height: 1.3;
   }
 
+  /* Automatically removes your <br /> tags so text wraps naturally on small screens */
   .hero-title br {
     display: none;
   }
 
   .hero-description {
     font-size: 1rem;
-  }
-
-  .hero-display-img {
-    min-width: 480px;
-  }
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media screen and (max-width: 480px) {
-  .hero {
-    padding: 50px 14px 40px;
-  }
-
-  .hero-wrapper {
-    gap: 36px;
-  }
-
-  .hero-content {
-    justify-content: flex-start;
-  }
-  .hero-title {
-    font-size: 1.9rem;
-  }
-
-  .hero-description {
-    font-size: 0.95rem;
-
-    line-height: 1.7;
+    margin-bottom: 30px;
   }
 
   .hero-button {
-    width: 100%;
-    max-width: 220px;
+    width: 100%; /* Makes the button touch-friendly and wide on mobile */
+    max-width: 250px; /* Keeps it looking clean instead of stretching infinitely */
   }
 
   .hero-display-img {
-    min-width: 100%;
+    /* width: 100%; */
+    min-width: auto;
+    /* height: auto; */
+    object-fit: contain;
   }
 }
