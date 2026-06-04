@@ -189,10 +189,6 @@
   margin-bottom: 24px;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
-
 @media screen and (max-width: 768px) {
   .signup-section {
     flex-direction: column;

@@ -286,7 +286,6 @@
   }
 }
 
-/* Responsive Fluid Breakdowns */
 @media screen and (max-width: 1024px) {
   .image-container {
     display: none; /* Emphasize clean onboarding flow on limited viewports */

@@ -1,16 +1,19 @@
 .header-container {
   width: 100%;
-  height: 10vh;
+  min-height: 10vh;
   background-color: var(--primaryWhite);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 100;
 }
+
 .header-wrapper {
   width: 90%;
   height: 100%;
   background-color: var(--primarywhite);
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,13 +22,13 @@
 .logo {
   width: 132px;
   height: 29px;
+  object-fit: contain;
 }
 
 .navigation {
   width: 30%;
   height: 100%;
   display: flex;
-
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
@@ -37,23 +40,27 @@
   list-style-type: none;
   cursor: pointer;
 }
+
 .navigation li:hover {
   color: var(--button-primaryColor);
 }
+
 .logs {
   display: flex;
 }
+
 .login {
   width: 152px;
   height: 49px;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
-  padding: 20px 10px 20px 10px;
+  padding: 20px 10px;
   color: #181739;
   background: var(--primaryWhite);
   cursor: pointer;
 }
+
 .create {
   width: 181px;
   height: 49px;
@@ -67,6 +74,7 @@
   cursor: pointer;
   background-color: var(--button-primaryColor);
 }
+
 .menu {
   display: none;
 }
@@ -74,11 +82,55 @@
 @media (max-width: 768px) {
   .menu {
     display: block;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 102;
   }
-  .navigation {
-    display: none;
-  }
+
+  /* Hide the desktop button logs container */
   .logs {
     display: none;
+  }
+
+  /* Convert the navigation list into a mobile drop drawer */
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 5%;
+    width: 200px;
+    background-color: #ffffff;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 10px 20px;
+    height: auto;
+    align-items: flex-start;
+    gap: 12px;
+
+    /* Hidden by default */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* HOVER APPROACH: When the user hovers over the header wrapper context area, 
+    the menu unrolls automatically without requiring custom JS click binders.
+  */
+  .header-wrapper:hover .navigation {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .navigation li {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .navigation li:last-child {
+    border-bottom: none;
   }
 }

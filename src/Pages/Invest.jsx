@@ -8,13 +8,79 @@ import investIMG3 from "../assets/investIMG3.jpg";
 import investIMG4 from "../assets/investIMG4.jpg";
 import lowrisk from "../assets/lowrisk.jpg";
 import mediumrisk from "../assets/mediumrisk.jpg";
-import { IoSpeedometerOutline } from "react-icons/io5";
+import { IoSpeedometerOutline, IoEyeOutline } from "react-icons/io5";
 import { LuTrendingUp } from "react-icons/lu";
 import { TbTargetArrow } from "react-icons/tb";
-import { IoEyeOutline } from "react-icons/io5";
 import { FaPeopleCarry } from "react-icons/fa";
+import Button from "../Components/Button"
 
 const Invest = () => {
+  // Array Data
+  const howItWorksData = [
+    {
+      id: 1,
+      icon: <IoSpeedometerOutline className="icon" />,
+      title: "Choose your risk level",
+      text: "Pick from low or medium options based on your comfort.",
+    },
+    {
+      id: 2,
+      icon: <LuTrendingUp className="icon" />,
+      title: "Select an investment",
+      text: "View clear details: expected returns, risks, and how it works.",
+    },
+    {
+      id: 3,
+      icon: <TbTargetArrow className="icon" />,
+      title: "Invest and track",
+      text: "Start with as low as ₦5,000 and monitor your growth in real time.",
+    },
+  ];
+
+  const investmentCategoriesData = [
+    {
+      id: 1,
+      badge: "Low Risk",
+      img: lowrisk,
+      title: "Stable Growth",
+      text: "Lower-risk options designed to preserve your capital while earning steady returns.",
+    },
+    {
+      id: 2,
+      badge: "Medium Risk",
+      img: mediumrisk,
+      title: "Balanced Growth",
+      text: "A mix of stability and growth. Ideal if you can counter returns without high risk.",
+    },
+  ];
+
+  const whyInvestData = [
+    {
+      id: 1,
+      icon: <FaPeopleCarry className="icon" />,
+      title: "Simple and beginner-friendly",
+      text: "No complex financial jargon",
+    },
+    {
+      id: 2,
+      icon: <LuTrendingUp className="icon" />,
+      title: "Clear risk levels",
+      text: "Know exactly what you're getting into",
+    },
+    {
+      id: 3,
+      icon: <IoEyeOutline className="icon" />,
+      title: "Transparent returns",
+      text: "No hidden surprises",
+    },
+    {
+      id: 4,
+      icon: <TbTargetArrow className="icon" />,
+      title: "Track performance easily",
+      text: "Stay in control at all times",
+    },
+  ];
+
   return (
     <div className="invest-page-wrapper">
       <section className="inv-hero">
@@ -45,12 +111,10 @@ const Invest = () => {
               </li>
             </ul>
             <div className="inv-actions">
-              <button className="inv-btn-solid" type="button">
-                Start Investing
-              </button>
-              <button className="inv-btn-outline" type="button">
-                Explore Options
-              </button>
+              <Button className="inv-btn-solid" text="Start Investing"/>
+               
+              <Button className="inv-btn-outline" text="Explore Options"/>
+              
             </div>
           </div>
           <div className="inv-graphic-wrapper">
@@ -101,34 +165,13 @@ const Invest = () => {
             </p>
           </div>
           <div className="hiw-grid">
-            <div className="hiw-card">
-              <div className="hiw-icon-placeholder">
-                <IoSpeedometerOutline className="icon" />
+            {howItWorksData.map((item) => (
+              <div className="hiw-card" key={item.id}>
+                <div className="hiw-icon-placeholder">{item.icon}</div>
+                <h3 className="hiw-card-title">{item.title}</h3>
+                <p className="hiw-card-text">{item.text}</p>
               </div>
-              <h3 className="hiw-card-title">Choose your risk level</h3>
-              <p className="hiw-card-text">
-                Pick from low or medium options based on your comfort.
-              </p>
-            </div>
-            <div className="hiw-card">
-              <div className="hiw-icon-placeholder">
-                <LuTrendingUp className="icon" />
-              </div>
-              <h3 className="hiw-card-title">Select an investment</h3>
-              <p className="hiw-card-text">
-                View clear details: expected returns, risks, and how it works.
-              </p>
-            </div>
-            <div className="hiw-card">
-              <div className="hiw-icon-placeholder">
-                <TbTargetArrow className="icon" />
-              </div>
-              <h3 className="hiw-card-title">Invest and track</h3>
-              <p className="hiw-card-text">
-                Start with as low as ₦5,000 and monitor your growth in real
-                time.
-              </p>
-            </div>
+            ))}
           </div>
           <div className="hiw-action">
             <button className="hiw-btn" type="button">
@@ -145,28 +188,16 @@ const Invest = () => {
             <p className="ic-subheading">Choose what fits your style</p>
           </div>
           <div className="ic-grid">
-            <div className="ic-card">
-              <span className="ic-risk-badge">Low Risk</span>
-              <div className="ic-image-placeholder">
-                <img src={lowrisk} alt="Low risk investment" />
+            {investmentCategoriesData.map((item) => (
+              <div className="ic-card" key={item.id}>
+                <span className="ic-risk-badge">{item.badge}</span>
+                <div className="ic-image-placeholder">
+                  <img src={item.img} alt={item.title} />
+                </div>
+                <h3 className="ic-card-title">{item.title}</h3>
+                <p className="ic-card-text">{item.text}</p>
               </div>
-              <h3 className="ic-card-title">Stable Growth</h3>
-              <p className="ic-card-text">
-                Lower-risk options designed to preserve your capital while
-                earning steady returns.
-              </p>
-            </div>
-            <div className="ic-card">
-              <span className="ic-risk-badge">Medium Risk</span>
-              <div className="ic-image-placeholder">
-                <img src={mediumrisk} alt="Medium risk investment" />
-              </div>
-              <h3 className="ic-card-title">Balanced Growth</h3>
-              <p className="ic-card-text">
-                A mix of stability and growth. Ideal if you can counter returns
-                without high risk.
-              </p>
-            </div>
+            ))}
           </div>
           <div className="ic-action">
             <button className="ic-btn" type="button">
@@ -180,36 +211,13 @@ const Invest = () => {
         <div className="wi-container">
           <h2 className="wi-heading">Why Invest with HedgeNest?</h2>
           <div className="wi-grid">
-            <div className="wi-card">
-              <div className="wi-icon-badge">
-                <FaPeopleCarry className="icon" />
+            {whyInvestData.map((item) => (
+              <div className="wi-card" key={item.id}>
+                <div className="wi-icon-badge">{item.icon}</div>
+                <h3 className="wi-card-title">{item.title}</h3>
+                <p className="wi-card-text">{item.text}</p>
               </div>
-              <h3 className="wi-card-title">Simple and beginner-friendly</h3>
-              <p className="wi-card-text">No complex financial jargon</p>
-            </div>
-            <div className="wi-card">
-              <div className="wi-icon-badge">
-                <LuTrendingUp className="icon" />
-              </div>
-              <h3 className="wi-card-title">Clear risk levels</h3>
-              <p className="wi-card-text">
-                Know exactly what you're getting into
-              </p>
-            </div>
-            <div className="wi-card">
-              <div className="wi-icon-badge">
-                <IoEyeOutline className="icon" />
-              </div>
-              <h3 className="wi-card-title">Transparent returns</h3>
-              <p className="wi-card-text">No hidden surprises</p>
-            </div>
-            <div className="wi-card">
-              <div className="wi-icon-badge">
-                <TbTargetArrow className="icon" />
-              </div>
-              <h3 className="wi-card-title">Track performance easily</h3>
-              <p className="wi-card-text">Stay in control at all times</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
