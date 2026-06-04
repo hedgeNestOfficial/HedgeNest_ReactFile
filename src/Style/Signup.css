@@ -1,40 +1,313 @@
 .signup-section {
-  width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+/* Left Column Styling */
+.image-container {
+  flex: 1;
   height: 100vh;
-  background: green;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c122c;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Right Column Styling */
+.form-container {
+  flex: 1;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 60px 40px;
+  box-sizing: border-box;
+  background-color: #ffffff;
 }
 
-.image-container {
-  width: 50%;
-  height: 100%;
+.signup-form-wrapper {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
 
-  img {
+.back-arrow-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 24px;
+  cursor: pointer;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: color 0.2s ease;
+}
+
+.back-arrow-btn:hover {
+  color: #0f172a;
+}
+
+.back-arrow-icon {
+  /* font-size: 60px; */
+  font-weight: 100;
+  width: 50px;
+  height: 35px;
+  /* angle: 0 deg; */
+  opacity: 1;
+}
+.signup-form-wrapper h2 {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 32px 0;
+  letter-spacing: -0.02em;
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group-wrapper {
+  width: 100%;
+  height: 86px;
+  display: flex;
+  /* background: #000; */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.input-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.input-field {
+  width: 100%;
+  height: 48px;
+  /* border: 1px solid #cbd5e1; */
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  /* background: green; */
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #eab308;
+}
+
+.input-field::placeholder {
+  color: #94a3b8;
+}
+
+.input-note {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #181739;
+  margin: 2px 0 0 0;
+}
+
+/* Checkbox Alignment */
+.checkbox-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #eab308;
+}
+
+.checkbox-container label {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #181739;
+  user-select: none;
+}
+
+/* Interactive typography links */
+.highlight-link {
+  color: #dfa712;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.highlight-link:hover {
+  text-decoration: underline;
+}
+
+.bold-link {
+  font-weight: 700;
+}
+
+/* Functional Authentication Action Buttons */
+.signup-submit-btn {
+  width: 100%;
+  height: 59px;
+  background: #c4c4c4; /* Matches gray unsubmitted state in Figma illustration */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.signup-submit-btn:hover {
+  background-color: #b3b3b3;
+}
+
+/* Separation Rules */
+.form-divider {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  margin: 12px 0;
+}
+
+.form-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  /* background-color: #e2e8f0; */
+  z-index: 1;
+}
+
+.form-divider span {
+  background-color: #ffffff;
+  padding: 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  /* font-style: s; */
+  color: #181739;
+  position: relative;
+  z-index: 2;
+}
+
+.google-oauth-btn {
+  width: 100%;
+  height: 59px;
+  background: #ffffff;
+  color: #181739;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.google-oauth-btn:hover {
+  background-color: #f8fafc;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.auth-switch-footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #181739;
+  margin: 16px 0 0 0;
+}
+
+.input-group-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* border: 1px solid #cbd5e1; */
+  height: 86px;
+  /* width: ; */
+  gap: 6px;
+
+  input {
+    height: 80%;
     width: 100%;
-    height: 100%;
+    border-radius: 4px;
+    border: 1px solid #181739;
+    /* background: #000; */
+    /* width: 433px;
+    height: 59px; */
+    gap: 10px;
+    /* angle: 0 deg; */
+    opacity: 1;
+    border-radius: 4px;
+    border-width: 1px;
+    padding-top: 20px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    padding-left: 10px;
   }
 }
 
-.form-container {
-  width: 50%;
-  height: 100%;
-  background: white;
-  padding: 20px;
+/* Responsive Fluid Breakdowns */
+@media screen and (max-width: 1024px) {
+  .image-container {
+    display: none; /* Emphasize clean onboarding flow on limited viewports */
+  }
 
-  .signup-form-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  .form-container {
+    padding: 40px 24px;
   }
 }
 
-.input-Card {
-  width: 80%;
-  height: 40px;
-  background-color: aqua;
+@media screen and (max-width: 480px) {
+  .signup-form-wrapper h2 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+
+  .input-field {
+    height: 46px;
+  }
+
+  .input-note {
+    display: none; /* Hide auxiliary notes on very small screens for cleaner layout */
+  }
 }

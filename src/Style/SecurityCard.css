@@ -1,0 +1,43 @@
+.security-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 48px 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.security-card-icon-box {
+  width: 64px;
+  height: 64px;
+  background-color: #fef8e8;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.security-card-icon-box img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.security-card-icon-box svg {
+  font-size: 26px;
+  color: #eab308;
+}
+
+.security-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}

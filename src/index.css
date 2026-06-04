@@ -1,5 +1,4 @@
-
-*{
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -12,10 +11,10 @@
   --Hero-backgroundSecondary2: #42409c;
   --text-color-primary: #c9922a;
 
-  --button-primaryColor: #c9922a;
+  --button-primaryColor: linear-gradient(#f6c15c, #d2af26);
   --side-Bar: #181739;
   --primaryWhite: #ffffff;
-  --primaryBlack: #0A0917;
+  --primaryBlack: #0a0917;
   --primaryGray: #9ca3af;
 
   @media (max-width: 1024px) {
@@ -37,11 +36,4 @@
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  font-family: sans-serif;
-  box-sizing: border-box;
 }

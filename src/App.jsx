@@ -5,6 +5,8 @@ import HeroPage from "./Pages/HeroPage";
 import Dashboard from "./Pages/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
+import Landing from "./Pages/Landing";
+import OtpPage from "./Pages/Auth/Otp";
 
 import AboutUs from './Pages/AboutUs';
 
@@ -14,11 +16,12 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HeroPage />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/Signup" element={<SignupPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
-        
+        <Route path="/otp" element={<OtpPage />} />
+        {/* <Route path="/login" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
 
