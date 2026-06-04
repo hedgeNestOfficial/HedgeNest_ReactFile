@@ -1,25 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import "../../Style/Signup.css";
+
 import Signupimg from "../../assets/Signupimg.jpg";
+
 import { inputTex } from "../../JS/signupCard";
+
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
+
 import { FcGoogle } from "react-icons/fc";
 import { LuArrowLeft } from "react-icons/lu";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import * as z from "zod";
+
 import axios from "axios";
 import { ENDPOINTS } from "../../Config/apiConfig";
 import { signup } from "../../Store/UserSlice";
 
+/* =========================
+   ZOD SCHEMA
+========================= */
+
 const signupSchema = z.object({
   firstName: z.string().min(3, "First name must be at least 3 characters"),
+
   lastName: z.string().optional(),
+
   email: z.string().email("Please enter a valid email address"),
+
   phoneNumber: z.string().min(10, "Please enter a valid phone number"),
+
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -27,21 +43,28 @@ const signupSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(
       /[^a-zA-Z0-9]/,
-      "Password must contain at least one special character (e.g., @, $, #, _)",
+      "Password must contain at least one special character",
     ),
+
   terms: z.literal(true, {
     errorMap: () => ({
-      message: "You must accept the Terms and Conditions to proceed",
+      message: "You must accept the Terms and Conditions",
     }),
   }),
 });
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const [apiError, setApiError] = useState("");
+
   const [successMessage, setSuccessMessage] = useState("");
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  /* =========================
+     REACT HOOK FORM
+  ========================= */
 
   const {
     register,
@@ -50,6 +73,7 @@ const SignupPage = () => {
     reset,
   } = useForm({
     resolver: zodResolver(signupSchema),
+
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -60,40 +84,49 @@ const SignupPage = () => {
     },
   });
 
-  // TIMEOUT MECHANISM: Automatically clear error messages after 5 seconds
+  /* =========================
+     CLEAR MESSAGES
+  ========================= */
+
   useEffect(() => {
-    if (apiError) {
-      const timer = setTimeout(() => {
-        setApiError("");
-      }, 5000);
-      return () => clearTimeout(timer); // Clean up timer on unmount
-    }
+    if (!apiError) return;
+
+    const timer = setTimeout(() => {
+      setApiError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [apiError]);
 
-  // TIMEOUT MECHANISM: Automatically clear success messages after 5 seconds
   useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 5000);
-      return () => clearTimeout(timer); // Clean up timer on unmount
-    }
+    if (!successMessage) return;
+
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [successMessage]);
 
-  const onSubmitForm = async (data) => {
-    setApiError("");
-    setSuccessMessage("");
+  /* =========================
+     SUBMIT FORM
+  ========================= */
 
+  const onSubmitForm = async (data) => {
     try {
-      const nameParts = data.firstName.trim().split(/\s+/); // Assuming firstName might contain multiple words
-      const firstName = nameParts[0];
-      const lastName = data.lastName || nameParts.slice(1).join(" ") || "";
+      setApiError("");
+
+      setSuccessMessage("");
 
       const registerPayload = {
-        firstName,
-        lastName,
+        firstName: data.firstName.trim(),
+
+        lastName: data.lastName?.trim() || "",
+
         email: data.email,
+
         phoneNumber: data.phoneNumber,
+
         password: data.password,
       };
 
@@ -105,39 +138,52 @@ const SignupPage = () => {
       if (
         response.status === 200 ||
         response.status === 201 ||
-        response.data.status
+        response.data?.status
       ) {
-        const serverMsg = response.data?.message || "OTP sent successfully!";
-        setSuccessMessage(serverMsg);
+        const message = response.data?.message || "OTP sent successfully";
 
-        const targetPayload = response.data?.data || response.data;
-        dispatch(signup(targetPayload));
+        setSuccessMessage(message);
+
+        const payload = response.data?.data || response.data;
+
+        dispatch(signup(payload));
 
         setTimeout(() => {
-          navigate("/otp");
           reset();
+
+          navigate("/otp");
         }, 1500);
       }
     } catch (error) {
-      const errorMsg =
+      const errorMessage =
         error.response?.data?.message ||
-        "An unexpected error occurred. Please try again.";
-      setApiError(errorMsg);
+        "Something went wrong. Please try again.";
+
+      setApiError(errorMessage);
+
+      console.log(error);
     }
   };
 
+  /* =========================
+     INVALID FORM
+  ========================= */
+
   const onInvalidSubmit = (formErrors) => {
-    console.log("❌ Zod Validation Blocked Submission:", formErrors);
+    console.log("Validation Errors:", formErrors);
   };
 
   return (
     <section className="signup-section">
+      {/* LEFT IMAGE */}
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
       </div>
 
+      {/* FORM SIDE */}
       <div className="form-container">
         <div className="signup-form-wrapper">
+          {/* BACK BUTTON */}
           <button
             type="button"
             className="back-arrow-btn"
@@ -148,35 +194,15 @@ const SignupPage = () => {
 
           <h2>Create Your Account</h2>
 
-          {apiError && (
-            <div
-              style={{
-                color: "#ef4444",
-                marginBottom: "10px",
-                fontSize: "0.9rem",
-                backgroundColor: "#fef2f2",
-                padding: "8px",
-                borderRadius: "4px",
-              }}
-            >
-              ⚠️ {apiError}
-            </div>
-          )}
+          {/* API ERROR */}
+          {apiError && <div className="api-error-message">{apiError}</div>}
+
+          {/* SUCCESS MESSAGE */}
           {successMessage && (
-            <div
-              style={{
-                color: "#22c55e",
-                marginBottom: "10px",
-                fontSize: "0.9rem",
-                backgroundColor: "#f0fdf4",
-                padding: "8px",
-                borderRadius: "4px",
-              }}
-            >
-              ✅ {successMessage}
-            </div>
+            <div className="success-message">{successMessage}</div>
           )}
 
+          {/* FORM */}
           <form
             className="auth-form"
             onSubmit={handleSubmit(onSubmitForm, onInvalidSubmit)}
@@ -194,52 +220,41 @@ const SignupPage = () => {
               />
             ))}
 
+            {/* TERMS */}
             <div className="checkbox-container">
               <input type="checkbox" id="terms" {...register("terms")} />
+
               <label htmlFor="terms">
                 I agree to the{" "}
                 <span className="highlight-link">Terms & Conditions</span> and{" "}
-                <span className="highlight-link">Privacy Policy.</span>
+                <span className="highlight-link">Privacy Policy</span>
               </label>
             </div>
+
             {errors.terms && (
-              <span
-                className="input-note"
-                style={{
-                  color: "#ef4444",
-                  display: "block",
-                  marginTop: "-12px",
-                  fontWeight: "500",
-                }}
-              >
-                {errors.terms.message}
-              </span>
+              <span className="terms-error">{errors.terms.message}</span>
             )}
 
+            {/* SUBMIT BUTTON */}
             <Button
-              text={isSubmitting ? "Creating Account..." : "Sign Up"}
+              text={isSubmitting ? "Signing up..." : "Sign Up"}
               type="submit"
               className="signup-submit-btn"
               disabled={isSubmitting}
-              style={{
-                background: isSubmitting ? "#b3b3b3" : undefined,
-                cursor: isSubmitting ? "not-allowed" : "pointer",
-              }}
             />
 
+            {/* DIVIDER */}
             <div className="form-divider">
               <span>Or</span>
             </div>
 
+            {/* GOOGLE BUTTON */}
             <button type="button" className="google-oauth-btn">
               <FcGoogle className="google-icon" />
               Sign Up with Google
             </button>
 
-            <p className="auth-switch-footer">
-              Already have an account?{" "}
-              <span className="highlight-link bold-link">Log In</span>
-            </p>
+            {/* LOGIN LINK */}
             <p className="auth-switch-footer">
               Already have an account?{" "}
               <span
