@@ -1,115 +1,92 @@
-/* =========================
-   WHY SECTION
-========================= */
-
+/* Base Section */
 .why-section {
   width: 100%;
-
   background: #f7f3e8;
-
   padding: 80px 20px;
-
   display: flex;
   justify-content: center;
 }
-
-/* =========================
-   CONTAINER
-========================= */
-
 .why-container {
   width: 100%;
   max-width: 1200px;
-
   display: flex;
   flex-direction: column;
-
   gap: 40px;
 }
-
-/* =========================
-   HEADER
-========================= */
-
-.why-header {
-  width: 100%;
-}
-
 .why-header h2 {
   font-size: 2.2rem;
   font-weight: 700;
-
   color: #0f172a;
-
   margin: 0;
+  text-align: center;
 }
 
-/* =========================
-   CARD FLEX LAYOUT
-========================= */
-
-.why-flex-deck {
-  width: 100%;
-
+/* Desktop Flex Layout (No calc) */
+.desktop-flex-container {
   display: flex;
   flex-wrap: wrap;
-
-  gap: 24px;
-
-  justify-content: space-between;
+  width: 100%;
+}
+.flex-card-wrapper {
+  flex: 0 0 33.33%;
+  padding: 12px;
+  box-sizing: border-box;
 }
 
-/* =========================
-   CARD WRAPPER
-========================= */
-
-.why-card-wrapper {
-  flex: 1 1 320px;
-
-  min-width: 280px;
-}
-
-/* =========================
-   TABLET
-========================= */
-
-@media screen and (max-width: 768px) {
-  .why-section {
-    padding: 60px 16px;
-  }
-
-  .why-header h2 {
-    font-size: 1.8rem;
-    text-align: center;
-  }
-
-  .why-flex-deck {
-    justify-content: center;
-  }
-
-  .why-card-wrapper {
-    width: 100%;
+@media screen and (max-width: 1024px) {
+  .flex-card-wrapper {
+    flex: 0 0 50%;
   }
 }
 
-/* =========================
-   MOBILE
-========================= */
-
-@media screen and (max-width: 480px) {
-  .why-section {
-    padding: 50px 14px;
-  }
-
-  .why-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .why-flex-deck {
-    gap: 18px;
-  }
-
-  .why-card-wrapper {
-    min-width: 100%;
-  }
+/* Mobile Carousel Styles */
+.mobile-carousel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+}
+.carousel-slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+}
+.carousel-btn {
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #d1d5db;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dot.active-dot {
+  background: #eab308;
 }
