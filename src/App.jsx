@@ -21,6 +21,7 @@ import ResetSucessful from "./Pages/Auth/ResetSuccessful";
 import MainLayout from "./Layout/MainLayout";
 
 const App = () => {
+
   return (
     <BrowserRouter>
       <Routes>
