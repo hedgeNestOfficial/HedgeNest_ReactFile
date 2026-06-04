@@ -1,6 +1,3 @@
-/* ==========================================================================
-   Base Layout Structure
-   ========================================================================== */
 .signup-section {
   width: 100%;
   min-height: 100vh;
@@ -11,7 +8,6 @@
   box-sizing: border-box;
 }
 
-/* Left Column Styling: Sticky Media Banner */
 .image-container {
   flex: 1;
   height: 100vh;
@@ -30,7 +26,6 @@
   object-fit: cover;
 }
 
-/* Right Column Styling: Form Canvas Scroll Plane */
 .form-container {
   flex: 1;
   min-height: 100vh;
@@ -44,16 +39,13 @@
 
 .signup-form-wrapper {
   width: 100%;
-  max-width: 440px; /* Locked optimal line-width for clean readability */
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
 }
 
-/* ==========================================================================
-   Navigation Elements
-   ========================================================================== */
 .back-arrow-btn {
   background: none;
   border: none;
@@ -93,9 +85,6 @@
   gap: 20px;
 }
 
-/* ==========================================================================
-   Dynamic Input Component Field Styles (Fixed Component Tag Mapping)
-   ========================================================================== */
 .input-group-wrapper {
   width: 100%;
   display: flex;
@@ -105,14 +94,12 @@
   margin-bottom: 4px;
 }
 
-/* TARGETED FIX: Direct tag mapping since your component has no label class */
 .input-group-wrapper label {
   font-size: 0.9rem;
   font-weight: 600;
   color: #334155;
 }
 
-/* TARGETED FIX: Safe standard CSS syntax path mapped directly to input tag */
 .input-group-wrapper input {
   width: 100%;
   height: 48px;
@@ -142,9 +129,6 @@
   margin: 2px 0 0 0;
 }
 
-/* ==========================================================================
-   Interactive Checkbox Controls
-   ========================================================================== */
 .checkbox-container {
   display: flex;
   flex-direction: row;
@@ -182,13 +166,10 @@
   font-weight: 700;
 }
 
-/* ==========================================================================
-   Action & OAuth Button Architecture
-   ========================================================================== */
 .signup-submit-btn {
   width: 100%;
   height: 54px;
-  background: #c4c4c4; /* Gray unsubmitted baseline layout profile state */
+  background: #c4c4c4;
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -203,7 +184,6 @@
   background-color: #b3b3b3;
 }
 
-/* Centered Line Content Separator */
 .form-divider {
   width: 100%;
   text-align: center;
@@ -214,7 +194,6 @@
   justify-content: center;
 }
 
-/* FIXED: Activated background rule to render line structure correctly */
 .form-divider::before {
   content: "";
   position: absolute;
@@ -270,11 +249,6 @@
   margin: 16px 0 0 0;
 }
 
-/* ==========================================================================
-   Responsive Fluid Layout Engine Breakpoints
-   ========================================================================== */
-
-/* FIXED: Instant drop threshold targeted specifically at 950px down */
 @media screen and (max-width: 950px) {
   .image-container {
     display: none;
@@ -285,29 +259,29 @@
     width: 100%;
   }
 
-@media screen and (max-width: 1024px) {
-  .image-container {
-    display: none; /* Emphasize clean onboarding flow on limited viewports */
-  }
-}
-
-/* Smooth layout scaling optimization handling 750px down to mobile devices */
-@media screen and (max-width: 750px) {
-  .form-container {
-    padding: 40px 24px;
+  @media screen and (max-width: 1024px) {
+    .image-container {
+      display: none;
+    }
   }
 
-  .signup-form-wrapper h2 {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
-  }
+  @media screen and (max-width: 750px) {
+    .form-container {
+      padding: 40px 24px;
+    }
 
-  .input-note {
-    font-size: 0.7rem; /* Reduces text size instead of a sudden drop to keep tips legible */
-  }
+    .signup-form-wrapper h2 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
 
-  .signup-submit-btn,
-  .google-oauth-btn {
-    height: 50px; /* Slight height reduction for standard mobile thumb-targets */
+    .input-note {
+      font-size: 0.7rem;
+    }
+
+    .signup-submit-btn,
+    .google-oauth-btn {
+      height: 50px;
+    }
   }
 }
