@@ -64,6 +64,7 @@
 .inv-actions {
   display: flex;
   gap: 16px;
+  /* margin-top:10px; */
 }
 .inv-btn-solid,
 .inv-btn-outline {

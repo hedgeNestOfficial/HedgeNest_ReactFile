@@ -57,6 +57,7 @@ const App = () => {
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
+   
   );
 };
 

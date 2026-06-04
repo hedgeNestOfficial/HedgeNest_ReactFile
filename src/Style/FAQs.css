@@ -160,10 +160,6 @@
   line-height: 1.8;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
-
 @media screen and (max-width: 768px) {
   .faq-Header {
     min-height: 240px;

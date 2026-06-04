@@ -4,6 +4,7 @@ import Button from "../Components/Button";
 import LeftCharacter from "../assets/man-usdt.png";
 import RightCharacter from "../assets/woman-coin.png";
 import ShieldImage from "../assets/shieldImage.jpg";
+
 import { BiShieldQuarter } from "react-icons/bi";
 import { IoMdTrendingUp } from "react-icons/io";
 import { BsLightningCharge } from "react-icons/bs";
@@ -12,13 +13,84 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoEyeOutline, IoHeadset, IoLockClosedSharp } from "react-icons/io5";
 
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
+
 
 const Shield = () => {
+  // Why Protect with USDT
+  const featuresData = [
+    {
+      icon: <BiShieldQuarter className="feature-icon" size={32} />,
+      title: "Stable Value",
+      description:
+        "USDT is pegged to the US dollar, helping your money stay stable.",
+    },
+    {
+      icon: <IoMdTrendingUp className="feature-icon" size={32} />,
+      title: "Beats Inflation",
+      description:
+        "While Naira loses value over time, USDT helps preserve your purchasing power.",
+    },
+    {
+      icon: <BsLightningCharge className="feature-icon" size={32} />,
+      title: "Global & Liquid",
+      description: "USDT is globally accepted and easy to convert anytime.",
+    },
+  ];
+
+  //  How it Works Steps
+  const stepsData = [
+    {
+      icon: <FaNairaSign className="feature-icon" size={28} />,
+      title: "Enter Amount",
+      description: "Enter the amount in Naira you want to convert.",
+    },
+    {
+      icon: <FaRegCheckCircle className="feature-icon" size={28} />,
+      title: "Review & Confirm",
+      description: "Check the rate, fees, and amount you'll receive.",
+    },
+    {
+      icon: <FiShield className="feature-icon" size={28} />,
+      title: "Secure Conversion",
+      description: "We process your conversion securely and instantly.",
+    },
+    {
+      icon: <FaCoins className="feature-icon" size={28} />,
+      title: "Receive USDT",
+      description: "Your USDT is added to your balance, ready to use.",
+    },
+  ];
+
+  // Why Trust HedgeNest
+  const trustData = [
+    {
+      icon: <FiShield size={28} className="feature-icon" />,
+      title: "Bank-level Security",
+      description: "Your funds are protected with top-notch security measures.",
+    },
+    {
+      icon: <IoEyeOutline size={28} className="feature-icon" />,
+      title: "Transparent Rates",
+      description: "Live rates, no hidden fees, and full transparency always.",
+    },
+    {
+      icon: <IoHeadset size={28} className="feature-icon" />,
+      title: "24/7 Support",
+      description: "Our support team is available round the clock to help you.",
+    },
+    {
+      icon: <IoLockClosedSharp size={28} className="feature-icon" />,
+      title: "You're in Control",
+      description: "Convert anytime, anywhere. You're always in control.",
+    },
+  ];
+
   return (
     <section className="shield-container">
+      
+
       <section className="shield-holder">
+         {/* HERO BANNER SECTION   */}
         <div className="hero-wrapper">
           <article className="hero-content">
             <h1>
@@ -49,92 +121,46 @@ const Shield = () => {
             </div>
           </article>
         </div>
+
+        {/* FEATURES SECTION  */}
         <section className="features-section">
           <div className="why-usdt-wrapper">
             <h2 className="why-usdt-heading">Why protect with USDT?</h2>
 
             <div className="features-grid">
-              <div className="feature-card">
-                <div className="icon-container">
-                  <BiShieldQuarter className="feature-icon" size={32} />
+              {featuresData.map((item, index) => (
+                <div key={index} className="feature-card">
+                  <div className="icon-container">{item.icon}</div>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
                 </div>
-                <h3>Stable Value</h3>
-                <p>
-                  USDT is pegged to the US dollar, helping your money stay
-                  stable.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <div className="icon-container">
-                  <IoMdTrendingUp className="feature-icon" size={32} />
-                </div>
-                <h3>Beats Inflation</h3>
-                <p>
-                  While Naira loses value over time, USDT helps preserve your
-                  purchasing power.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <div className="icon-container">
-                  <BsLightningCharge className="feature-icon" size={32} />
-                </div>
-                <h3>Global & Liquid</h3>
-                <p>USDT is globally accepted and easy to convert anytime.</p>
-              </div>
+              ))}
             </div>
           </div>
         </section>
+
+         {/* HOW IT WORKS SECTION  */}
         <section className="how-it-works-section">
           <div className="how-it-works-container">
             <h2 className="section-heading">How it works</h2>
 
             <div className="steps-grid">
-              <div className="step-card">
-                <div className="step-icon-badge">
-                  <FaNairaSign className="feature-icon" size={28} />
+              {stepsData.map((step, index) => (
+                <div key={index} className="step-card">
+                  <div className="step-icon-badge">{step.icon}</div>
+                  <h3 className="step-card-title">{step.title}</h3>
+                  <p className="step-card-description">{step.description}</p>
                 </div>
-                <h3 className="step-card-title">Enter Amount</h3>
-                <p className="step-card-description">
-                  Enter the amount in Naira you want to convert.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-icon-badge">
-                  <FaRegCheckCircle className="feature-icon" size={28} />
-                </div>
-                <h3 className="step-card-title">Review & Confirm</h3>
-                <p className="step-card-description">
-                  Check the rate, fees, and amount you'll receive.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-icon-badge">
-                  <FiShield className="feature-icon" size={28} />
-                </div>
-                <h3 className="step-card-title">Secure Conversion</h3>
-                <p className="step-card-description">
-                  We process your conversion securely and instantly.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-icon-badge">
-                  <FaCoins className="feature-icon" size={28} />
-                </div>
-                <h3 className="step-card-title">Receive USDT</h3>
-                <p className="step-card-description">
-                  Your USDT is added to your balance, ready to use.
-                </p>
-              </div>
+              ))}
             </div>
 
             <div className="cta-wrapper">
-              <button className="convert-now-btn">Convert Now</button>
+              <Button className="convert-now-btn" text="Convert Now" />
             </div>
           </div>
         </section>
 
+         {/* HEDGENEST TRUST SECTION  */}
         <section className="hn-trust-section">
           <div className="hn-container">
             <h2 className="hn-title">
@@ -142,57 +168,20 @@ const Shield = () => {
             </h2>
 
             <div className="hn-grid">
-              <div className="hn-card">
-                <div className="hn-icon-wrapper">
-                  <span className="hn-icon">
-                    <FiShield size={28} className="feature-icon" />
-                  </span>
+              {trustData.map((card, index) => (
+                <div key={index} className="hn-card">
+                  <div className="hn-icon-wrapper">
+                    <span className="hn-icon">{card.icon}</span>
+                  </div>
+                  <h3 className="hn-card-title">{card.title}</h3>
+                  <p className="hn-card-description">{card.description}</p>
                 </div>
-                <h3 className="hn-card-title">Bank-level Security</h3>
-                <p className="hn-card-description">
-                  Your funds are protected with top-notch security measures.
-                </p>
-              </div>
-
-              <div className="hn-card">
-                <div className="hn-icon-wrapper">
-                  <span className="hn-icon">
-                    <IoEyeOutline size={28} className="feature-icon" />
-                  </span>
-                </div>
-                <h3 className="hn-card-title">Transparent Rates</h3>
-                <p className="hn-card-description">
-                  Live rates, no hidden fees, and full transparency always.
-                </p>
-              </div>
-
-              <div className="hn-card">
-                <div className="hn-icon-wrapper">
-                  <span className="hn-icon">
-                    <IoHeadset size={28} className="feature-icon" />
-                  </span>
-                </div>
-                <h3 className="hn-card-title">24/7 Support</h3>
-                <p className="hn-card-description">
-                  Our support team is available round the clock to help you.
-                </p>
-              </div>
-
-              <div className="hn-card">
-                <div className="hn-icon-wrapper">
-                  <span className="hn-icon">
-                    <IoLockClosedSharp size={28} className="feature-icon" />
-                  </span>
-                </div>
-                <h3 className="hn-card-title">You're in Control</h3>
-                <p className="hn-card-description">
-                  Convert anytime, anywhere. You're always in control.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
+        {/* INFLATION PROMO SECTION  */}
         <section className="inflation-promo-section">
           <div className="inflation-promo-container">
             <div className="inflation-promo-card">
@@ -216,6 +205,8 @@ const Shield = () => {
           </div>
         </section>
       </section>
+
+      
     </section>
   );
 };
