@@ -6,8 +6,6 @@ import Footer from "../Components/Footer";
 const RegulatoryInfo = () => {
   return (
     <div className="Regulatory-container">
-      <Header />
-
       <main className="reg-section">
         <section className="reg-content">
           <h1 className="reg-heading">Regulatory Information</h1>
@@ -35,8 +33,6 @@ const RegulatoryInfo = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.HedgeNest_Url;
+const BASE_URL = import.meta.env.VITE_HedgeNest_Url;
 
 export const API_CONFIG = {
   baseUrl: BASE_URL,
@@ -11,16 +11,21 @@ export const API_CONFIG = {
 
 export const ENDPOINTS = {
   AUTH: {
-    REGISTER: `${BASE_URL}/auth/register`,
+    REGISTER: `${BASE_URL}/api/v1/create-user`,
     LOGIN: `${BASE_URL}/auth/login`,
-    VERIFY_KYC: `${BASE_URL}/auth/verify-kyc`,
+    VERIFY_OTP: `${BASE_URL}/api/v1/verify/check`,
+    RESET_OTP: `${BASE_URL}//api/v1/resendOtp`,
+    PIN: `${BASE_URL}/api/v1/create-pin`,
+    VERIFY_KYC: `${BASE_URL}/api/v1/uploadId`,
+    LOGIN: `${BASE_URL}/api/v1/login`,
   },
-  RATES: {
-    LIVE_USDT: `${BASE_URL}/rates/live`,
+  EDIT_DATA: {
+    RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
+    CHANGE_PASSWORD: `${BASE_URL}/api/v1/change-password`,
+    CHANGE_DATAS: `${BASE_URL}/api/v1/update`,
+  },
+  BANK_DETAILS: {
+    GET_BANK_DETAILS: `${BASE_URL}/api/v1/link`,
     CONVERT: `${BASE_URL}/rates/convert`,
-  },
-  SAVINGS: {
-    GET_VAULTS: `${BASE_URL}/savings/vaults`,
-    CREATE_GOAL: `${BASE_URL}/savings/create`,
   },
 };

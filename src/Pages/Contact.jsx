@@ -10,8 +10,6 @@ import { FaWhatsapp } from "react-icons/fa";
 const ContactUs = () => {
   return (
     <div className="contact-page-container">
-      <Header />
-
       <section className="contact-hero">
         <div className="hero-icon-wrapper">
           <IoCallOutline className="hero-phone-icon" size={36} />
@@ -123,8 +121,6 @@ const ContactUs = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

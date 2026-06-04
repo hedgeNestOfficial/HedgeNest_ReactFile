@@ -20,6 +20,11 @@ import NewPass from "./Pages/Auth/NewPass";
 import ResetSucessful from "./Pages/Auth/ResetSuccessful";
 import MainLayout from "./Layout/MainLayout";
 import WalletDashboard from "./Pages/WalletDashboard";
+import Loading from "./Components/Loading";
+import Policy from "./Pages/Policy";
+import Contact from "./Pages/Contact";
+import About from "./Pages/AboutUs";
+import RegulatoryInfo from "./Pages/RegulatoryInfo";
 
 const App = () => {
   return (
@@ -31,6 +36,10 @@ const App = () => {
           <Route path="/shield" element={<Shield />} />
           <Route path="/save" element={<Save />} />
           <Route path="/invest" element={<Invest />} />
+          <Route path="/policy" element={<Policy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="regulatory" element={<RegulatoryInfo />} />
         </Route>
 
         <Route path="/otp" element={<OtpPage />} />
@@ -43,6 +52,8 @@ const App = () => {
         <Route path="NewPass" element={<NewPass />} />
         <Route path="ResetSucessful" element={<ResetSucessful />} />
         <Route path="wallet" element={<WalletDashboard />} />
+        <Route path="loading" element={<Loading />} />
+
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
