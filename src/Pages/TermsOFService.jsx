@@ -6,8 +6,6 @@ import Footer from "../Components/Footer";
 const TermsOfService = () => {
   return (
     <div className="Terms-container">
-      <Header />
-
       <main className="terms-section">
         <section className="terms-content">
           <h1 className="terms-heading">Terms of Service</h1>
@@ -32,8 +30,6 @@ const TermsOfService = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };

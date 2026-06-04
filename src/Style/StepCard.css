@@ -1,5 +1,5 @@
 .step-card {
-  width: 250px;
+  width: 100%; /* FIXED: Allows the card to naturally fill the layout deck */
   background: #ffffff;
   border: 1px solid #f1f5f9;
   border-radius: 12px;
@@ -21,6 +21,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .step-card-icon-box img {
@@ -29,20 +30,15 @@
   object-fit: contain;
 }
 
-.step-card-icon-box svg {
-  font-size: 26px;
-  color: #eab308;
-}
-
 .step-card-title {
-  font-size: 1.15rem;
+  font-size: 18px; /* LOCKED to clean pixels */
   font-weight: 700;
   color: #0f172a;
   margin: 0 0 12px 0;
 }
 
 .step-card-text {
-  font-size: 0.95rem;
+  font-size: 14px; /* LOCKED to clean pixels */
   line-height: 1.5;
   color: #475569;
   margin: 0;

@@ -1,0 +1,481 @@
+/* ==========================================================================
+   Global Variables & Container Architecture
+   ========================================================================== */
+:root {
+  --bg-main: #faf7f0; /* Soft warm cream workspace background background style */
+  --sidebar-dark: #181739;
+  --text-primary: #181739;
+  --text-muted: #64748b;
+  --card-border: #e2e8f0;
+  --accent-gold: #eab308;
+  --accent-gold-hover: #dfa712;
+  --success-green: #22c55e;
+  --danger-red: #ef4444;
+}
+
+.wallet-dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--bg-main);
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Desktop Left Sidebar Element Style
+   ========================================================================== */
+.wallet-sidebar {
+  width: 260px;
+  background-color: var(--sidebar-dark);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.brand-logo-icon {
+  font-size: 1.5rem;
+}
+
+.sidebar-brand h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item span {
+  font-size: 1.1rem;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: var(--accent-gold);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-footer {
+  padding: 0 24px;
+}
+
+.signout-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 12px 0;
+  width: 100%;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.signout-btn:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Main App Content Space
+   ========================================================================== */
+.wallet-main-content {
+  flex: 1;
+  padding: 40px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.content-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Balance Panel Configuration
+   ========================================================================== */
+.balance-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.balance-card {
+  border-radius: 12px;
+  padding: 28px;
+  box-sizing: border-box;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-ngn {
+  background-color: var(--sidebar-dark);
+}
+
+.card-usdt {
+  background: linear-gradient(135deg, #eab308 0%, #f5be49 100%);
+}
+
+.card-currency-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.flag-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  font-size: 0.9rem;
+}
+
+.currency-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.balance-amount {
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Central Workspace Activity Cards Architecture
+   ========================================================================== */
+.wallet-operations-card,
+.transactions-history-card {
+  background-color: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 32px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Tab Button Layout Rows */
+.operations-tabs-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background-color: var(--sidebar-dark);
+  border-color: var(--sidebar-dark);
+  color: #ffffff;
+}
+
+.arrow-icon {
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Dynamic Input Fields Architecture Style
+   ========================================================================== */
+.operations-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.wallet-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.wallet-input-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.wallet-input-group input {
+  width: 100%;
+  height: 54px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.wallet-input-group input:focus {
+  border-color: var(--accent-gold);
+}
+
+/* Main Golden Action Submit Buttons */
+.form-submit-action-btn {
+  width: 100%;
+  height: 54px;
+  background-color: var(--accent-gold);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.form-submit-action-btn:hover {
+  background-color: var(--accent-gold-hover);
+}
+
+/* ==========================================================================
+   Ledger Activity Transactions History Card
+   ========================================================================== */
+.transactions-history-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card-title-bar {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.card-title-bar h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.transactions-view-port {
+  min-height: 180px;
+}
+
+.empty-state-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 32px;
+  text-align: center;
+}
+
+/* Render List Rows Style matching Home Wallet 3.png */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 0.2s ease;
+}
+
+.transaction-row-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-row-item:hover {
+  background-color: #f8fafc;
+}
+
+.tx-info-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tx-direction-indicator {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.tx-direction-indicator.icon-in {
+  background-color: #dcfce7;
+  color: var(--success-green);
+}
+
+.tx-direction-indicator.icon-out {
+  background-color: #fee2e2;
+  color: var(--danger-red);
+}
+
+.tx-text-meta h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tx-text-meta p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.tx-amount-block {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.text-success {
+  color: var(--success-green);
+}
+.text-danger {
+  color: var(--danger-red);
+}
+
+/* ==========================================================================
+   Responsive Layout Engine Breakpoints
+   ========================================================================== */
+
+/* Drop sidebar panel at requested 950px marker */
+@media screen and (max-width: 950px) {
+  .wallet-sidebar {
+    display: none; /* Sidebar drops fully to maximize dashboard form focus on tablet layouts */
+  }
+}
+
+/* Target interface optimization parameters for 750px and mobile views */
+@media screen and (max-width: 750px) {
+  .wallet-main-content {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  .content-header h1 {
+    font-size: 1.75rem;
+  }
+
+  /* Stacks Balance Cards vertically */
+  .balance-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .balance-card {
+    padding: 20px;
+  }
+
+  .balance-amount {
+    font-size: 1.85rem;
+  }
+
+  /* Structural adjustment of action keys matching Frame 673.png */
+  .wallet-operations-card {
+    padding: 20px;
+  }
+
+  .operations-tabs-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  /* Keeps Deposit and Withdraw side-by-side but forces link account underneath */
+  .link-account-btn {
+    grid-column: span 2;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .tab-btn {
+    height: 46px;
+    padding: 0 12px;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  .wallet-input-group input,
+  .form-submit-action-btn {
+    height: 50px;
+  }
+
+  .card-title-bar {
+    padding: 16px 20px;
+  }
+
+  .transaction-row-item {
+    padding: 16px 20px;
+  }
+}

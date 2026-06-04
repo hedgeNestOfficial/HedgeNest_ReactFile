@@ -7,9 +7,23 @@ const Input = (props) => {
       <input
         type={props.type}
         placeholder={props.placeholder}
-        onChange={props.onChange}
+        {...props.registerProps}
+        onChange={(e) => {
+          if (props.registerProps?.onChange) props.registerProps.onChange(e);
+          if (props.onChange) props.onChange(e);
+        }}
       />
-      <span className="input-note">{props.note}</span>
+
+      {props.error ? (
+        <span
+          className="input-note"
+          style={{ color: "#ef4444", fontWeight: "500" }}
+        >
+          {props.error.message}
+        </span>
+      ) : (
+        <span className="input-note">{props.note}</span>
+      )}
     </div>
   );
 };
