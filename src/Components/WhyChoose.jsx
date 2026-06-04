@@ -22,38 +22,44 @@ const WhyChoose = () => {
         </div>
 
         {isMobile ? (
-          /* Mobile Carousel (JS Logic) */
+          /* Mobile Viewport with Floating Controls */
           <div className="mobile-carousel-container">
-            <div className="carousel-wrapper">
-              <button
-                className="carousel-btn"
-                onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}
+            {/* Left Absolute Button */}
+            <button
+              className={`carousel-btn prev-btn ${currentIndex === 0 ? "disabled" : ""}`}
+              onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}
+              disabled={currentIndex === 0}
+            >
+              <FaChevronLeft />
+            </button>
+
+            <div className="carousel-viewport">
+              <div
+                className="carousel-track"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
-                <FaChevronLeft />
-              </button>
-              <div className="carousel-viewport">
-                <div
-                  className="carousel-track"
-                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                >
-                  {WhyChooseData.map((item, index) => (
-                    <div className="carousel-slide" key={index}>
-                      <FeatureCard {...item} />
-                    </div>
-                  ))}
-                </div>
+                {WhyChooseData.map((item, index) => (
+                  <div className="carousel-slide" key={index}>
+                    <FeatureCard {...item} />
+                  </div>
+                ))}
               </div>
-              <button
-                className="carousel-btn"
-                onClick={() =>
-                  setCurrentIndex(
-                    Math.min(currentIndex + 1, WhyChooseData.length - 1),
-                  )
-                }
-              >
-                <FaChevronRight />
-              </button>
             </div>
+
+            {/* Right Absolute Button */}
+            <button
+              className={`carousel-btn next-btn ${currentIndex === WhyChooseData.length - 1 ? "disabled" : ""}`}
+              onClick={() =>
+                setCurrentIndex(
+                  Math.min(currentIndex + 1, WhyChooseData.length - 1),
+                )
+              }
+              disabled={currentIndex === WhyChooseData.length - 1}
+            >
+              <FaChevronRight />
+            </button>
+
+            {/* Bottom Dots Indicator */}
             <div className="carousel-dots">
               {WhyChooseData.map((_, index) => (
                 <div
@@ -65,7 +71,7 @@ const WhyChoose = () => {
             </div>
           </div>
         ) : (
-          /* Desktop Flex View (No calc) */
+          /* Desktop Flex View */
           <div className="desktop-flex-container">
             {WhyChooseData.map((item, index) => (
               <div className="flex-card-wrapper" key={index}>

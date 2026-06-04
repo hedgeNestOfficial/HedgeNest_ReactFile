@@ -1,15 +1,19 @@
 import React from "react";
-import background from "../../assets/Signupimg.jpg";
+import { useSelector } from "react-redux";
+import Signupimg from "../../assets/Signupimg.jpg";
 import { LuArrowLeft } from "react-icons/lu";
 import Button from "../../Components/Button"; // Ensure your relative path to Button matches
 import "../../Style/Otp.css";
+
 const Otp = () => {
+  const tempUser = useSelector((state) => state.user.tempUser);
+  const userEmail = tempUser?.email || "your email";
   const otpLength = Array(6).fill("");
 
   return (
     <section className="signup-section">
       <div className="image-container">
-        <img src={background} alt="HedgeNest Protection Illustration" />
+        <img src={Signupimg} alt="HedgeNest Protection Illustration" />
       </div>
 
       <div className="form-container">
@@ -26,10 +30,8 @@ const Otp = () => {
           <p className="otp-subtitle">
             A 6-digit code has been sent to your email
             <br />
-            <span className="user-email-highlight">
-              he*****22@gmail.com
-            </span>{" "}
-            for verification
+            <span className="user-email-highlight">{userEmail}</span> for
+            verification
           </p>
 
           <form className="auth-form" onSubmit={(e) => e.preventDefault()}>

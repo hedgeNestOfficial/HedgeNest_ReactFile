@@ -25,8 +25,6 @@ const AboutUs = () => {
 
   return (
     <div className="about-page-container">
-      <Header />
-
       <section className="story-hero">
         <div className="story-badge">
           <span className="sparkle">✦</span> OUR STORY{" "}
@@ -65,8 +63,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

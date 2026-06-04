@@ -6,8 +6,6 @@ import Footer from "../Components/Footer";
 const Policy = () => {
   return (
     <div className="policy-container">
-      <Header />
-
       <main className="policy-section">
         <section className="policy-content">
           <h1 className="policy-heading">Privacy Policy</h1>
@@ -37,8 +35,6 @@ const Policy = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };

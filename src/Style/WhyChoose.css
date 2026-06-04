@@ -1,11 +1,14 @@
 /* Base Section */
 .why-section {
   width: 100%;
-  background: #f7f3e8;
-  padding: 80px 20px;
+  background: #f7f3e8; /* Exact beige tint from your image */
+  padding: 80px 24px;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
+
 .why-container {
   width: 100%;
   max-width: 1200px;
@@ -13,80 +16,132 @@
   flex-direction: column;
   gap: 40px;
 }
+
 .why-header h2 {
-  font-size: 2.2rem;
+  font-size: 32px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
-  text-align: center;
+  text-align: left;
+  letter-spacing: -0.02em;
 }
 
-/* Desktop Flex Layout (No calc) */
+/* Desktop View Layout */
 .desktop-flex-container {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
+  gap: 24px;
   width: 100%;
 }
+
 .flex-card-wrapper {
-  flex: 0 0 33.33%;
-  padding: 12px;
+  width: 30%;
+  flex-grow: 1;
+  display: flex;
   box-sizing: border-box;
 }
 
 @media screen and (max-width: 1024px) {
   .flex-card-wrapper {
-    flex: 0 0 50%;
+    width: 46%;
   }
 }
 
-/* Mobile Carousel Styles */
+/* Mobile Carousel Base Container */
 .mobile-carousel-container {
+  position: relative; /* REQUIRED: Anchor point for absolute side buttons */
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-.carousel-wrapper {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
-}
+
 .carousel-viewport {
   overflow: hidden;
   width: 100%;
 }
+
 .carousel-track {
   display: flex;
-  transition: transform 0.4s ease-in-out;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
 .carousel-slide {
-  min-width: 100%;
+  flex: 0 0 100%;
+  width: 100%;
   box-sizing: border-box;
-  padding: 5px;
+  padding: 4px; /* Room for card drop shadows */
 }
+
+/* Floating Absolute Buttons */
 .carousel-btn {
-  background: #0f172a;
-  color: white;
+  position: absolute;
+  top: 42%; /* Centered vertically relative to the card body */
+  transform: translateY(-50%);
+  z-index: 5;
+  background: #0f172a; /* Dark navy */
+  color: #eab308; /* Gold icon */
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   cursor: pointer;
-  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
 }
+
+.prev-btn {
+  left: -14px; /* Pushes button into the section padding edge */
+}
+
+.next-btn {
+  right: -14px; /* Pushes button into the section padding edge */
+}
+
+/* Muted / Inactive Style (Matches the Left Arrow in your image) */
+.carousel-btn.disabled {
+  background: #b9b2a2;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Dots Setup */
 .carousel-dots {
   display: flex;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 24px;
+  justify-content: center;
+  align-items: center;
 }
+
 .dot {
-  width: 10px;
-  height: 10px;
-  background: #d1d5db;
+  width: 8px;
+  height: 8px;
+  background: #e2d9c2; /* Light beige-gold dot */
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
+
 .dot.active-dot {
-  background: #eab308;
+  background: #eab308; /* Active Gold Dot */
+  transform: scale(1.2);
+}
+
+/* Mobile Media Breakpoint */
+@media screen and (max-width: 768px) {
+  .why-section {
+    padding: 60px 36px; /* High side padding ensures floating buttons don't clip the screen */
+  }
+
+  .why-header h2 {
+    font-size: 26px;
+    text-align: center;
+  }
 }

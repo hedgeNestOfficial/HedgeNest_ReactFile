@@ -26,7 +26,7 @@
 }
 
 .navigation {
-  width: 30%;
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -39,46 +39,68 @@
 .navigation li {
   list-style-type: none;
   cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 500;
+  line-height: 14px;
 }
 
 .navigation li:hover {
-  color: var(--button-primaryColor);
+  color: #c9922a;
 }
 
 .logs {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
 }
 
 .login {
-  width: 152px;
-  height: 49px;
-  border-radius: 4px;
+  background: transparent;
+  border: none;
   font-size: 16px;
   font-weight: 500;
   padding: 20px 10px;
   color: #181739;
   background: var(--primaryWhite);
   cursor: pointer;
+  padding: 0;
+  width: auto;
+  height: auto;
+  transition: color 0.2s ease;
 }
 
 .create {
-  width: 181px;
-  height: 49px;
+  width: 170px;
+  height: 46px;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  border: none;
   cursor: pointer;
-  background-color: var(--button-primaryColor);
+  background: var(--button-primaryColor);
+  box-shadow: 0px 2px 4px rgba(201, 146, 42, 0.2);
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.create:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 .menu {
   display: none;
+  font-size: 24px;
+  cursor: pointer;
 }
 
+/* Mobile Responsiveness Matrix */
 @media (max-width: 768px) {
   .menu {
     display: block;

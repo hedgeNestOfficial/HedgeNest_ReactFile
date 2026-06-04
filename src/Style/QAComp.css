@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: center;
   /* background: #000; */
+  padding: 60px 0;
 
   align-items: center;
   justify-content: center;
@@ -40,7 +41,7 @@
     margin: 0px;
   }
 
-  p {
+  .Descript {
     margin: 0;
     padding: 0;
     font-size: 14.5px;
@@ -62,12 +63,12 @@
   width: 170px;
   height: 50px;
   background: #ffff;
-  color: #1e293b;
+  color: #0f172a;
   border: none;
   border-radius: 6px;
   font-size: 16px;
   border: 1px solid #1e293b;
-  font-weight: 200;
+  font-weight: 500;
   cursor: pointer;
 }
 

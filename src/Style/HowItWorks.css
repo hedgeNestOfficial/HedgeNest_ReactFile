@@ -3,13 +3,13 @@
   background-color: #f4f6f9;
   display: flex;
   justify-content: center;
-  padding: 100px 0;
+  padding: 90px 24px; /* Added side padding to prevent screen edge clipping */
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
 
 .how-container {
-  width: 85%;
+  width: 100%;
   max-width: 1200px;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
 }
 
 .how-header h2 {
-  font-size: 2.25rem;
+  font-size: 32px; /* LOCKED to clean pixels */
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -32,7 +32,7 @@
 }
 
 .how-header p {
-  font-size: 1.1rem;
+  font-size: 16px; /* LOCKED to clean pixels */
   color: #475569;
   margin: 0;
 }
@@ -41,19 +41,16 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
 }
 
+/* DESKTOP LAYOUT (4 items in a row) */
 .how-card-wrapper {
-  width: calc((100% - 60px) / 4);
+  width: 23%;
+  flex-grow: 1; /* Automatically builds even, perfectly filled rows */
   display: flex;
   box-sizing: border-box;
-}
-
-.how-card-wrapper > * {
-  width: 100% !important;
-  max-width: 100% !important;
 }
 
 .how-action-container {
@@ -66,33 +63,44 @@
 .how-button {
   height: 54px;
   padding: 0 44px;
-  font-size: 1.05rem;
+  font-size: 16px;
   font-weight: 600;
-  color: primary-white;
-  background: var(--button-primaryColor);
+  color: #ffffff;
+  background: var(--button-primaryColor, #d2af26);
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
-@media screen and (max-width: 1100px) {
+.how-button:hover {
+  background: #ca8a04;
+}
+
+/* TABLET LAYOUT (2 items per row - Max width: 1005px) */
+@media screen and (max-width: 1005px) {
   .how-card-wrapper {
-    width: calc((100% - 20px) / 2);
+    width: 47%;
   }
 }
 
-@media screen and (max-width: 768px) {
+/* MOBILE LAYOUT (1 stacked item per row - Max width: 750px) */
+@media screen and (max-width: 750px) {
   .how-section {
-    padding: 60px 0;
+    padding: 60px 16px;
   }
 
   .how-container {
-    width: 88%;
     gap: 36px;
   }
 
+  .how-header {
+    align-items: center; /* Centers the heading text on mobile screens */
+    text-align: center;
+  }
+
   .how-header h2 {
-    font-size: 1.75rem;
+    font-size: 26px;
   }
 
   .how-flex-deck {
@@ -101,10 +109,11 @@
   }
 
   .how-card-wrapper {
-    width: 100%;
+    width: 100%; /* Forces cards to take full safety width on mobile */
   }
 
   .how-button {
-    width: 100%;
+    width: 100%; /* Makes your action button mobile-friendly */
+    max-width: 280px;
   }
 }

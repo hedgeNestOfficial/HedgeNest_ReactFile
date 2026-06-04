@@ -26,7 +26,11 @@ const HowItWorks = () => {
         </div>
 
         <div className="how-action-container">
-          <Button text="Get Started" className="how-button" />
+          <Button
+            text="Get Started"
+            className="how-button"
+            onClick={() => navigate("/signup")}
+          />
         </div>
       </div>
     </section>

@@ -28,7 +28,7 @@
   width: 100%;
   min-height: 300px;
 
-  background: radial-gradient(#42409c, #181739);
+  background: radial-gradient(#352e97, #181739);
 
   display: flex;
   flex-direction: column;
@@ -181,6 +181,7 @@
 @media screen and (max-width: 480px) {
   .faqs-Question {
     padding: 50px 16px;
+    gap: 5px;
   }
 
   .faq-Icon {

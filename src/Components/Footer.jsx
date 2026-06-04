@@ -8,8 +8,10 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="footer-container">
       <section className="footer-holder">
@@ -36,7 +38,8 @@ const Footer = () => {
           <div className="footer-box">
             <h4>Company</h4>
             <ul>
-              <li>About Us</li>
+              <li onClick={() => Navigate("/contact")}>Contact Us</li>
+              <li onClick={() => navigate("/about")}>About Us</li>
               <li>Savings</li>
               <li>Investments</li>
               <li>Currency Conversion</li>
@@ -46,27 +49,27 @@ const Footer = () => {
           <div className="footer-box">
             <h4>Business</h4>
             <ul>
-              <li>Stable Coin</li>
-              <li>Savings Vault</li>
-              <li>Tiered Investments</li>
+              <li oonClick={() => navigate("/policy")}>Stable Coin</li>
+              <li onClick={() => Navigate("/save")}>Savings Vault</li>
+              <li onClick={() => Navigate("/invest")}>Tiered Investments</li>
             </ul>
           </div>
 
           <div className="footer-box">
             <h4>Legal</h4>
             <ul>
-              <li>Privacy Policy</li>
-              <li>Terms Of Service</li>
-              <li>Cookie Policy</li>
-              <li>Compliance</li>
+              <li onClick={() => navigate("/policy")}>Privacy Policy</li>
+              <li onClick={() => navigate("/policy")}>Terms Of Service</li>
+              <li onClick={() => navigate("/policy")}>Cookie Policy</li>
+              <li onClick={() => navigate("/policy")}>Compliance</li>
             </ul>
           </div>
 
           <div className="footer-box">
             <h4>Support</h4>
             <ul>
-              <li>Help Center</li>
-              <li>Contact Us</li>
+              <li onClick={() => Navigate("/contact")}>Help Center</li>
+              <li onClick={() => Navigate("/contact")}>Contact Us</li>
             </ul>
           </div>
         </article>
