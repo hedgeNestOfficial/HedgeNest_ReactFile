@@ -1,5 +1,6 @@
 import React from "react";
 import "../../Style/Signup.css";
+// Check if the capital 'S' and lowercase 'i' match the real file exactly
 import Signupimg from "../../assets/Signupimg.jpg";
 import { inputTex } from "../../JS/signupCard";
 import Input from "../../Components/Input";

@@ -154,4 +154,30 @@ export const QAData = [
     answer:
       "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
   },
+
+  {
+    Question: "Is my money safe on HedgeNest?",
+    answer:
+      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+  },
+  {
+    Question: "are there any hiden charges when converting?",
+    answer:
+      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+  },
+  {
+    Question: "How long does converting takes?",
+    answer:
+      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+  },
+  {
+    Question: "Can i withdraw my savings anytime?",
+    answer:
+      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+  },
+  {
+    Question: "How do investment work on HedgeNest?",
+    answer:
+      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+  },
 ];

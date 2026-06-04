@@ -12,14 +12,12 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoEyeOutline, IoHeadset, IoLockClosedSharp } from "react-icons/io5";
 
-
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 
 const Shield = () => {
   return (
     <section className="shield-container">
-      <Header />
       <section className="shield-holder">
         <div className="hero-wrapper">
           <article className="hero-content">
@@ -218,7 +216,6 @@ const Shield = () => {
           </div>
         </section>
       </section>
-      <Footer />
     </section>
   );
 };

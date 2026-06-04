@@ -5,12 +5,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => {
   return (
     <article className="feature-card">
       <div className="feature-card-icon-box">
-        {Icon &&
-          (typeof Icon === "string" ? (
-            <img src={Icon} alt={title} />
-          ) : (
-            <Icon />
-          ))}
+        <img src={Icon} alt={title} />
       </div>
       <div className="feature-card-info">
         <h3 className="feature-card-title">{title}</h3>
