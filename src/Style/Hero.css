@@ -91,29 +91,29 @@
     /* flex-wrap: wrap; */
   }
 
-  .hero-wrapper {
+  .hero-wrap {
     flex-direction: column;
     text-align: center;
     flex-wrap: wrap;
-    /* background: green; */
+    /* background:green; */
     gap: 40px;
   }
 
-  .hero-content {
+  .hero-contents {
     /* background: #000; */
     align-items: flex-start;
     width: 40%;
   }
 
-  .hero-title {
+  .hero-titles {
     font-size: 2.6rem;
   }
 
-  .hero-description {
+  .hero-descriptions {
     max-width: 600px;
   }
 
-  .hero-display-img {
+  .hero-display-imgs {
     width: 60%;
     /* min-width: 500px; */
     /* height: auto; */

@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* position: sticky; */
+  position: sticky;
   box-sizing: border-box;
   z-index: 100;
   /* padding: 0 10px; */
@@ -24,6 +24,7 @@
   width: 132px;
   height: 35px;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .navigation {

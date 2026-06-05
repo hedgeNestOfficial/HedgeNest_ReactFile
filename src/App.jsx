@@ -9,7 +9,7 @@ import Landing from "./Pages/Landing";
 import OtpPage from "./Pages/Auth/Otp";
 import BvnAuth from "./Pages/Auth/BvnAuth";
 import FAQs from "./Pages/FAQs";
-import Shield from "./Pages/Shield";
+import Protect from "./Pages/Protect";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
 
@@ -33,7 +33,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
-          <Route path="/shield" element={<Shield />} />
+          <Route path="/protect" element={<Protect />} />
           <Route path="/save" element={<Save />} />
           <Route path="/invest" element={<Invest />} />
           <Route path="/policy" element={<Policy />} />

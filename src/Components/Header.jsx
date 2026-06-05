@@ -29,7 +29,12 @@ const Header = () => {
   return (
     <header className="header-container">
       <section className="header-wrapper">
-        <img src={logo} alt="HedgeNest Logo" className="logo" />
+        <img
+          src={logo}
+          alt="HedgeNest Logo"
+          className="logo"
+          onClick={() => navigate("/")}
+        />
 
         {/* NAVIGATION */}
 
@@ -40,7 +45,7 @@ const Header = () => {
               color: activeTab === "shield" ? "#c9922a" : "",
             }}
           >
-            Shield
+            Protect
           </li>
 
           <li
