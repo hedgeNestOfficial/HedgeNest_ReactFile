@@ -26,7 +26,7 @@ const LoginPage = () => {
             <LuArrowLeft className="back-arrow-icon" />
           </button>
 
-          <h2>Create Your Account</h2>
+          <h2>Log In Your Account</h2>
 
           <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
             {LoginData.map((item, index) => (
