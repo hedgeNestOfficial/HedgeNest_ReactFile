@@ -7,6 +7,7 @@ const Button = (props) => {
       style={{ background: props.color }}
       className={props.className}
       onClick={props.onClick}
+      onMouseEnter={props.onMouseEnter}
     >
       {props.text}
     </button>

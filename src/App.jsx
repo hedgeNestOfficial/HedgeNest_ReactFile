@@ -45,11 +45,12 @@ const App = () => {
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/kycauth" element={<BvnAuth />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/ready" element={<ReadyComp />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPass />} />
-        <Route path="/new-pass" element={<NewPass />} />
+        <Route path="/newpass" element={<NewPass />} />
         <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/loading" element={<Loading />} />

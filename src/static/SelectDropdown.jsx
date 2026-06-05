@@ -11,11 +11,10 @@ const SelectDropdown = ({ data }) => {
 
   return (
     <div className="select-dropdown-wrapper">
-      <div className="select-dropdown-header" onClick={toggleDropdown}>
-        {/* Wrapped with h3 tag to correctly read your CSS rules */}
+      <div className="select-dropdown-header">
         <h3>{data.Question}</h3>
-        {/* String template literal applies rotation state on click */}
         <LuChevronDown
+          onMouseEnter={toggleDropdown}
           className={`select-dropdown-arrow ${isOpen ? "rotate-arrow" : ""}`}
         />
       </div>
