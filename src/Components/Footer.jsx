@@ -49,7 +49,7 @@ const Footer = () => {
           <div className="footer-box">
             <h4>Business</h4>
             <ul>
-              <li oonClick={() => navigate("/policy")}>Stable Coin</li>
+              <li onClick={() => navigate("/policy")}>Stable Coin</li>
               <li onClick={() => Navigate("/save")}>Savings Vault</li>
               <li onClick={() => Navigate("/invest")}>Tiered Investments</li>
             </ul>

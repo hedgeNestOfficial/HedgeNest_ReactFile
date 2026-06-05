@@ -13,10 +13,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoEyeOutline, IoHeadset, IoLockClosedSharp } from "react-icons/io5";
 
-
-
 const Shield = () => {
-  // Why Protect with USDT
   const featuresData = [
     {
       icon: <BiShieldQuarter className="feature-icon" size={32} />,
@@ -37,7 +34,6 @@ const Shield = () => {
     },
   ];
 
-  //  How it Works Steps
   const stepsData = [
     {
       icon: <FaNairaSign className="feature-icon" size={28} />,
@@ -61,7 +57,6 @@ const Shield = () => {
     },
   ];
 
-  // Why Trust HedgeNest
   const trustData = [
     {
       icon: <FiShield size={28} className="feature-icon" />,
@@ -87,10 +82,7 @@ const Shield = () => {
 
   return (
     <section className="shield-container">
-      
-
       <section className="shield-holder">
-         {/* HERO BANNER SECTION   */}
         <div className="hero-wrapper">
           <article className="hero-content">
             <h1>
@@ -122,7 +114,6 @@ const Shield = () => {
           </article>
         </div>
 
-        {/* FEATURES SECTION  */}
         <section className="features-section">
           <div className="why-usdt-wrapper">
             <h2 className="why-usdt-heading">Why protect with USDT?</h2>
@@ -139,7 +130,6 @@ const Shield = () => {
           </div>
         </section>
 
-         {/* HOW IT WORKS SECTION  */}
         <section className="how-it-works-section">
           <div className="how-it-works-container">
             <h2 className="section-heading">How it works</h2>
@@ -160,7 +150,6 @@ const Shield = () => {
           </div>
         </section>
 
-         {/* HEDGENEST TRUST SECTION  */}
         <section className="hn-trust-section">
           <div className="hn-container">
             <h2 className="hn-title">
@@ -180,8 +169,6 @@ const Shield = () => {
             </div>
           </div>
         </section>
-
-        {/* INFLATION PROMO SECTION  */}
         <section className="inflation-promo-section">
           <div className="inflation-promo-container">
             <div className="inflation-promo-card">
@@ -205,8 +192,6 @@ const Shield = () => {
           </div>
         </section>
       </section>
-
-      
     </section>
   );
 };

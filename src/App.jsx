@@ -39,25 +39,24 @@ const App = () => {
           <Route path="/policy" element={<Policy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
-          <Route path="regulatory" element={<RegulatoryInfo />} />
+          <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
 
         <Route path="/otp" element={<OtpPage />} />
-        <Route path="pin" element={<Pin />} />
+        <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="ReadyComp" element={<ReadyComp />} />
+        <Route path="/ReadyComp" element={<ReadyComp />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="ResetPass" element={<ResetPass />} />
-        <Route path="NewPass" element={<NewPass />} />
-        <Route path="ResetSucessful" element={<ResetSucessful />} />
-        <Route path="wallet" element={<WalletDashboard />} />
-        <Route path="loading" element={<Loading />} />
+        <Route path="/ResetPass" element={<ResetPass />} />
+        <Route path="/NewPass" element={<NewPass />} />
+        <Route path="/ResetSucessful" element={<ResetSucessful />} />
+        <Route path="/wallet" element={<WalletDashboard />} />
+        <Route path="/loading" element={<Loading />} />
 
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
-   
   );
 };
 

@@ -10,12 +10,10 @@ import { LuArrowLeft } from "react-icons/lu";
 const LoginPage = () => {
   return (
     <section className="signup-section">
-      {/* Left Column: Media Banner */}
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
       </div>
 
-      {/* Right Column: Form Container */}
       <div className="form-container">
         <div className="signup-form-wrapper">
           <button
@@ -39,16 +37,6 @@ const LoginPage = () => {
                 className="input-group-wrapper"
               />
             ))}
-
-            <div className="checkbox-container">
-              <input type="checkbox" id="terms" />
-              <label htmlFor="terms">
-                I agree to the{" "}
-                <span className="highlight-link">Terms & Conditions</span> and{" "}
-                <span className="highlight-link">Privacy Policy.</span>
-              </label>
-            </div>
-
             <Button
               text="Login"
               type="submit"

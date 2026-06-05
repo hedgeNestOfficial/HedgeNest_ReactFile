@@ -6,7 +6,7 @@
   font-size: 0.95rem;
   line-height: 1.5;
   color: #475569;
-  margin-bottom: 28px;
+  margin-bottom: 32px; /* Increased from 28px for better separation */
 }
 
 .user-email-highlight {
@@ -18,46 +18,32 @@
    OTP INPUT SECTION
 ========================= */
 
-.otp-inputs-row {
-  width: 100%;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-.otp-inputs-row label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #0f172a;
-}
-
+/* The main flex container for the 6 boxes */
 .otp-input {
   width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: nowrap;
+  justify-content: space-between; /* Spreads the boxes evenly across the container */
+  gap: 10px;
+  margin-bottom: 32px; /* Creates breathing room before the Next button */
 }
 
 .otp-box {
-  width: 48px;
-  height: 54px;
-
+  width: 52px; /* Slightly wider for a better touch target */
+  height: 56px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
-
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.25rem; /* Larger font for OTP digits */
   font-weight: 600;
-
+  color: #0f172a;
   outline: none;
-  transition: 0.2s ease;
+  background: transparent;
+  transition: all 0.2s ease;
 }
 
 .otp-box:focus {
   border-color: #eab308;
-  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15); /* Softer, thicker focus ring */
 }
 
 /* =========================
@@ -67,19 +53,13 @@
 .otp-submit-btn {
   width: 100%;
   height: 54px;
-
   border: none;
   border-radius: 6px;
-
-  background: var(--button-primaryColor);
+  background: var(--button-primaryColor, #eab308); /* Added fallback color */
   color: white !important;
-
   font-size: 1rem;
   font-weight: 600;
-
   cursor: pointer;
-  margin-top: 10px;
-
   transition: 0.2s ease;
 }
 
@@ -92,31 +72,33 @@
 ========================= */
 
 .down-action-container {
-  margin-top: 22px;
-
+  margin-top: 28px; /* Pushed down slightly for balance */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center; /* Centers the footer links perfectly under the button */
+  gap: 16px;
 }
 
 .down-action-container p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .resend-countdown {
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .countdown-timer {
   color: #0f172a;
   font-weight: 700;
+  margin-left: 4px;
 }
 
 .edit-email-action {
   color: #0f172a;
   font-weight: 600;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
 .edit-email-action:hover {
@@ -124,70 +106,8 @@
 }
 
 /* =========================
-   INPUT ROWS
+   MOBILE RESPONSIVE
 ========================= */
-
-.Auth-inputs-row {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.Auth-inputs-row label {
-  display: block;
-  margin-bottom: 8px;
-
-  font-size: 0.95rem;
-  font-weight: 500;
-
-  color: #0f172a;
-}
-
-.input-tag {
-  width: 100%;
-  height: 54px;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 14px;
-
-  transition: 0.2s ease;
-}
-
-.input-tag:focus-within {
-  border-color: #eab308;
-}
-
-.input-tag input {
-  width: 100%;
-  height: 100%;
-
-  border: none;
-  outline: none;
-
-  font-size: 0.95rem;
-  background: transparent;
-}
-
-.icon,
-.icon1 {
-  font-size: 18px;
-  color: #64748b;
-}
-
-/* =========================
-   SUCCESS TEXT
-========================= */
-
-.otp-inputs-text {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 24px;
-}
 
 @media screen and (max-width: 768px) {
   .signup-section {
@@ -208,22 +128,16 @@
     width: 100%;
     max-width: 100%;
   }
-
-  .otp-box {
-    height: 50px;
-    max-width: 46px;
-    font-size: 1rem;
-  }
 }
 
 @media screen and (max-width: 480px) {
   .otp-input {
-    gap: 8px;
+    gap: 8px; /* Slightly tighter gap on very small screens */
   }
 
   .otp-box {
-    width: 42px;
-    height: 48px;
-    font-size: 1rem;
+    width: 44px; /* Scaled down for mobile */
+    height: 50px;
+    font-size: 1.1rem;
   }
 }

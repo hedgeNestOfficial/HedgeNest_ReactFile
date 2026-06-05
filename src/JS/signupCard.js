@@ -69,7 +69,7 @@ export const LoginData = [
   },
   {
     label: "Password",
-    type: "text",
+    type: "password",
     placeholder: "Enter password ",
     // note: <FaChevronDown />,
   },
