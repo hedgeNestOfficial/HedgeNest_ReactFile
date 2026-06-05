@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Input = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,7 +22,7 @@ const Input = (props) => {
             className="eye-icon"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
+            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
           </span>
         )}
       </div>

@@ -167,7 +167,6 @@ const Otp = () => {
               color="#c9922a"
             />
 
-            {/* ACTIONS */}
             <div className="otp-footer-actions">
               <p>
                 Didn’t receive code?

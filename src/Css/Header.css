@@ -8,6 +8,7 @@
   position: relative;
   box-sizing: border-box;
   z-index: 100;
+  padding: 0 10px;
 }
 
 .header-wrapper {
@@ -114,12 +115,10 @@
     z-index: 102;
   }
 
-  /* Hide the desktop inline log block completely */
   .logs {
     display: none;
   }
 
-  /* Dropdown UI drawer alignment layout modifications */
   .navigation {
     display: flex;
     flex-direction: column;
@@ -141,7 +140,10 @@
     pointer-events: none;
     transform: translateY(-10px);
     overflow: hidden;
-    transition: max-height 0.25s ease-out, opacity 0.2s ease, transform 0.2s ease;
+    transition:
+      max-height 0.25s ease-out,
+      opacity 0.2s ease,
+      transform 0.2s ease;
   }
 
   .navigation.open {
@@ -168,7 +170,6 @@
     border-bottom: none;
   }
 
-  /* Stretch actions wide for comfortable touchscreen click surfaces */
   .navigation .mobile-dropdown-logs .login,
   .navigation .mobile-dropdown-logs .create {
     width: 90%;

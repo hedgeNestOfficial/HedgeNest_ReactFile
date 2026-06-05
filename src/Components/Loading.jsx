@@ -3,6 +3,8 @@ import background from "../assets/Signupimg.jpg";
 import { LuArrowLeft } from "react-icons/lu";
 import Button from "../Components/Button"; // Ensure your relative path to Button matches
 import "../Style/Otp.css";
+import { BvnAuthData } from "../JS/signupCard";
+import Input from "../Components/Input";
 
 const Loading = () => {
   return (

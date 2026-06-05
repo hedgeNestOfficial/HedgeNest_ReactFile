@@ -26,7 +26,6 @@ const Hero = () => {
           />
         </div>
 
-        {/* Image Container (Right Side) */}
         <div className="hero-image-container">
           <img
             src="https://i.postimg.cc/vH7WpFyt/Landing-Hero.png"
