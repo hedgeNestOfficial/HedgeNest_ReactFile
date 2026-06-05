@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  padding: 20px 0;
 }
 
 .footer-holder {
@@ -117,6 +118,9 @@
 }
 
 @media (max-width: 900px) {
+  .footer-container {
+    padding: 40px;
+  }
   .Footer-logo-con {
     flex: 1 1 100%;
     margin-bottom: 10px;
@@ -129,7 +133,7 @@
 
 @media (max-width: 500px) {
   .footer-container {
-    padding: 40px 0 20px 0;
+    padding: 40px;
   }
 
   .footer-up {

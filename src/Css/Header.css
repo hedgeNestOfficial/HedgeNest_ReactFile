@@ -8,6 +8,7 @@
   position: relative;
   box-sizing: border-box;
   z-index: 100;
+  padding: 0 10px;
 }
 
 .header-wrapper {
@@ -100,7 +101,6 @@
   cursor: pointer;
 }
 
-/* Mobile Responsiveness Matrix */
 @media (max-width: 768px) {
   .menu {
     display: block;
@@ -109,12 +109,10 @@
     z-index: 102;
   }
 
-  /* Hide the desktop button logs container */
   .logs {
     display: none;
   }
 
-  /* Convert the navigation list into a mobile drop drawer */
   .navigation {
     display: flex;
     flex-direction: column;
@@ -137,9 +135,6 @@
     transition: all 0.2s ease-in-out;
   }
 
-  /* HOVER APPROACH: When the user hovers over the header wrapper context area, 
-    the menu unrolls automatically without requiring custom JS click binders.
-  */
   .header-wrapper:hover .navigation {
     opacity: 1;
     pointer-events: auto;

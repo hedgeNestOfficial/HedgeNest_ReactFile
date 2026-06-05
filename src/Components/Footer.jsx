@@ -38,7 +38,7 @@ const Footer = () => {
           <div className="footer-box">
             <h4>Company</h4>
             <ul>
-              <li onClick={() => Navigate("/contact")}>Contact Us</li>
+              <li onClick={() => navigate("/contact")}>Contact Us</li>
               <li onClick={() => navigate("/about")}>About Us</li>
               <li>Savings</li>
               <li>Investments</li>
@@ -50,8 +50,8 @@ const Footer = () => {
             <h4>Business</h4>
             <ul>
               <li onClick={() => navigate("/policy")}>Stable Coin</li>
-              <li onClick={() => Navigate("/save")}>Savings Vault</li>
-              <li onClick={() => Navigate("/invest")}>Tiered Investments</li>
+              <li onClick={() => navigate("/save")}>Savings Vault</li>
+              <li onClick={() => navigate("/invest")}>Tiered Investments</li>
             </ul>
           </div>
 
@@ -68,8 +68,8 @@ const Footer = () => {
           <div className="footer-box">
             <h4>Support</h4>
             <ul>
-              <li onClick={() => Navigate("/contact")}>Help Center</li>
-              <li onClick={() => Navigate("/contact")}>Contact Us</li>
+              <li onClick={() => navigate("/contact")}>Help Center</li>
+              <li onClick={() => navigate("/contact")}>Contact Us</li>
             </ul>
           </div>
         </article>

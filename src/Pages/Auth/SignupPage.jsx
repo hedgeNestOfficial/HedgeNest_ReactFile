@@ -1,40 +1,25 @@
 import React, { useEffect, useState } from "react";
-
 import "../../Style/Signup.css";
-
 import Signupimg from "../../assets/Signupimg.jpg";
-
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
-
 import { inputTex } from "../../JS/signupCard";
-
 import { FcGoogle } from "react-icons/fc";
 import { LuArrowLeft } from "react-icons/lu";
-
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
-
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { signupSchema } from "../../Validation/authSchema";
-
 import { registerUser } from "../../Services/authService";
-
 import { signup } from "../../Store/UserSlice";
+import WhiteLogo from "../../assets/white logo.png";
 
 const SignupPage = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   const [apiError, setApiError] = useState("");
-
   const [successMessage, setSuccessMessage] = useState("");
-
   const {
     register,
     handleSubmit,
@@ -122,6 +107,7 @@ const SignupPage = () => {
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+        {/* <img src={WhiteLogo} alt="HedgeNest" className="signupage-logo" /> */}
       </div>
 
       <div className="form-container">
