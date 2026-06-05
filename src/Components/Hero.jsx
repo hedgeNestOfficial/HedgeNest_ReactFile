@@ -7,7 +7,7 @@ const Hero = () => {
   const navigate = useNavigate();
   return (
     <section className="hero">
-      <div className="hero-wrapper">
+      <div className="hero-wrap">
         <div className="hero-content">
           <h1 className="hero-title">
             Protect Your Money, <br />
@@ -26,7 +26,6 @@ const Hero = () => {
           />
         </div>
 
-        {/* Image Container (Right Side) */}
         <div className="hero-image-container">
           <img
             src="https://i.postimg.cc/vH7WpFyt/Landing-Hero.png"

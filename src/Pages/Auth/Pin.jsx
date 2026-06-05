@@ -2,7 +2,7 @@ import React from "react";
 import Signupimg from "../../assets/Signupimg.jpg";
 // import { LuArrowLeft } from "react-icons/lu";
 import { LuArrowLeft } from "react-icons/lu";
-import Button from "../../Components/Button"; // Ensure your relative path to Button matches
+import Button from "../../Components/Button";
 import "../../Style/Otp.css";
 const Pin = () => {
   const otpLength = Array(6).fill("");
