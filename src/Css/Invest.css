@@ -12,17 +12,18 @@
   background: linear-gradient(135deg, #22225b 0%, #171742 100%);
   width: 100%;
   height: 60%;
-  padding: 80px 24px;
+  padding: 80px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .inv-container {
-  width: 90%;
-  height: 100%;
+  width: 95%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  /* background-color: #f3c152; */
 }
 .inv-content {
   flex: 1;

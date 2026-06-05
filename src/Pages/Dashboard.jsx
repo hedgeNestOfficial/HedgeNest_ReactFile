@@ -5,24 +5,25 @@ import { IoPersonCircle } from "react-icons/io5";
 
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
-import Sidebar from '../Components/Sidebar'
+import Sidebar from "../Components/Sidebar";
 
 const Dashboard = () => {
   return (
     <section>
       <div className="Dash-container">
-        <section className="Dash-left"><Sidebar /></section>
+        <section className="Dash-left">
+          <Sidebar />
+        </section>
         <section className="Dash-right">
           <section className="dr-holder">
             <article className="dr-header">
               <div>
-               
                 <p>Welcome Abayomi,</p>
                 <h3>Your nest,today.</h3>
               </div>
               <div>
-                <IoNotificationsSharp  />
-                <IoPersonCircle  />
+                <IoNotificationsSharp />
+                <IoPersonCircle />
               </div>
             </article>
             <article className="dr-balance">
@@ -34,7 +35,9 @@ const Dashboard = () => {
                 <div className="other-balances">
                   <div className="Ngn-balance">
                     <p>NGN BALANCE</p>
-                    <h2><span>{'\u20A6'}  </span>  <span>0</span></h2>
+                    <h2>
+                      <span>{"\u20A6"} </span> <span>0</span>
+                    </h2>
                   </div>
                   <div className="usdt-balance">
                     <p>USDT BALANCE</p>
@@ -65,7 +68,7 @@ const Dashboard = () => {
               <div className="vault">
                 <div className="upper-section">
                   <h3>Smart Vaults</h3>
-                  <div style={{ display: "flex", gap:"10px" }}>
+                  <div style={{ display: "flex", gap: "10px" }}>
                     <p>View all</p>
                     <div className="icon-holder">
                       <IoIosArrowRoundForward className="arrow-icon" />
@@ -73,14 +76,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="lower-section">
-                  <p>₦0.00</p>
+                  <p>0</p>
                   <p>Acive Savings Plan</p>
                 </div>
               </div>
               <div className="investment">
                 <div className="upper-section">
                   <h3>Investments</h3>
-                  <div style={{display:"flex", gap:"10px"}}>
+                  <div style={{ display: "flex", gap: "10px" }}>
                     <p>View all</p>
                     <div className="icon-holder">
                       <IoIosArrowRoundForward className="arrow-icon" />
