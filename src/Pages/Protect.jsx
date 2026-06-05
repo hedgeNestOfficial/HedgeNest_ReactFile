@@ -13,7 +13,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoEyeOutline, IoHeadset, IoLockClosedSharp } from "react-icons/io5";
 
-const Shield = () => {
+const Protect = () => {
   const featuresData = [
     {
       icon: <BiShieldQuarter className="feature-icon" size={32} />,
@@ -97,7 +97,7 @@ const Shield = () => {
 
             <div className="hero-cta-group">
               <Button className="btn-primary" text="Convert Now" />
-              <Button className="btn-secondary" text="How it works" />
+              <Button className="btn-second" text="How it works" />
             </div>
           </article>
 
@@ -196,4 +196,4 @@ const Shield = () => {
   );
 };
 
-export default Shield;
+export default Protect;
