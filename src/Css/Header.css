@@ -34,6 +34,8 @@
   font-size: 16px;
   font-weight: 500;
   color: #0a0917;
+  margin: 0;
+  padding: 0;
 }
 
 .navigation li {
@@ -48,6 +50,11 @@
   color: #c9922a;
 }
 
+/* Hidden on desktop views naturally */
+.mobile-dropdown-logs {
+  display: none !important;
+}
+
 .logs {
   display: flex;
   align-items: center;
@@ -60,7 +67,6 @@
   border: none;
   font-size: 16px;
   font-weight: 500;
-  padding: 20px 10px;
   color: #181739;
   background: var(--primaryWhite);
   cursor: pointer;
@@ -100,7 +106,6 @@
   cursor: pointer;
 }
 
-/* Mobile Responsiveness Matrix */
 @media (max-width: 768px) {
   .menu {
     display: block;
@@ -109,50 +114,73 @@
     z-index: 102;
   }
 
-  /* Hide the desktop button logs container */
+  /* Hide the desktop inline log block completely */
   .logs {
     display: none;
   }
 
-  /* Convert the navigation list into a mobile drop drawer */
+  /* Dropdown UI drawer alignment layout modifications */
   .navigation {
     display: flex;
     flex-direction: column;
     position: absolute;
     top: 100%;
     right: 5%;
-    width: 200px;
+    width: 220px;
     background-color: #ffffff;
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 0px 16px;
     height: auto;
     align-items: flex-start;
-    gap: 12px;
+    gap: 0;
+    box-sizing: border-box;
 
-    /* Hidden by default */
+    max-height: 0;
     opacity: 0;
     pointer-events: none;
     transform: translateY(-10px);
-    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    transition: max-height 0.25s ease-out, opacity 0.2s ease, transform 0.2s ease;
   }
 
-  /* HOVER APPROACH: When the user hovers over the header wrapper context area, 
-    the menu unrolls automatically without requiring custom JS click binders.
-  */
-  .header-wrapper:hover .navigation {
+  .navigation.open {
+    max-height: 450px;
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+    padding: 8px 16px 16px 16px;
   }
 
   .navigation li {
     width: 100%;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 14px 8px;
+    border-bottom: 1px solid #f5f5f7;
+    box-sizing: border-box;
   }
 
-  .navigation li:last-child {
+  .navigation .mobile-dropdown-logs {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 0 4px 0;
     border-bottom: none;
+  }
+
+  /* Stretch actions wide for comfortable touchscreen click surfaces */
+  .navigation .mobile-dropdown-logs .login,
+  .navigation .mobile-dropdown-logs .create {
+    width: 90%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .navigation .mobile-dropdown-logs .login {
+    border: 1px solid rgba(24, 23, 57, 0.15);
+    border-radius: 4px;
   }
 }

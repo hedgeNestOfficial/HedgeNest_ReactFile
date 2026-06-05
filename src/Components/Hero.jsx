@@ -7,7 +7,7 @@ const Hero = () => {
   const navigate = useNavigate();
   return (
     <section className="hero">
-      <div className="hero-wrapper">
+      <div className="hero-wrap">
         <div className="hero-content">
           <h1 className="hero-title">
             Protect Your Money, <br />
