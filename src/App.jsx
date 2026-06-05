@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "./Components/Button";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HeroPage from "./Pages/HeroPage";
 import Dashboard from "./Pages/Dashboard";
@@ -9,15 +9,15 @@ import Landing from "./Pages/Landing";
 import OtpPage from "./Pages/Auth/Otp";
 import BvnAuth from "./Pages/Auth/BvnAuth";
 import FAQs from "./Pages/FAQs";
-import save from "./Pages/Save";
 import Shield from "./Pages/Shield";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
+
 import Pin from "./Pages/Auth/Pin";
 import ReadyComp from "./Pages/Auth/ReadyComp";
 import ResetPass from "./Pages/Auth/ResetPass";
 import NewPass from "./Pages/Auth/NewPass";
-import ResetSucessful from "./Pages/Auth/ResetSuccessful";
+import ResetSuccessful from "./Pages/Auth/ResetSuccessful";
 import MainLayout from "./Layout/MainLayout";
 import WalletDashboard from "./Pages/WalletDashboard";
 import Loading from "./Components/Loading";
@@ -46,11 +46,11 @@ const App = () => {
         <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/ReadyComp" element={<ReadyComp />} />
+        <Route path="/ready" element={<ReadyComp />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/ResetPass" element={<ResetPass />} />
-        <Route path="/NewPass" element={<NewPass />} />
-        <Route path="/ResetSucessful" element={<ResetSucessful />} />
+        <Route path="/reset" element={<ResetPass />} />
+        <Route path="/new-pass" element={<NewPass />} />
+        <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/loading" element={<Loading />} />
 
