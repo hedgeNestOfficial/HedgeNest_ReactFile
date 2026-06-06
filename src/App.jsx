@@ -25,6 +25,8 @@ import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
+import DashboardLayout from "./Layout/Dashboardlayout";
+import ConvertPage from "./Pages/ConvertPage";
 
 const App = () => {
   return (
@@ -41,10 +43,14 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
+        <Route element={<DashboardLayout />}></Route>
 
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/ConvertPage" element={ <ConvertPage />} />
+        <Route path="/bvn" element={<BvnAuth />} />
+        
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/ready" element={<ReadyComp />} />
         <Route path="/login" element={<LoginPage />} />
@@ -57,6 +63,7 @@ const App = () => {
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
+   
   );
 };
 
