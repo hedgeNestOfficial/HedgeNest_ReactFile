@@ -101,3 +101,20 @@ export const createTransactionPin = async (payload, token) => {
     throw error;
   }
 };
+
+export const createPin = async (payload, token) => {
+  try {
+    const response = await axios.post(ENDPOINTS.AUTH.CREATE_PIN, payload, {
+      headers: {
+        ...API_CONFIG.headers,
+        Authorization: `Bearer ${token}`,
+      },
+
+      timeout: API_CONFIG.timeout,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

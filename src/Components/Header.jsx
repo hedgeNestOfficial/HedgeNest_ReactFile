@@ -13,16 +13,12 @@ import Button from "./Button";
 
 const Header = () => {
   const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState("");
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNavigation = (tab, route) => {
     setActiveTab(tab);
-
     setIsMenuOpen(false);
-
     navigate(route);
   };
 
@@ -36,13 +32,11 @@ const Header = () => {
           onClick={() => navigate("/")}
         />
 
-        {/* NAVIGATION */}
-
         <ul className={`navigation ${isMenuOpen ? "open" : ""}`}>
           <li
-            onClick={() => handleNavigation("shield", "/shield")}
+            onClick={() => handleNavigation("protect", "/protect")}
             style={{
-              color: activeTab === "shield" ? "#c9922a" : "",
+              color: activeTab === "protect" ? "#c9922a" : "",
             }}
           >
             Protect

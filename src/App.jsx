@@ -25,6 +25,7 @@ import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
+import NotFoundPage from "./Pages/NotFoundPage";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
 
+        <Route path="/*" element={<NotFoundPage />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
