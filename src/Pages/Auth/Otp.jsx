@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -7,49 +7,35 @@ import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
 import { LuArrowLeft } from "react-icons/lu";
 import { verifyOtp, resendOtp } from "../../Services/authService";
+import toast from "react-hot-toast";
 
 const Otp = () => {
   const navigate = useNavigate();
   const inputRefs = useRef([]);
+
   const tempUser = useSelector((state) => state.user.tempUser);
+
   const userEmail = tempUser?.email || "";
+
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [apiError, setApiError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!apiError) return;
-
-    const timer = setTimeout(() => {
-      setApiError("");
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, [apiError]);
-
-  useEffect(() => {
-    if (!successMessage) return;
-
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, [successMessage]);
 
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
+
     const updatedOtp = [...otp];
     updatedOtp[index] = value;
+
     setOtp(updatedOtp);
 
+    // Move to next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e, index) => {
+    // Move backward on backspace
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -57,16 +43,17 @@ const Otp = () => {
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+
     const otpCode = otp.join("");
+
     if (otpCode.length !== 6) {
-      setApiError("Please enter the complete 6-digit OTP");
+      toast.error("Please enter the complete 6-digit OTP");
+
       return;
     }
 
     try {
       setIsLoading(true);
-      setApiError("");
-      setSuccessMessage("");
 
       const payload = {
         email: userEmail,
@@ -75,13 +62,13 @@ const Otp = () => {
 
       const response = await verifyOtp(payload);
 
-      setSuccessMessage(response?.message || "OTP verified successfully");
+      toast.success(response?.message || "OTP verified successfully");
 
       setTimeout(() => {
         navigate("/bvn");
       }, 1500);
     } catch (error) {
-      setApiError(
+      toast.error(
         error.response?.data?.message || "Invalid OTP. Please try again.",
       );
 
@@ -93,21 +80,17 @@ const Otp = () => {
 
   const handleResendOtp = async () => {
     try {
-      setApiError("");
-
-      setSuccessMessage("");
-
       const response = await resendOtp({
         email: userEmail,
       });
 
-      setSuccessMessage(response?.message || "OTP resent successfully");
+      toast.success(response?.message || "OTP resent successfully");
 
       setOtp(["", "", "", "", "", ""]);
 
       inputRefs.current[0]?.focus();
     } catch (error) {
-      setApiError(error.response?.data?.message || "Failed to resend OTP");
+      toast.error(error.response?.data?.message || "Failed to resend OTP");
 
       console.log(error);
     }
@@ -136,12 +119,6 @@ const Otp = () => {
             <span className="user-email-highlight"> {userEmail}</span>
           </p>
 
-          {apiError && <div className="api-error-message">{apiError}</div>}
-
-          {successMessage && (
-            <div className="success-message">{successMessage}</div>
-          )}
-
           <form className="auth-form" onSubmit={handleVerifyOtp}>
             <div className="otp-input-container">
               {otp.map((digit, index) => (
@@ -149,6 +126,7 @@ const Otp = () => {
                   key={index}
                   ref={(el) => (inputRefs.current[index] = el)}
                   type="text"
+                  inputMode="numeric"
                   maxLength={1}
                   value={digit}
                   className="otp-box"
@@ -158,7 +136,6 @@ const Otp = () => {
               ))}
             </div>
 
-            {/* BUTTON */}
             <Button
               text={isLoading ? "Verifying..." : "Verify OTP"}
               type="submit"

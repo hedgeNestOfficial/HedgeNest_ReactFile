@@ -1,8 +1,12 @@
+.otp-input/* =========================
+   OTP SUBTITLE
+========================= */
+
 .otp-subtitle {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #475569;
-  margin-bottom: 32px; /* Increased from 28px for better separation */
+  margin-bottom: 32px;
 }
 
 .user-email-highlight {
@@ -10,31 +14,48 @@
   color: #0f172a;
 }
 
-.otp-input {
+/* =========================
+   OTP INPUT CONTAINER
+========================= */
+
+.otp-input-container {
   width: 100%;
   display: flex;
-  justify-content: space-between; /* Spreads the boxes evenly across the container */
-  gap: 10px;
-  margin-bottom: 32px; /* Creates breathing room before the Next button */
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  margin: 30px 0;
 }
 
+/* =========================
+   OTP BOX
+========================= */
+
 .otp-box {
-  width: 52px; /* Slightly wider for a better touch target */
+  width: 56px;
   height: 56px;
+
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  border-radius: 10px;
+
   text-align: center;
-  font-size: 1.25rem; /* Larger font for OTP digits */
+
+  font-size: 1.2rem;
   font-weight: 600;
+
   color: #0f172a;
+  background: #ffffff;
+
   outline: none;
-  background: transparent;
+
   transition: all 0.2s ease;
 }
 
 .otp-box:focus {
   border-color: #eab308;
-  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15); /* Softer, thicker focus ring */
+
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
 }
 
 /* =========================
@@ -44,13 +65,19 @@
 .otp-submit-btn {
   width: 100%;
   height: 54px;
+
   border: none;
   border-radius: 6px;
-  background: var(--button-primaryColor, #eab308); /* Added fallback color */
-  color: white !important;
+
+  background: #eab308;
+
+  color: #ffffff !important;
+
   font-size: 1rem;
   font-weight: 600;
+
   cursor: pointer;
+
   transition: 0.2s ease;
 }
 
@@ -62,38 +89,42 @@
    FOOTER ACTIONS
 ========================= */
 
-.down-action-container {
-  margin-top: 28px; /* Pushed down slightly for balance */
+.otp-footer-actions {
+  margin-top: 24px;
+
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers the footer links perfectly under the button */
-  gap: 16px;
+  align-items: center;
+
+  gap: 14px;
 }
 
-.down-action-container p {
+.otp-footer-actions p {
   margin: 0;
-  font-size: 0.95rem;
-}
 
-.resend-countdown {
+  font-size: 0.95rem;
+
   color: #64748b;
 }
 
-.countdown-timer {
-  color: #0f172a;
-  font-weight: 700;
-  margin-left: 4px;
-}
+.otp-footer-actions span {
+  margin-left: 5px;
 
-.edit-email-action {
-  color: #0f172a;
   font-weight: 600;
+
+  color: #eab308;
+
   cursor: pointer;
-  transition: color 0.2s ease;
 }
 
-.edit-email-action:hover {
-  color: #eab308;
+.edit-email {
+  cursor: pointer !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+.edit-email:hover {
+  color: #eab308 !important;
 }
 
 /* =========================
@@ -122,13 +153,14 @@
 }
 
 @media screen and (max-width: 480px) {
-  .otp-input {
-    gap: 8px; /* Slightly tighter gap on very small screens */
+  .otp-input-container {
+    gap: 8px;
   }
 
   .otp-box {
-    width: 44px; /* Scaled down for mobile */
+    width: 46px;
     height: 50px;
-    font-size: 1.1rem;
+
+    font-size: 1rem;
   }
 }

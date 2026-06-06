@@ -1,25 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
+
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
+
 import { inputTex } from "../../JS/signupCard";
+
 import { FcGoogle } from "react-icons/fc";
 import { LuArrowLeft } from "react-icons/lu";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import toast from "react-hot-toast";
+
 import { signupSchema } from "../../Validation/authSchema";
 import { registerUser } from "../../Services/authService";
 import { signup } from "../../Store/UserSlice";
-import WhiteLogo from "../../assets/white logo.png";
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [apiError, setApiError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -36,53 +42,71 @@ const SignupPage = () => {
       email: "",
       phoneNumber: "",
       password: "",
+      confirmPassword: "",
       terms: false,
     },
   });
 
-  const isChecked = watch("terms");
+  /*
+  =========================================
+  WATCHED VALUES
+  =========================================
+  */
+
+  const watchedFields = watch();
+
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  /*
+  =========================================
+  PASSWORD MATCH MONITOR
+  =========================================
+  */
 
   useEffect(() => {
-    if (!apiError) return;
+    if (
+      password?.length >= 8 &&
+      confirmPassword?.length >= 8 &&
+      password !== confirmPassword
+    ) {
+      toast.error("Passwords do not match");
+    }
+  }, [password, confirmPassword]);
 
-    const timer = setTimeout(() => {
-      setApiError("");
-    }, 4000);
+  /*
+  =========================================
+  FORM FILLED STATE
+  =========================================
+  */
 
-    return () => clearTimeout(timer);
-  }, [apiError]);
+  const isFormFilled =
+    watchedFields.firstName?.trim() &&
+    watchedFields.email?.trim() &&
+    watchedFields.phoneNumber?.trim() &&
+    watchedFields.password?.trim() &&
+    watchedFields.confirmPassword?.trim() &&
+    watchedFields.terms;
 
-  useEffect(() => {
-    if (!successMessage) return;
-
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, [successMessage]);
+  /*
+  =========================================
+  SUBMIT FUNCTION
+  =========================================
+  */
 
   const onSubmitForm = async (data) => {
     try {
-      setApiError("");
-
-      setSuccessMessage("");
-
       const payload = {
         firstName: data.firstName.trim(),
-
         lastName: data.lastName?.trim() || "",
-
         email: data.email,
-
         phoneNumber: data.phoneNumber,
-
         password: data.password,
       };
 
       const response = await registerUser(payload);
 
-      setSuccessMessage(response.message || "OTP sent successfully");
+      toast.success(response.message || "OTP sent successfully");
 
       dispatch(
         signup({
@@ -97,7 +121,7 @@ const SignupPage = () => {
         navigate("/otp");
       }, 1500);
     } catch (error) {
-      setApiError(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
 
       console.log(error);
     }
@@ -107,7 +131,6 @@ const SignupPage = () => {
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
-        {/* <img src={WhiteLogo} alt="HedgeNest" className="signupage-logo" /> */}
       </div>
 
       <div className="form-container">
@@ -121,12 +144,6 @@ const SignupPage = () => {
           </button>
 
           <h2>Create Your Account</h2>
-
-          {apiError && <div className="api-error-message">{apiError}</div>}
-
-          {successMessage && (
-            <div className="success-message">{successMessage}</div>
-          )}
 
           <form className="auth-form" onSubmit={handleSubmit(onSubmitForm)}>
             {inputTex.map((item, index) => (
@@ -160,8 +177,8 @@ const SignupPage = () => {
               text={isSubmitting ? "Signing up..." : "Sign Up"}
               type="submit"
               className="signup-submit-btn"
-              disabled={!isChecked || isSubmitting}
-              color={isChecked ? "#c9922a" : "#bdbdbd"}
+              disabled={!isFormFilled || isSubmitting}
+              color={isFormFilled ? "#c9922a" : "#bdbdbd"}
             />
 
             <div className="form-divider">
@@ -177,7 +194,7 @@ const SignupPage = () => {
               Already have an account?{" "}
               <span
                 className="highlight-link bold-link"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/bvn")}
               >
                 Log In
               </span>

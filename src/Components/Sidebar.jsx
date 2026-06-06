@@ -1,17 +1,19 @@
 import React from "react";
 import "../Css/Sidebar.css";
 import logo from "../assets/white logo.png"; // Your HedgeNest shield logo asset
-import { 
-  IoGridOutline, 
-  IoWalletOutline, 
-  IoSwapHorizontalOutline, 
-  IoTrendingUpOutline, 
-  IoPersonOutline, 
-  IoLogOutOutline 
+import { useDispatch } from "react-redux";
+import {
+  IoGridOutline,
+  IoWalletOutline,
+  IoSwapHorizontalOutline,
+  IoTrendingUpOutline,
+  IoPersonOutline,
+  IoLogOutOutline,
 } from "react-icons/io5";
 import { FaPiggyBank } from "react-icons/fa6"; // Standard outline piggy bank for Smart Safe
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   return (
     <aside className="sidebar-wrapper">
       {/* Brand Header Unit */}
@@ -87,7 +89,9 @@ const Sidebar = () => {
           <span className="sb-icon-wrapper">
             <IoLogOutOutline className="sb-icon" />
           </span>
-          <span className="sb-link-label">Sign Out</span>
+          <span className="sb-link-label" onClick={() => dispatch(signOut())}>
+            Sign Out
+          </span>
         </button>
       </div>
     </aside>

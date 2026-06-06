@@ -1,0 +1,444 @@
+/* Container & Title Layout */
+.signup-form-wrapper h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between input rows */
+}
+
+.Auth-inputs-row {
+  width: 100%;
+}
+
+.Auth-inputs-row label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+/* =========================================
+   SIMPLE FLEXBOX INPUT CONTAINER
+   ========================================= */
+.input-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes input left, icon right */
+  width: 100%;
+  height: 50px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 15px; /* Side padding inside the box */
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+/* Change border color to Gold when clicking inside */
+.input-tag:focus-within {
+  border-color: #c9922a;
+}
+
+/* Clean up the actual input and select tags so they fill the space */
+.input-tag input[type="text"],
+.input-tag select {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  font-size: 14px;
+  appearance: none; /* Hides the default ugly select arrow */
+}
+
+/* Icon styling */
+.input-icon {
+  font-size: 18px;
+  color: #4b5563; /* Dark gray */
+  margin-left: 10px;
+}
+
+/* =========================================
+   CUSTOM FILE UPLOAD LOGIC
+   ========================================= */
+.custom-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* When no file is selected, look like placeholder text */
+.file-placeholder {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* When a file is selected, look like normal typed text */
+.file-selected {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* =========================
+   BVN / NIN AUTH PAGE
+========================= */
+/* 
+.bvn-subtitle {
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #64748b;
+  margin-bottom: 30px;
+} */
+
+/* =========================
+   FORM LAYOUT
+========================= */
+/* 
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+} */
+
+/* =========================
+   FORM ROW
+========================= */
+/* 
+.Auth-inputs-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Auth-inputs-row label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+} */
+
+/* =========================
+   INPUT / SELECT CONTAINER
+========================= */
+/* 
+.input-tag {
+  width: 100%;
+  height: 56px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.input-tag:hover {
+  border-color: #cbd5e1;
+}
+
+.input-tag:focus-within {
+  border-color: #c9922a;
+  box-shadow: 0 0 0 4px rgba(201, 146, 42, 0.12);
+} */
+
+/* =========================
+   INPUTS & SELECTS
+========================= */
+/* 
+.input-tag input,
+.input-tag select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.96rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.input-tag input::placeholder {
+  color: #94a3b8;
+}
+
+.input-tag select {
+  cursor: pointer;
+  appearance: none;
+} */
+
+/* =========================
+   FILE UPLOAD
+========================= */
+/* 
+.file-upload-box {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.file-upload-box input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-placeholder {
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.file-name {
+  width: 100%;
+  font-size: 0.92rem;
+  color: #0f172a;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
+
+/* =========================
+   BUTTON
+========================= */
+/* 
+.otp-submit-btn,
+.bvn-submit-btn {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 8px;
+  background: #c9922a;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 6px;
+}
+
+.otp-submit-btn:hover,
+.bvn-submit-btn:hover {
+  background: #b58220;
+}
+
+.otp-submit-btn:disabled,
+.bvn-submit-btn:disabled {
+  background: #d6d3d1;
+  cursor: not-allowed;
+} */
+
+/* =========================
+   ICONS
+========================= */
+/* 
+.icon,
+.icon1 {
+  font-size: 1rem;
+  color: #64748b;
+  flex-shrink: 0;
+} */
+
+/* =========================
+   DIVIDER
+========================= */
+/* 
+.auth-divider {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  margin: 4px 0 8px;
+}
+
+.auth-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.auth-divider span {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  color: #64748b;
+} */
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* @media screen and (max-width: 768px) {
+  .signup-section {
+    flex-direction: column;
+  }
+
+  .image-container {
+    display: none;
+  }
+
+  .form-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 18px;
+  }
+
+  .signup-form-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .auth-form {
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .input-tag {
+    height: 52px;
+    padding: 0 14px;
+  }
+
+  .Auth-inputs-row label {
+    font-size: 0.9rem;
+  }
+
+  .input-tag input,
+  .input-tag select {
+    font-size: 0.92rem;
+  }
+
+  .otp-submit-btn,
+  .bvn-submit-btn {
+    height: 52px;
+    font-size: 0.95rem;
+  }
+} */
+
+/* .signup-form-wrapper h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827; 
+  margin-bottom: 30px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+}
+
+.Auth-inputs-row {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.Auth-inputs-row label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-family: inherit;
+}
+
+.input-tag {
+  position: relative;
+  width: 100%;
+}
+
+.input-tag input[type="text"],
+.input-tag select,
+.upload-placeholder,
+.file-name {
+  width: 100%;
+  padding: 14px 45px 14px 16px;
+  font-size: 14px;
+  color: #111827;
+  border: 1px solid #d1d5db; 
+  border-radius: 6px;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.2s ease;
+  appearance: none; 
+}
+
+.input-tag input[type="text"]:focus,
+.input-tag select:focus {
+  border-color: #c9922a; 
+}
+
+.input-tag input::placeholder,
+.upload-placeholder {
+  color: #9ca3af;
+}
+
+
+.input-tag select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23111827%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  cursor: pointer;
+} */
+
+/* 2. Lock Icon for ID Number Input */
+/* .input-tag input[type="text"] {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%24%2024%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%2211%22%20width%3D%2218%22%20height%3D%2211%22%20rx%3D%222%22%20ry%3D%222%22%2F%3E%3Cpath%20d%3D%22M7%2011V7a5%205%200%200110%200v4%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+} */
+
+/* 3. File Document Icon for Upload Box */
+/* .upload-placeholder,
+.file-name {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%202H6a2%202%200%2000-2%202v16a2%202%200%20002%202h12a2%202%200%20002-2V9z%22%2F%3E%3Cpolyline%20points%3D%2213%202%2013%209%2020%209%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+} */
+
+/* =========================================
+   File Upload Specific Logic
+   ========================================= */
+/* .file-upload-box {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+} */
+
+/* Hides default HTML file input button but keeps it clickable over the area */
+/* .file-upload-box input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+} */
+
+/* Normalizes the p tags inside the upload box so they look exactly like inputs */
+/* .file-upload-box p {
+  margin: 0;
+  box-sizing: border-box;
+} */

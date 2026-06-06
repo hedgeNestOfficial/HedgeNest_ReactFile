@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import Input from "../../Components/Input";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 import { loginSchema } from "../../Validation/authSchema";
 import { loginUser } from "../../Services/authService";
 import { login } from "../../Store/UserSlice";
@@ -17,13 +18,12 @@ import { login } from "../../Store/UserSlice";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [apiError, setApiError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [inputField, setInputField] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
+
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -34,37 +34,22 @@ const LoginPage = () => {
     },
   });
 
-  useEffect(() => {
-    password >= 8 ? setInputField(true) : null;
-  });
+  const watchedFields = watch();
 
-  useEffect(() => {
-    if (!apiError) return;
-    const timer = setTimeout(() => {
-      setApiError("");
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, [apiError]);
-
-  useEffect(() => {
-    if (!successMessage) return;
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, [successMessage]);
+  const isFormFilled =
+    watchedFields.email?.trim() && watchedFields.password?.trim();
 
   const onSubmitForm = async (data) => {
     try {
-      setApiError("");
-      setSuccessMessage("");
       const payload = {
         email: data.email.trim(),
         password: data.password,
       };
+
       const response = await loginUser(payload);
+
       const { message, user, token } = response;
-      setSuccessMessage(message || "Login Successful");
+
       dispatch(
         login({
           user,
@@ -73,13 +58,18 @@ const LoginPage = () => {
       );
 
       localStorage.setItem("authToken", token);
+
       localStorage.setItem("user", JSON.stringify(user));
+
+      toast.success(message || "Login Successful");
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      setApiError(error.response?.data?.message || "Invalid email or password");
       console.log("LOGIN ERROR:", error);
+
+      toast.error(error.response?.data?.message || "Invalid email or password");
     }
   };
 
@@ -101,12 +91,6 @@ const LoginPage = () => {
 
           <h2>Log In To Your Account</h2>
 
-          {apiError && <div className="api-error-message">{apiError}</div>}
-
-          {successMessage && (
-            <div className="success-message">{successMessage}</div>
-          )}
-
           <form className="auth-form" onSubmit={handleSubmit(onSubmitForm)}>
             {LoginData.map((item, index) => (
               <Input
@@ -125,8 +109,8 @@ const LoginPage = () => {
               text={isSubmitting ? "Logging in..." : "Login"}
               type="submit"
               className="signup-submit-btn"
-              disabled={isSubmitting}
-              color={() => (inputField === true ? "#f6c15c" : "")}
+              disabled={!isFormFilled || isSubmitting}
+              color={isFormFilled ? "#f6c15c" : "#bdbdbd"}
             />
 
             <div className="form-divider">
