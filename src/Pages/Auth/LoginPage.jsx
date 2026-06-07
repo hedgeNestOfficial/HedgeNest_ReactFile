@@ -110,9 +110,17 @@ const LoginPage = () => {
               type="submit"
               className="signup-submit-btn"
               disabled={!isFormFilled || isSubmitting}
-              color={isFormFilled ? "#f6c15c" : "#bdbdbd"}
+              color={
+                isFormFilled ? "liner-grediant(#f6c15c, #a07017)" : "#bdbdbd"
+              }
             />
-
+            <p
+              onClick={() => navigate("/")}
+              style={{ color: "#fac156", cursor: "pointer" }}
+            >
+              {" "}
+              Forgoten password?{" "}
+            </p>
             <div className="form-divider">
               <span>Or</span>
             </div>
