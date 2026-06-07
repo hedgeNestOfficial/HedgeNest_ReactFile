@@ -26,6 +26,7 @@ import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
+import DashboardLayout from "./Layout/DashboardLayout";
 
 const App = () => {
   return (
@@ -61,7 +62,6 @@ const App = () => {
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
-   
   );
 };
 
