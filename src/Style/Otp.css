@@ -52,6 +52,13 @@
   transition: all 0.2s ease;
 }
 
+.otp-box-email {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
 .otp-box:focus {
   border-color: #eab308;
 

@@ -118,3 +118,16 @@ export const createPin = async (payload, token) => {
     throw error;
   }
 };
+
+export const resetPassword = async (payload) => {
+  try {
+    const response = await axios.post(ENDPOINTS.AUTH.RESET_PASSWORD, payload, {
+      headers: API_CONFIG.headers,
+      timeout: API_CONFIG.timeout,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

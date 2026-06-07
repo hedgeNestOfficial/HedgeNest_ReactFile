@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { loginSchema } from "../../Validation/authSchema";
 import { loginUser } from "../../Services/authService";
 import { login } from "../../Store/UserSlice";
+import { OrbitProgress } from "react-loading-indicators";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -106,7 +107,15 @@ const LoginPage = () => {
             ))}
 
             <Button
-              text={isSubmitting ? "Logging in..." : "Login"}
+              text={
+                isSubmitting ? (
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#c9922a" size="small" />
+                  </div>
+                ) : (
+                  "Login"
+                )
+              }
               type="submit"
               className="signup-submit-btn"
               disabled={!isFormFilled || isSubmitting}
@@ -115,7 +124,7 @@ const LoginPage = () => {
               }
             />
             <p
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/reset")}
               style={{ color: "#fac156", cursor: "pointer" }}
             >
               {" "}
