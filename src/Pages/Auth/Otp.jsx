@@ -65,7 +65,7 @@ const Otp = () => {
       toast.success(response?.message || "OTP verified successfully");
 
       setTimeout(() => {
-        navigate("/bvn");
+        navigate("/Kycauth");
       }, 1500);
     } catch (error) {
       toast.error(
