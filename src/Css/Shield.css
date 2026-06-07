@@ -2,6 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background-color: #1a193a;
+  
 }
 
 .shield-holder {
@@ -19,7 +20,7 @@
 
 .hero-wrapper {
   width: 90%;
-  max-width: 1200px;
+
   height: auto;
   display: flex;
   flex-direction: row;
@@ -106,7 +107,7 @@
 
 .graphic-wrapper {
   width: 45%;
-  max-width: 220px;
+  /* max-width: 220px; */
   display: flex;
   align-items: flex-end;
 }
@@ -136,7 +137,7 @@
 
 .why-usdt-wrapper {
   width: 90%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   padding: 20px;
   display: flex;
@@ -222,7 +223,7 @@
 
 .how-it-works-container {
   width: 90%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   padding: 0 24px;
   display: flex;
   flex-direction: column;
@@ -328,7 +329,7 @@
 
 .hn-container {
   width: 90%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
 }
 
 .hn-title {
