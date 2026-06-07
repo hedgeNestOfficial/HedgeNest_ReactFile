@@ -15,9 +15,9 @@
 
 @media (max-width: 768px) {
   .dashboard-content {
-    padding-left: 16px; /* No sidebar on mobile */
-    padding-top: 80px; /* Clear room for mobile top navbar */
-    padding-bottom: 84px; /* Clear room for mobile bottom navbar */
+    padding-left: 16px;
+    padding-top: 80px;
+    padding-bottom: 84px;
     padding-right: 16px;
   }
 }

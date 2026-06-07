@@ -51,7 +51,6 @@
   margin: 0;
 }
 
-/* Header Icons Alignment Fix */
 .notify-user {
   display: flex;
   align-items: center;
@@ -293,7 +292,6 @@
   color: #666666;
 }
 
-/* Recent Transaction Logs Container */
 .transaction-section {
   width: 100%;
   background-color: #fff;
@@ -361,13 +359,10 @@
   }
 }
 
-/* Mobile Devices Breakpoint */
 @media (max-width: 768px) {
   .Dash-container {
     flex-direction: column;
   }
-
-  /* Hides sidebar on small mobile views or switches to a fluid flow layout */
 
   .Dash-right {
     width: 100%;
@@ -399,7 +394,6 @@
     font-size: 20px;
   }
 
-  /* Compresses Action Row items if screen width gets tight */
   .dr-actions {
     gap: 10px;
   }
@@ -411,7 +405,6 @@
     height: 44px;
   }
 
-  /* Stack Vault panels into a single column block */
   .vault-section {
     flex-direction: column;
     gap: 16px;
@@ -428,7 +421,6 @@
   }
 }
 
-/* Small Screens Quick Layout Compression */
 @media (max-width: 480px) {
   .other-balances {
     flex-direction: column;

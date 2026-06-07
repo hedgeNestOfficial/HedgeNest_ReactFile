@@ -306,7 +306,6 @@
   text-align: right;
 }
 
-/* Structural Interaction Layout Tray */
 .modal-actions-wrapper {
   display: flex;
   justify-content: space-between;
@@ -340,7 +339,7 @@
 }
 
 .btn-modal-confirm {
-  background-color: #e5b842; /* Matches your core golden brand accent */
+  background-color: #e5b842;
   color: #ffffff;
   border: none;
 }

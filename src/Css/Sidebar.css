@@ -67,7 +67,6 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Exact Gold color match on active state text/icon selection */
 .menu-item.active {
   color: #ffc107;
 }
@@ -87,7 +86,6 @@
     display: none;
   }
 
-  /* 1. Mobile Top Bar */
   .mobile-top-navbar {
     display: flex;
     justify-content: space-between;
@@ -134,7 +132,6 @@
     border: 1.5px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* 2. Mobile Bottom Navigation Tab Layout */
   .mobile-bottom-nav {
     display: flex;
     justify-content: space-around;
