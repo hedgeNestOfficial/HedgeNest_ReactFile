@@ -1,7 +1,7 @@
 import React from "react";
 import "../Css/DashBoard.css";
 import { IoNotificationsSharp } from "react-icons/io5";
-import { IoPersonCircle } from "react-icons/io5";
+import Abayomi from "../assets/Abayomi.png";
 
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
@@ -21,9 +21,13 @@ const Dashboard = () => {
                 <p>Welcome Abayomi,</p>
                 <h3>Your nest,today.</h3>
               </div>
-              <div>
-                <IoNotificationsSharp />
-                <IoPersonCircle />
+              <div className="notify-user">
+                <button className="notify-button">
+                  <IoNotificationsSharp />
+                </button>
+                <div className="user-prof">
+                  <img src={Abayomi} alt="user profile" />
+                </div>
               </div>
             </article>
             <article className="dr-balance">

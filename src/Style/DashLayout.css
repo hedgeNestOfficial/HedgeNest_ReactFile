@@ -1,0 +1,23 @@
+.dashboard-container {
+  background-color: #0b091a;
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: sans-serif;
+}
+
+.dashboard-content {
+  padding-left: 260px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding-left: 16px;
+    padding-top: 80px;
+    padding-bottom: 84px;
+    padding-right: 16px;
+  }
+}

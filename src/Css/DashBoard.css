@@ -1,42 +1,35 @@
-/* Base Layout & Reset Parameters */
 .Dash-container {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background-color: #fbf7e9;
   display: flex;
-  box-sizing: border-box;
 }
 
-/* Sidebar Column Layout */
 .Dash-left {
-  width: 260px; /* Fixed side width preventing content smash */
+  width: 260px;
   min-width: 260px;
-  height: 100vh;
+  height: 100%;
   position: sticky;
   top: 0;
 }
 
-/* Scrollable Main Workspace */
 .Dash-right {
   flex: 1;
-  min-height: 100vh;
+  height: 90%;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Better vertical breathing space */
+  align-items: flex-start;
   padding: 24px 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 .dr-holder {
   width: 92%;
-  max-width: 1200px;
+
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-/* Top Header Profile Panel */
 .dr-header {
   width: 100%;
   display: flex;
@@ -58,16 +51,31 @@
   margin: 0;
 }
 
-/* Header Icons Alignment Fix */
-.dr-header div:last-child {
+.notify-user {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+}
+.notify-button {
+  width: 32px !important;
+  background: none;
+  border: none;
+
+  color: rgb(1, 1, 75);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
   font-size: 24px;
-  color: #141432;
+}
+.user-prof img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Balance Panel Segment Layouts */
 .dr-balance {
   width: 100%;
   display: flex;
@@ -144,7 +152,6 @@
   letter-spacing: -0.5px;
 }
 
-/* Daily Insight Sidebar Layout */
 .insight {
   width: 30%;
   background-color: white;
@@ -173,7 +180,6 @@
   line-height: 1.4;
 }
 
-/* Quick Action Tool Rows */
 .dr-actions {
   width: 100%;
   display: flex;
@@ -209,13 +215,12 @@
 
 .icon {
   color: #d2af26;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-/* Utility UI Icon Elements */
 .icon-holder {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background-color: #d2af26;
   display: flex;
@@ -224,11 +229,10 @@
 }
 
 .arrow-icon {
-  font-size: 16px;
+  font-size: 14px;
   color: white;
 }
 
-/* Vault and Investment Category Rows */
 .vault-section {
   width: 100%;
   display: flex;
@@ -288,7 +292,6 @@
   color: #666666;
 }
 
-/* Recent Transaction Logs Container */
 .transaction-section {
   width: 100%;
   background-color: #fff;
@@ -356,18 +359,9 @@
   }
 }
 
-/* Mobile Devices Breakpoint */
 @media (max-width: 768px) {
   .Dash-container {
     flex-direction: column;
-  }
-
-  /* Hides sidebar on small mobile views or switches to a fluid flow layout */
-  .Dash-left {
-    width: 100%;
-    min-width: 100%;
-    height: auto;
-    position: relative;
   }
 
   .Dash-right {
@@ -383,6 +377,9 @@
   .dr-header h3 {
     font-size: 20px;
   }
+  .notify-user {
+    display: none;
+  }
 
   .total-available h2 {
     font-size: 28px;
@@ -397,7 +394,6 @@
     font-size: 20px;
   }
 
-  /* Compresses Action Row items if screen width gets tight */
   .dr-actions {
     gap: 10px;
   }
@@ -409,7 +405,6 @@
     height: 44px;
   }
 
-  /* Stack Vault panels into a single column block */
   .vault-section {
     flex-direction: column;
     gap: 16px;
@@ -426,7 +421,6 @@
   }
 }
 
-/* Small Screens Quick Layout Compression */
 @media (max-width: 480px) {
   .other-balances {
     flex-direction: column;
