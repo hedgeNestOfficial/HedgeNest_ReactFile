@@ -5,7 +5,7 @@ import Abayomi from "../assets/Abayomi.png";
 
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
-import Sidebar from '../Components/Sidebar'
+import Sidebar from "../Components/Sidebar";
 
 const Dashboard = () => {
   return (

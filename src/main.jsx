@@ -1,14 +1,30 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { store } from "./Store/store.js";
-import "./index.css";
+
+import { PersistGate } from "redux-persist/integration/react";
+
+import { store, persistor } from "./Store/store";
+
 import App from "./App.jsx";
+
+import "./index.css";
+
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+          }}
+        />
+
+        <App />
+      </PersistGate>
     </Provider>
   </StrictMode>,
 );

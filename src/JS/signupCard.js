@@ -60,17 +60,37 @@ export const BvnAuthData = [
     name: "phoneNumber",
   },
 ];
+
+
+// export const LoginData = [
+//   {
+//     label: "Email address",
+//     type: "text",
+//     placeholder: "Enter email  ",
+//     name: "firstName",
+//   },
+//   {
+//     label: "Password",
+//     type: "password",
+//     placeholder: "Enter password ",
+//     // note: <FaChevronDown />,
+//   },
+// ];
+
+
+
 export const LoginData = [
   {
-    label: "Email address",
-    type: "text",
-    placeholder: "Enter email  ",
-    name: "firstName",
+    label: "Email Address",
+    type: "email",
+    placeholder: "Enter your email",
+    name: "email",
   },
+
   {
     label: "Password",
-    type: "text",
-    placeholder: "Enter password ",
-    // note: <FaChevronDown />,
+    type: "password",
+    placeholder: "Enter your password",
+    name: "password",
   },
 ];

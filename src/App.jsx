@@ -9,7 +9,7 @@ import Landing from "./Pages/Landing";
 import OtpPage from "./Pages/Auth/Otp";
 import BvnAuth from "./Pages/Auth/BvnAuth";
 import FAQs from "./Pages/FAQs";
-import Shield from "./Pages/Shield";
+import Protect from "./Pages/Protect";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
 
@@ -25,8 +25,7 @@ import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
-import DashboardLayout from "./Layout/Dashboardlayout";
-import ConvertPage from "./Pages/ConvertPage";
+import NotFoundPage from "./Pages/NotFoundPage";
 
 const App = () => {
   return (
@@ -35,7 +34,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
-          <Route path="/shield" element={<Shield />} />
+          <Route path="/protect" element={<Protect />} />
           <Route path="/save" element={<Save />} />
           <Route path="/invest" element={<Invest />} />
           <Route path="/policy" element={<Policy />} />
@@ -45,17 +44,16 @@ const App = () => {
         </Route>
         <Route element={<DashboardLayout />}></Route>
 
+        <Route path="/*" element={<NotFoundPage />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/ConvertPage" element={ <ConvertPage />} />
-        <Route path="/bvn" element={<BvnAuth />} />
-        
+        <Route path="/kycauth" element={<BvnAuth />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/ready" element={<ReadyComp />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPass />} />
-        <Route path="/new-pass" element={<NewPass />} />
+        <Route path="/newpass" element={<NewPass />} />
         <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/loading" element={<Loading />} />

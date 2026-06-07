@@ -1,11 +1,108 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Signupimg from "../../assets/Signupimg.jpg";
-// import { LuArrowLeft } from "react-icons/lu";
 import { LuArrowLeft } from "react-icons/lu";
-import Button from "../../Components/Button"; // Ensure your relative path to Button matches
+import Button from "../../Components/Button";
 import "../../Style/Otp.css";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { createPin } from "../../Services/authService";
+
 const Pin = () => {
-  const otpLength = Array(6).fill("");
+  const navigate = useNavigate();
+
+  const inputRefs = useRef([]);
+
+  const { token } = useSelector((state) => state.user);
+
+  const [pin, setPin] = useState(["", "", "", "", "", ""]);
+  const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // HANDLE INPUT CHANGE
+  const handleChange = (value, index, type) => {
+    if (!/^\d?$/.test(value)) return;
+
+    if (type === "pin") {
+      const updatedPin = [...pin];
+      updatedPin[index] = value;
+      setPin(updatedPin);
+    } else {
+      const updatedConfirmPin = [...confirmPin];
+      updatedConfirmPin[index] = value;
+      setConfirmPin(updatedConfirmPin);
+    }
+
+    // MOVE TO NEXT INPUT
+    if (value && index < 5) {
+      const nextRef =
+        type === "pin"
+          ? inputRefs.current[`pin-${index + 1}`]
+          : inputRefs.current[`confirm-${index + 1}`];
+
+      nextRef?.focus();
+    }
+  };
+
+  // HANDLE BACKSPACE
+  const handleKeyDown = (e, index, type) => {
+    const currentArray = type === "pin" ? pin : confirmPin;
+
+    if (e.key === "Backspace" && !currentArray[index] && index > 0) {
+      const prevRef =
+        type === "pin"
+          ? inputRefs.current[`pin-${index - 1}`]
+          : inputRefs.current[`confirm-${index - 1}`];
+
+      prevRef?.focus();
+    }
+  };
+
+  // SUBMIT PIN
+  const handleSubmitPin = async (e) => {
+    e.preventDefault();
+
+    const pinCode = pin.join("");
+    const confirmPinCode = confirmPin.join("");
+
+    if (pinCode.length !== 6) {
+      toast.error("PIN must be 6 digits");
+      return;
+    }
+
+    if (confirmPinCode.length !== 6) {
+      toast.error("Confirm PIN must be 6 digits");
+      return;
+    }
+
+    if (pinCode !== confirmPinCode) {
+      toast.error("PINs do not match");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const payload = {
+        pin: pinCode,
+      };
+
+      const response = await createPin(payload, token);
+
+      toast.success(response?.message || "PIN created successfully");
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to create PIN");
+
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section className="signup-section">
@@ -23,48 +120,64 @@ const Pin = () => {
             <LuArrowLeft className="back-arrow-icon" />
           </button>
 
-          <h2>Enter PIN</h2>
+          <h2>Create Transaction PIN</h2>
+
           <p className="otp-subtitle">
-            Create Your Transaction Pin
-            {/* <br />
-            <span className="user-email-highlight">
-              he*****22@gmail.com
-            </span>{" "}
-            for verification */}
+            Create a secure 6-digit PIN for transactions
           </p>
 
-          <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+          <form className="auth-form" onSubmit={handleSubmitPin}>
+            {/* ENTER PIN */}
             <div className="otp-inputs-row">
-              <label htmlFor="">Enter Pin</label>
-              <div className="otp-input">
-                {otpLength.map((_, index) => (
+              <label>Enter PIN</label>
+
+              <div className="otp-input-container">
+                {pin.map((digit, index) => (
                   <input
                     key={index}
-                    type="text"
-                    maxLength="1"
-                    pattern="[0-9]*"
+                    ref={(el) => (inputRefs.current[`pin-${index}`] = el)}
+                    type="password"
+                    maxLength={1}
                     inputMode="numeric"
+                    value={digit}
                     className="otp-box"
+                    onChange={(e) => handleChange(e.target.value, index, "pin")}
+                    onKeyDown={(e) => handleKeyDown(e, index, "pin")}
                   />
                 ))}
               </div>
             </div>
+
+            {/* CONFIRM PIN */}
             <div className="otp-inputs-row">
-              <label htmlFor="">Confirm Pin</label>
-              <div className="otp-input">
-                {otpLength.map((_, index) => (
+              <label>Confirm PIN</label>
+
+              <div className="otp-input-container">
+                {confirmPin.map((digit, index) => (
                   <input
                     key={index}
-                    type="text"
-                    maxLength="1"
-                    pattern="[0-9]*"
+                    ref={(el) => (inputRefs.current[`confirm-${index}`] = el)}
+                    type="password"
+                    maxLength={1}
                     inputMode="numeric"
+                    value={digit}
                     className="otp-box"
+                    onChange={(e) =>
+                      handleChange(e.target.value, index, "confirm")
+                    }
+                    onKeyDown={(e) => handleKeyDown(e, index, "confirm")}
                   />
                 ))}
               </div>
             </div>
-            <Button text="Next" type="submit" className="otp-submit-btn" />
+
+            <Button
+              text={isLoading ? "Creating PIN..." : "Continue"}
+              type="submit"
+              className="otp-submit-btn"
+              disabled={isLoading}
+              color="#c9922a"
+            />
           </form>
         </div>
       </div>

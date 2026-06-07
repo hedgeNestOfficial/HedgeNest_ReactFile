@@ -1,18 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Input = (props) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = props.type === "password";
+
   return (
     <div className={props.className}>
       <label>{props.label}</label>
-      <input
-        type={props.type}
-        placeholder={props.placeholder}
-        {...props.registerProps}
-        onChange={(e) => {
-          if (props.registerProps?.onChange) props.registerProps.onChange(e);
-          if (props.onChange) props.onChange(e);
-        }}
-      />
+
+      <div className="password-input-wrapper">
+        <input
+          type={isPassword ? (showPassword ? "text" : "password") : props.type}
+          placeholder={props.placeholder}
+          {...props.registerProps}
+        />
+
+        {isPassword && (
+          <span
+            className="eye-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+          </span>
+        )}
+      </div>
 
       {props.error ? (
         <span

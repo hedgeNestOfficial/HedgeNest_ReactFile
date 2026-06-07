@@ -3,7 +3,12 @@ import "../Css/Button.css";
 
 const Button = (props) => {
   return (
-    <button className={props.className} onClick={props.onClick}>
+    <button
+      style={{ background: props.color }}
+      className={props.className}
+      onClick={props.onClick}
+      onMouseEnter={props.onMouseEnter}
+    >
       {props.text}
     </button>
   );
