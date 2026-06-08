@@ -1,19 +1,28 @@
 import React, { useState } from "react";
+
 import background from "../../assets/Signupimg.jpg";
+
 import { LuArrowLeft } from "react-icons/lu";
+
 import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
+
 import { useForm } from "react-hook-form";
+
 import toast from "react-hot-toast";
 
 import Button from "../../Components/Button";
+
 import "../../Style/Otp.css";
 
 import { resendOtp } from "../../Services/authService";
+
 import { signup } from "../../Store/UserSlice";
 
 const ResetPass = () => {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,18 +54,22 @@ const ResetPass = () => {
 
       dispatch(
         signup({
-          email: data.email,
+          email: data.email.trim(),
           phoneNumber: "",
         }),
       );
 
       setTimeout(() => {
-        navigate("/otp");
+        navigate("/otp?type=reset");
       }, 1500);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to send OTP");
+      console.log("RESET OTP ERROR:", error);
 
-      console.log(error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Failed to send OTP",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -91,12 +104,13 @@ const ResetPass = () => {
               <div className="input-tag">
                 <input
                   type="email"
-                  className="otp-box-email"
                   placeholder="Enter email address"
                   {...register("email", {
                     required: "Email is required",
+
                     pattern: {
                       value: /^\S+@\S+\.\S+$/,
+
                       message: "Enter a valid email address",
                     },
                   })}
@@ -113,7 +127,7 @@ const ResetPass = () => {
               type="submit"
               className="otp-submit-btn"
               disabled={!watchedEmail || isLoading}
-              color={watchedEmail ? "#c9922a" : "#bdbdbd"}
+              color={watchedEmail?.trim() ? "#c9922a" : "#bdbdbd"}
             />
           </form>
         </div>

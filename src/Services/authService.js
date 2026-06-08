@@ -1,6 +1,10 @@
 import axios from "axios";
+
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
+/* =========================
+   REGISTER
+========================= */
 export const registerUser = async (payload) => {
   try {
     const response = await axios.post(ENDPOINTS.AUTH.REGISTER, payload, {
@@ -14,6 +18,9 @@ export const registerUser = async (payload) => {
   }
 };
 
+/* =========================
+   LOGIN
+========================= */
 export const loginUser = async (payload) => {
   try {
     const response = await axios.post(ENDPOINTS.AUTH.LOGIN, payload, {
@@ -27,6 +34,9 @@ export const loginUser = async (payload) => {
   }
 };
 
+/* =========================
+   VERIFY OTP
+========================= */
 export const verifyOtp = async (payload) => {
   try {
     const response = await axios.post(ENDPOINTS.AUTH.VERIFY_OTP, payload, {
@@ -40,9 +50,12 @@ export const verifyOtp = async (payload) => {
   }
 };
 
+/* =========================
+   RESEND OTP
+========================= */
 export const resendOtp = async (payload) => {
   try {
-    const response = await axios.post(ENDPOINTS.AUTH.RESET_OTP, payload, {
+    const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
       headers: API_CONFIG.headers,
       timeout: API_CONFIG.timeout,
     });
@@ -53,21 +66,9 @@ export const resendOtp = async (payload) => {
   }
 };
 
-// import axios from "axios";
-
-// const BASE_URL = import.meta.env.VITE_BASE_URL;
-
-// export const submitKyc = async (formData, token) => {
-//   const response = await axios.post(`${BASE_URL}/kyc/verify`, formData, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-
-//   return response.data;
-// };
-
+/* =========================
+   SUBMIT KYC
+========================= */
 export const submitKyc = async (formData, token) => {
   try {
     const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
@@ -85,23 +86,9 @@ export const submitKyc = async (formData, token) => {
   }
 };
 
-export const createTransactionPin = async (payload, token) => {
-  try {
-    const response = await axios.post(ENDPOINTS.AUTH.CREATE_PIN, payload, {
-      headers: {
-        ...API_CONFIG.headers,
-        Authorization: `Bearer ${token}`,
-      },
-
-      timeout: API_CONFIG.timeout,
-    });
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
+/* =========================
+   CREATE PIN
+========================= */
 export const createPin = async (payload, token) => {
   try {
     const response = await axios.post(ENDPOINTS.AUTH.CREATE_PIN, payload, {
@@ -119,9 +106,12 @@ export const createPin = async (payload, token) => {
   }
 };
 
+/* =========================
+   RESET PASSWORD
+========================= */
 export const resetPassword = async (payload) => {
   try {
-    const response = await axios.post(ENDPOINTS.AUTH.RESET_PASSWORD, payload, {
+    const response = await axios.post(ENDPOINTS.USER.RESET_PASSWORD, payload, {
       headers: API_CONFIG.headers,
       timeout: API_CONFIG.timeout,
     });
