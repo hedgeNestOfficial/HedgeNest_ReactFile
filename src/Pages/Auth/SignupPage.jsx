@@ -175,10 +175,11 @@ const SignupPage = () => {
             )}
 
             <Button
+              color={isSubmitting ? "#bdbdbd" : "#c9922a"}
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">
-                    <OrbitProgress color="#c9922a" size="small" />
+                    <OrbitProgress color="#bdbdbd" size="small" />
                   </div>
                 ) : (
                   "Sign Up"
