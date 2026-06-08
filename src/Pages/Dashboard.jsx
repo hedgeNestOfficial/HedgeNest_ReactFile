@@ -56,15 +56,15 @@ const Dashboard = () => {
             </article>
             <article className="dr-actions">
               <div className="convert">
-                <LuPlus className="icon" />
+                
                 <p>Convert</p>
               </div>
               <div className="save">
-                <LuPlus className="icon" />
+                
                 <p>Save</p>
               </div>
               <div className="invest">
-                <LuPlus className="icon" />
+                
                 <p>Invest</p>
               </div>
             </article>

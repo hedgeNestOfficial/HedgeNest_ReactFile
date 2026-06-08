@@ -12,6 +12,7 @@ import FAQs from "./Pages/FAQs";
 import Protect from "./Pages/Protect";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
+import ConvertPage from "./Pages/ConvertPage";
 
 import Pin from "./Pages/Auth/Pin";
 import ReadyComp from "./Pages/Auth/ReadyComp";
@@ -58,6 +59,7 @@ const App = () => {
         <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/loading" element={<Loading />} />
+        <Route path="/convert" element={<ConvertPage />} />
 
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
