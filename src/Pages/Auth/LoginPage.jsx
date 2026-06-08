@@ -1,41 +1,28 @@
 import React from "react";
-
 import "../../Style/Signup.css";
-
 import Signupimg from "../../assets/Signupimg.jpg";
-
 import Input from "../../Components/Input";
-
 import Button from "../../Components/Button";
-
 import { LoginData } from "../../JS/signupCard";
-
 import { FcGoogle } from "react-icons/fc";
-
 import { LuArrowLeft } from "react-icons/lu";
-
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
-
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import toast from "react-hot-toast";
-
 import { loginSchema } from "../../Validation/authSchema";
-
 import { loginUser } from "../../Services/authService";
-
 import { login } from "../../Store/UserSlice";
-
 import { OrbitProgress } from "react-loading-indicators";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8228/api/v1/auth/google";
+  };
 
   const {
     register,
@@ -142,6 +129,7 @@ const LoginPage = () => {
             <p
               onClick={() => navigate("/reset")}
               className="forgot-password-text"
+              style={{ textAlign: "left" }}
             >
               Forgotten password?
             </p>
@@ -150,7 +138,11 @@ const LoginPage = () => {
               <span>Or</span>
             </div>
 
-            <button type="button" className="google-oauth-btn">
+            <button
+              type="button"
+              className="google-oauth-btn"
+              onClick={handleGoogleLogin}
+            >
               <FcGoogle className="google-icon" />
               Login with Google
             </button>
