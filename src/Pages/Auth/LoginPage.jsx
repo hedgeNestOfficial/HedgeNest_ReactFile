@@ -1,30 +1,46 @@
 import React from "react";
+
 import "../../Style/Signup.css";
+
 import Signupimg from "../../assets/Signupimg.jpg";
+
 import Input from "../../Components/Input";
+
 import Button from "../../Components/Button";
+
 import { LoginData } from "../../JS/signupCard";
+
 import { FcGoogle } from "react-icons/fc";
+
 import { LuArrowLeft } from "react-icons/lu";
+
 import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
+
 import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import toast from "react-hot-toast";
+
 import { loginSchema } from "../../Validation/authSchema";
+
 import { loginUser } from "../../Services/authService";
+
 import { login } from "../../Store/UserSlice";
+
 import { OrbitProgress } from "react-loading-indicators";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const {
     register,
     handleSubmit,
     watch,
-
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -110,26 +126,26 @@ const LoginPage = () => {
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">
-                    <OrbitProgress color="#c9922a" size="small" />
+                    <OrbitProgress color="#ffffff" size="small" />
                   </div>
                 ) : (
                   "Login"
                 )
               }
               type="submit"
-              className="signup-submit-btn"
+              className={`signup-submit-btn ${
+                isFormFilled ? "active-submit-btn" : "disabled-submit-btn"
+              }`}
               disabled={!isFormFilled || isSubmitting}
-              color={
-                isFormFilled ? "liner-grediant(#f6c15c, #a07017)" : "#bdbdbd"
-              }
             />
+
             <p
               onClick={() => navigate("/reset")}
-              style={{ color: "#fac156", cursor: "pointer" }}
+              className="forgot-password-text"
             >
-              {" "}
-              Forgoten password?{" "}
+              Forgotten password?
             </p>
+
             <div className="form-divider">
               <span>Or</span>
             </div>
