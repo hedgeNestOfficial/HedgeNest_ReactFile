@@ -2,7 +2,7 @@ import React from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HeroPage from "./Pages/HeroPage";
-import Dashboard from "./Pages/Dashboard";
+import Dashboard from "./Pages/Main/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
 import Landing from "./Pages/Landing";
@@ -19,7 +19,7 @@ import ResetPass from "./Pages/Auth/ResetPass";
 import NewPass from "./Pages/Auth/NewPass";
 import ResetSuccessful from "./Pages/Auth/ResetSuccessful";
 import MainLayout from "./Layout/MainLayout";
-import WalletDashboard from "./Pages/WalletDashboard";
+import WalletDashboard from "./Pages/Main/WalletDashboard";
 import Loading from "./Components/Loading";
 import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";

@@ -1,9 +1,7 @@
 .convert-layout-container {
-  display: flex;
   width: 100%;
   min-height: 100vh;
   background-color: #fbf9f4;
-  padding-left: 18%;
 }
 
 .convert-main-content {
