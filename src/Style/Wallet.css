@@ -263,6 +263,9 @@
 /* =========================
    MOBILE RESPONSIVENESS
 ========================= */
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
 @media screen and (max-width: 768px) {
   .wallet-page-container {
     padding: 20px;
@@ -284,5 +287,11 @@
 
   .card-title-bar {
     padding: 20px;
+  }
+
+  /* FIX: Target the buttons on mobile */
+  .tab-btn {
+    width: 100%; /* Force buttons to stretch full width */
+    flex: none; /* Stop flex from distorting the height */
   }
 }

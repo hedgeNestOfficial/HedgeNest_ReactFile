@@ -91,7 +91,6 @@ const BvnAuth = () => {
 
       toast.success(response?.message || "KYC submitted successfully");
 
-      // REDIRECT TO PIN PAGE
       setTimeout(() => {
         navigate("/create-pin");
       }, 1500);

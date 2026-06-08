@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
-import "../Style/Wallet.css";
+import "../../Style/Wallet.css";
+import Sidebar from "../../Components/Sidebar";
 
 const WalletPage = () => {
   // --- UI STATE ---
@@ -45,7 +46,7 @@ const WalletPage = () => {
 
   return (
     <div className="wallet-page-container">
-      {/* HEADER */}
+      <Sidebar />
       <header className="wallet-header">
         <h1>Wallet</h1>
       </header>

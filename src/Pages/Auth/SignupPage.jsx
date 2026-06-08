@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { signupSchema } from "../../Validation/authSchema";
 import { registerUser } from "../../Services/authService";
 import { signup } from "../../Store/UserSlice";
+import { OrbitProgress } from "react-loading-indicators";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -174,7 +175,15 @@ const SignupPage = () => {
             )}
 
             <Button
-              text={isSubmitting ? "Signing up..." : "Sign Up"}
+              text={
+                isSubmitting ? (
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#c9922a" size="small" />
+                  </div>
+                ) : (
+                  "Sign Up"
+                )
+              }
               type="submit"
               className="signup-submit-btn"
               disabled={!isFormFilled || isSubmitting}
@@ -194,7 +203,7 @@ const SignupPage = () => {
               Already have an account?{" "}
               <span
                 className="highlight-link bold-link"
-                onClick={() => navigate("/bvn")}
+                onClick={() => navigate("/login")}
               >
                 Log In
               </span>
