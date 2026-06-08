@@ -160,6 +160,8 @@
     cursor: pointer;
     font-family: sans-serif;
     padding: 6px 0;
+    text-decoration: none;
+    transition: all 0.2s ease;
   }
 
   .bottom-nav-text {
