@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
+  padding-top:50px;
 }
 
 .inv-hero {
@@ -19,14 +20,17 @@
 }
 .inv-container {
   width: 95%;
-  height: 90%;
+  height: 95%;
   display: flex;
   flex-direction: column;
   gap: 40px;
-  /* background-color: #f3c152; */
+  /* background-color: red; */
 }
 .inv-content {
   flex: 1;
+  /* width:50%;
+  height:100%;
+  background-color: chartreuse; */
 }
 .inv-title {
   font-size: 2.25rem;
@@ -90,17 +94,22 @@
 .inv-btn-outline:hover {
   opacity: 0.85;
 }
+
 .inv-graphic-wrapper {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+  width:50%;
+  height:100%;
+  background-color: chocolate;
+  /* display: flex;
+  justify-content: center; */
+ 
 }
 .inv-image-placeholder {
   width: 100%;
-  max-width: 500px;
-  height: 320px;
+  /* max-width: 500px; */
+  height: 100%;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.05);
+   object-fit: cover;
 }
 
 .nti-section {
