@@ -14,7 +14,7 @@ const Hero = () => {
             <span className="highlight-text">Grow Confidently,</span> <br />
             Save Smarter.
           </h1>
-          <p className="hero-description">
+          <p className="hero-description-context1">
             HedgeNest helps everyday Nigerians protect their money from
             inflation, build better saving habits, and grow their wealth
             securely.

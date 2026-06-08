@@ -3,12 +3,15 @@
   min-height: 10vh;
   background-color: var(--primaryWhite);
   display: flex;
+  /* background-color: #c9922a; */
   justify-content: center;
   align-items: center;
   position: fixed;
   box-sizing: border-box;
   z-index: 100;
+  /* margin-top: 10px; */
   /* padding: 0 10px; */
+  padding: 0 10px;
 }
 
 .header-wrapper {
