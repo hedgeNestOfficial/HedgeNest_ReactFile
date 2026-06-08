@@ -1,10 +1,12 @@
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
 import whiteLogo from "../assets/white logo.png";
 import Abayomi from "../assets/Abayomi.png";
 import {
   FaGripHorizontal, // Dashboard
   FaWallet, // Wallet
   FaExchangeAlt, // Convert
+  FaPiggyBank, // Smart Safe
+  FaChartLine, // Invest
   FaUserCircle, // Profile
   FaSignOutAlt, // Sign Out
   FaBell, // Mobile Top Header Bell
@@ -12,10 +14,14 @@ import {
 import "../Css/Sidebar.css";
 
 const Sidebar = () => {
+  const [activeItem, setActiveItem] = useState("Smart Safe");
+
   const menuItems = [
-    { name: "Dashboard", icon: FaGripHorizontal, path: "/dashboard" },
-    { name: "Wallet", icon: FaWallet, path: "/wallet" },
-    { name: "Convert", icon: FaExchangeAlt, path: "/convert" },
+    { name: "Dashboard", icon: FaGripHorizontal },
+    { name: "Wallet", icon: FaWallet },
+    { name: "Convert", icon: FaExchangeAlt },
+    { name: "Smart Safe", icon: FaPiggyBank },
+    { name: "Invest", icon: FaChartLine },
   ];
 
   return (
@@ -51,22 +57,24 @@ const Sidebar = () => {
           <ul className="menu-list">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              const isActive = activeItem === item.name;
               return (
                 <li key={item.name}>
-                  <NavLink
-                    to={item.path}
-                    className={({ isActive: routeIsActive }) =>
-                      `menu-item ${routeIsActive ? "active" : ""}`
-                    }
+                  <button
+                    onClick={() => setActiveItem(item.name)}
+                    className={`menu-item ${isActive ? "active" : ""}`}
                   >
                     <Icon className="menu-icon" size={18} />
                     <span className="menu-text">{item.name}</span>
-                  </NavLink>
+                  </button>
                 </li>
               );
             })}
             <li>
-              <button className="menu-item">
+              <button
+                onClick={() => setActiveItem("Profile")}
+                className={`menu-item ${activeItem === "Profile" ? "active" : ""}`}
+              >
                 <FaUserCircle className="menu-icon" size={18} />
                 <span className="menu-text">Profile</span>
               </button>
@@ -86,17 +94,16 @@ const Sidebar = () => {
       <nav className="mobile-bottom-nav">
         {menuItems.map((item) => {
           const Icon = item.icon;
+          const isActive = activeItem === item.name;
           return (
-            <NavLink
+            <button
               key={item.name}
-              to={item.path}
-              className={({ isActive: routeIsActive }) =>
-                `bottom-nav-item ${routeIsActive ? "active" : ""}`
-              }
+              onClick={() => setActiveItem(item.name)}
+              className={`bottom-nav-item ${isActive ? "active" : ""}`}
             >
               <Icon className="bottom-nav-icon" size={20} />
               <span className="bottom-nav-text">{item.name}</span>
-            </NavLink>
+            </button>
           );
         })}
       </nav>

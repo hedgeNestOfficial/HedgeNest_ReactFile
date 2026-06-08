@@ -74,7 +74,6 @@ export const submitKyc = async (formData, token) => {
     const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
       },
 
       timeout: API_CONFIG.timeout,
