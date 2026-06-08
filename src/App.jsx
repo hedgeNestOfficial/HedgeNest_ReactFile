@@ -12,8 +12,7 @@ import FAQs from "./Pages/FAQs";
 import Protect from "./Pages/Protect";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
-import ConvertPage from "./Pages/ConvertPage";
-
+import ConvertPage from "./Pages/Main/ConvertPage";
 import Pin from "./Pages/Auth/Pin";
 import ReadyComp from "./Pages/Auth/ReadyComp";
 import ResetPass from "./Pages/Auth/ResetPass";
@@ -44,9 +43,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
-        <Route element={<DashboardLayout />}>
-        
-        </Route>
+        <Route element={<DashboardLayout />}></Route>
 
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/otp" element={<OtpPage />} />
