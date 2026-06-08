@@ -182,7 +182,9 @@
 
 .dr-actions {
   width: 100%;
+  height:100px;
   display: flex;
+  /* background: #000; */
   justify-content: space-between;
   align-items: center;
   gap: 16px;
@@ -194,7 +196,7 @@
   flex: 1;
   height: 50px;
   background-color: rgb(255, 255, 255);
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #d2af26;
   color: #d2af26;
   font-size: 15px;
@@ -398,13 +400,16 @@
 
   .dr-actions {
     gap: 10px;
+    height: 120px;
   }
 
   .convert,
   .save,
   .invest {
     font-size: 13px;
-    height: 44px;
+    height: 80%;
+    width: 90%;
+    
   }
 
   .vault-section {
