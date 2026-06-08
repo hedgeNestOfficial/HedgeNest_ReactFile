@@ -60,6 +60,8 @@
   font-weight: 500;
   font-family: sans-serif;
   transition: all 0.2s ease;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .menu-item:hover {
@@ -160,6 +162,7 @@
     cursor: pointer;
     font-family: sans-serif;
     padding: 6px 0;
+    text-decoration: none;
   }
 
   .bottom-nav-text {

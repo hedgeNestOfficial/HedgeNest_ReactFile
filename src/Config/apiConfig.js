@@ -18,6 +18,7 @@ export const ENDPOINTS = {
     RESEND_OTP: `${BASE_URL}/api/v1/resendOtp`,
     CREATE_PIN: `${BASE_URL}/api/v1/create-pin`,
     VERIFY_KYC: `${BASE_URL}/api/v1/uploadId`,
+    RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
   },
 
   USER: {

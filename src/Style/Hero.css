@@ -8,7 +8,8 @@
 
   background: radial-gradient(#352e97, #181739);
   /* background: #000; */
-  /* padding: 80px 24px; */
+  /* padding: 80px; */
+  /* margin-top: auto; */
   box-sizing: border-box;
   overflow: hidden;
   font-family: "Inter", sans-serif;
@@ -44,12 +45,14 @@
   color: #d2af26;
 }
 
-.hero-description {
+.hero-description-context1 {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: #ffffff;
+  color: #c41717;
+  font-weight: 400;
   margin-bottom: 40px;
   max-width: 520px;
+  /* background: #000; */
 }
 
 .hero-button {
@@ -85,7 +88,7 @@
 
 @media screen and (max-width: 1005px) {
   .hero {
-    padding: 60px 20px;
+    padding: 1px 80px;
     min-height: auto;
     height: auto;
     /* flex-wrap: wrap; */
@@ -96,6 +99,8 @@
     text-align: center;
     flex-wrap: wrap;
     /* background:green; */
+    padding-right: 20px;
+    box-sizing: border-box;
     gap: 40px;
   }
 
@@ -121,11 +126,16 @@
   }
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 655px) {
   .hero {
-    padding: 50px 16px;
+    padding: 50px 5px;
     /* max-height: auto; */
     height: auto;
+  }
+  .hero-content {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
   }
 
   .hero-title {

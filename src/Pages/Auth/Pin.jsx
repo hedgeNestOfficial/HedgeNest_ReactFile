@@ -19,8 +19,8 @@ const Pin = () => {
   const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [splashscreen, setSplashScreen] = useState(null);
 
-  // HANDLE INPUT CHANGE
   const handleChange = (value, index, type) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -45,7 +45,6 @@ const Pin = () => {
     }
   };
 
-  // HANDLE BACKSPACE
   const handleKeyDown = (e, index, type) => {
     const currentArray = type === "pin" ? pin : confirmPin;
 
@@ -59,7 +58,6 @@ const Pin = () => {
     }
   };
 
-  // SUBMIT PIN
   const handleSubmitPin = async (e) => {
     e.preventDefault();
 
@@ -172,7 +170,15 @@ const Pin = () => {
             </div>
 
             <Button
-              text={isLoading ? "Creating PIN..." : "Continue"}
+              text={
+                isLoading ? (
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#fff" size="small" />
+                  </div>
+                ) : (
+                  "Continue"
+                )
+              }
               type="submit"
               className="otp-submit-btn"
               disabled={isLoading}

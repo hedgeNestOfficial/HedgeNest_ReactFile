@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import "../Css/Convert.css";
+import "../../Css/Convert.css";
 import { FiHelpCircle } from "react-icons/fi";
 
-import Sidebar from "../Components/Sidebar";
+import Sidebar from "../../Components/Sidebar";
 
 const ConvertPage = () => {
   const [activeCurrency, setActiveCurrency] = useState("NGN");
   const [inputValue, setInputValue] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   return (
@@ -19,7 +19,6 @@ const ConvertPage = () => {
       <Sidebar />
 
       <main className="convert-main-content">
-        
         <header className="convert-page-header">
           <div className="header-title-group">
             <h1>Hedge Your Naira</h1>
@@ -30,7 +29,7 @@ const ConvertPage = () => {
           </div>
         </header>
 
-         {/* Live Market Rates Bar Banner   */}
+        {/* Live Market Rates Bar Banner   */}
         <section className="rate-banner-container">
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
@@ -44,7 +43,7 @@ const ConvertPage = () => {
         {/* Form Container Panel */}
         <form className="conversion-card-panel" onSubmit={handleFormSubmit}>
           <div className="conversion-split-grid">
-             {/* Left side: Source Input Box  */}
+            {/* Left side: Source Input Box  */}
             <div className="grid-left-input-pane">
               <input
                 type="number"
@@ -105,9 +104,8 @@ const ConvertPage = () => {
         </section>
       </main>
 
-      
-         {/* CONVERSION SUMMARY MODAL POPUP LAYER */}
-        
+      {/* CONVERSION SUMMARY MODAL POPUP LAYER */}
+
       {isModalOpen && (
         <div
           className="modal-backdrop-overlay"
