@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  padding-top:50px;
+  padding-top: 50px;
 }
 
 .inv-hero {
@@ -96,20 +96,19 @@
 }
 
 .inv-graphic-wrapper {
-  width:50%;
-  height:100%;
-  background-color: chocolate;
+  width: 50%;
+  height: 100%;
+  /* background-color: chocolate; */
   /* display: flex;
   justify-content: center; */
- 
 }
 .inv-image-placeholder {
   width: 100%;
-  /* max-width: 500px; */
+  /* width: ; % */
   height: 100%;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.05);
-   object-fit: cover;
+  /* background-color: rgba(255, 255, 255, 0.05); */
+  object-fit: fill;
 }
 
 .nti-section {
