@@ -1,0 +1,253 @@
+/* =========================
+   PAGE CONTAINER
+========================= */
+.profile-page-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #fafaea; /* Light cream background */
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.profile-header {
+  margin-bottom: 24px;
+}
+
+.profile-header h1 {
+  font-size: 1.8rem;
+  color: #111827;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* =========================
+   TABS NAVIGATION
+========================= */
+.profile-tabs-container {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto; /* Allows scrolling on very small screens */
+}
+
+.profile-tab-btn {
+  flex: 1;
+  height: 48px;
+  border: none;
+  background: transparent;
+  color: #374151;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  padding: 0 16px;
+}
+
+.profile-tab-btn.active {
+  background: #11102a; /* Deep Navy Blue */
+  color: #ffffff;
+}
+
+.profile-tab-btn:hover:not(.active) {
+  background: #f3f4f6;
+}
+
+/* =========================
+   MAIN CARD & USER INFO
+========================= */
+.profile-content-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 40px;
+}
+
+.user-info-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.avatar-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #3b82f6; /* Blue border from design */
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-btn {
+  position: absolute;
+  bottom: 0;
+  right: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e6b042;
+  border: 2px solid #ffffff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.user-details h2 {
+  font-size: 1.4rem;
+  color: #111827;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.user-email-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 12px 0;
+}
+
+.kyc-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kyc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.tier-text {
+  color: #e6b042;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.upgrade-link {
+  color: #10b981; /* Emerald green */
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.upgrade-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   FORM GRID
+========================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+.input-group input {
+  height: 50px;
+  padding: 0 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #4b5563;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.input-group input:focus {
+  border-color: #e6b042;
+}
+
+.save-changes-btn {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.save-changes-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+@media screen and (max-width: 768px) {
+  .profile-page-container {
+    padding: 20px;
+  }
+
+  .profile-tabs-container {
+    flex-direction: column; /* Stacks the tabs on mobile */
+    gap: 8px;
+  }
+
+  .profile-tab-btn {
+    width: 100%;
+  }
+
+  .profile-content-card {
+    padding: 24px;
+  }
+
+  .user-info-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr; /* Changes to single column on mobile */
+    gap: 16px;
+  }
+}

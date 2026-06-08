@@ -1,17 +1,21 @@
 .Dash-container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #fbf7e9;
   display: flex;
+  border: 0;
+
+  /* box-sizing: border-box; */
 }
 
-.Dash-left {
+/* .Dash-left {
   width: 260px;
   min-width: 260px;
   height: 100%;
   position: sticky;
+  background: #000;
   top: 0;
-}
+} */
 
 .Dash-right {
   flex: 1;
@@ -91,6 +95,7 @@
   padding: 24px;
   box-sizing: border-box;
   gap: 24px;
+  font-weight: 100;
 }
 
 .total-available {
@@ -107,7 +112,7 @@
 .total-available h2 {
   color: white;
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 100;
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -116,6 +121,7 @@
   width: 100%;
   display: flex;
   gap: 40px;
+  font-weight: 100;
 }
 
 .Ngn-balance,
@@ -126,6 +132,7 @@
   color: white;
   flex-direction: column;
   justify-content: center;
+  font-weight: 100;
 }
 
 .Ngn-balance p,
@@ -134,6 +141,7 @@
   font-size: 11px;
   letter-spacing: 0.5px;
   opacity: 0.6;
+  font-weight: 100;
 }
 
 .Ngn-balance h2 {
@@ -182,7 +190,7 @@
 
 .dr-actions {
   width: 100%;
-  height:100px;
+  height: 100px;
   display: flex;
   /* background: #000; */
   justify-content: space-between;
@@ -359,6 +367,7 @@
   }
   .insight {
     width: 100%;
+    height: 30%;
     padding: 20px;
   }
 }
@@ -400,7 +409,7 @@
 
   .dr-actions {
     gap: 10px;
-    height: 120px;
+    height: 140px;
   }
 
   .convert,
@@ -409,7 +418,6 @@
     font-size: 13px;
     height: 80%;
     width: 90%;
-    
   }
 
   .vault-section {

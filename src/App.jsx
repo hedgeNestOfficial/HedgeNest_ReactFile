@@ -27,6 +27,7 @@ import About from "./Pages/AboutUs";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
+import ProfilePage from "./Pages/Main/ProfilePage";
 
 const App = () => {
   return (
@@ -43,22 +44,26 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
-        <Route element={<DashboardLayout />}></Route>
+
+        <Route element={<DashboardLayout />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/convert" element={<ConvertPage />} />
+          <Route path="/wallet" element={<WalletDashboard />} />
+        </Route>
 
         <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route path="/kycauth" element={<BvnAuth />} />
-        <Route path="/signup" element={<SignupPage />} />
         <Route path="/ready" element={<ReadyComp />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/reset" element={<ResetPass />} />
         <Route path="/newpass" element={<NewPass />} />
         <Route path="/reset-successful" element={<ResetSuccessful />} />
-        <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/loading" element={<Loading />} />
-        <Route path="/convert" element={<ConvertPage />} />
 
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>

@@ -2,7 +2,7 @@ import React from "react";
 import "../Css/Invest.css";
 import Header from "../Components/Header.jsx";
 import Footer from "../Components/Footer.jsx";
-import investIMG1 from "../assets/investIMG1.png";
+// import investIMG1 from "../assets/investIMG1.png";
 import investIMG2 from "../assets/investIMG2.jpg";
 import investIMG3 from "../assets/investIMG3.jpg";
 import investIMG4 from "../assets/investIMG4.jpg";
@@ -12,7 +12,8 @@ import { IoSpeedometerOutline, IoEyeOutline } from "react-icons/io5";
 import { LuTrendingUp } from "react-icons/lu";
 import { TbTargetArrow } from "react-icons/tb";
 import { FaPeopleCarry } from "react-icons/fa";
-import Button from "../Components/Button"
+import Button from "../Components/Button";
+import investIMG1 from "../assets/currencypic.jpg";
 
 const Invest = () => {
   // Array Data
@@ -111,10 +112,9 @@ const Invest = () => {
               </li>
             </ul>
             <div className="inv-actions">
-              <Button className="inv-btn-solid" text="Start Investing"/>
-               
-              <Button className="inv-btn-outline" text="Explore Options"/>
-              
+              <Button className="inv-btn-solid" text="Start Investing" />
+
+              <Button className="inv-btn-outline" text="Explore Options" />
             </div>
           </div>
           <div className="inv-graphic-wrapper">

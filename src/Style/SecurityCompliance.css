@@ -9,8 +9,8 @@
 }
 
 .security-container {
-  width: 85%;
-  max-width: 1200px;
+  width: 90%;
+  /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
   gap: 48px;
