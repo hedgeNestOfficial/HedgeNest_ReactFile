@@ -1,4 +1,4 @@
-.feature-card {
+.whychoose-card {
   width: 100%;
   background: #ffffff;
   border: 1px solid #f1f5f9;
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-.feature-card-header {
+.whychoose-card-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -19,7 +19,7 @@
   width: 100%;
 }
 
-.feature-card-icon-box {
+.whychoose-card-icon-box {
   width: 48px;
   height: 48px;
   background-color: #fef8e8;
@@ -30,13 +30,13 @@
   flex-shrink: 0;
 }
 
-.feature-card-icon-box img {
+.whychoose-card-icon-box img {
   width: 25px;
   height: 25px;
   object-fit: contain;
 }
 
-.feature-card-title {
+.whychoose-card-title {
   font-size: 20px;
   font-weight: 700;
   color: #0f172a;
@@ -44,7 +44,7 @@
   letter-spacing: -0.01em;
 }
 
-.feature-card-text {
+.whychoose-card-text {
   font-size: 14px;
   line-height: 1.6;
   color: #475569;
@@ -52,11 +52,11 @@
 }
 
 @media screen and (max-width: 768px) {
-  .feature-card {
+  .whychoose-card {
     padding: 24px;
   }
 
-  .feature-card-title {
+  .whychoose-card-title {
     font-size: 18px;
   }
 }

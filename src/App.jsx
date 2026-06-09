@@ -1,7 +1,6 @@
 import React from "react";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HeroPage from "./Pages/HeroPage";
+// import HeroPage from "./Pages/HeroPage";
 import Dashboard from "./Pages/Main/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
@@ -28,6 +27,7 @@ import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
+import PopupCard from "./Features/PopupCard";
 
 const App = () => {
   return (
@@ -57,6 +57,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
+        <Route path="/popup" element={<PopupCard />} />
 
         <Route path="/kycauth" element={<BvnAuth />} />
         <Route path="/ready" element={<ReadyComp />} />

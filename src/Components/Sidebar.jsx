@@ -1,30 +1,58 @@
 import React, { useState } from "react";
+
 import whiteLogo from "../assets/white logo.png";
 import Abayomi from "../assets/Abayomi.png";
+
 import {
-  FaGripHorizontal, // Dashboard
-  FaWallet, // Wallet
-  FaExchangeAlt, // Convert
-  FaPiggyBank, // Smart Safe
-  FaChartLine, // Invest
-  FaUserCircle, // Profile
-  FaSignOutAlt, // Sign Out
-  FaBell, // Mobile Top Header Bell
+  FaGripHorizontal,
+  FaWallet,
+  FaExchangeAlt,
+  FaPiggyBank,
+  FaChartLine,
+  FaUserCircle,
+  FaSignOutAlt,
+  FaBell,
 } from "react-icons/fa";
+
 import "../Css/Sidebar.css";
+
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { logout } from "../Store/UserSlice";
+
 const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState("Smart Safe");
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const [activeItem, setActiveItem] = useState("dashboard");
+
+  // GET USER FROM REDUX
+  const { user } = useSelector((state) => state.user);
 
   const menuItems = [
     { name: "dashboard", icon: FaGripHorizontal },
     { name: "wallet", icon: FaWallet },
     { name: "convert", icon: FaExchangeAlt },
-    { name: "smart Safe", icon: FaPiggyBank },
+    { name: "smart-safe", icon: FaPiggyBank },
     { name: "invest", icon: FaChartLine },
   ];
-  const navigate = useNavigate();
+
+  // HANDLE LOGOUT
+  const handleLogout = () => {
+    // CLEAR REDUX
+    dispatch(logout());
+
+    // CLEAR LOCAL STORAGE
+    localStorage.removeItem("authToken");
+
+    localStorage.removeItem("user");
+
+    // REDIRECT USER
+    navigate("/");
+  };
 
   return (
     <>
@@ -34,14 +62,20 @@ const Sidebar = () => {
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
+
           <span className="brand-name">HedgeNest</span>
         </div>
+
         <div className="mobile-actions">
           <button className="action-btn" aria-label="Notifications">
             <FaBell size={22} />
           </button>
+
           <div className="user-avatar">
-            <img src={Abayomi} alt="User Profile" />
+            <img
+              src={user?.profilePicture?.url || Abayomi}
+              alt="User Profile"
+            />
           </div>
         </div>
       </header>
@@ -52,70 +86,90 @@ const Sidebar = () => {
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
+
           <span className="brand-name">HedgeNest</span>
         </div>
 
+        {/* MENU */}
         <nav className="sidebar-menu">
           <ul className="menu-list">
             {menuItems.map((item) => {
               const Icon = item.icon;
+
               const isActive = activeItem === item.name;
+
               return (
                 <li key={item.name}>
                   <button
                     onClick={() => {
                       setActiveItem(item.name);
+
                       navigate(`/${item.name}`);
                     }}
                     className={`menu-item ${isActive ? "active" : ""}`}
                   >
                     <Icon className="menu-icon" size={18} />
-                    <span className="menu-text">{item.name}</span>
+
+                    <span className="menu-text">
+                      {item.name.replace("-", " ")}
+                    </span>
                   </button>
                 </li>
               );
             })}
+
+            {/* PROFILE */}
             <li>
               <button
                 onClick={() => {
-                  setActiveItem("Profile");
+                  setActiveItem("profile");
+
                   navigate("/profile");
                 }}
-                className={`menu-item ${activeItem === "Profile" ? "active" : ""}`}
+                className={`menu-item ${
+                  activeItem === "profile" ? "active" : ""
+                }`}
               >
                 <FaUserCircle className="menu-icon" size={18} />
+
                 <span className="menu-text">Profile</span>
               </button>
             </li>
           </ul>
         </nav>
 
+        {/* LOGOUT */}
         <div className="sidebar-footer">
-          <button
-            className="menu-item logout-btn"
-            onClick={() => navigate("/signout")}
-          >
+          <button className="menu-item logout-btn" onClick={handleLogout}>
             <FaSignOutAlt className="menu-icon" size={18} />
+
             <span className="menu-text">Sign Out</span>
           </button>
         </div>
       </aside>
 
+      {/* MOBILE BOTTOM NAV */}
       <nav className="mobile-bottom-nav">
         {menuItems.map((item) => {
           const Icon = item.icon;
+
           const isActive = activeItem === item.name;
+
           return (
             <button
               key={item.name}
               onClick={() => {
                 setActiveItem(item.name);
-                navigate(`/${item.name.toLowerCase().replace(/\s/g, "-")}`);
+
+                navigate(`/${item.name}`);
               }}
               className={`bottom-nav-item ${isActive ? "active" : ""}`}
             >
               <Icon className="bottom-nav-icon" size={20} />
-              <span className="bottom-nav-text">{item.name}</span>
+
+              <span className="bottom-nav-text">
+                {item.name.replace("-", " ")}
+              </span>
             </button>
           );
         })}

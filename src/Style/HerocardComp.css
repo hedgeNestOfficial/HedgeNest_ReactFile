@@ -10,11 +10,12 @@
 }
 
 .features-container {
-  width: 95%;
+  width: 90%;
   /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
   gap: 48px;
+  padding: 80px 24px;
   /* padding: 20px; */
   /* background: #000; */
 }

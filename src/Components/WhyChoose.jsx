@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import FeatureCard from "../static/FeatureCard";
+import FeatureCard from "../static/WhychooseCard";
 import "../Style/WhyChoose.css";
 import { WhyChooseData } from "../JS/HeroCrad";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import WhychooseCard from "../static/WhychooseCard";
 
 const WhyChoose = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -40,7 +41,7 @@ const WhyChoose = () => {
               >
                 {WhyChooseData.map((item, index) => (
                   <div className="carousel-slide" key={index}>
-                    <FeatureCard {...item} />
+                    <WhychooseCard {...item} />
                   </div>
                 ))}
               </div>
@@ -75,7 +76,7 @@ const WhyChoose = () => {
           <div className="desktop-flex-container">
             {WhyChooseData.map((item, index) => (
               <div className="flex-card-wrapper" key={index}>
-                <FeatureCard {...item} />
+                <WhychooseCard {...item} />
               </div>
             ))}
           </div>
