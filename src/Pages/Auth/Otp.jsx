@@ -27,7 +27,6 @@ const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // HANDLE INPUT CHANGE
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -37,20 +36,17 @@ const Otp = () => {
 
     setOtp(updatedOtp);
 
-    // AUTO MOVE
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // HANDLE BACKSPACE
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  // VERIFY OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
 
@@ -74,7 +70,6 @@ const Otp = () => {
 
       toast.success(response?.message || "OTP verified successfully");
 
-      // HANDLE DIFFERENT FLOWS
       setTimeout(() => {
         switch (purpose) {
           case "signup":
@@ -104,7 +99,6 @@ const Otp = () => {
     }
   };
 
-  // RESEND OTP
   const handleResendOtp = async () => {
     try {
       const response = await resendOtp({

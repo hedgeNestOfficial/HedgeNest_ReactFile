@@ -40,23 +40,16 @@ const Sidebar = () => {
     { name: "invest", icon: FaChartLine },
   ];
 
-  // HANDLE LOGOUT
   const handleLogout = () => {
-    // CLEAR REDUX
     dispatch(logout());
 
-    // CLEAR LOCAL STORAGE
     localStorage.removeItem("authToken");
-
     localStorage.removeItem("user");
-
-    // REDIRECT USER
     navigate("/");
   };
 
   return (
     <>
-      {/* MOBILE TOP NAVBAR */}
       <header className="mobile-top-navbar">
         <div className="brand-group">
           <div className="brand-logo">
@@ -80,7 +73,6 @@ const Sidebar = () => {
         </div>
       </header>
 
-      {/* DESKTOP SIDEBAR */}
       <aside className="desktop-sidebar">
         <div className="sidebar-brand">
           <div className="brand-logo">
@@ -90,7 +82,6 @@ const Sidebar = () => {
           <span className="brand-name">HedgeNest</span>
         </div>
 
-        {/* MENU */}
         <nav className="sidebar-menu">
           <ul className="menu-list">
             {menuItems.map((item) => {
@@ -118,7 +109,6 @@ const Sidebar = () => {
               );
             })}
 
-            {/* PROFILE */}
             <li>
               <button
                 onClick={() => {
@@ -138,7 +128,6 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        {/* LOGOUT */}
         <div className="sidebar-footer">
           <button className="menu-item logout-btn" onClick={handleLogout}>
             <FaSignOutAlt className="menu-icon" size={18} />
@@ -148,7 +137,6 @@ const Sidebar = () => {
         </div>
       </aside>
 
-      {/* MOBILE BOTTOM NAV */}
       <nav className="mobile-bottom-nav">
         {menuItems.map((item) => {
           const Icon = item.icon;

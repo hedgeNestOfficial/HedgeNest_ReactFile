@@ -1,7 +1,7 @@
 import React from "react";
-import "../../Style/SettingsView.css"; // Matches your centralized style directory structure
+import "../../Style/SettingView.css"; // Ensure this matches your CSS filename exactly
 
-const SettingsView = ({ accounts = [], onAddAccount }) => {
+const SettingView = ({ accounts = [], onAddAccount }) => {
   return (
     <div className="settings-view-wrapper">
       {/* CARD 1: CHANGE PASSWORD */}
@@ -57,4 +57,4 @@ const SettingsView = ({ accounts = [], onAddAccount }) => {
   );
 };
 
-export default SettingsView;
+export default SettingView;
