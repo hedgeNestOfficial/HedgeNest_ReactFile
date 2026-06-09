@@ -63,11 +63,8 @@
 
   border: none;
   border-radius: 6px;
-
   background: var(--button-primaryColor, #eab308) !important;
-
   color: #ffffff !important;
-
   font-size: 1rem;
   font-weight: 600;
 
