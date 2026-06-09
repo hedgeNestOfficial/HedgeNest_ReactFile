@@ -1,30 +1,19 @@
 import React, { useState } from "react";
-
 import background from "../../assets/Signupimg.jpg";
-
 import { LuArrowLeft } from "react-icons/lu";
-
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
-
 import { useForm } from "react-hook-form";
-
 import toast from "react-hot-toast";
-
 import Button from "../../Components/Button";
-
 import "../../Style/Otp.css";
-
 import { resendOtp } from "../../Services/authService";
-
 import { signup } from "../../Store/UserSlice";
+import { OrbitProgress } from "react-loading-indicators";
 
 const ResetPass = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -49,9 +38,22 @@ const ResetPass = () => {
       };
 
       const response = await resendOtp(payload);
-
       toast.success(response?.message || "OTP sent successfully");
 
+      // dispatch(
+      //   signup({
+      //     email: data.email.trim(),
+      //     phoneNumber: "",
+      //   }),
+      // );
+
+      // setTimeout(() => {
+      //   navigate("/otp", {
+      //     state: {
+      //       purpose: "reset-password",
+      //     },
+      //   });
+      // }, 1500);
       dispatch(
         signup({
           email: data.email.trim(),
@@ -60,7 +62,11 @@ const ResetPass = () => {
       );
 
       setTimeout(() => {
-        navigate("/otp?type=reset");
+        navigate("/otp", {
+          state: {
+            purpose: "reset-password",
+          },
+        });
       }, 1500);
     } catch (error) {
       console.log("RESET OTP ERROR:", error);
@@ -123,10 +129,18 @@ const ResetPass = () => {
             </div>
 
             <Button
-              text={isLoading ? "Sending..." : "Next"}
+              text={
+                isLoading ? (
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#ffffff" size="small" />
+                  </div>
+                ) : (
+                  "Next"
+                )
+              }
               type="submit"
               className="otp-submit-btn"
-              disabled={!watchedEmail || isLoading}
+              disabled={!watchedEmail.trim() || isLoading}
               color={watchedEmail?.trim() ? "#c9922a" : "#bdbdbd"}
             />
           </form>

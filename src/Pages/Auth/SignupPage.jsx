@@ -1,23 +1,16 @@
 import React, { useEffect } from "react";
 import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
-
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
-
 import { inputTex } from "../../JS/signupCard";
-
 import { FcGoogle } from "react-icons/fc";
 import { LuArrowLeft } from "react-icons/lu";
-
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import toast from "react-hot-toast";
-
 import { signupSchema } from "../../Validation/authSchema";
 import { registerUser } from "../../Services/authService";
 import { signup } from "../../Store/UserSlice";
@@ -26,6 +19,9 @@ import { OrbitProgress } from "react-loading-indicators";
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8228/api/v1/auth/google";
+  };
 
   const {
     register,
@@ -48,22 +44,10 @@ const SignupPage = () => {
     },
   });
 
-  /*
-  =========================================
-  WATCHED VALUES
-  =========================================
-  */
-
   const watchedFields = watch();
 
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
-
-  /*
-  =========================================
-  PASSWORD MATCH MONITOR
-  =========================================
-  */
 
   useEffect(() => {
     if (
@@ -75,12 +59,6 @@ const SignupPage = () => {
     }
   }, [password, confirmPassword]);
 
-  /*
-  =========================================
-  FORM FILLED STATE
-  =========================================
-  */
-
   const isFormFilled =
     watchedFields.firstName?.trim() &&
     watchedFields.email?.trim() &&
@@ -88,12 +66,6 @@ const SignupPage = () => {
     watchedFields.password?.trim() &&
     watchedFields.confirmPassword?.trim() &&
     watchedFields.terms;
-
-  /*
-  =========================================
-  SUBMIT FUNCTION
-  =========================================
-  */
 
   const onSubmitForm = async (data) => {
     try {
@@ -119,7 +91,11 @@ const SignupPage = () => {
       reset();
 
       setTimeout(() => {
-        navigate("/otp");
+        navigate("/otp", {
+          state: {
+            purpose: "signup",
+          },
+        });
       }, 1500);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -175,7 +151,7 @@ const SignupPage = () => {
             )}
 
             <Button
-              color={isSubmitting ? "#bdbdbd" : "#c9922a"}
+              // color={isSubmitting ? "#bdbdbd" : "#c9922a"}
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">
@@ -195,7 +171,12 @@ const SignupPage = () => {
               <span>Or</span>
             </div>
 
-            <button type="button" className="google-oauth-btn">
+            <button
+              className="google-oauth-btn"
+              type="button"
+              // className="google-oauth-btn"
+              onClick={handleGoogleLogin}
+            >
               <FcGoogle className="google-icon" />
               Sign Up with Google
             </button>
