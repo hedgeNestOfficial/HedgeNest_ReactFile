@@ -13,6 +13,7 @@
   /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
+  padding: 80px 24px;
   gap: 48px;
 }
 

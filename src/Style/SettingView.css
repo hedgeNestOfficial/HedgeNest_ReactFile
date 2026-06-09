@@ -1,0 +1,95 @@
+.settings-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.settings-card h3 {
+  font-size: 1.2rem;
+  color: #111827;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+}
+
+.settings-card p {
+  color: #4b5563;
+  font-size: 0.95rem;
+  margin: 0 0 24px 0;
+}
+
+/* Golden Action Buttons */
+.settings-action-btn {
+  height: 50px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.settings-action-btn:hover {
+  opacity: 0.9;
+}
+
+/* Card Header Layout for Linked Accounts */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-header-row h3 {
+  margin: 0;
+}
+
+.add-account-link-btn {
+  background: transparent;
+  border: none;
+  color: #e6b042;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-account-link-btn:hover {
+  text-decoration: underline;
+}
+
+.accounts-list-zone {
+  min-height: 40px;
+}
+
+.empty-accounts-text {
+  color: #6b7280 !important;
+  font-size: 0.95rem;
+  margin: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+  .settings-card {
+    padding: 20px;
+  }
+
+  .card-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
