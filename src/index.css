@@ -42,13 +42,3 @@
   align-items: center;
   justify-content: center;
 }
-
-.brand-group-signup {
-  display: none;
-}
-
-@media screen and (max-width: 768px) {
-  .brand-group-signup {
-    display: flex;
-  }
-}

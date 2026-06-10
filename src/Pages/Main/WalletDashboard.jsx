@@ -230,7 +230,7 @@ const WalletPage = () => {
             ) : (
               <div className="transactions-list">
                 {historyData.map((item, index) => (
-                  <TransactionHistory key={index} transactions={transactions} />
+                  <TransactionHistory key={index} item={transactions} />
                 ))}
               </div>
             )}
