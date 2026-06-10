@@ -54,9 +54,8 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
-          <Route path="/smart safe" element={<SmartSafe />} />
-                      <Route path="/invest" element={<InvestDasboard />} />
-
+          <Route path="/smart-safe" element={<SmartSafe />} />
+          <Route path="/invest" element={<InvestDashboard />} />
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />

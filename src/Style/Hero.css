@@ -100,13 +100,15 @@
 
   .hero-content {
     width: 100%;
-    align-items: center; /* Centers the button and layout elements */
-    text-align: center; /* Centers the actual typography text */
+    /* align-items: center; Centers the button and layout elements */
+    text-align: left; /* Centers the actual typography text */
   }
 
   .hero-title {
+    width: 100%;
     font-size: 2.2rem; /* Comfortably scales down typography for smaller mobile viewports */
     margin-bottom: 16px;
+    text-align: left;
   }
 
   .hero-text-description {
@@ -126,5 +128,9 @@
     width: 100%;
     max-width: 480px; /* Forces your app mockups to look big, crisp, and beautifully centered */
     height: auto;
+  }
+
+  .hero-button {
+    align-self: flex-start;
   }
 }

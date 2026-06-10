@@ -8,7 +8,6 @@ import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { GiInjustice } from "react-icons/gi";
 
 const ProfilePage = () => {
-  // State to hold form data, making it ready for API integration
   const [formData, setFormData] = useState({
     firstName: "Michael",
     lastName: "Promise",
@@ -16,13 +15,9 @@ const ProfilePage = () => {
     email: "hello.hedgenest@gmail.com",
   });
 
-  // Controls which view is currently active
   const [activeTab, setActiveTab] = useState("profile");
-
-  // State placeholder for linked bank accounts (ready for your API later)
   const [linkedAccounts, setLinkedAccounts] = useState([]);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -31,11 +26,9 @@ const ProfilePage = () => {
     }));
   };
 
-  // Handle form submission (Ready for your API call)
   const handleSaveProfile = (e) => {
     e.preventDefault();
     console.log("Submitting to API...", formData);
-    // Add your fetch/axios logic here
   };
 
   const handleAddAccountClick = () => {
