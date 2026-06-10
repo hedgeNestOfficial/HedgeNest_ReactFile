@@ -1,4 +1,4 @@
-import "../Style/investmentCard.css";
+import "../Style/InvestmentCard.css";
 import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 
 export const InvestmentCard = ({ product }) => {
