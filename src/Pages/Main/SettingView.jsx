@@ -1,10 +1,9 @@
 import React from "react";
-import "../../Style/SettingView.css"; // Ensure this matches your CSS filename exactly
+import "../../Style/SettingView.css";
 
 const SettingView = ({ accounts = [], onAddAccount }) => {
   return (
     <div className="settings-view-wrapper">
-      {/* CARD 1: CHANGE PASSWORD */}
       <div className="settings-card">
         <h3>Change Password</h3>
         <p>Don’t like password, or have forgotten it?</p>

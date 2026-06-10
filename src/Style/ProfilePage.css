@@ -228,8 +228,8 @@
   }
 
   .profile-tabs-container {
-    flex-direction: column; /* Stacks the tabs on mobile */
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .profile-tab-btn {

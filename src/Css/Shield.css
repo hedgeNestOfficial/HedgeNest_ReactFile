@@ -2,7 +2,6 @@
   width: 100%;
   min-height: 100vh;
   background: radial-gradient(#352e97, #181739);
-  
 }
 
 .shield-holder {
@@ -12,7 +11,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 60px 0;
   box-sizing: border-box;
   font-family: sans-serif;
   overflow: hidden;
@@ -20,7 +18,7 @@
 
 .hero-wrapper {
   width: 90%;
-
+  padding: 80px 20px;
   height: auto;
   display: flex;
   flex-direction: row;
@@ -28,7 +26,6 @@
   justify-content: space-between;
   gap: 40px;
   margin-bottom: 60px;
-  
 }
 
 .hero-content {

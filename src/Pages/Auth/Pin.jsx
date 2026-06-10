@@ -8,17 +8,17 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { createPin } from "../../Services/authService";
 import whiteLogo from "../../assets/white logo.png";
+import { OrbitProgress } from "react-loading-indicators";
 
 const Pin = () => {
   const navigate = useNavigate();
 
   const inputRefs = useRef([]);
 
-  const { token } = useSelector((state) => state.user);
-
+  // const { user } = useSelector((state) => state.user);
+  const { token, user } = useSelector((state) => state.user);
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [splashscreen, setSplashScreen] = useState(null);
 
@@ -35,7 +35,6 @@ const Pin = () => {
       setConfirmPin(updatedConfirmPin);
     }
 
-    // MOVE TO NEXT INPUT
     if (value && index < 5) {
       const nextRef =
         type === "pin"
@@ -63,6 +62,7 @@ const Pin = () => {
     e.preventDefault();
 
     const pinCode = pin.join("");
+
     const confirmPinCode = confirmPin.join("");
 
     if (pinCode.length !== 6) {
@@ -84,25 +84,38 @@ const Pin = () => {
       setIsLoading(true);
 
       const payload = {
-        pin: pinCode,
+        email: user?.email,
+
+        transactionPin: pinCode,
+
+        confirmTransactionPin: confirmPinCode,
       };
+
+      console.log("PIN PAYLOAD:", payload);
 
       const response = await createPin(payload, token);
 
-      toast.success(response?.message || "PIN created successfully");
+      console.log("PIN SUCCESS:", response);
+
+      toast.success(
+        response?.message || "Transaction pin created successfully",
+      );
 
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create PIN");
+      console.log("FULL PIN ERROR:", error);
 
-      console.log(error);
+      console.log("PIN ERROR RESPONSE:", error?.response);
+
+      console.log("PIN ERROR DATA:", error?.response?.data);
+
+      toast.error(error?.response?.data?.message || "Failed to create PIN");
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <section className="signup-section">
       <div className="image-container">

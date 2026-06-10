@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-padding-top: 40px;;
+  /* padding-top: 40px; */
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
@@ -38,12 +38,11 @@ padding-top: 40px;;
 .sc-save-section {
   width: 100%;
   height: 50%;
-   background: radial-gradient(#352e97, #181739);
+  background: radial-gradient(#352e97, #181739);
   padding: 80px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .sc-container {

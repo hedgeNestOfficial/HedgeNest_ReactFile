@@ -45,7 +45,7 @@ const BvnAuth = () => {
     const value = e.target.value.replace(/\D/g, "");
 
     if (value.length <= 11) {
-      setIdNumber(value); // Assuming this is for NIN, not BVN
+      setIdNumber(value);
     }
   };
 
@@ -56,19 +56,16 @@ const BvnAuth = () => {
   const handleSubmitKyc = async (e) => {
     e.preventDefault();
 
-    if (!idNumber) {
-      toast.error("Enter NIN number");
-      return;
+    if (!idNumber.trim()) {
+      return toast.error("Enter NIN number");
     }
 
     if (idNumber.length !== 11) {
-      toast.error("NIN must be 11 digits");
-      return;
+      return toast.error("NIN must be 11 digits");
     }
 
     if (!idPhoto) {
-      toast.error("Upload your NIN slip");
-      return;
+      return toast.error("Upload your NIN slip");
     }
 
     try {
@@ -76,27 +73,39 @@ const BvnAuth = () => {
 
       const formData = new FormData();
 
+      // EXACT BACKEND FIELDS
       formData.append("idType", "nin");
-      formData.append("idNumber", idNumber.toString());
+
+      formData.append("idNumber", String(idNumber));
+
       formData.append("idPhoto", idPhoto);
+
+      console.log("FORM DATA:");
+      console.log("idType:", "nin");
+      console.log("idNumber:", String(idNumber));
+      console.log("idPhoto:", idPhoto);
 
       const response = await submitKyc(formData, token);
 
-      toast.success(response.message);
+      console.log("SUCCESS RESPONSE:", response);
 
-      navigate("/pin");
+      toast.success(response?.message || "KYC uploaded successfully");
+
+      setTimeout(() => {
+        navigate("/pin");
+      }, 1500);
     } catch (error) {
-      console.log(error);
+      console.log("FULL ERROR:", error);
 
-      toast.error(error?.response?.data?.message || "KYC upload failed");
+      console.log("ERROR RESPONSE:", error?.response?.data);
+
+      toast.error(error?.response?.data?.message || "KYC failed to submit");
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <section className="signup-section">
-      {/* LEFT IMAGE */}
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
         <div
@@ -141,7 +150,6 @@ const BvnAuth = () => {
           <h2>Verify Your Identity</h2>
 
           <form className="auth-form" onSubmit={handleSubmitKyc}>
-            {/* FILE UPLOAD */}
             <div className="Auth-inputs-row">
               <label>ID Type</label>
 
@@ -151,15 +159,7 @@ const BvnAuth = () => {
             <div className="Auth-inputs-row">
               <label>Upload photo of NIN ID</label>
 
-              <div
-                className="input-tag"
-                // style={{
-                //   width: "100%",
-                //   height: "100%",
-                //   display: "flex",
-                //   justifyContent: "space-between",
-                // }}
-              >
+              <div className="input-tag">
                 <input
                   type="file"
                   id="ninUpload"
