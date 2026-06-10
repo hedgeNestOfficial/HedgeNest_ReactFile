@@ -1,0 +1,159 @@
+/* Base Shared Modal Overlays Framework Layout Elements */
+.modal-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  width: 520px;
+  min-height: 320px;
+  height: auto;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 40px;
+  box-sizing: border-box;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-container.layout-centered {
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title, .summary-title, .pin-screen-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 32px 0;
+}
+
+.back-arrow-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.back-icon-style {
+  font-size: 24px;
+  color: #111111;
+}
+
+/* Core Form Action Button Bottom Standard Sizing Elements */
+.modal-actions-footer {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.btn-secondary {
+  width: 204px;
+  height: 50px;
+  background-color: #FFFFFF;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  color: #111111;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  width: 204px;
+  height: 50px;
+  background-color: #E2B93B;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Stage C Loading Transitional Spinner Framework Rules */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(226, 185, 59, 0.2);
+  border-top: 4px solid #E2B93B;
+  border-radius: 50%;
+  animation: spinSmooth 0.8s linear infinite;
+}
+
+@keyframes spinSmooth {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Stage E Success Card Interface Structure Settings */
+.modal-container.success-card-padding {
+  padding: 60px 40px;
+}
+
+.success-pulse-ring {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(226, 185, 59, 0.15);
+  border-radius: 50%;
+  margin-bottom: 36px;
+}
+
+.success-inner-dot {
+  width: 16px;
+  height: 16px;
+  background-color: #E2B93B;
+  border-radius: 50%;
+}
+
+.success-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111111;
+  text-align: center;
+  margin: 0 0 52px 0;
+}
+
+.success-close-btn {
+  width: 100%;
+  height: 52px;
+  background-color: #E2B93B;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}

@@ -1,0 +1,80 @@
+/* Stage A Input Form Layout Rules */
+.modal-form {
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.relative-group {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #111111;
+  margin-bottom: 10px;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #757575;
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: 16px;
+  color: #111111;
+  box-sizing: border-box;
+  outline: none;
+  background-color: #FFFFFF;
+}
+
+.read-only-input {
+  cursor: default;
+}
+
+.select-wrapper {
+  width: 100%;
+  height: 52px;
+  position: relative;
+}
+
+.form-select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.select-arrow-icon {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  pointer-events: none;
+}
+
+.select-arrow-icon-style {
+  font-size: 24px;
+  color: #111111;
+}
+
+.toggle-flexible-btn {
+  background: none;
+  border: none;
+  color: #E2B93B;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  position: absolute;
+  bottom: -45px;
+  right: 0;
+  /* padding: 0; */
+}

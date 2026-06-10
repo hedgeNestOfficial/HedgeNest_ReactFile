@@ -28,6 +28,8 @@ import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
+import SmartSafe from "./Pages/SmartSafe";
+
 
 const App = () => {
   return (
@@ -50,6 +52,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
+          <Route path="/smart safe" element={<SmartSafe />} />
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />

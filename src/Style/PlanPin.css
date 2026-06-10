@@ -1,0 +1,50 @@
+/* Stage D Secure Pin Box Configuration Layout Elements */
+.pin-screen-title {
+  font-size: 26px;
+  margin-bottom: 40px;
+}
+
+.pin-input-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.pin-box {
+  width: 60px;
+  height: 72px;
+  border: 1px solid #C4C4C4;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 28px;
+  color: #111111;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pin-box:focus {
+  border-color: #E2B93B;
+}
+
+.pin-submit-btn {
+  width: 100%;
+  height: 52px;
+  background-color: #E2B93B;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.pin-submit-btn:disabled {
+  background-color: #E6D29B;
+  cursor: not-allowed;
+}

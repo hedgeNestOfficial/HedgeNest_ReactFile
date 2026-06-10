@@ -1,0 +1,221 @@
+/* Container Layout Base */
+.smart-container {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 750px;
+  background-color: #FDF9EC;
+  padding: 40px 48px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+}
+
+/* Header Element Styles */
+.dash-header {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.main-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #010101;
+  margin: 0 0 6px 0;
+}
+
+.sub-title {
+  font-size: 14px;
+  color: #555555;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Info Dropdown Panels Overlay */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.help-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent !important;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111111;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.help-btn:hover, .help-btn.active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-help {
+  font-size: 28px;
+}
+
+.dropdown-panel {
+  width: 440px;
+  background-color: #FFFFFF;
+  border: 1px solid #C4C4C4;
+  border-radius: 16px;
+  position: absolute;
+  top: 52px;
+  right: -60px;
+  z-index: 100;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.panel-content {
+  width: 100%;
+  padding: 24px 20px;
+  box-sizing: border-box;
+}
+
+.arrow-top {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #FFFFFF;
+  position: absolute;
+  top: -12px;
+  right: 64px;
+}
+
+.info-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #111111;
+  margin: 0 0 16px 0;
+}
+
+.rate-banner {
+  width: 100%;
+  height: 44px;
+  background-color: #E2B93B;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 20px 0 12px 0;
+}
+
+/* Flexbox Rate List Alternative */
+.rate-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  min-height: 36px;
+  box-sizing: border-box;
+}
+
+.rate-header {
+  font-weight: 500;
+}
+
+.bg-highlight {
+  background-color: #FFFDF4;
+  border-radius: 4px;
+}
+
+.cell {
+  font-size: 14px;
+  color: #111111;
+}
+
+.text-left { text-align: left; }
+.text-right { text-align: right; font-weight: 500; }
+
+/* Call to Action Button */
+.create-btn {
+  width: 154px;
+  height: 46px;
+  background-color: #E2B93B;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.icon-plus {
+  font-size: 18px;
+}
+
+/* Empty State Card Window */
+.empty-card {
+  width: 100%;
+  height: 360px;
+  background-color: #FFFFFF;
+  border: 1px solid #C4C4C4;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-content {
+  width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-piggy {
+  font-size: 44px;
+  color: #111111;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 12px 0;
+}
+
+.card-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444444;
+  margin: 0;
+}
