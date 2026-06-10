@@ -2,9 +2,6 @@ import axios from "axios";
 
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
-/* =========================
-   REGISTER
-========================= */
 export const registerUser = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.REGISTER, payload, {
     headers: API_CONFIG.headers,
@@ -14,9 +11,6 @@ export const registerUser = async (payload) => {
   return response.data;
 };
 
-/* =========================
-   LOGIN
-========================= */
 export const loginUser = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.LOGIN, payload, {
     headers: API_CONFIG.headers,
@@ -26,9 +20,6 @@ export const loginUser = async (payload) => {
   return response.data;
 };
 
-/* =========================
-   VERIFY OTP
-========================= */
 export const verifyOtp = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.VERIFY_OTP, payload, {
     headers: API_CONFIG.headers,
@@ -38,9 +29,6 @@ export const verifyOtp = async (payload) => {
   return response.data;
 };
 
-/* =========================
-   RESEND OTP
-========================= */
 export const resendOtp = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
     headers: API_CONFIG.headers,
@@ -59,9 +47,7 @@ export const submitKyc = async (formData, token) => {
 
   return response.data;
 };
-/* =========================
-   CREATE PIN
-========================= */
+
 export const createPin = async (payload, token) => {
   try {
     const response = await axios.patch(ENDPOINTS.AUTH.CREATE_PIN, payload, {
@@ -92,4 +78,18 @@ export const resetPassword = async (payload) => {
   });
 
   return response.data;
+};
+
+export const updateProfile = async (formData, token) => {
+  try {
+    const response = await axios.put(ENDPOINTS.USER.UPDATE_PROFILE, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };

@@ -1,0 +1,170 @@
+/* Modal Overlay and Container */
+.kyc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.kyc-modal-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  width: 90%;
+  max-w: 400px;
+  min-height: 200px;
+  padding: 30px 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typography */
+.kyc-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.kyc-modal-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 24px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Buttons */
+.kyc-btn-group {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.kyc-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kyc-btn-cancel {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.kyc-btn-continue {
+  background-color: #f2c94c; /* HedgeNest Yellow */
+  border: none;
+  color: #000;
+}
+
+.kyc-btn-continue:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Upload Fields */
+.kyc-upload-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.kyc-upload-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.kyc-upload-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: #fafafa;
+}
+
+.kyc-upload-text {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
+
+/* PIN Inputs */
+.kyc-pin-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.kyc-pin-input {
+  width: 45px;
+  height: 55px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.kyc-pin-input:focus {
+  border-color: #f2c94c;
+  outline: none;
+}
+
+.kyc-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #374151;
+}
+
+/* Success State */
+.kyc-success-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 3rem;
+  color: #f2c94c;
+}

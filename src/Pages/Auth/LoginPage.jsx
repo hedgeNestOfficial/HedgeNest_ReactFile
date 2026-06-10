@@ -16,15 +16,14 @@ import { loginUser } from "../../Services/authService";
 import { login } from "../../Store/UserSlice";
 import { OrbitProgress } from "react-loading-indicators";
 import whiteLogo from "../../assets/white logo.png";
-
+import { API_CONFIG, ENDPOINTS } from "../../Config/apiConfig";
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8228/api/v1/auth/google";
+    window.location.href = ENDPOINTS.AUTH.GOOGLE_AUTH;
   };
-
   const {
     register,
     handleSubmit,

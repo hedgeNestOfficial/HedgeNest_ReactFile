@@ -21,7 +21,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8228/api/v1/auth/google";
+    window.location.href = "https://hedgenest.onrender.com/api/v1/auth/google";
   };
 
   const {
