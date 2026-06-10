@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import whiteLogo from "../../assets/white logo.png";
 import { signupSchema } from "../../Validation/authSchema";
 import { registerUser } from "../../Services/authService";
 import { signup } from "../../Store/UserSlice";
@@ -108,6 +109,27 @@ const SignupPage = () => {
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "2%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
       </div>
 
       <div className="form-container">

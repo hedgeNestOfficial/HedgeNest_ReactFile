@@ -7,9 +7,11 @@ import saveIMG4 from "../assets/saveIMG4.jpg";
 import saveIMG5 from "../assets/saveIMG5.png";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import { useNavigate } from "react-router-dom";
 import { MdOutlineCheck } from "react-icons/md";
 
 const Save = () => {
+  const navigate = useNavigate();
   return (
     <div className="hn-page-wrapper">
       <section className="sc-save-section">
@@ -53,7 +55,11 @@ const Save = () => {
                 Track your savings progress in real time
               </li>
             </ul>
-            <button className="sc-primary-btn" type="button">
+            <button
+              className="sc-primary-btn"
+              type="button"
+              onClick={() => navigate("/signup")}
+            >
               Start Saving
             </button>
           </div>
@@ -115,7 +121,11 @@ const Save = () => {
               </li>
               <li className="sb-step-item">Start saving!</li>
             </ol>
-            <button className="sb-primary-btn" type="button">
+            <button
+              className="sb-primary-btn"
+              type="button"
+              onClick={() => navigate("/signup")}
+            >
               Start Saving
             </button>
           </div>
@@ -140,7 +150,13 @@ const Save = () => {
             <p className="im-subtext">
               Start saving now and build the future you deserve.
             </p>
-            <button className="im-action-btn" type="button">
+            <button
+              onClick={() => navigate("/signup")}
+              className="im-action-btn"
+              type="button"
+            >
+              {" "}
+              {/* Added useNavigate hook */}
               Start Saving Now
             </button>
           </div>

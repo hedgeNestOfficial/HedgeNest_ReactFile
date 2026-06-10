@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -35,6 +35,7 @@ const WalletPage = () => {
     }));
   };
 
+  // useEffect((){})
   const handleLinkAccount = async (e) => {
     e.preventDefault();
 
@@ -111,6 +112,8 @@ const WalletPage = () => {
     }
   };
 
+  console.log(user);
+  console.log(token);
   return (
     <div className="wallet-page-container">
       <Sidebar />

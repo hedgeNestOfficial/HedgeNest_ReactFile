@@ -28,17 +28,20 @@ import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
 import PopupCard from "./Features/PopupCard";
+import ScrollToTop from "./Components/ScrollToTop";
+import { InvestDashboard } from "./Pages/Main/InvestDasboard";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/protect" element={<Protect />} />
           <Route path="/save" element={<Save />} />
-          <Route path="/invest" element={<Invest />} />
+          <Route path="/investPage" element={<Invest />} />
           <Route path="/policy" element={<Policy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
@@ -50,6 +53,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
+          <Route path="/invest" element={<InvestDashboard />} />
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />

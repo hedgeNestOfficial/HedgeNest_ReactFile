@@ -15,6 +15,7 @@ import { FaPeopleCarry } from "react-icons/fa";
 import Button from "../Components/Button";
 import investIMG1 from "../assets/currencypic.jpg";
 
+import { useNavigate } from "react-router-dom";
 const Invest = () => {
   // Array Data
   const howItWorksData = [
@@ -82,6 +83,7 @@ const Invest = () => {
     },
   ];
 
+  const navigate = useNavigate();
   return (
     <div className="invest-page-wrapper">
       <section className="inv-hero">
@@ -112,9 +114,17 @@ const Invest = () => {
               </li>
             </ul>
             <div className="inv-actions">
-              <Button className="inv-btn-solid" text="Start Investing" />
+              <Button
+                className="inv-btn-solid"
+                text="Start Investing"
+                onClick={() => navigate("/signup")}
+              />
 
-              <Button className="inv-btn-outline" text="Explore Options" />
+              <Button
+                className="inv-btn-outline"
+                text="Explore Options"
+                onClick={() => navigate("/signup")}
+              />
             </div>
           </div>
           <div className="inv-graphic-wrapper">
@@ -174,7 +184,11 @@ const Invest = () => {
             ))}
           </div>
           <div className="hiw-action">
-            <button className="hiw-btn" type="button">
+            <button
+              className="hiw-btn"
+              type="button"
+              onClick={() => navigate("/signup")}
+            >
               Start Investing
             </button>
           </div>
@@ -200,7 +214,11 @@ const Invest = () => {
             ))}
           </div>
           <div className="ic-action">
-            <button className="ic-btn" type="button">
+            <button
+              className="ic-btn"
+              type="button"
+              onClick={() => navigate("/signup")}
+            >
               Start Investing
             </button>
           </div>
@@ -232,7 +250,11 @@ const Invest = () => {
             <p className="wfy-subtext">
               Start small, stay consistent, and watch your money grow over time.
             </p>
-            <button className="wfy-action-btn" type="button">
+            <button
+              className="wfy-action-btn"
+              type="button"
+              onClick={() => navigate("/signup")}
+            >
               Start Investing
             </button>
           </div>

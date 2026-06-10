@@ -1,0 +1,80 @@
+.card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%; /* Default for mobile */
+  box-sizing: border-box;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge.low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.badge.medium {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.description {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.metrics-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.metric-box {
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  border-radius: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.metric-box .label {
+  font-size: 10px;
+  color: #999;
+}
+.metric-box .value {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.invest-btn {
+  background: #f4c430; /* Matches your gold button */
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}

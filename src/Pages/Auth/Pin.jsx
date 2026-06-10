@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { createPin } from "../../Services/authService";
+import whiteLogo from "../../assets/white logo.png";
 
 const Pin = () => {
   const navigate = useNavigate();
@@ -106,6 +107,27 @@ const Pin = () => {
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "2%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
       </div>
 
       <div className="form-container">

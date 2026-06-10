@@ -33,7 +33,7 @@
   width: 100%;
   height: 50px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 0 15px; /* Side padding inside the box */
   background: transparent;
   transition: border-color 0.2s ease;
@@ -59,13 +59,10 @@
 /* Icon styling */
 .input-icon {
   font-size: 18px;
-  color: #4b5563; /* Dark gray */
+  color: #4b5563;
   margin-left: 10px;
 }
 
-/* =========================================
-   CUSTOM FILE UPLOAD LOGIC
-   ========================================= */
 .custom-file-label {
   display: flex;
   align-items: center;
@@ -74,17 +71,22 @@
   cursor: pointer;
 }
 
-/* When no file is selected, look like placeholder text */
 .file-placeholder {
   color: #9ca3af;
   font-size: 14px;
 }
-
-/* When a file is selected, look like normal typed text */
 .file-selected {
   color: #111827;
   font-size: 14px;
   font-weight: 500;
+}
+
+.file-upload-box {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* =========================

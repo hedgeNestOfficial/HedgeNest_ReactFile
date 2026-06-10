@@ -1,0 +1,30 @@
+.dashboard-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8; /* Light background for the dashboard */
+  color: black;
+  gap: 30px;
+}
+
+/* Flexbox container for the products */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to next line on mobile */
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+/* Responsive adjustment without media queries/calc: 
+   Flex-basis tells the cards to be 350px wide. 
+   On mobile, they are > 350px, so they stack. 
+   On desktop, the container is wider, allowing them to sit side-by-side. */
+.products-grid > .card {
+  flex: 1 1 350px;
+}
+
+/* Styling the section headers */
+h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}

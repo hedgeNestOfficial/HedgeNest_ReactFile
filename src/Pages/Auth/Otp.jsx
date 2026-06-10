@@ -2,14 +2,12 @@ import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
-
 import "../../Style/Otp.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
 import { LuArrowLeft } from "react-icons/lu";
-
 import { verifyOtp, resendOtp } from "../../Services/authService";
-
+import whiteLogo from "../../assets/white logo.png";
 import toast from "react-hot-toast";
 
 const Otp = () => {
@@ -120,6 +118,27 @@ const Otp = () => {
   return (
     <section className="signup-section">
       <div className="image-container">
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "2%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
       </div>
 

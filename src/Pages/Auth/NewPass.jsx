@@ -1,38 +1,23 @@
 import React, { useEffect, useState } from "react";
-
 import "../../Style/NewPass.css";
-
 import background from "../../assets/Signupimg.jpg";
-
 import { LuArrowLeft, LuEye, LuEyeOff } from "react-icons/lu";
-
 import Button from "../../Components/Button";
-
 import { useNavigate } from "react-router-dom";
-
 import { useSelector } from "react-redux";
-
 import { useForm } from "react-hook-form";
-
 import toast from "react-hot-toast";
-
 import { OrbitProgress } from "react-loading-indicators";
-
+import whiteLogo from "../../assets/white logo.png";
 import { resetPassword } from "../../Services/authService";
 
 const NewPass = () => {
   const navigate = useNavigate();
-
   const tempUser = useSelector((state) => state.user.tempUser);
-
   const userEmail = tempUser?.email || "";
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -103,6 +88,27 @@ const NewPass = () => {
       {/* LEFT IMAGE */}
       <div className="image-container">
         <img src={background} alt="HedgeNest Protection Illustration" />
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "2%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
       </div>
 
       {/* RIGHT FORM */}

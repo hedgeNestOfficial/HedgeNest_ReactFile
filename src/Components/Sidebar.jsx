@@ -51,7 +51,7 @@ const Sidebar = () => {
   return (
     <>
       <header className="mobile-top-navbar">
-        <div className="brand-group">
+        <div className="brand-group" onClick={() => navigate("/")}>
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
@@ -74,7 +74,11 @@ const Sidebar = () => {
       </header>
 
       <aside className="desktop-sidebar">
-        <div className="sidebar-brand">
+        <div
+          className="sidebar-brand"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
@@ -120,7 +124,11 @@ const Sidebar = () => {
                   activeItem === "profile" ? "active" : ""
                 }`}
               >
-                <FaUserCircle className="menu-icon" size={18} />
+                <FaUserCircle
+                  className="menu-icon"
+                  onClick={() => navigate("/profile")}
+                  size={18}
+                />
 
                 <span className="menu-text">Profile</span>
               </button>
