@@ -27,6 +27,7 @@ import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
+import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
 import { InvestDashboard } from "./Pages/Main/InvestDasboard";
@@ -53,7 +54,9 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
-          <Route path="/invest" element={<InvestDashboard />} />
+          <Route path="/smart safe" element={<SmartSafe />} />
+                      <Route path="/invest" element={<InvestDasboard />} />
+
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />

@@ -1,0 +1,233 @@
+/* Core Flex Workspace Layout Wrapper */
+.vault-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Automatically flushes cards to opposite horizontal sides */
+  row-gap: 24px;                  /* Creates uniform vertical rows spacing */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Flex Item Sizing & Card Base Structure */
+.vault-card {
+  width: 48%;                     /* Flat percentage layout share */
+  min-width: 340px;
+  max-width: 540px;
+  height: 400px;                  /* Locked strict card container bounds */
+  background-color: #FFFFFF;
+  border: 1px solid #C4C4C4;
+  border-radius: 16px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Category Badge Layout Elements */
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.badge-text {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #111111;
+}
+
+.badge-icon {
+  font-size: 16px;
+}
+
+.icon-gold {
+  color: #E2B93B;
+}
+
+/* Content Frame Headers */
+.vault-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 16px 0;
+}
+
+.amount-group {
+  display: flex;
+  align-items: baseline;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.vault-currency {
+  font-size: 28px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.vault-balance {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.timeline-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 16px 0;
+}
+
+/* Linear Progress Bar Elements */
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background-color: #F7F3E3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #E2B93B;
+  border-radius: 10px;
+}
+
+/* Info Labels Layout Row */
+.metrics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.rate-lbl, .freq-lbl {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+}
+
+/* Action Button Core Frameworks */
+.action-row {
+  display: flex;
+  justify-content: space-between; /* Pushes child buttons to separate outer edge points */
+  width: 100%;
+  margin-bottom: auto;
+}
+
+.btn-gold-full {
+  width: 100%;
+  height: 48px;
+  background-color: #EDC344 ;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-gold-action {
+  width: 48%; /* Splits action row side-by-side elements down evenly */
+  height: 48px;
+  background-color: #EDC344;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-white-action {
+  width: 48%; /* Splits action row side-by-side elements down evenly */
+  height: 48px;
+  background: #FFFFFF !important;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Card Control Toggles Footer Frame */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; 
+  padding-top: 20px;
+  border-top: 1px solid #EAEAEA;
+}
+
+.footer-lbl {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555555;
+  transition: color 0.2s ease;
+}
+
+.footer-lbl.lbl-active {
+  font-weight: 600;
+  color: #111111;
+}
+
+/* Slider Controls Element Styles */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #C4C4C4;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #EDC344;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Mobile Media Break Handling */
+@media (max-width: 768px) {
+  .vault-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 400px;
+  }
+}
