@@ -13,27 +13,18 @@ import toast from "react-hot-toast";
 const Otp = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const inputRefs = useRef([]);
-
   const tempUser = useSelector((state) => state.user.tempUser);
-
   const userEmail = tempUser?.email || "";
-
   const purpose = location.state?.purpose || "signup";
-
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
-
     const updatedOtp = [...otp];
-
     updatedOtp[index] = value;
-
     setOtp(updatedOtp);
-
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -125,8 +116,9 @@ const Otp = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">

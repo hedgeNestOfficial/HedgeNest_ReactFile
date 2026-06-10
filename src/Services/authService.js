@@ -50,29 +50,6 @@ export const resendOtp = async (payload) => {
   return response.data;
 };
 
-/* =========================
-   SUBMIT KYC
-========================= */
-// export const submitKyc = async (formData, token) => {
-//   try {
-//     const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-
-//       timeout: 60000,
-//     });
-
-//     return response.data;
-//   } catch (error) {
-//     console.log("FULL UPLOAD ERROR:", error);
-
-//     console.log("SERVER ERROR:", error?.response?.data);
-
-//     throw error;
-//   }
-// };
-
 export const submitKyc = async (formData, token) => {
   const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
     headers: {

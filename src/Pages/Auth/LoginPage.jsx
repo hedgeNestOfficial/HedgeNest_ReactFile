@@ -73,7 +73,6 @@ const LoginPage = () => {
       }, 1500);
     } catch (error) {
       console.log("LOGIN ERROR:", error);
-
       toast.error(error.response?.data?.message || "Invalid email or password");
     }
   };
@@ -89,8 +88,9 @@ const LoginPage = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">

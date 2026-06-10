@@ -132,52 +132,88 @@ export const WhyChooseData = [
       "See exactly what you'll get before you convert; real-time rate display as well as clear fee breakdown",
   },
 ];
-
 export const QAData = [
   {
     Question: "What is HedgeNest?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation,",
+      "HedgeNest is a financial platform that helps you save, protect your money from inflation using USDT, and invest — all in one simple app.",
   },
+
   {
-    Question: "Do I need to Understand Crypto before using HedgeNest?",
+    Question: "Do I need to understand crypto before using HedgeNest?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits, ",
+      "No. HedgeNest is designed for beginners. We explain everything in simple terms so you can make confident financial decisions without technical knowledge.",
   },
+
   {
-    Question: "Why do I need to complete KYC Verification?",
+    Question: "Why do I need to complete KYC verification?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "KYC helps us confirm your identity, prevent fraud, and comply with financial regulations while keeping your account and funds secure.",
   },
+
   {
-    Question: "What is USDT, and how should I use it?",
+    Question: "What is USDT and why should I use it?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "USDT is a digital currency tied to the US Dollar. It helps protect your money from Naira depreciation and keeps its value more stable over time.",
   },
 
   {
     Question: "Is my money safe on HedgeNest?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "HedgeNest works with trusted and regulated financial partners to ensure your funds are handled securely. We also use identity verification (KYC) to protect all users.",
   },
+
   {
-    Question: "are there any hiden charges when converting?",
+    Question: "Are there any hidden charges when converting?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "No. You will always see the exact rate, fees, and amount you’ll receive before confirming any transaction.",
   },
+
   {
-    Question: "How long does converting takes?",
+    Question: "How long does conversion take?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "Most conversions are processed within minutes after confirmation, depending on network and partner processing times.",
   },
+
   {
-    Question: "Can i withdraw my savings anytime?",
+    Question: "How does saving on HedgeNest work?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "You can create savings goals (vaults), set targets, and automate your savings daily, weekly, or monthly.",
   },
+
   {
-    Question: "How do investment work on HedgeNest?",
+    Question: "Can I withdraw my savings anytime?",
     answer:
-      "HedgeNest is a financial platform designed to help everyday Nigerians protect their money from inflation, build better saving habits",
+      "Yes. Flexible savings can be withdrawn anytime, while locked savings may include conditions or small penalties.",
+  },
+
+  {
+    Question: "How do investments work on HedgeNest?",
+    answer:
+      "We provide simple investment options based on your risk level. You choose how much to invest and track your growth over time.",
+  },
+
+  {
+    Question: "Are investment returns guaranteed?",
+    answer:
+      "No. Investments can grow your money, but returns are not guaranteed and may vary depending on market conditions.",
+  },
+
+  {
+    Question: "How does HedgeNest make money?",
+    answer:
+      "We earn through small, transparent fees on conversions and investment services — always shown before you confirm any action.",
+  },
+
+  {
+    Question: "Can I use HedgeNest on my phone?",
+    answer:
+      "Yes. HedgeNest is designed primarily for mobile use and works smoothly on smartphones.",
+  },
+
+  {
+    Question: "What if I need help?",
+    answer:
+      "You can access our Help Center or contact support directly via WhatsApp anytime.",
   },
 ];
