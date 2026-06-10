@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Sidebar from "../../Components/Sidebar";
 import "../../Style/Wallet.css";
+import { historyData } from "../../JS/Transactions.js";
+import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import { linkBankAccount } from "../../Services/Walletservice.js";
 const WalletPage = () => {
   const { user, token } = useSelector((state) => state.user);
@@ -35,6 +37,7 @@ const WalletPage = () => {
     }));
   };
 
+  // useEffect((){})
   const handleLinkAccount = async (e) => {
     e.preventDefault();
 
@@ -111,6 +114,8 @@ const WalletPage = () => {
     }
   };
 
+  console.log(user);
+  console.log(token);
   return (
     <div className="wallet-page-container">
       <Sidebar />
@@ -218,14 +223,14 @@ const WalletPage = () => {
           </div>
 
           <div className="transactions-view-port">
-            {transactions.length === 0 ? (
+            {historyData.length === 0 ? (
               <div className="empty-state-container">
                 <p>No activities yet</p>
               </div>
             ) : (
               <div className="transactions-list">
-                {transactions.map((item, index) => (
-                  <div key={index}>{item.description}</div>
+                {historyData.map((item, index) => (
+                  <TransactionHistory key={index} transactions={transactions} />
                 ))}
               </div>
             )}

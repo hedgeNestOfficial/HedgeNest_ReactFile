@@ -1,48 +1,35 @@
 import React, { useState } from "react";
-
 import "../../Style/BvnAuth.css";
 import Signupimg from "../../assets/Signupimg.jpg";
-
 import Button from "../../Components/Button";
-
-import { LuArrowLeft, LuLock, LuFile, LuChevronDown } from "react-icons/lu";
-
+import { LuArrowLeft, LuLock, LuFile } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 import toast from "react-hot-toast";
-
 import { submitKyc } from "../../Services/authService";
+import { OrbitProgress } from "react-loading-indicators";
+import whiteLogo from "../../assets/white logo.png";
 
 const BvnAuth = () => {
   const navigate = useNavigate();
-
   const { token } = useSelector((state) => state.user);
-
-  const [idType, setIdType] = useState("");
   const [idNumber, setIdNumber] = useState("");
   const [idPhoto, setIdPhoto] = useState(null);
-  const [occupation, setOccupation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [selectedOption, setSelectedOption] = useState("");
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
-  // =========================
-  // HANDLE FILE
-  // =========================
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
 
-    // CHECK IMAGE TYPE
     if (!file.type.startsWith("image/")) {
       toast.error("Only image files are allowed");
 
       return;
     }
 
-    // CHECK FILE SIZE
     if (file.size > MAX_FILE_SIZE) {
       toast.error("Image size must be less than 2MB");
 
@@ -54,42 +41,34 @@ const BvnAuth = () => {
     toast.success("Image attached successfully");
   };
 
-  // =========================
-  // HANDLE NIN INPUT
-  // =========================
   const handleIdNumberChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
 
     if (value.length <= 11) {
-      setIdNumber(value);
+      setIdNumber(value); // Assuming this is for NIN, not BVN
     }
   };
 
-  // =========================
-  // SUBMIT KYC
-  // =========================
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
   const handleSubmitKyc = async (e) => {
     e.preventDefault();
 
-    // VALIDATIONS
-    if (!idType) {
-      return toast.error("Please select ID type");
-    }
-
-    if (!idNumber.trim()) {
-      return toast.error(`Please enter your ${idType.toUpperCase()} number`);
+    if (!idNumber) {
+      toast.error("Enter NIN number");
+      return;
     }
 
     if (idNumber.length !== 11) {
-      return toast.error(`${idType.toUpperCase()} must be exactly 11 digits`);
+      toast.error("NIN must be 11 digits");
+      return;
     }
 
-    if (!occupation) {
-      return toast.error("Please select occupation");
-    }
-
-    if (idType === "nin" && !idPhoto) {
-      return toast.error("Please upload your NIN slip");
+    if (!idPhoto) {
+      toast.error("Upload your NIN slip");
+      return;
     }
 
     try {
@@ -97,30 +76,19 @@ const BvnAuth = () => {
 
       const formData = new FormData();
 
-      // APPEND VALUES
-      formData.append("idType", idType);
-
-      formData.append("idNumber", idNumber);
-
-      formData.append("occupation", occupation);
-
-      // IMPORTANT:
-      // CHANGE "image" TO WHATEVER YOUR BACKEND EXPECTS
-      if (idType === "nin" && idPhoto) {
-        formData.append("image", idPhoto);
-      }
+      formData.append("idType", "nin");
+      formData.append("idNumber", idNumber.toString());
+      formData.append("idPhoto", idPhoto);
 
       const response = await submitKyc(formData, token);
 
-      toast.success(response?.message || "KYC submitted successfully");
+      toast.success(response.message);
 
-      setTimeout(() => {
-        navigate("/create-pin");
-      }, 1500);
+      navigate("/pin");
     } catch (error) {
-      console.log("KYC ERROR:", error);
+      console.log(error);
 
-      toast.error(error?.response?.data?.message || "Failed to submit KYC");
+      toast.error(error?.response?.data?.message || "KYC upload failed");
     } finally {
       setIsLoading(false);
     }
@@ -131,136 +99,135 @@ const BvnAuth = () => {
       {/* LEFT IMAGE */}
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "5%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
       </div>
 
-      {/* FORM */}
+      {/* RIGHT FORM */}
       <div className="form-container">
         <div className="signup-form-wrapper">
-          {/* BACK BUTTON */}
-          <button
-            type="button"
-            className="back-arrow-btn"
-            onClick={() => window.history.back()}
-          >
-            <LuArrowLeft className="back-arrow-icon" />
-          </button>
+          <div className="form-header-mobile">
+            <div className="brand-group-mobile">
+              <img src={whiteLogo} alt="Logo" />
+            </div>
+            <button
+              type="button"
+              className="back-arrow-btn"
+              onClick={() => window.history.back()}
+            >
+              <LuArrowLeft className="back-arrow-icon" />
+            </button>
+          </div>
 
           <h2>Verify Your Identity</h2>
 
-          <p className="bvn-subtitle">
-            Complete your KYC verification to continue
-          </p>
-
           <form className="auth-form" onSubmit={handleSubmitKyc}>
-            {/* =========================
-                ID TYPE
-            ========================= */}
+            {/* FILE UPLOAD */}
             <div className="Auth-inputs-row">
               <label>ID Type</label>
 
-              <div className="input-tag">
-                <select
-                  value={idType}
-                  onChange={(e) => {
-                    setIdType(e.target.value);
-
-                    // RESET
-                    setIdPhoto(null);
-
-                    setIdNumber("");
-                  }}
-                >
-                  <option value="">Select ID Type</option>
-
-                  <option value="nin">NIN</option>
-                </select>
-
-                <LuChevronDown className="input-icon" />
-              </div>
+              <div className="input-tag">NIN</div>
             </div>
 
-            {/* =========================
-                FILE UPLOAD
-            ========================= */}
-            {idType === "nin" && (
-              <div className="Auth-inputs-row">
-                <label>Upload NIN Slip</label>
-
-                <div className="input-tag">
-                  <input
-                    type="file"
-                    id="ninUpload"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleFileChange}
-                    hidden
-                  />
-
-                  <label htmlFor="ninUpload" className="custom-file-label">
-                    <span
-                      className={idPhoto ? "file-selected" : "file-placeholder"}
-                    >
-                      {idPhoto ? idPhoto.name : "Attach NIN Slip"}
-                    </span>
-
-                    <LuFile className="input-icon" />
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {/* =========================
-                NIN NUMBER
-            ========================= */}
-            {idType && (
-              <div className="Auth-inputs-row">
-                <label>Enter {idType.toUpperCase()} Number</label>
-
-                <div className="input-tag">
-                  <input
-                    type="text"
-                    placeholder={`Enter your ${idType.toUpperCase()} number`}
-                    value={idNumber}
-                    maxLength={11}
-                    onChange={handleIdNumberChange}
-                  />
-
-                  <LuLock className="input-icon" />
-                </div>
-              </div>
-            )}
-
-            {/* =========================
-                OCCUPATION
-            ========================= */}
             <div className="Auth-inputs-row">
-              <label>What best describes you</label>
+              <label>Upload photo of NIN ID</label>
 
-              <div className="input-tag">
-                <select
-                  value={occupation}
-                  onChange={(e) => setOccupation(e.target.value)}
-                >
-                  <option value="">Select Occupation</option>
+              <div
+                className="input-tag"
+                // style={{
+                //   width: "100%",
+                //   height: "100%",
+                //   display: "flex",
+                //   justifyContent: "space-between",
+                // }}
+              >
+                <input
+                  type="file"
+                  id="ninUpload"
+                  accept="image/*"
+                  // capture="environment"
+                  onChange={handleFileChange}
+                  hidden
+                />
 
-                  <option value="student">Student</option>
+                <label htmlFor="ninUpload" className="custom-file-label">
+                  <span
+                    className={idPhoto ? "file-selected" : "file-placeholder"}
+                  >
+                    {idPhoto ? idPhoto.name : "Attach NIN Slip"}
+                  </span>
 
-                  <option value="self-employed">Self Employed</option>
-
-                  <option value="employed">Employed</option>
-
-                  <option value="others">Others</option>
-                </select>
-
-                <LuChevronDown className="input-icon" />
+                  <LuFile className="input-icon" />
+                </label>
               </div>
             </div>
 
-            {/* =========================
-                SUBMIT BUTTON
-            ========================= */}
+            {/* NIN INPUT */}
+            <div className="Auth-inputs-row">
+              <label>Enter NIN Number (11 degits)</label>
+
+              <div className="input-tag">
+                <input
+                  type="text"
+                  placeholder="Enter your NIN number"
+                  value={idNumber}
+                  maxLength={11}
+                  onChange={handleIdNumberChange}
+                />
+
+                <LuLock className="input-icon" />
+              </div>
+            </div>
+
+            {/* SUBMIT BUTTON */}
+            <div className="Auth-inputs-row">
+              <label>What Best Describes You?</label>
+
+              <div className="input-tag">
+                <select
+                  className="select-input"
+                  // value={selectedOption}
+                  // onChange={handleSelectChange}
+                >
+                  <option value="">Select an option</option>
+                  <option value="Student">Student</option>
+                  <option value="SelfEmployed">Self Employed</option>
+                  <option value="Employed">Employed </option>
+                  <option value="Others">Others </option>
+                </select>
+              </div>
+            </div>
+
+            {/* CONTINUE BUTTON */}
             <Button
-              text={isLoading ? "Submitting..." : "Continue"}
+              text={
+                isLoading ? (
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#ffffff" size="small" />
+                  </div>
+                ) : (
+                  "Continue"
+                )
+              }
               type="submit"
               className="otp-submit-btn"
               disabled={isLoading}
@@ -272,6 +239,16 @@ const BvnAuth = () => {
                 marginTop: "10px",
               }}
             />
+            <p
+              style={{
+                color: "black",
+                alignSelf: "flex-start",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/dashboard")}
+            >
+              Skip for now
+            </p>
           </form>
         </div>
       </div>

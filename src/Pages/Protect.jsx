@@ -13,6 +13,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoEyeOutline, IoHeadset, IoLockClosedSharp } from "react-icons/io5";
 
+import { useNavigate } from "react-router-dom";
 const Protect = () => {
   const featuresData = [
     {
@@ -80,6 +81,7 @@ const Protect = () => {
     },
   ];
 
+  const navigate = useNavigate();
   return (
     <section className="shield-container">
       <section className="shield-holder">
@@ -96,8 +98,16 @@ const Protect = () => {
             </p>
 
             <div className="hero-cta-group">
-              <Button className="btn-primary" text="Convert Now" />
-              <Button className="btn-second" text="How it works" />
+              <Button
+                className="btn-primary"
+                text="Convert Now"
+                onClick={() => navigate("/signup")}
+              />
+              <Button
+                className="btn-second"
+                text="How it works"
+                onClick={() => navigate("/signup")}
+              />
             </div>
           </article>
 
@@ -145,7 +155,11 @@ const Protect = () => {
             </div>
 
             <div className="cta-wrapper">
-              <Button className="convert-now-btn" text="Convert Now" />
+              <Button
+                className="convert-now-btn"
+                text="Convert Now"
+                onClick={() => navigate("/signup")}
+              />
             </div>
           </div>
         </section>
@@ -186,7 +200,11 @@ const Protect = () => {
                 <p className="inflation-promo-subtext">
                   Protect it today. Convert to USDT in minutes.
                 </p>
-                <Button text="Convert Now" className="inflation-promo-btn" />
+                <Button
+                  text="Convert Now"
+                  className="inflation-promo-btn"
+                  onClick={() => navigate("/signup")}
+                />
               </div>
             </div>
           </div>

@@ -1,10 +1,5 @@
 import axios from "axios";
-
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
-
-/* =========================
-   LINK BANK ACCOUNT
-========================= */
 
 export const linkBankAccount = async (payload, token) => {
   try {

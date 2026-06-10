@@ -15,7 +15,8 @@
 
 @media (max-width: 768px) {
   .dashboard-content {
-    padding-left: 16px;
+    padding-left: 0px;
+    padding-bottom: 15%;
     /* padding-top: 80px;
     padding-bottom: 84px; */
     /* padding-right: 16px; */

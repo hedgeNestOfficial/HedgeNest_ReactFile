@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../../Css/Convert.css";
 import { FiHelpCircle } from "react-icons/fi";
-
 import Sidebar from "../../Components/Sidebar";
 
 const ConvertPage = () => {
@@ -33,7 +32,7 @@ const ConvertPage = () => {
         <section className="rate-banner-container">
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
-            <h2>₦1,397 / 1 USDT</h2>
+            <h2 className="summary-value">₦1,397 / 1 USDT</h2>
           </div>
           <div className="rate-timestamp">
             <span>Updated Just Now</span>
