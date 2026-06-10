@@ -127,8 +127,9 @@ const Pin = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">

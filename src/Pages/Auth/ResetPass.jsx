@@ -41,20 +41,6 @@ const ResetPass = () => {
       const response = await resendOtp(payload);
       toast.success(response?.message || "OTP sent successfully");
 
-      // dispatch(
-      //   signup({
-      //     email: data.email.trim(),
-      //     phoneNumber: "",
-      //   }),
-      // );
-
-      // setTimeout(() => {
-      //   navigate("/otp", {
-      //     state: {
-      //       purpose: "reset-password",
-      //     },
-      //   });
-      // }, 1500);
       dispatch(
         signup({
           email: data.email.trim(),
@@ -93,8 +79,9 @@ const ResetPass = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">
@@ -131,7 +118,7 @@ const ResetPass = () => {
           </p>
 
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="Auth-inputs-row">
+            <div className="Auth-inputs-row" style={{ marginTop: "10px" }}>
               <label>Email Address</label>
 
               <div className="input-tag">
@@ -151,7 +138,9 @@ const ResetPass = () => {
               </div>
 
               {errors.email && (
-                <span className="terms-error">{errors.email.message}</span>
+                <span style={{ color: "red" }} className="terms-error">
+                  {errors.email.message}
+                </span>
               )}
             </div>
 

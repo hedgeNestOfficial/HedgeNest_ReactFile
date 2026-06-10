@@ -73,13 +73,9 @@ const BvnAuth = () => {
 
       const formData = new FormData();
 
-      // EXACT BACKEND FIELDS
       formData.append("idType", "nin");
-
       formData.append("idNumber", String(idNumber));
-
       formData.append("idPhoto", idPhoto);
-
       console.log("FORM DATA:");
       console.log("idType:", "nin");
       console.log("idNumber:", String(idNumber));
@@ -117,6 +113,7 @@ const BvnAuth = () => {
             alignItems: "center",
             top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">
