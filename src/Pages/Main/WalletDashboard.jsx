@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Sidebar from "../../Components/Sidebar";
 import "../../Style/Wallet.css";
+import { historyData } from "../../JS/Transactions.js";
+import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import { linkBankAccount } from "../../Services/Walletservice.js";
 const WalletPage = () => {
   const { user, token } = useSelector((state) => state.user);
@@ -221,14 +223,14 @@ const WalletPage = () => {
           </div>
 
           <div className="transactions-view-port">
-            {transactions.length === 0 ? (
+            {historyData.length === 0 ? (
               <div className="empty-state-container">
                 <p>No activities yet</p>
               </div>
             ) : (
               <div className="transactions-list">
-                {transactions.map((item, index) => (
-                  <div key={index}>{item.description}</div>
+                {historyData.map((item, index) => (
+                  <TransactionHistory key={index} transactions={transactions} />
                 ))}
               </div>
             )}

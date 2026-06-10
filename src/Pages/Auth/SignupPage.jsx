@@ -134,13 +134,18 @@ const SignupPage = () => {
 
       <div className="form-container">
         <div className="signup-form-wrapper">
-          <button
-            type="button"
-            className="back-arrow-btn"
-            onClick={() => window.history.back()}
-          >
-            <LuArrowLeft className="back-arrow-icon" />
-          </button>
+          <div className="form-header-mobile">
+            <div className="brand-group-mobile">
+              <img src={whiteLogo} alt="Logo" />
+            </div>
+            <button
+              type="button"
+              className="back-arrow-btn"
+              onClick={() => window.history.back()}
+            >
+              <LuArrowLeft className="back-arrow-icon" />
+            </button>
+          </div>
 
           <h2>Create Your Account</h2>
 

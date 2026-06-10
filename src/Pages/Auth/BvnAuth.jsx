@@ -106,7 +106,7 @@ const BvnAuth = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
           }}
         >
@@ -125,20 +125,20 @@ const BvnAuth = () => {
       {/* RIGHT FORM */}
       <div className="form-container">
         <div className="signup-form-wrapper">
-          {/* BACK BUTTON */}
-          <button
-            type="button"
-            className="back-arrow-btn"
-            onClick={() => window.history.back()}
-          >
-            <LuArrowLeft className="back-arrow-icon" />
-          </button>
+          <div className="form-header-mobile">
+            <div className="brand-group-mobile">
+              <img src={whiteLogo} alt="Logo" />
+            </div>
+            <button
+              type="button"
+              className="back-arrow-btn"
+              onClick={() => window.history.back()}
+            >
+              <LuArrowLeft className="back-arrow-icon" />
+            </button>
+          </div>
 
           <h2>Verify Your Identity</h2>
-
-          <p className="bvn-subtitle">
-            Complete your KYC verification to continue
-          </p>
 
           <form className="auth-form" onSubmit={handleSubmitKyc}>
             {/* FILE UPLOAD */}
@@ -153,12 +153,12 @@ const BvnAuth = () => {
 
               <div
                 className="input-tag"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
+                // style={{
+                //   width: "100%",
+                //   height: "100%",
+                //   display: "flex",
+                //   justifyContent: "space-between",
+                // }}
               >
                 <input
                   type="file"
