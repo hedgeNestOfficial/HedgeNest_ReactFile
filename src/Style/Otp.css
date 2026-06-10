@@ -1,8 +1,4 @@
-.otp-input/* =========================
-   OTP SUBTITLE
-========================= */
-
-.otp-subtitle {
+.otp-input .otp-subtitle {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #475569;
@@ -28,13 +24,9 @@
   margin: 30px 0;
 }
 
-/* =========================
-   OTP BOX
-========================= */
-
 .otp-box {
-  width: 56px;
-  height: 56px;
+  width: 66px;
+  height: 106px;
 
   border: 1px solid #cbd5e1;
   border-radius: 10px;
@@ -65,21 +57,14 @@
   box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
 }
 
-/* =========================
-   BUTTON
-========================= */
-
 .otp-submit-btn {
   width: 100%;
   height: 54px;
 
   border: none;
   border-radius: 6px;
-
-  background: #eab308;
-
+  background: var(--button-primaryColor, #eab308) !important;
   color: #ffffff !important;
-
   font-size: 1rem;
   font-weight: 600;
 
@@ -91,10 +76,6 @@
 .otp-submit-btn:hover {
   background: #ca8a04 !important;
 }
-
-/* =========================
-   FOOTER ACTIONS
-========================= */
 
 .otp-footer-actions {
   margin-top: 24px;
@@ -133,10 +114,6 @@
 .edit-email:hover {
   color: #eab308 !important;
 }
-
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
 
 @media screen and (max-width: 768px) {
   .signup-section {

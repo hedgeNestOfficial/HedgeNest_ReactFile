@@ -1,0 +1,52 @@
+/* PositionCard.css */
+.position-card {
+  background: #16162d; /* Dark navy */
+  color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pos-amount {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.pos-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #b0b0b0;
+}
+
+.pos-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.pos-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-topup {
+  background: #ffc107;
+  color: #000;
+}
+.btn-withdraw {
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}

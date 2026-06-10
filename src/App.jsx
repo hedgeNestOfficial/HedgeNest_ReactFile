@@ -1,7 +1,6 @@
 import React from "react";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HeroPage from "./Pages/HeroPage";
+// import HeroPage from "./Pages/HeroPage";
 import Dashboard from "./Pages/Main/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
@@ -29,18 +28,21 @@ import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
 import SmartSafe from "./Pages/SmartSafe";
-
+import PopupCard from "./Features/PopupCard";
+import ScrollToTop from "./Components/ScrollToTop";
+import { InvestDashboard } from "./Pages/Main/InvestDasboard";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/protect" element={<Protect />} />
           <Route path="/save" element={<Save />} />
-          <Route path="/invest" element={<Invest />} />
+          <Route path="/investPage" element={<Invest />} />
           <Route path="/policy" element={<Policy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
@@ -53,6 +55,8 @@ const App = () => {
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
           <Route path="/smart safe" element={<SmartSafe />} />
+                      <Route path="/invest" element={<InvestDasboard />} />
+
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />
@@ -60,6 +64,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
+        <Route path="/popup" element={<PopupCard />} />
 
         <Route path="/kycauth" element={<BvnAuth />} />
         <Route path="/ready" element={<ReadyComp />} />

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { createPin } from "../../Services/authService";
+import whiteLogo from "../../assets/white logo.png";
 
 const Pin = () => {
   const navigate = useNavigate();
@@ -106,17 +107,43 @@ const Pin = () => {
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+        <div
+          className="brand-group"
+          style={{
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "2%",
+            left: "2%",
+          }}
+        >
+          <div className="brand-logo">
+            <img
+              onClick={() => navigate("/")}
+              src={whiteLogo}
+              alt="HedgeNest Logo"
+            />
+          </div>
+
+          <span className="brand-name">HedgeNest</span>
+        </div>
       </div>
 
       <div className="form-container">
         <div className="signup-form-wrapper">
-          <button
-            type="button"
-            className="back-arrow-btn"
-            onClick={() => window.history.back()}
-          >
-            <LuArrowLeft className="back-arrow-icon" />
-          </button>
+          <div className="form-header-mobile">
+            <div className="brand-group-mobile">
+              <img src={whiteLogo} alt="Logo" />
+            </div>
+            <button
+              type="button"
+              className="back-arrow-btn"
+              onClick={() => window.history.back()}
+            >
+              <LuArrowLeft className="back-arrow-icon" />
+            </button>
+          </div>
 
           <h2>Create Transaction PIN</h2>
 
