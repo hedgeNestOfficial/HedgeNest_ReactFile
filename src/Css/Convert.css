@@ -22,7 +22,7 @@
 .header-title-group h1 {
   font-size: 26px;
   font-weight: 700;
-  color: #0b0914;
+  color: #fefeff;
   margin: 0 0 6px 0;
 }
 
@@ -294,13 +294,13 @@
 .summary-label {
   font-size: 15px;
   font-weight: 700;
-  color: #0b0914;
+  color: #ffffff;
 }
 
 .summary-value {
   font-size: 15px;
   font-weight: 500;
-  color: #0b0914;
+  color: #fdfcff;
   text-align: right;
 }
 

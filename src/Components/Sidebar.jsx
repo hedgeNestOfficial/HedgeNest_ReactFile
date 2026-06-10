@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import whiteLogo from "../assets/white logo.png";
 import Abayomi from "../assets/Abayomi.png";
@@ -16,7 +16,7 @@ import {
 
 import "../Css/Sidebar.css";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -25,12 +25,13 @@ import { logout } from "../Store/UserSlice";
 const Sidebar = () => {
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const dispatch = useDispatch();
 
-  const [activeItem, setActiveItem] = useState("dashboard");
-
-  // GET USER FROM REDUX
   const { user } = useSelector((state) => state.user);
+
+  const currentPath = location.pathname;
 
   const menuItems = [
     { name: "dashboard", icon: FaGripHorizontal },
@@ -45,11 +46,13 @@ const Sidebar = () => {
 
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
+
     navigate("/");
   };
 
   return (
     <>
+      {/* MOBILE TOP NAVBAR */}
       <header className="mobile-top-navbar">
         <div className="brand-group" onClick={() => navigate("/")}>
           <div className="brand-logo">
@@ -68,11 +71,16 @@ const Sidebar = () => {
             <img
               src={user?.profilePicture?.url || Abayomi}
               alt="User Profile"
+              onClick={() => navigate("/profile")}
+              className={`menu-item ${
+                currentPath === "/profile" ? "active" : ""
+              }`}
             />
           </div>
         </div>
       </header>
 
+      {/* DESKTOP SIDEBAR */}
       <aside className="desktop-sidebar">
         <div
           className="sidebar-brand"
@@ -91,16 +99,12 @@ const Sidebar = () => {
             {menuItems.map((item) => {
               const Icon = item.icon;
 
-              const isActive = activeItem === item.name;
+              const isActive = currentPath === `/${item.name}`;
 
               return (
                 <li key={item.name}>
                   <button
-                    onClick={() => {
-                      setActiveItem(item.name);
-
-                      navigate(`/${item.name}`);
-                    }}
+                    onClick={() => navigate(`/${item.name}`)}
                     className={`menu-item ${isActive ? "active" : ""}`}
                   >
                     <Icon className="menu-icon" size={18} />
@@ -113,22 +117,15 @@ const Sidebar = () => {
               );
             })}
 
+            {/* PROFILE */}
             <li>
               <button
-                onClick={() => {
-                  setActiveItem("profile");
-
-                  navigate("/profile");
-                }}
+                onClick={() => navigate("/profile")}
                 className={`menu-item ${
-                  activeItem === "profile" ? "active" : ""
+                  currentPath === "/profile" ? "active" : ""
                 }`}
               >
-                <FaUserCircle
-                  className="menu-icon"
-                  onClick={() => navigate("/profile")}
-                  size={18}
-                />
+                <FaUserCircle className="menu-icon" size={18} />
 
                 <span className="menu-text">Profile</span>
               </button>
@@ -136,6 +133,7 @@ const Sidebar = () => {
           </ul>
         </nav>
 
+        {/* LOGOUT */}
         <div className="sidebar-footer">
           <button className="menu-item logout-btn" onClick={handleLogout}>
             <FaSignOutAlt className="menu-icon" size={18} />
@@ -145,20 +143,17 @@ const Sidebar = () => {
         </div>
       </aside>
 
+      {/* MOBILE BOTTOM NAV */}
       <nav className="mobile-bottom-nav">
         {menuItems.map((item) => {
           const Icon = item.icon;
 
-          const isActive = activeItem === item.name;
+          const isActive = currentPath === `/${item.name}`;
 
           return (
             <button
               key={item.name}
-              onClick={() => {
-                setActiveItem(item.name);
-
-                navigate(`/${item.name}`);
-              }}
+              onClick={() => navigate(`/${item.name}`)}
               className={`bottom-nav-item ${isActive ? "active" : ""}`}
             >
               <Icon className="bottom-nav-icon" size={20} />

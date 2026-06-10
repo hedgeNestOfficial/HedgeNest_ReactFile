@@ -1,30 +1,54 @@
 .dashboard-wrapper {
-  padding: 20px;
+  padding: 24px;
+  max-width: 1200px;
+  /* margin: 0 auto; Centers the dashboard */
   display: flex;
   flex-direction: column;
-  background-color: #f8f8f8; /* Light background for the dashboard */
-  color: black;
-  gap: 30px;
+  gap: 32px;
+  background-color: #fcfcf7;
+  min-height: 100vh;
 }
 
-/* Flexbox container for the products */
-.products-grid {
+header h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+header p {
+  color: #666;
+  font-size: 16px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+}
+.flex-container {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to next line on mobile */
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
 }
 
-/* Responsive adjustment without media queries/calc: 
-   Flex-basis tells the cards to be 350px wide. 
-   On mobile, they are > 350px, so they stack. 
-   On desktop, the container is wider, allowing them to sit side-by-side. */
-.products-grid > .card {
+.flex-container > div {
   flex: 1 1 350px;
 }
 
-/* Styling the section headers */
-h2 {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+/* Mobile Specific Tweaks */
+@media (max-width: 480px) {
+  .dashboard-wrapper {
+    padding-top: 80px;
+    padding-right: 20px;
+  }
+
+  .flex-container {
+    gap: 16px;
+  }
+
+  /* Force cards to take full width on very small screens */
+  .flex-container > div {
+    flex: 1 1 100%;
+  }
 }

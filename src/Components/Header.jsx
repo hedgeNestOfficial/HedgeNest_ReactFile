@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Css/Header.css";
-import logo from "../assets/HedgeNest.png";
+import logo from "../assets/Hedge.png";
 import { CiMenuBurger } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";

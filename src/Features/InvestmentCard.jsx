@@ -1,11 +1,12 @@
 import "../Style/investmentCard.css";
+import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 
-export const Card = ({ product }) => {
+export const InvestmentCard = ({ product }) => {
   return (
     <div className="card">
       <div className="card-header">
         <div className="card-title-row">
-          <span className="icon">▲</span>
+          <HiMiniArrowTrendingUp className="icon" />
           <h3>{product.name}</h3>
         </div>
         <span className={`badge ${product.risk.toLowerCase()}`}>
