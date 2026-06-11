@@ -81,15 +81,11 @@ export const resetPassword = async (payload) => {
 };
 
 export const updateProfile = async (formData, token) => {
-  try {
-    const response = await axios.put(ENDPOINTS.USER.UPDATE_PROFILE, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.put(ENDPOINTS.USER.UPDATE_PROFILE, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 };

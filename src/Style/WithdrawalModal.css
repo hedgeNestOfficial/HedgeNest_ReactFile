@@ -1,0 +1,306 @@
+/* ==========================================================================
+   HedgeNest Custom Modal Layout System (Sandboxed Styling Namespace)
+   ========================================================================== */
+
+/* Dark frosted-glass layer across full screen background viewport */
+.hn-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+/* Centered content platform container */
+.hn-modal-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 36px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Base structural layout containers inside screens */
+.hn-step-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Heading Typography */
+.hn-modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+/* Body context details rules descriptions text layouts */
+.hn-modal-desc {
+  font-size: 0.92rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Input Fields and Labels Grouping */
+.hn-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 20px 0 4px 0;
+  width: 100%;
+}
+
+.hn-input-label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #374151;
+  text-align: left;
+}
+
+.hn-text-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.hn-text-input:focus {
+  border-color: #e8b943;
+}
+
+/* 6-Digit Entry Fields Layout */
+.hn-pin-box-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.hn-pin-input-box {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.hn-pin-input-box:focus {
+  border-color: #e8b943;
+  box-shadow: 0 0 0 2px rgba(232, 185, 67, 0.15);
+}
+
+/* Financial Settlement Breakdown Layout Components */
+.hn-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0 12px 0;
+}
+
+.hn-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.hn-row-label {
+  font-size: 0.92rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.hn-row-value-block {
+  text-align: right;
+}
+
+.hn-val-main {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.hn-val-sub {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 2px 0 0 0;
+}
+
+.hn-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 4px 0;
+}
+
+.hn-font-total {
+  align-items: center;
+  margin-top: 4px;
+}
+
+.hn-val-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Button & Actions Navigation System Layouts */
+.hn-button-grid {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  width: 100%;
+}
+
+.hn-btn-primary,
+.hn-btn-secondary {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Brand Theme Gold Accent Action Base Button */
+.hn-btn-primary {
+  background-color: #e8b943;
+  color: #ffffff;
+}
+
+.hn-btn-primary:hover {
+  background-color: #d6a732;
+}
+
+.hn-btn-primary.hn-disabled,
+.hn-btn-primary:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Secondary Cancel/Back Variant Button Element Outline */
+.hn-btn-secondary {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+}
+
+.hn-btn-secondary:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Floating Elements Placement */
+.hn-back-arrow {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hn-back-arrow:hover {
+  color: #111827;
+}
+
+/* Pure CSS Keyframe Loader System Animation */
+.hn-loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid #f3f4f6;
+  border-top: 3.5px solid #e8b943;
+  border-radius: 50%;
+  animation: hn-spin 0.85s linear infinite;
+}
+
+@keyframes hn-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success Celebration Screens Elements Layout */
+.hn-success-celebration-icon {
+  font-size: 3.5rem;
+  margin: 12px 0 16px 0;
+  line-height: 1;
+}
+
+/* Typography, Margin & Layout Helper Utilities */
+.hn-text-center {
+  text-align: center;
+}
+.hn-text-left {
+  text-align: left;
+}
+.hn-relative {
+  position: relative;
+}
+.hn-full-width {
+  width: 100%;
+}
+.hn-align-center {
+  align-items: center;
+}
+.hn-justify-center {
+  justify-content: center;
+}
+.hn-py-xl {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+.hn-margin-top-sm {
+  margin-top: 8px;
+}
+.hn-margin-top-md {
+  margin-top: 14px;
+}
+.hn-margin-top-lg {
+  margin-top: 24px;
+}
+.hn-pin-title-spacing {
+  padding-left: 28px;
+}

@@ -159,19 +159,19 @@ const LoginPage = () => {
             >
               Forgotten password?
             </p>
-
+            {/* 
             <div className="form-divider">
               <span>Or</span>
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
               type="button"
               className="google-oauth-btn"
               onClick={handleGoogleLogin}
             >
               <FcGoogle className="google-icon" />
               Login with Google
-            </button>
+            </button> */}
 
             <p className="auth-switch-footer">
               Don’t have an account?{" "}

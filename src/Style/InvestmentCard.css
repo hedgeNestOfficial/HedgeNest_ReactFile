@@ -1,7 +1,7 @@
 /* InvestmentCard.css */
 .card {
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e5e7eb; /* Soft, clean border matching the dashboard layout */
   border-radius: 16px;
   padding: 24px;
   display: flex;
@@ -22,10 +22,28 @@
   gap: 12px;
 }
 
+/* Perfected Golden Circle Icon Container */
+.icon-container {
+  background-color: #ffb300; /* Brand accent gold */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-container .icon {
+  color: #ffffff; /* Crisp white arrow inside the gold circle */
+  font-size: 18px;
+}
+
 .card-title-row h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
+  color: #111827;
 }
 
 /* Badge Styling */
@@ -35,22 +53,25 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .badge.low {
   background: #eafbf3;
-  color: #00c853;
-} /* Light Green/Teal */
+  color: #00c853; /* Vibrant success green */
+}
+
 .badge.medium {
   background: #fff8e1;
-  color: #ffb300;
-} /* Light Gold/Yellow */
+  color: #ffb300; /* Matched warning/medium gold */
+}
 
 .description {
-  color: #757575;
+  color: #6b7280;
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
+  min-height: 42px; /* Helps keep different cards perfectly aligned even with varying description lengths */
 }
 
 .metrics-row {
@@ -59,7 +80,7 @@
 }
 
 .metric-box {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e5e7eb;
   padding: 12px 8px;
   border-radius: 8px;
   flex: 1;
@@ -67,25 +88,36 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  background: #fafafa;
 }
 
 .metric-box .label {
   font-size: 10px;
-  color: #9e9e9e;
+  color: #9ca3af;
   text-transform: uppercase;
+  font-weight: 500;
 }
+
 .metric-box .value {
   font-weight: 700;
   font-size: 14px;
+  color: #111827;
 }
 
+/* Perfected Invest Button */
 .invest-btn {
-  background: #ffc107; /* The golden yellow button */
-  color: #000;
+  background: #ffb300;
+  color: #ffffff; /* Changed to white to match your overall UI button profiles perfectly */
   border: none;
   padding: 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
   margin-top: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.invest-btn:hover {
+  background: #e6a100; /* Smooth interactive feedback on hover */
 }

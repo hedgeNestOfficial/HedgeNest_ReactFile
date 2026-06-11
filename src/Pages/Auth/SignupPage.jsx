@@ -195,10 +195,10 @@ const SignupPage = () => {
               color={isFormFilled ? "#c9922a" : "#bdbdbd"}
             />
 
-            <div className="form-divider">
+            {/* <div className="form-divider">
               <span>Or</span>
-            </div>
-
+            </div> */}
+            {/* 
             <button
               className="google-oauth-btn"
               type="button"
@@ -207,7 +207,7 @@ const SignupPage = () => {
             >
               <FcGoogle className="google-icon" />
               Sign Up with Google
-            </button>
+            </button> */}
 
             <p className="auth-switch-footer">
               Already have an account?{" "}
