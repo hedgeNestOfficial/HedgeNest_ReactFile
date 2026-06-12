@@ -3,7 +3,6 @@ import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
 const Vaults = ({ onTopUp, onWithdraw }) => {
-  // The array data is kept completely inside this file
   const [vaults, setVaults] = useState([
     {
       id: "v-01",
@@ -48,14 +47,14 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
       rate: "14%",
       frequency: "Monthly",
       autoSave: false,
-    }
+    },
   ]);
 
   const handleToggleAutoSave = (vaultId) => {
     setVaults((prevList) =>
       prevList.map((vault) =>
-        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault
-      )
+        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
+      ),
     );
   };
 
@@ -78,18 +77,20 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
 
             {/* Core Vault Content */}
             <h2 className="vault-name">{vault.title}</h2>
-            
+
             <div className="amount-group">
               <span className="vault-currency">₦</span>
-              <span className="vault-balance">{Number(vault.balance).toLocaleString()}</span>
+              <span className="vault-balance">
+                {Number(vault.balance).toLocaleString()}
+              </span>
             </div>
 
             <p className="timeline-text">{vault.timelineSubtext}</p>
 
             {/* Progress Meter bar */}
             <div className="progress-container">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 style={{ width: `${vault.progress || 0}%` }}
               ></div>
             </div>
@@ -103,15 +104,15 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
             {/* Context-Aware Action Buttons Group */}
             <div className="action-row">
               {!isLocked && (
-                <button 
-                  className="btn-gold-action" 
+                <button
+                  className="btn-gold-action"
                   onClick={() => onTopUp?.(vault)}
                 >
                   Top Up
                 </button>
               )}
-              <button 
-                className={isLocked ? "btn-gold-full" : "btn-white-action"} 
+              <button
+                className={isLocked ? "btn-gold-full" : "btn-white-action"}
                 onClick={() => onWithdraw?.(vault)}
               >
                 Withdraw
@@ -121,7 +122,9 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
             {/* Context-Aware Footer Row */}
             {!isLocked && (
               <footer className="card-footer">
-                <span className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}>
+                <span
+                  className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
+                >
                   {vault.autoSave ? "Auto-Save Enabled" : "Enable Auto-Save"}
                 </span>
                 <label className="toggle-switch">

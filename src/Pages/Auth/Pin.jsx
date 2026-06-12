@@ -15,7 +15,6 @@ const Pin = () => {
 
   const inputRefs = useRef([]);
 
-  // const { user } = useSelector((state) => state.user);
   const { token, user } = useSelector((state) => state.user);
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);

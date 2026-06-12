@@ -29,15 +29,35 @@ export const verifyOtp = async (payload) => {
   return response.data;
 };
 
+// export const resendOtp = async (payload) => {
+//   const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
+//     headers: API_CONFIG.headers,
+//     timeout: API_CONFIG.timeout,
+//   });
+
+//   return response.data;
+// };
 export const resendOtp = async (payload) => {
-  const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
-    headers: API_CONFIG.headers,
-    timeout: API_CONFIG.timeout,
-  });
+  try {
+    console.log("Sending OTP:", payload);
+    console.log("URL:", ENDPOINTS.AUTH.RESEND_OTP);
 
-  return response.data;
+    const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
+      headers: API_CONFIG.headers,
+      timeout: API_CONFIG.timeout,
+    });
+
+    console.log("OTP RESPONSE:", response);
+
+    return response.data;
+  } catch (error) {
+    console.log("OTP ERROR:", error);
+    console.log("OTP ERROR CODE:", error.code);
+    console.log("OTP ERROR RESPONSE:", error.response);
+
+    throw error;
+  }
 };
-
 export const submitKyc = async (formData, token) => {
   const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
     headers: {

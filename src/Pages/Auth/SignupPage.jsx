@@ -179,7 +179,6 @@ const SignupPage = () => {
             )}
 
             <Button
-              // color={isSubmitting ? "#bdbdbd" : "#c9922a"}
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">

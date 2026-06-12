@@ -17,7 +17,6 @@ import investIMG1 from "../assets/currencypic.jpg";
 
 import { useNavigate } from "react-router-dom";
 const Invest = () => {
-  // Array Data
   const howItWorksData = [
     {
       id: 1,

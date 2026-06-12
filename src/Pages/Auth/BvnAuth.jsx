@@ -161,7 +161,6 @@ const BvnAuth = () => {
                   type="file"
                   id="ninUpload"
                   accept="image/*"
-                  // capture="environment"
                   onChange={handleFileChange}
                   hidden
                 />
@@ -200,11 +199,7 @@ const BvnAuth = () => {
               <label>What Best Describes You?</label>
 
               <div className="input-tag">
-                <select
-                  className="select-input"
-                  // value={selectedOption}
-                  // onChange={handleSelectChange}
-                >
+                <select className="select-input">
                   <option value="">Select an option</option>
                   <option value="Student">Student</option>
                   <option value="SelfEmployed">Self Employed</option>
