@@ -30,7 +30,7 @@ import ProfilePage from "./Pages/Main/ProfilePage";
 import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
-import { InvestDashboard } from "./Pages/Main/InvestDasboard";
+import InvestDashboard from "./Pages/Main/InvestDashboard";
 
 const App = () => {
   return (
@@ -54,9 +54,8 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
-          <Route path="/smart safe" element={<SmartSafe />} />
-                      <Route path="/invest" element={<InvestDasboard />} />
-
+          <Route path="/smart-safe" element={<SmartSafe />} />
+          <Route path="/Invest" element={<InvestDashboard />} />
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />

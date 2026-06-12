@@ -3,7 +3,7 @@ import { InvestmentCard } from "../../Features/InvestmentCard.jsx";
 // import { PositionCard } from "../../Features/PositionCard.jsx";
 import "../../Style/InvestDashboard.css";
 
-export const InvestDashboard = ({ activeInvestments }) => {
+const InvestDashboard = ({ activeInvestments }) => {
   return (
     <div className="dashboard-wrapper">
       <header>
@@ -35,3 +35,4 @@ export const InvestDashboard = ({ activeInvestments }) => {
     </div>
   );
 };
+export default InvestDashboard;

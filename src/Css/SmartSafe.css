@@ -2,11 +2,12 @@
 .smart-container {
   width: 100%;
   min-height: 100vh;
-  min-height: 750px;
-  background-color: #FDF9EC;
+  /* min-height: 750px; */
+  background-color: #fdf9ec;
   padding: 40px 48px;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   position: relative;
 }
 
@@ -59,7 +60,8 @@
   transition: background-color 0.2s;
 }
 
-.help-btn:hover, .help-btn.active {
+.help-btn:hover,
+.help-btn.active {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -69,8 +71,8 @@
 
 .dropdown-panel {
   width: 440px;
-  background-color: #FFFFFF;
-  border: 1px solid #C4C4C4;
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
   border-radius: 16px;
   position: absolute;
   top: 52px;
@@ -91,7 +93,7 @@
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-bottom: 12px solid #FFFFFF;
+  border-bottom: 12px solid #ffffff;
   position: absolute;
   top: -12px;
   right: 64px;
@@ -107,12 +109,12 @@
 .rate-banner {
   width: 100%;
   height: 44px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 600;
   font-size: 15px;
   margin: 20px 0 12px 0;
@@ -139,7 +141,7 @@
 }
 
 .bg-highlight {
-  background-color: #FFFDF4;
+  background-color: #fffdf4;
   border-radius: 4px;
 }
 
@@ -148,17 +150,22 @@
   color: #111111;
 }
 
-.text-left { text-align: left; }
-.text-right { text-align: right; font-weight: 500; }
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+  font-weight: 500;
+}
 
 /* Call to Action Button */
 .create-btn {
   width: 154px;
   height: 46px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
@@ -175,9 +182,9 @@
 /* Empty State Card Window */
 .empty-card {
   width: 100%;
-  height: 360px;
-  background-color: #FFFFFF;
-  border: 1px solid #C4C4C4;
+  height: 460px;
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
   border-radius: 16px;
   display: flex;
   align-items: center;
