@@ -49,6 +49,7 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
       frequency: "Monthly",
       autoSave: false,
     },
+    },
   ]);
 
   // LISTEN FOR TOP UP STATE UPDATES FROM PARENT
@@ -85,6 +86,8 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
       prevList.map((vault) =>
         vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
       ),
+        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
+      ),
     );
   };
 
@@ -108,8 +111,12 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
             {/* Core Vault Content */}
             <h2 className="vault-name">{vault.title}</h2>
 
+
             <div className="amount-group">
               <span className="vault-currency">₦</span>
+              <span className="vault-balance">
+                {Number(vault.balance).toLocaleString()}
+              </span>
               <span className="vault-balance">
                 {Number(vault.balance).toLocaleString()}
               </span>
@@ -119,6 +126,8 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
 
             {/* Progress Meter bar */}
             <div className="progress-container">
+              <div
+                className="progress-fill"
               <div
                 className="progress-fill"
                 style={{ width: `${vault.progress || 0}%` }}
@@ -134,6 +143,8 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
             {/* Context-Aware Action Buttons Group */}
             <div className="action-row">
               {!isLocked && (
+                <button
+                  className="btn-gold-action"
                 <button
                   className="btn-gold-action"
                   onClick={() => onTopUp?.(vault)}
@@ -153,6 +164,9 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
             {/* Context-Aware Footer Row */}
             {!isLocked && (
               <footer className="card-footer">
+                <span
+                  className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
+                >
                 <span
                   className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
                 >
@@ -176,3 +190,4 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
 };
 
 export default Vaults;
+

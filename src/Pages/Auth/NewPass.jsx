@@ -37,10 +37,6 @@ const NewPass = () => {
 
   const watchedConfirmPassword = watch("confirmPassword");
 
-  /* =========================================
-     LIVE PASSWORD MATCH VALIDATION
-  ========================================= */
-
   useEffect(() => {
     if (watchedConfirmPassword && watchedPassword !== watchedConfirmPassword) {
       setError("confirmPassword", {
@@ -51,10 +47,6 @@ const NewPass = () => {
       clearErrors("confirmPassword");
     }
   }, [watchedPassword, watchedConfirmPassword, setError, clearErrors]);
-
-  /* =========================================
-     SUBMIT RESET PASSWORD
-  ========================================= */
 
   const onSubmit = async (data) => {
     try {
@@ -95,7 +87,7 @@ const NewPass = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
           }}
         >
@@ -111,10 +103,8 @@ const NewPass = () => {
         </div>
       </div>
 
-      {/* RIGHT FORM */}
       <div className="form-container">
         <div className="signup-form-wrapper">
-          {/* BACK BUTTON */}
           <div className="form-header-mobile">
             <div className="brand-group-mobile">
               <img src={whiteLogo} alt="Logo" />
@@ -128,7 +118,6 @@ const NewPass = () => {
             </button>
           </div>
 
-          {/* TITLE */}
           <h2>Create Your New Password</h2>
 
           <p className="newpass-subtitle">
@@ -137,7 +126,6 @@ const NewPass = () => {
 
           {/* FORM */}
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
-            {/* OTP */}
             <div className="auth-inputs-row">
               <label>OTP Code</label>
 
@@ -160,7 +148,6 @@ const NewPass = () => {
               )}
             </div>
 
-            {/* NEW PASSWORD */}
             <div className="auth-inputs-row">
               <label>New Password</label>
 
@@ -222,7 +209,6 @@ const NewPass = () => {
               )}
             </div>
 
-            {/* BUTTON */}
             <Button
               text={
                 isLoading ? (

@@ -51,7 +51,6 @@ export const BvnAuthData = [
     label: "Upload Photo Of NIN ID",
     type: "text",
     placeholder: "Attach File",
-    // note: <FaChevronDown />,
   },
   {
     label: "Phone number",
@@ -60,24 +59,6 @@ export const BvnAuthData = [
     name: "phoneNumber",
   },
 ];
-
-
-// export const LoginData = [
-//   {
-//     label: "Email address",
-//     type: "text",
-//     placeholder: "Enter email  ",
-//     name: "firstName",
-//   },
-//   {
-//     label: "Password",
-//     type: "password",
-//     placeholder: "Enter password ",
-//     // note: <FaChevronDown />,
-//   },
-// ];
-
-
 
 export const LoginData = [
   {

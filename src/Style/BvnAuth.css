@@ -46,10 +46,17 @@
 }
 
 .form-header-mobile {
-  display: none;
+  display: flex;
 }
 
-@media screen and (max-width: 850px) {
+.otp-submit-btn {
+  border-radius: 4px !important;
+}
+
+.brand-group-mobile {
+  display: none;
+}
+@media screen and (max-width: 951px) {
   .signup-form-wrapper {
     padding-top: 60px;
     padding-bottom: 60;
@@ -64,7 +71,7 @@
   .brand-group-mobile {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 20px;
     font-weight: 600;
     width: 100%;
     padding: 10px;

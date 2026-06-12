@@ -16,15 +16,14 @@ import { loginUser } from "../../Services/authService";
 import { login } from "../../Store/UserSlice";
 import { OrbitProgress } from "react-loading-indicators";
 import whiteLogo from "../../assets/white logo.png";
-
+import { API_CONFIG, ENDPOINTS } from "../../Config/apiConfig";
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8228/api/v1/auth/google";
+    window.location.href = ENDPOINTS.AUTH.GOOGLE_AUTH;
   };
-
   const {
     register,
     handleSubmit,
@@ -73,7 +72,6 @@ const LoginPage = () => {
       }, 1500);
     } catch (error) {
       console.log("LOGIN ERROR:", error);
-
       toast.error(error.response?.data?.message || "Invalid email or password");
     }
   };
@@ -89,8 +87,9 @@ const LoginPage = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            top: "2%",
+            top: "5%",
             left: "2%",
+            gap: "10px",
           }}
         >
           <div className="brand-logo">
@@ -160,19 +159,19 @@ const LoginPage = () => {
             >
               Forgotten password?
             </p>
-
+            {/* 
             <div className="form-divider">
               <span>Or</span>
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
               type="button"
               className="google-oauth-btn"
               onClick={handleGoogleLogin}
             >
               <FcGoogle className="google-icon" />
               Login with Google
-            </button>
+            </button> */}
 
             <p className="auth-switch-footer">
               Don’t have an account?{" "}

@@ -55,7 +55,6 @@ const SmartSafe = () => {
 
   const handlePinKeyDown = (e, index) => {
     if (e.key === "Backspace" && !pin[index] && index > 0) {
-      // Logic managed inside layout subcomponents
     }
   };
 

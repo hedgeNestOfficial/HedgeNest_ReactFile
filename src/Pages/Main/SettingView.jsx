@@ -1,7 +1,21 @@
-import React from "react";
-import "../../Style/SettingView.css"; // Ensure this matches your CSS filename exactly
+import React, { useState } from "react";
+import "../../Style/SettingView.css";
+import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
+import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
+import ChangePinModal from "../../Components/KycModals/ChangePinModal";
 
 const SettingView = ({ accounts = [], onAddAccount }) => {
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+
+  const handleAddAccountClick = () => {
+    setIsAccountModalOpen(true);
+    if (onAddAccount) {
+      onAddAccount();
+    }
+  };
+
   return (
     <div className="settings-view-wrapper">
       {/* CARD 1: CHANGE PASSWORD */}
@@ -10,7 +24,7 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
         <p>Don’t like password, or have forgotten it?</p>
         <button
           className="settings-action-btn"
-          onClick={() => console.log("Trigger change password flow")}
+          onClick={() => setIsPasswordModalOpen(true)}
         >
           Change Password
         </button>
@@ -22,7 +36,7 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
         <p>Forgotten your pin?</p>
         <button
           className="settings-action-btn"
-          onClick={() => console.log("Trigger change PIN flow")}
+          onClick={() => setIsPinModalOpen(true)}
         >
           Change Transaction PIN
         </button>
@@ -32,7 +46,10 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
       <div className="settings-card">
         <div className="card-header-row">
           <h3>Linked Withdrawal Accounts</h3>
-          <button className="add-account-link-btn" onClick={onAddAccount}>
+          <button
+            className="add-account-link-btn"
+            onClick={handleAddAccountClick}
+          >
             <span>+</span> Add account
           </button>
         </div>
@@ -53,6 +70,29 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
           )}
         </div>
       </div>
+
+      {/* CRITICAL GUARDRAIL: Rendered outside layout blocks 
+        to guarantee perfect stack layout alignment 
+      */}
+      <LinkAccountModal
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+        onSuccessRefresh={() => {
+          console.log(
+            "Bank linked successfully. Refresh global user data context.",
+          );
+        }}
+      />
+
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
+
+      <ChangePinModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+      />
     </div>
   );
 };

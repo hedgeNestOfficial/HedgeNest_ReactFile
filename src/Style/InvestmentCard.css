@@ -1,91 +1,152 @@
-/* InvestmentCard.css */
-.card {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 16px;
+/* Core Structural Card Layout Box */
+.investment-product-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 380px;
+  min-height: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.card-header {
+.investment-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Header Composition Elements */
+.card-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  margin-bottom: 14px;
 }
 
-.card-title-row {
+.card-title-group {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.card-title-row h3 {
-  margin: 0;
+.card-title-group h3 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
 }
 
-/* Badge Styling */
-.badge {
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 10px;
+/* Perfected Brand Golden Circle Framework */
+.premium-icon-container {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #fef08a; /* Soft theme gold tint backing fill */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trending-growth-icon {
+  font-size: 18px;
+  color: #ca8a04; /* Core asset tone */
+}
+
+/* Adaptive Risk Metadata Badge Nodes */
+.risk-badge-node {
+  font-size: 11px;
   font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
   letter-spacing: 0.5px;
 }
 
-.badge.low {
-  background: #eafbf3;
-  color: #00c853;
-} /* Light Green/Teal */
-.badge.medium {
-  background: #fff8e1;
-  color: #ffb300;
-} /* Light Gold/Yellow */
+.risk-badge-node.low {
+  background-color: #dcfce7;
+  color: #15803d;
+}
 
-.description {
-  color: #757575;
-  font-size: 14px;
+.risk-badge-node.medium {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.risk-badge-node.high {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Typography Descriptions Blocks */
+.investment-product-description {
+  font-size: 13.5px;
   line-height: 1.5;
-  margin: 0;
+  color: #475569;
+  margin: 0 0 20px 0;
+  text-align: left;
+  flex-grow: 1;
 }
 
-.metrics-row {
-  display: flex;
-  gap: 10px;
+/* 3-Column Metrics Dashboard Grid System */
+.metrics-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 14px 0;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.metric-box {
-  border: 1px solid #e0e0e0;
-  padding: 12px 8px;
-  border-radius: 8px;
-  flex: 1;
+.metric-data-cell {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 4px;
+  text-align: left;
 }
 
-.metric-box .label {
-  font-size: 10px;
-  color: #9e9e9e;
-  text-transform: uppercase;
-}
-.metric-box .value {
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.invest-btn {
-  background: #ffc107; /* The golden yellow button */
-  color: #000;
-  border: none;
-  padding: 14px;
-  border-radius: 8px;
-  cursor: pointer;
+.metric-cell-label {
+  font-size: 11px;
   font-weight: 600;
-  margin-top: 5px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.metric-cell-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.metric-cell-value.text-gold {
+  color: #ca8a04; /* Highlighting performance metric metrics */
+}
+
+/* Bottom Action Buttons Framework */
+.invest-action-trigger-btn {
+  width: 100%;
+  height: 44px;
+  background-color: #f2bf5e; /* Application synchronized branding accent */
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.invest-action-trigger-btn:hover {
+  opacity: 0.93;
 }

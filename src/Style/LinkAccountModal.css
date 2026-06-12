@@ -1,0 +1,340 @@
+/* Isolated Structural Overlay Layer */
+.link-account-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+/* Modal Card Blueprint Container */
+.link-account-modal-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Layout dimensions match optimized spinner frames */
+.link-account-modal-card.loading-card-dims {
+  max-width: 380px;
+  min-height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Step Layout Wrapper */
+.link-account-step-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Typography Assignments */
+.link-account-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 24px 0;
+}
+
+.link-account-modal-subtitle {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+/* Form Controls and Input Rows */
+.link-account-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.link-account-input-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+/* Dropdown Custom Architectures */
+.link-account-select-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.link-account-custom-select {
+  width: 100%;
+  height: 46px;
+  padding: 0 40px 0 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background-color: #ffffff;
+  appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.link-account-custom-select:focus {
+  outline: none;
+  border-color: #eab308;
+}
+
+.link-account-select-chevron {
+  position: absolute;
+  right: 16px;
+  color: #6b7280;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+/* Form Fields */
+.link-account-custom-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.link-account-custom-input:focus {
+  outline: none;
+  border-color: #eab308;
+}
+
+.link-account-custom-input:disabled {
+  background: #f9fafb;
+  color: #111827;
+  cursor: not-allowed;
+}
+
+/* Embedded Verified Green Banner Layout (image_d9e12e.png) */
+.link-account-verified-banner {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.link-account-verified-icon {
+  color: #22c55e;
+  font-size: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.link-account-verified-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.link-account-verified-status-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.link-account-verified-user-name {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* Micro-transaction Data Metric Layouts (image_d9de26.png) */
+.link-account-data-table {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.link-account-table-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.link-account-table-row:last-child {
+  border-bottom: none;
+}
+
+.link-account-label-text {
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.link-account-value-text {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 600;
+  text-align: right;
+}
+
+.link-account-value-text.text-bold {
+  font-weight: 700;
+}
+
+.link-account-copyable-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.link-account-copy-icon-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+.link-account-copy-icon-btn:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+/* Action Button Core Elements */
+.link-account-actions-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.link-account-btn-outline {
+  flex: 1;
+  height: 46px;
+  background: transparent;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.link-account-btn-outline:hover {
+  background-color: #f9fafb;
+  border-color: #4b5563;
+}
+
+.link-account-btn-solid {
+  flex: 1;
+  height: 46px;
+  background: #f2bf5e; /* Golden Yellow Primary Design Brand */
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.link-account-btn-solid:hover {
+  background: #e0ae4e;
+}
+
+/* Spinner Loading Component Animations (image_d9e0f1.png / image_d9dde8.png) */
+.link-account-loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  width: 100%;
+}
+
+.link-account-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #f2bf5e;
+  border-radius: 50%;
+  animation: spinAccountLoader 1s linear infinite;
+}
+
+@keyframes spinAccountLoader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success Components (image_d9ddc7.png) */
+.link-account-celebration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background-color: #fef9c3;
+  border-radius: 50%;
+  margin: 12px auto;
+}
+
+.link-account-party-icon {
+  font-size: 42px;
+  color: #eab308;
+}
+
+/* Alignment and Helper Modifiers */
+.text-center {
+  text-align: center;
+}
+.margin-top-sm {
+  margin-top: 16px;
+}
+.margin-top-md {
+  margin-top: 24px;
+}
+.width-full {
+  width: 100%;
+}
+.width-narrow {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
