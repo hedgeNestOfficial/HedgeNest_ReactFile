@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import "../../Style/SettingView.css";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
+import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
+import ChangePinModal from "../../Components/KycModals/ChangePinModal";
 
 const SettingView = ({ accounts = [], onAddAccount }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 
   const handleAddAccountClick = () => {
-    // Open our newly minted multi-step modal flow
-    setIsModalOpen(true);
-
-    // Maintain backward compatibility with any optional parent-level handlers
+    setIsAccountModalOpen(true);
     if (onAddAccount) {
       onAddAccount();
     }
@@ -23,7 +24,7 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
         <p>Don’t like password, or have forgotten it?</p>
         <button
           className="settings-action-btn"
-          onClick={() => console.log("Trigger change password flow")}
+          onClick={() => setIsPasswordModalOpen(true)}
         >
           Change Password
         </button>
@@ -35,7 +36,7 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
         <p>Forgotten your pin?</p>
         <button
           className="settings-action-btn"
-          onClick={() => console.log("Trigger change PIN flow")}
+          onClick={() => setIsPinModalOpen(true)}
         >
           Change Transaction PIN
         </button>
@@ -70,18 +71,27 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
         </div>
       </div>
 
-      {/* 
-        CRITICAL GUARDRAIL: Kept outside layout flex containers 
-        to ensure overlay rendering works perfectly as seen in image_da3745.png 
+      {/* CRITICAL GUARDRAIL: Rendered outside layout blocks 
+        to guarantee perfect stack layout alignment 
       */}
       <LinkAccountModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
         onSuccessRefresh={() => {
           console.log(
             "Bank linked successfully. Refresh global user data context.",
           );
         }}
+      />
+
+      <ChangePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
+
+      <ChangePinModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
       />
     </div>
   );

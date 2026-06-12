@@ -1,0 +1,319 @@
+/* Overlay Background Masking layer */
+.invest-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal Card Sizing Container */
+.invest-modal-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Loading specific utility bounds to avoid layout jumps during step 2 */
+.invest-loader-card-dims {
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Internal Steps wrappers */
+.invest-modal-step-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+.align-center {
+  align-items: center;
+}
+
+/* Text System */
+.invest-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+
+.invest-modal-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  text-align: left;
+}
+
+/* Locked Asset notification banner box layout info */
+.invest-lock-notification-banner {
+  background: #fef08a; /* Custom light gold/yellow accent fill variant */
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.invest-shield-icon {
+  font-size: 16px;
+}
+
+.invest-lock-banner-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #713f12;
+  margin: 0;
+}
+
+/* Input system formatting rows */
+.invest-input-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.invest-input-field-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: left;
+}
+
+.invest-input-box-wrapper {
+  width: 100%;
+  border-bottom: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+}
+
+.invest-numeric-text-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0f172a;
+  background: transparent;
+}
+
+/* Return summary pricing modules row styling rules */
+.invest-returns-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.invest-summary-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.invest-summary-value-highlight {
+  font-size: 22px;
+  font-weight: 700;
+  color: #eab308; /* Theme gold value color highlights matching Figma */
+}
+
+/* Control Button System configurations */
+.invest-modal-action-buttons-container {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+}
+
+.invest-btn-secondary-cancel {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.invest-btn-secondary-cancel:hover {
+  background: #f8fafc;
+}
+
+.invest-btn-primary-solid,
+.invest-btn-block-action {
+  flex: 1;
+  background: #f2bf5e; /* Exact theme matching yellow hue */
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.invest-btn-primary-solid:hover,
+.invest-btn-block-action:hover {
+  opacity: 0.92;
+}
+
+.invest-btn-block-action {
+  width: 100%;
+}
+
+.invest-btn-block-action:disabled {
+  background: #fef08a;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Loader Screen configurations */
+.invest-full-card-spinner-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 0;
+}
+
+/* 6-digit transaction PIN verification views styling rules layout elements */
+.invest-modal-back-navigation-arrow {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #334155;
+  cursor: pointer;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.invest-pin-box-grid-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.invest-square-box-input {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.invest-square-box-input:focus {
+  border-color: #f2bf5e;
+}
+
+/* Success View configurations */
+.invest-success-checkmark-animated-badge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.invest-checkmark-inner-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #eab308;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invest-processing-button-loader-banner {
+  width: 100%;
+  background: #fef08a;
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.invest-modal-processing-subtext {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Spacing and Alignment Utility Overrides */
+.margin-top-md {
+  margin-top: 16px;
+}
+.margin-top-lg {
+  margin-top: 24px;
+}
+.margin-top-xl {
+  margin-top: 36px;
+}
+.margin-top-xs {
+  margin-top: 6px;
+}
+.padding-vertical-lg {
+  padding: 20px 0;
+}
+.display-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.font-size-xl {
+  font-size: 26px;
+}
+.text-center-forced {
+  text-align: center !important;
+}
+.max-width-text {
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}

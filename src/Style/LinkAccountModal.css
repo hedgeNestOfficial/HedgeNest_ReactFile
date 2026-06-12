@@ -114,7 +114,7 @@
   border-radius: 6px;
   font-size: 14px;
   color: #111827;
-  background-color: #ffffff;
+  background: #ffffff;
   box-sizing: border-box;
 }
 
@@ -124,7 +124,7 @@
 }
 
 .link-account-custom-input:disabled {
-  background-color: #f9fafb;
+  background: #f9fafb;
   color: #111827;
   cursor: not-allowed;
 }
@@ -262,7 +262,7 @@
 .link-account-btn-solid {
   flex: 1;
   height: 46px;
-  background-color: #f2bf5e; /* Golden Yellow Primary Design Brand */
+  background: #f2bf5e; /* Golden Yellow Primary Design Brand */
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -273,7 +273,7 @@
 }
 
 .link-account-btn-solid:hover {
-  background-color: #e0ae4e;
+  background: #e0ae4e;
 }
 
 /* Spinner Loading Component Animations (image_d9e0f1.png / image_d9dde8.png) */

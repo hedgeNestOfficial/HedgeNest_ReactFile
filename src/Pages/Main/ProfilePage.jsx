@@ -620,7 +620,7 @@ import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { updateProfile } from "../../Services/authService";
 import { OrbitProgress } from "react-loading-indicators";
-import { updateUser } from "../../Store/userSlice";
+import { updateUser } from "../../Store/UserSlice";
 
 // Import your exact 4-step modal manager from yesterday
 import KycModalManager from "../../Components/KycModals/KycModalManager";

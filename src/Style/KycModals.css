@@ -87,7 +87,7 @@
 }
 
 .kyc-btn-continue {
-  background-color: #f2c94c; /* HedgeNest Yellow */
+  background: #f2c94c; /* HedgeNest Yellow */
   border: none;
   color: #ffffff;
 }
