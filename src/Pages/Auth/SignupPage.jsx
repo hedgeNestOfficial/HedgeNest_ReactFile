@@ -21,7 +21,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8228/api/v1/auth/google";
+    window.location.href = "https://hedgenest.onrender.com/api/v1/auth/google";
   };
 
   const {
@@ -179,7 +179,6 @@ const SignupPage = () => {
             )}
 
             <Button
-              // color={isSubmitting ? "#bdbdbd" : "#c9922a"}
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">
@@ -195,10 +194,10 @@ const SignupPage = () => {
               color={isFormFilled ? "#c9922a" : "#bdbdbd"}
             />
 
-            <div className="form-divider">
+            {/* <div className="form-divider">
               <span>Or</span>
-            </div>
-
+            </div> */}
+            {/* 
             <button
               className="google-oauth-btn"
               type="button"
@@ -207,7 +206,7 @@ const SignupPage = () => {
             >
               <FcGoogle className="google-icon" />
               Sign Up with Google
-            </button>
+            </button> */}
 
             <p className="auth-switch-footer">
               Already have an account?{" "}

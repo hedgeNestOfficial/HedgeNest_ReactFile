@@ -1,10 +1,10 @@
-// import React from "react";
-// import { Navigate, Outlet } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-// const PublicRoute = () => {
-//   const { token } = useSelector((state) => state?.user);
-//   return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
-// };
+const PublicRoute = () => {
+  const { token } = useSelector((state) => state?.user);
+  return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
+};
 
-// export default PublicRoute;
+export default PublicRoute;

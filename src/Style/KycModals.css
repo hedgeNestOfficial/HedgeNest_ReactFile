@@ -1,0 +1,186 @@
+/* Modal Overlay and Container */
+.kyc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Slightly darker overlay for better backdrop isolation */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500; /* Ensures it sits neatly above all profile card layouts */
+}
+
+.kyc-modal-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  width: 92%; /* Clean margins on small mobile frames */
+  max-width: 420px; /* Perfect moderate desktop popup width */
+  min-height: 200px;
+  padding: 32px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* Prevents text overflow padding issues */
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typography */
+.kyc-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.kyc-modal-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 24px;
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* Buttons */
+.kyc-btn-group {
+  display: flex;
+  gap: 15px;
+  margin-top: auto; /* Pushes action block to the bottom dynamically */
+}
+
+.kyc-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kyc-btn-cancel {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.kyc-btn-continue {
+  background: #f2c94c; /* HedgeNest Yellow */
+  border: none;
+  color: #ffffff;
+}
+
+.kyc-btn-continue:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Upload Fields */
+.kyc-upload-group {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.kyc-upload-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.kyc-upload-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: border-color 0.2s ease;
+}
+
+.kyc-upload-box:hover {
+  border-color: #f2c94c;
+}
+
+.kyc-upload-text {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 85%;
+}
+
+/* PIN Inputs */
+.kyc-pin-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.kyc-pin-input {
+  width: 45px;
+  height: 55px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+.kyc-pin-input:focus {
+  border-color: #f2c94c;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(242, 201, 76, 0.2);
+}
+
+.kyc-back-btn {
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Success State */
+.kyc-success-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 3.5rem;
+  color: #f2c94c;
+}

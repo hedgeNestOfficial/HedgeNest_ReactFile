@@ -38,5 +38,4 @@ export const availableProducts = [
     term: "365days",
     minAmount: "N25,000",
   },
-  // ... add other items
 ];

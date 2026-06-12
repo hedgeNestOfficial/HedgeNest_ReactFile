@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import HeroPage from "./Pages/HeroPage";
 import Dashboard from "./Pages/Main/Dashboard";
 import SignupPage from "./Pages/Auth/SignupPage";
 import LoginPage from "./Pages/Auth/LoginPage";
@@ -31,6 +30,7 @@ import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
 import { InvestDashboard } from "./Pages/Main/InvestDasboard";
+import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 
 const App = () => {
   return (
@@ -71,6 +71,7 @@ const App = () => {
         <Route path="/newpass" element={<NewPass />} />
         <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/loading" element={<Loading />} />
+        <Route path="/google-success" element={<GoogleSuccess />} />
 
         {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>

@@ -188,3 +188,36 @@
     border-radius: 4px;
   }
 }
+
+/* ============================================
+   DESKTOP USER SECTION
+   ============================================ */
+
+.desktop-user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f7;
+  border: 2px solid #c9922a;
+  flex-shrink: 0;
+}
+
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar-icon {
+  color: #c9922a;
+}

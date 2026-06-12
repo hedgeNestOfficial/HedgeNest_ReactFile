@@ -4,7 +4,7 @@ import { CiCircleQuestion } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { LuPiggyBank } from "react-icons/lu";
 import SavingsModal from "../Components/SavingsModal";
-import Vaults from "../Components/Vaults"; // 1. IMPORT THE SEPARATED COMPONENT
+import Vaults from "../Components/Vaults";
 import "../Css/SmartSafe.css";
 
 const SmartSafe = () => {
@@ -19,7 +19,6 @@ const SmartSafe = () => {
     savingFrequency: "Daily",
   });
 
-  // 2. DASHBOARD SWITCH FLAG (Starts false to show the empty placeholder card)
   const [hasVaults, setHasVaults] = useState(false);
 
   useEffect(() => {
@@ -43,7 +42,6 @@ const SmartSafe = () => {
 
   const handlePinKeyDown = (e, index) => {
     if (e.key === "Backspace" && !pin[index] && index > 0) {
-      // Logic managed inside layout subcomponents
     }
   };
 
@@ -57,7 +55,6 @@ const SmartSafe = () => {
     });
     setModalScreen("NONE");
 
-    // 3. FLIP STATE TO TRUE WHEN PLAN GENERATION CONCLUDES
     setHasVaults(true);
   };
 

@@ -14,8 +14,3 @@ export const historyData = [
     amount: 5000,
   },
 ];
-
-// In your Page:
-{
-  /* <TransactionHistory transactions={historyData} />; */
-}
