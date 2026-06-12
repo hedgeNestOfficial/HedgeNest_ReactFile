@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../../Style/BvnAuth.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
-import { LuArrowLeft, LuLock, LuFile } from "react-icons/lu";
+import { LuArrowLeft, LuLock } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -12,34 +12,11 @@ import whiteLogo from "../../assets/white logo.png";
 
 const BvnAuth = () => {
   const navigate = useNavigate();
+
   const { token } = useSelector((state) => state.user);
+
   const [idNumber, setIdNumber] = useState("");
-  const [idPhoto, setIdPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      toast.error("Only image files are allowed");
-
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      toast.error("Image size must be less than 2MB");
-
-      return;
-    }
-
-    setIdPhoto(file);
-
-    toast.success("Image attached successfully");
-  };
 
   const handleIdNumberChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -49,61 +26,53 @@ const BvnAuth = () => {
     }
   };
 
-  const handleSelectChange = (e) => {
-    setSelectedOption(e.target.value);
-  };
-
   const handleSubmitKyc = async (e) => {
     e.preventDefault();
 
     if (!idNumber.trim()) {
-      return toast.error("Enter NIN number");
+      return toast.error("Enter your NIN");
     }
 
     if (idNumber.length !== 11) {
-      return toast.error("NIN must be 11 digits");
-    }
-
-    if (!idPhoto) {
-      return toast.error("Upload your NIN slip");
+      return toast.error("NIN must be exactly 11 digits");
     }
 
     try {
       setIsLoading(true);
 
-      const formData = new FormData();
+      const payload = {
+        nin: idNumber,
+        verification_consent: true,
+      };
 
-      formData.append("idType", "nin");
-      formData.append("idNumber", String(idNumber));
-      formData.append("idPhoto", idPhoto);
-      console.log("FORM DATA:");
-      console.log("idType:", "nin");
-      console.log("idNumber:", String(idNumber));
-      console.log("idPhoto:", idPhoto);
+      console.log("VERIFY PAYLOAD:", payload);
 
-      const response = await submitKyc(formData, token);
+      const response = await submitKyc(payload, token);
 
-      console.log("SUCCESS RESPONSE:", response);
+      console.log("VERIFY RESPONSE:", response);
 
-      toast.success(response?.message || "KYC uploaded successfully");
+      toast.success(response?.message || "Identity verified successfully");
 
       setTimeout(() => {
         navigate("/pin");
       }, 1500);
     } catch (error) {
-      console.log("FULL ERROR:", error);
+      console.log("VERIFY ERROR:", error);
+      console.log("VERIFY ERROR RESPONSE:", error?.response?.data);
 
-      console.log("ERROR RESPONSE:", error?.response?.data);
-
-      toast.error(error?.response?.data?.message || "KYC failed to submit");
+      toast.error(
+        error?.response?.data?.message || "Unable to verify identity",
+      );
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <section className="signup-section">
       <div className="image-container">
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
+
         <div
           className="brand-group"
           style={{
@@ -128,13 +97,13 @@ const BvnAuth = () => {
         </div>
       </div>
 
-      {/* RIGHT FORM */}
       <div className="form-container">
         <div className="signup-form-wrapper">
           <div className="form-header-mobile">
             <div className="brand-group-mobile">
               <img src={whiteLogo} alt="Logo" />
             </div>
+
             <button
               type="button"
               className="back-arrow-btn"
@@ -154,32 +123,7 @@ const BvnAuth = () => {
             </div>
 
             <div className="Auth-inputs-row">
-              <label>Upload photo of NIN ID</label>
-
-              <div className="input-tag">
-                <input
-                  type="file"
-                  id="ninUpload"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  hidden
-                />
-
-                <label htmlFor="ninUpload" className="custom-file-label">
-                  <span
-                    className={idPhoto ? "file-selected" : "file-placeholder"}
-                  >
-                    {idPhoto ? idPhoto.name : "Attach NIN Slip"}
-                  </span>
-
-                  <LuFile className="input-icon" />
-                </label>
-              </div>
-            </div>
-
-            {/* NIN INPUT */}
-            <div className="Auth-inputs-row">
-              <label>Enter NIN Number (11 degits)</label>
+              <label>Enter NIN Number (11 digits)</label>
 
               <div className="input-tag">
                 <input
@@ -194,22 +138,6 @@ const BvnAuth = () => {
               </div>
             </div>
 
-            {/* SUBMIT BUTTON */}
-            <div className="Auth-inputs-row">
-              <label>What Best Describes You?</label>
-
-              <div className="input-tag">
-                <select className="select-input">
-                  <option value="">Select an option</option>
-                  <option value="Student">Student</option>
-                  <option value="SelfEmployed">Self Employed</option>
-                  <option value="Employed">Employed </option>
-                  <option value="Others">Others </option>
-                </select>
-              </div>
-            </div>
-
-            {/* CONTINUE BUTTON */}
             <Button
               text={
                 isLoading ? (
@@ -225,12 +153,11 @@ const BvnAuth = () => {
               disabled={isLoading}
               style={{
                 background: isLoading ? "#b3b3b3" : "#eed06c",
-
                 color: "#fff",
-
                 marginTop: "10px",
               }}
             />
+
             <p
               style={{
                 color: "black",
