@@ -179,7 +179,7 @@ const LoginPage = () => {
                 className="highlight-link bold-link"
                 onClick={() => navigate("/signup")}
               >
-                Sign Up o
+                Sign Up
               </span>
             </p>
           </form>
