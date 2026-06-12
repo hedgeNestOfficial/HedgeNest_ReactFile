@@ -58,6 +58,7 @@ export const resendOtp = async (payload) => {
     throw error;
   }
 };
+
 export const submitKyc = async (formData, token) => {
   const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
     headers: {

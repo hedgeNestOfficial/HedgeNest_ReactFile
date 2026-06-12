@@ -25,7 +25,7 @@ export const ENDPOINTS = {
 
     CREATE_PIN: `${BASE_URL}/api/v1/create-pin`,
 
-    VERIFY_KYC: `${BASE_URL}/api/v1/uploadId`,
+    VERIFY_KYC: `${BASE_URL}/api/v1/verify`,
   },
 
   USER: {
