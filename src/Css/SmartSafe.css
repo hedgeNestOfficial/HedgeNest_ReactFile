@@ -2,7 +2,6 @@
 .smart-container {
   width: 100%;
   min-height: 100vh;
-  /* min-height: 750px; */
   background-color: #fdf9ec;
   padding: 40px 48px;
   box-sizing: border-box;
@@ -14,11 +13,16 @@
 /* Header Element Styles */
 .dash-header {
   width: 100%;
-  height: 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+  gap: 16px;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
 }
 
 .main-title {
@@ -173,6 +177,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .icon-plus {
@@ -189,10 +194,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
 }
 
 .empty-content {
   width: 420px;
+  max-width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -225,4 +233,51 @@
   line-height: 1.5;
   color: #444444;
   margin: 0;
+}
+
+/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+
+@media (max-width: 768px) {
+  .smart-container {
+    padding: 80px 16px 24px 16px; /* Added 80px safe buffer context below app navigation layout header */
+  }
+
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dropdown-panel {
+    width: calc(
+      100vw - 32px
+    ); /* Scale dynamically instead of staying a fixed 440px wide */
+    max-width: 380px;
+    right: -50px;
+  }
+
+  .arrow-top {
+    right: 54px;
+  }
+
+  .empty-card {
+    height: 380px;
+  }
+}
+
+@media (max-width: 400px) {
+  .dropdown-panel {
+    right: -100px; /* Shift overlay balance for very tiny phone screens */
+  }
+
+  .arrow-top {
+    right: 104px;
+  }
 }

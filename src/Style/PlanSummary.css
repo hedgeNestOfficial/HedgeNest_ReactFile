@@ -14,6 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px; /* Prevent text elements from touching on smaller screens */
 }
 
 .summary-row.items-start {
@@ -40,7 +41,76 @@
   gap: 4px;
 }
 
-.text-dark { color: #111111; font-weight: 400; }
-.text-gold { color: #E2B93B; font-weight: 500; }
-.text-gold.font-bold { font-weight: 700; }
-.calculation-subtext { font-size: 13px; color: #111111; font-weight: 400; }
+.text-dark {
+  color: #111111;
+  font-weight: 400;
+}
+.text-gold {
+  color: #e2b93b;
+  font-weight: 500;
+}
+.text-gold.font-bold {
+  font-weight: 700;
+}
+.calculation-subtext {
+  font-size: 13px;
+  color: #111111;
+  font-weight: 400;
+}
+
+/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+
+@media (max-width: 540px) {
+  .summary-details-list {
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .summary-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .summary-row.items-start {
+    align-items: flex-start;
+  }
+
+  .summary-label {
+    max-width: 100%; /* Reset max width constraint so labels can span the container width */
+    font-size: 14px;
+    color: #555555; /* Slightly softer tone for clean structural hierarchy */
+  }
+
+  .summary-value {
+    text-align: left;
+    font-size: 15px;
+  }
+
+  .summary-value-stack {
+    align-items: flex-start; /* Turn off right alignment for stacked items */
+    width: 100%;
+  }
+
+  .calculation-subtext {
+    font-size: 12px;
+    text-align: left;
+    word-break: break-word; /* Prevents long formula structures from overflowing */
+    color: #666666;
+  }
+
+  /* Optional wrapper management optimization for footer buttons */
+  .modal-actions-footer {
+    display: flex;
+    flex-direction: column-reverse; /* Stack cancel under confirm for easier thumb taps */
+    gap: 12px;
+    width: 100%;
+  }
+
+  .modal-actions-footer button,
+  .btn-primary,
+  .btn-secondary {
+    width: 100% !important; /* Ensure buttons expand nicely to fill screen width */
+    height: 48px;
+  }
+}
