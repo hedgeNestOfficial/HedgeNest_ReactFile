@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
-const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
-  // The array data remains completely inside this file as requested
-  const [vaults, setSetVaults] = useState([
+const Vaults = ({ onTopUp, onWithdraw }) => {
+  const [vaults, setVaults] = useState([
     {
       id: "v-01",
       type: "locked",
@@ -49,43 +48,11 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
       frequency: "Monthly",
       autoSave: false,
     },
-    },
   ]);
 
-  // LISTEN FOR TOP UP STATE UPDATES FROM PARENT
-  useEffect(() => {
-    if (topUpEvent && topUpEvent.id) {
-      setSetVaults((prevList) =>
-        prevList.map((vault) => {
-          if (vault.id === topUpEvent.id) {
-            const newBalance = vault.balance + topUpEvent.amount;
-
-            // Recalculate progress micro-indicator proportionally (Max caps out at 100%)
-            const addedProgress = Math.floor(
-              (topUpEvent.amount / vault.balance) * 10,
-            );
-            const newProgress = Math.min(
-              vault.progress + (addedProgress || 5),
-              100,
-            );
-
-            return {
-              ...vault,
-              balance: newBalance,
-              progress: newProgress,
-            };
-          }
-          return vault;
-        }),
-      );
-    }
-  }, [topUpEvent]);
-
   const handleToggleAutoSave = (vaultId) => {
-    setSetVaults((prevList) =>
+    setVaults((prevList) =>
       prevList.map((vault) =>
-        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
-      ),
         vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
       ),
     );
@@ -111,12 +78,8 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
             {/* Core Vault Content */}
             <h2 className="vault-name">{vault.title}</h2>
 
-
             <div className="amount-group">
               <span className="vault-currency">₦</span>
-              <span className="vault-balance">
-                {Number(vault.balance).toLocaleString()}
-              </span>
               <span className="vault-balance">
                 {Number(vault.balance).toLocaleString()}
               </span>
@@ -126,8 +89,6 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
 
             {/* Progress Meter bar */}
             <div className="progress-container">
-              <div
-                className="progress-fill"
               <div
                 className="progress-fill"
                 style={{ width: `${vault.progress || 0}%` }}
@@ -145,14 +106,11 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
               {!isLocked && (
                 <button
                   className="btn-gold-action"
-                <button
-                  className="btn-gold-action"
                   onClick={() => onTopUp?.(vault)}
                 >
                   Top Up
                 </button>
               )}
-              {/* LOGIC UPDATE HERE: We pass the specific vault information out when clicked */}
               <button
                 className={isLocked ? "btn-gold-full" : "btn-white-action"}
                 onClick={() => onWithdraw?.(vault)}
@@ -164,9 +122,6 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
             {/* Context-Aware Footer Row */}
             {!isLocked && (
               <footer className="card-footer">
-                <span
-                  className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
-                >
                 <span
                   className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
                 >
@@ -190,4 +145,3 @@ const Vaults = ({ onTopUp, onWithdraw, topUpEvent }) => {
 };
 
 export default Vaults;
-
