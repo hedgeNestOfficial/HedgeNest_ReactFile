@@ -59,10 +59,11 @@ export const resendOtp = async (payload) => {
   }
 };
 
-export const submitKyc = async (formData, token) => {
-  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
+export const submitKyc = async (payload, token) => {
+  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
