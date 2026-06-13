@@ -16,7 +16,7 @@
   width: 520px;
   min-height: 320px;
   height: auto;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 40px;
   box-sizing: border-box;
@@ -30,7 +30,9 @@
   justify-content: center;
 }
 
-.modal-title, .summary-title, .pin-screen-title {
+.modal-title,
+.summary-title,
+.pin-screen-title {
   font-size: 24px;
   font-weight: 700;
   color: #111111;
@@ -67,7 +69,7 @@
 .btn-secondary {
   width: 204px;
   height: 50px;
-  background-color: #FFFFFF;
+  background: #ffffff;
   border: 1px solid #111111;
   border-radius: 8px;
   color: #111111;
@@ -83,10 +85,10 @@
 .btn-primary {
   width: 204px;
   height: 50px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -101,14 +103,18 @@
   width: 50px;
   height: 50px;
   border: 4px solid rgba(226, 185, 59, 0.2);
-  border-top: 4px solid #E2B93B;
+  border-top: 4px solid #e2b93b;
   border-radius: 50%;
   animation: spinSmooth 0.8s linear infinite;
 }
 
 @keyframes spinSmooth {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Stage E Success Card Interface Structure Settings */
@@ -130,7 +136,7 @@
 .success-inner-dot {
   width: 16px;
   height: 16px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border-radius: 50%;
 }
 
@@ -145,10 +151,10 @@
 .success-close-btn {
   width: 100%;
   height: 52px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;

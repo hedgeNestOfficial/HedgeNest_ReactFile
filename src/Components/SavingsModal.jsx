@@ -17,7 +17,7 @@ const SavingsModal = ({
   handlePinChange,
   handlePinKeyDown,
   handlePinSubmit,
-  handleCloseSuccess
+  handleCloseSuccess,
 }) => {
   if (modalScreen === "NONE") return null;
 
@@ -45,7 +45,11 @@ const SavingsModal = ({
       )}
 
       {modalScreen === "LOADING" && (
-        <div className="modal-container layout-centered" role="dialog" aria-modal="true">
+        <div
+          className="modal-container layout-centered"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="loading-spinner"></div>
         </div>
       )}
@@ -59,14 +63,35 @@ const SavingsModal = ({
           onSubmit={handlePinSubmit}
         />
       )}
-
-      {modalScreen === "SUCCESS" && (
+      {/* {modalScreen === "SUCCESS" && (
         <div className="modal-container layout-centered success-card-padding" role="dialog" aria-modal="true">
           <div className="success-pulse-ring"><div className="success-inner-dot"></div></div>
           <h2 className="success-heading">Savings Plan Created!</h2>
           <button type="button" onClick={handleCloseSuccess} className="success-close-btn">Close</button>
-        </div>
-      )}
+        </div> 
+      )}  */}
+
+      {modalScreen === "SUCCESS" &&
+        /* SWEETALERT ALIGNMENT AT LINE 63 */
+        (() => {
+          Swal.fire({
+            title: "Savings Plan Created!",
+            text: `Your plan "${formData?.title || "Nest"}" has been set up successfully.`,
+            icon: "success",
+            confirmButtonText: "Close",
+            confirmButtonColor: "#EDC344",
+            buttonsStyling: true,
+            allowOutsideClick: false,
+            customClass: {
+              popup: "swal-vault-radius",
+              title: "swal-vault-title",
+              confirmButton: "swal-vault-button",
+            },
+          }).then(() => {
+            handleCloseSuccess?.();
+          });
+          return null;
+        })()}
     </div>
   );
 };

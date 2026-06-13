@@ -62,3 +62,4 @@ export const InvestDashboard = ({ activeInvestments, userTier = 1 }) => {
     </div>
   );
 };
+export default InvestDashboard;
