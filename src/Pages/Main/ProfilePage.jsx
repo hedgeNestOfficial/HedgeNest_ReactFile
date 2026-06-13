@@ -11,7 +11,10 @@
 // import toast from "react-hot-toast";
 // import { updateProfile } from "../../Services/authService";
 // import { OrbitProgress } from "react-loading-indicators";
-// import { updateUser } from "../../Store/userSlice";
+// import { updateUser } from "../../Store/UserSlice";
+
+// // Import your exact 4-step modal manager from yesterday
+// import KycModalManager from "../../Components/KycModals/KycModalManager";
 
 // const ProfilePage = () => {
 //   const dispatch = useDispatch();
@@ -32,6 +35,9 @@
 //   const [isEditing, setIsEditing] = useState(false);
 //   const [profilePicture, setProfilePicture] = useState(null);
 //   const [previewUrl, setPreviewUrl] = useState("");
+
+//   // Control state for your KYC popup canvas layer
+//   const [isKycOpen, setIsKycOpen] = useState(false);
 
 //   // Sync state automatically whenever the Redux user object initializes or changes
 //   useEffect(() => {
@@ -57,6 +63,7 @@
 //     fileInputRef.current.click();
 //   };
 
+//   // FIXED: Moved handleFileChange to the top-level scope of the component
 //   const handleFileChange = (e) => {
 //     const file = e.target.files[0];
 //     if (file) {
@@ -69,43 +76,94 @@
 //     }
 //   };
 
+//   // const handleSaveProfile = async (e) => {
+//   //   e.preventDefault();
+
+//   //   try {
+//   //     setIsLoading(true);
+
+//   //     const profileFormData = new FormData();
+//   //     profileFormData.append("firstName", formData.firstName);
+//   //     profileFormData.append("lastName", formData.lastName);
+//   //     profileFormData.append("phoneNumber", formData.phoneNumber);
+
+//   //     if (profilePicture) {
+//   //       profileFormData.append("profilePicture", profilePicture);
+//   //     }
+
+//   //     const response = await updateProfile(profileFormData, token);
+
+//   //     // Log to inspect exact backend response structure
+//   //     console.log("🔍 Backend Response:", response);
+
+//   //     // Extract user object from various possible backend response structures
+//   //     const responseData = response?.data || response?.user || response;
+
+//   //     const normalizedUser = {
+//   //       ...responseData,
+//   //       profilePicture: responseData.profilePicture?.url || null,
+//   //     };
+
+//   //     dispatch(updateUser(normalizedUser));
+
+//   //     console.log("✅ Extracted User Data:", updatedUserData);
+
+//   //     dispatch(updateUser(updatedUserData));
+//   //     toast.success(response.message || "Profile updated successfully");
+//   //     setIsEditing(false);
+//   //   } catch (error) {
+//   //     console.log(error);
+//   //     toast.error(error?.response?.data?.message || "Failed to update profile");
+//   //   } finally {
+//   //     setIsLoading(false);
+//   //   }
+//   // };
 //   const handleSaveProfile = async (e) => {
 //     e.preventDefault();
-//     if (!formData.firstName || !formData.lastName || !formData.phoneNumber) {
-//       toast.error("Please fill in all required fields.");
-//       return;
-//     }
-
-//     setIsLoading(true);
 
 //     try {
-//       const data = new FormData();
-//       data.append("firstName", formData.firstName);
-//       data.append("lastName", formData.lastName);
-//       data.append("phoneNumber", formData.phoneNumber);
+//       setIsLoading(true);
+
+//       const profileFormData = new FormData();
+
+//       profileFormData.append("phoneNumber", formData.phoneNumber);
+
 //       if (profilePicture) {
-//         data.append("profilePicture", profilePicture);
+//         profileFormData.append("profilePicture", profilePicture);
 //       }
 
-//       const response = await updateProfile(data, token);
+//       const response = await updateProfile(profileFormData, token);
 
-//       // Inspect this log in your browser DevTools to see your exact backend schema response
-//       console.log("Backend Update Response:", response);
+//       dispatch(updateUser(response.data));
 
-//       // Safely check how data is layered within your axios/fetch instance
-//       const updatedUserData = response.user || response.data || response;
+//       toast.success(response.message || "Profile updated successfully");
 
-//       dispatch(updateUser(updatedUserData));
-//       toast.success("Profile updated successfully!");
 //       setIsEditing(false);
+
+//       setProfilePicture(null);
 //     } catch (error) {
-//       console.error("Profile update error details:", error);
+//       console.log(error);
+
 //       toast.error(error?.response?.data?.message || "Failed to update profile");
 //     } finally {
 //       setIsLoading(false);
 //     }
 //   };
 
+//   const handleCancel = () => {
+//     setFormData({
+//       firstName: user?.firstName || "",
+//       lastName: user?.lastName || "",
+//       phoneNumber: user?.phoneNumber || "",
+//       email: user?.email || "",
+//     });
+
+//     setPreviewUrl(user?.profilePicture?.url || "");
+
+//     setProfilePicture(null);
+
+//     setIsEditing(false);
+//   };
 //   return (
 //     <div className="profile-page-container">
 //       <div className="profile-header">
@@ -114,19 +172,25 @@
 
 //       <div className="profile-tabs-container">
 //         <button
-//           className={`profile-tab-btn ${activeTab === "profile" ? "active" : ""}`}
+//           className={`profile-tab-btn ${
+//             activeTab === "profile" ? "active" : ""
+//           }`}
 //           onClick={() => setActiveTab("profile")}
 //         >
 //           <CgProfile className="tab-icon" /> Profile
 //         </button>
 //         <button
-//           className={`profile-tab-btn ${activeTab === "settings" ? "active" : ""}`}
+//           className={`profile-tab-btn ${
+//             activeTab === "settings" ? "active" : ""
+//           }`}
 //           onClick={() => setActiveTab("settings")}
 //         >
 //           <IoSettingsOutline className="tab-icon" /> Settings
 //         </button>
 //         <button
-//           className={`profile-tab-btn ${activeTab === "support" ? "active" : ""}`}
+//           className={`profile-tab-btn ${
+//             activeTab === "support" ? "active" : ""
+//           }`}
 //           onClick={() => setActiveTab("support")}
 //         >
 //           <TfiHeadphoneAlt className="tab-icon" /> Help & Support
@@ -158,6 +222,7 @@
 //                     alignItems: "center",
 //                     justifyContent: "center",
 //                     gap: "8px",
+//                     alignSelf: "flex-end",
 //                     textAlign: "center",
 //                     padding: "8px 8px",
 //                     borderRadius: "4px",
@@ -213,7 +278,15 @@
 //                     KYC:{" "}
 //                     <span className="tier-text">Tier {user?.tier || 1}</span>
 //                   </span>
-//                   <a href="#upgrade" className="upgrade-link">
+
+//                   <a
+//                     href="#upgrade"
+//                     className="upgrade-link"
+//                     onClick={(e) => {
+//                       e.preventDefault();
+//                       setIsKycOpen(true);
+//                     }}
+//                   >
 //                     Upgrade To Tier 2
 //                   </a>
 //                 </div>
@@ -224,26 +297,29 @@
 //               <div className="form-grid">
 //                 <div className="input-group">
 //                   <label>First Name</label>
+
 //                   <input
 //                     type="text"
-//                     name="firstName"
-//                     value={formData.firstName}
-//                     onChange={handleInputChange}
-//                     disabled={!isEditing}
+//                     value={user?.firstName || ""}
+//                     disabled
+//                     className="readonly-input"
 //                   />
 //                 </div>
+
 //                 <div className="input-group">
 //                   <label>Last Name</label>
+
 //                   <input
 //                     type="text"
-//                     name="lastName"
-//                     value={formData.lastName}
-//                     onChange={handleInputChange}
-//                     disabled={!isEditing}
+//                     value={user?.lastName || ""}
+//                     disabled
+//                     className="readonly-input"
 //                   />
 //                 </div>
+
 //                 <div className="input-group">
-//                   <label>Phone number</label>
+//                   <label>Phone Number</label>
+
 //                   <input
 //                     type="tel"
 //                     name="phoneNumber"
@@ -252,13 +328,15 @@
 //                     disabled={!isEditing}
 //                   />
 //                 </div>
+
 //                 <div className="input-group">
-//                   <label>Email address</label>
+//                   <label>Email Address</label>
+
 //                   <input
 //                     type="email"
-//                     name="email"
-//                     value={formData.email}
+//                     value={user?.email || ""}
 //                     disabled
+//                     className="readonly-input"
 //                   />
 //                 </div>
 //               </div>
@@ -303,6 +381,9 @@
 //           </div>
 //         )}
 //       </div>
+
+//       {/* Rendered cleanly on top without layout shifts */}
+//       <KycModalManager isOpen={isKycOpen} onClose={() => setIsKycOpen(false)} />
 //     </div>
 //   );
 // };
@@ -429,48 +510,52 @@ const ProfilePage = () => {
   //     setIsLoading(false);
   //   }
   // };
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
 
-  const handleSaveProfile = async () => {
     try {
       setIsLoading(true);
 
-      const formData = new FormData();
+      const profileFormData = new FormData();
 
-      formData.append("phoneNumber", phoneNumber);
+      profileFormData.append("phoneNumber", formData.phoneNumber);
 
-      if (selectedImage) {
-        formData.append("profilePicture", selectedImage);
+      if (profilePicture) {
+        profileFormData.append("profilePicture", profilePicture);
       }
 
-      const response = await updateProfile(formData, token);
+      const response = await updateProfile(profileFormData, token);
 
       dispatch(updateUser(response.data));
 
       toast.success(response.message || "Profile updated successfully");
 
       setIsEditing(false);
+
+      setProfilePicture(null);
     } catch (error) {
+      console.log(error);
+
       toast.error(error?.response?.data?.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleCancel = () => {
-    // Reset form to original user data
     setFormData({
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       phoneNumber: user?.phoneNumber || "",
       email: user?.email || "",
     });
-    // Reset preview to original profile picture
+
     setPreviewUrl(user?.profilePicture?.url || "");
-    // Clear any pending profile picture upload
+
     setProfilePicture(null);
-    // Exit edit mode
+
     setIsEditing(false);
   };
-
   return (
     <div className="profile-page-container">
       <div className="profile-header">
@@ -604,26 +689,29 @@ const ProfilePage = () => {
               <div className="form-grid">
                 <div className="input-group">
                   <label>First Name</label>
+
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
+                    value={user?.firstName || ""}
+                    disabled
+                    className="readonly-input"
                   />
                 </div>
+
                 <div className="input-group">
                   <label>Last Name</label>
+
                   <input
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
+                    value={user?.lastName || ""}
+                    disabled
+                    className="readonly-input"
                   />
                 </div>
+
                 <div className="input-group">
-                  <label>Phone number</label>
+                  <label>Phone Number</label>
+
                   <input
                     type="tel"
                     name="phoneNumber"
@@ -632,13 +720,15 @@ const ProfilePage = () => {
                     disabled={!isEditing}
                   />
                 </div>
+
                 <div className="input-group">
-                  <label>Email address</label>
+                  <label>Email Address</label>
+
                   <input
                     type="email"
-                    name="email"
-                    value={formData.email}
+                    value={user?.email || ""}
                     disabled
+                    className="readonly-input"
                   />
                 </div>
               </div>
