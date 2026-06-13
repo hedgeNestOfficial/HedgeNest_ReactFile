@@ -34,6 +34,7 @@ export const ENDPOINTS = {
     VERIFY_RESET_OTP: `${BASE_URL}/api/v1/verify/check`,
 
     RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
+    CHANGE_PIN: `${BASE_URL}/api/v1/changePin`,
   },
 
   USER: {

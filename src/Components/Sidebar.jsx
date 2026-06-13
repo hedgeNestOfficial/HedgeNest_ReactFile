@@ -1,8 +1,6 @@
 import React from "react";
-
 import whiteLogo from "../assets/white logo.png";
 import Abayomi from "../assets/Abayomi.png";
-
 import {
   FaGripHorizontal,
   FaWallet,
@@ -13,26 +11,22 @@ import {
   FaSignOutAlt,
   FaBell,
 } from "react-icons/fa";
-
 import "../Css/Sidebar.css";
-
 import { useNavigate, useLocation } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { logout } from "../Store/UserSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
-
   const dispatch = useDispatch();
-
   const { user } = useSelector((state) => state.user);
-
+  // const userInitial = user?.firstName?.charAt(0)?.toUpperCase() || "U";
+  const userInitial = `${user?.firstName?.charAt(0) || ""}${
+    user?.lastName?.charAt(0) || ""
+  }`.toUpperCase();
+  const profileImage = user?.profilePicture?.url;
   const currentPath = location.pathname;
-
   const menuItems = [
     { name: "dashboard", icon: FaGripHorizontal },
     { name: "wallet", icon: FaWallet },
@@ -67,15 +61,16 @@ const Sidebar = () => {
             <FaBell size={22} />
           </button>
 
-          <div className="user-avatar">
-            <img
-              src={user?.profilePicture?.url || Abayomi}
-              alt="User Profile"
-              onClick={() => navigate("/profile")}
-              className={`menu-item ${
-                currentPath === "/profile" ? "active" : ""
-              }`}
-            />
+          <div className="user-avatar" onClick={() => navigate("/profile")}>
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="User Profile"
+                className="avatar-image"
+              />
+            ) : (
+              <div className="avatar-placeholder">{userInitial}</div>
+            )}
           </div>
         </div>
       </header>
