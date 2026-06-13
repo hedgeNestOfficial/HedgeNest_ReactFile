@@ -3,6 +3,7 @@ const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const API_CONFIG = {
   baseUrl: BASE_URL,
+
   frontendUrl: FRONTEND_URL,
 
   timeout: 60000,
@@ -26,12 +27,17 @@ export const ENDPOINTS = {
     CREATE_PIN: `${BASE_URL}/api/v1/create-pin`,
 
     VERIFY_KYC: `${BASE_URL}/api/v1/verify`,
+
+    // PASSWORD RESET FLOW
+    FORGOT_PASSWORD: `${BASE_URL}/api/v1/forgot-password`,
+
+    VERIFY_RESET_OTP: `${BASE_URL}/api/v1/verify/check`,
+
+    RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
   },
 
   USER: {
     CHANGE_PASSWORD: `${BASE_URL}/api/v1/change-password`,
-
-    RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
 
     UPDATE_PROFILE: `${BASE_URL}/api/v1/update`,
   },
