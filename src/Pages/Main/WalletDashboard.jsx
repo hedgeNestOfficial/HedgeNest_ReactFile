@@ -9,21 +9,19 @@ import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import { historyData } from "../../JS/Transactions.js";
 import { linkBankAccount } from "../../Services/Walletservice.js";
 import "../../Style/Wallet.css";
+import { useNavigate } from "react-router-dom";
 
 const WalletPage = () => {
   const { user, token, wallet } = useSelector((state) => state.user);
-
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [confirmedDepositAmount, setConfirmedDepositAmount] = useState("");
-
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false); // <-- ADDED STATE
   const [confirmedWithdrawAmount, setConfirmedWithdrawAmount] = useState(""); // <-- ADDED STATE
-
+  // const naviagte = useNavigate()
   // const [balances] = useState({
   //   ngn: "0.00",
   //   usdt: "0.00",

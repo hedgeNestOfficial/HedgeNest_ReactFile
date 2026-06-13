@@ -111,3 +111,15 @@ export const resetPassword = async (payload) => {
 
   return response.data;
 };
+
+export const changeTransactionPin = async (payload, token) => {
+  const response = await axios.post(ENDPOINTS.USER.CHANGE_PIN, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    timeout: API_CONFIG.timeout,
+  });
+
+  return response.data;
+};
