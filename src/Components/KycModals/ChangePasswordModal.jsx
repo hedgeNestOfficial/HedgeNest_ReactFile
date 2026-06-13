@@ -2,39 +2,42 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../Style/ChangePasswordModal.css";
 import { FiArrowLeft } from "react-icons/fi";
 import { FaCircleNotch } from "react-icons/fa";
+import { GiPartyPopper } from "react-icons/gi"; // Imported the congratulations cone icon
 import toast from "react-hot-toast";
+import {
+  forgotPassword,
+  verifyResetOtp,
+  resetPassword,
+} from "../../Services/authService";
 
 const ChangePasswordModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  // Flow step management mapping directly to your provided files:
-  // 1: Verify Email (image_d97149.png)
-  // 2: Email verification loader (image_d97128.png)
-  // 3: Enter OTP view (image_d97108.png)
-  // 4: Create Password view (image_d970ad.png)
-  // 5: Password update loader (image_d97073.png)
-  // 6: Success completion view (image_d9704e.png)
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(30);
-
   const otpRefs = useRef([]);
 
   // Handles countdown timer logic for the OTP view
   useEffect(() => {
-    let interval = null;
-    if (step === 3 && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      clearInterval(interval);
-    }
+    if (step !== 3) return;
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [step, timer]);
+  }, [step]);
 
   // Reset all local component state when modal opens/closes
   useEffect(() => {
@@ -48,28 +51,34 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email.trim()) {
+      return toast.error("Enter your email address");
+    }
 
-    // Transition to loading spinner (image_d97128.png)
-    setStep(2);
-
-    // Simulate validation request
-    setTimeout(() => {
-      setStep(3); // Transition to Enter OTP view (image_d97108.png)
-    }, 1500);
+    try {
+      setIsLoading(true);
+      const response = await forgotPassword({
+        email: email.trim(),
+      });
+      toast.success(response?.message || "OTP sent successfully");
+      setStep(3);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Unable to send OTP");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleOtpChange = (element, index) => {
-    const value = element.value.replace(/\D/g, ""); // Accept digits only
+    const value = element.value.replace(/\D/g, "");
     if (!value) return;
 
     let updatedOtp = [...otp];
     updatedOtp[index] = value.substring(value.length - 1);
     setOtp(updatedOtp);
 
-    // Automatically shift focus to next input block
     if (index < 5 && element.value) {
       otpRefs.current[index + 1].focus();
     }
@@ -81,48 +90,73 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       updatedOtp[index] = "";
       setOtp(updatedOtp);
 
-      // Automatically shift focus backwards on backspace
       if (index > 0) {
         otpRefs.current[index - 1].focus();
       }
     }
   };
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    const enteredCode = otp.join("");
-    if (enteredCode.length !== 6) {
-      toast.error("Please enter a valid 6-digit verification code");
-      return;
+    const otpCode = otp.join("");
+
+    if (otpCode.length !== 6) {
+      return toast.error("Please enter a valid 6-digit verification code");
     }
-    // Transition to Create Password view (image_d970ad.png)
-    setStep(4);
+
+    try {
+      setIsLoading(true);
+      const response = await verifyResetOtp({
+        email,
+        otp: otpCode,
+      });
+      toast.success(response?.message || "OTP verified successfully");
+      setStep(4);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Invalid OTP");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    const otpCode = otp.join("");
+
     if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
+      return toast.error("Passwords do not match");
     }
+
     if (newPassword.length < 6) {
-      toast.error("Password must be at least 6 characters long");
-      return;
+      return toast.error("Password must be at least 6 characters");
     }
 
-    // Transition to Processing Loader (image_d97073.png)
-    setStep(5);
-
-    // Simulate api database push
-    setTimeout(() => {
-      setStep(6); // Success (image_d9704e.png)
-    }, 2000);
+    try {
+      setIsLoading(true);
+      const response = await resetPassword({
+        email,
+        newPassword,
+        confirmPassword,
+        otp: otpCode,
+      });
+      toast.success(response?.message || "Password reset successful");
+      setStep(6);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Unable to reset password");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResendCode = () => {
-    if (timer === 0) {
+  const handleResendCode = async () => {
+    if (timer > 0) return;
+
+    try {
+      const response = await forgotPassword({ email });
+      toast.success(response?.message || "OTP resent");
       setTimer(30);
-      toast.success("A new verification code has been dispatched!");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Unable to resend OTP");
     }
   };
 
@@ -132,7 +166,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         className={`pwd-modal-card ${step === 2 || step === 5 ? "pwd-loading-dims" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* STEP 1: VERIFY EMAIL ADDRESS (image_d97149.png) */}
+        {/* STEP 1: VERIFY EMAIL ADDRESS */}
         {step === 1 && (
           <form
             onSubmit={handleEmailSubmit}
@@ -163,32 +197,38 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               >
                 Cancel
               </button>
-              <button type="submit" className="pwd-btn-continue">
-                Continue
+              <button
+                type="submit"
+                className="pwd-btn-continue"
+                disabled={isLoading}
+              >
+                {isLoading ? "Sending..." : "Continue"}
               </button>
             </div>
           </form>
         )}
 
-        {/* STEP 2 & 5: LOADING STATE SPINNERS (image_d97128.png / image_d97073.png) */}
+        {/* STEP 2 & 5: LOADING STATE SPINNERS */}
         {(step === 2 || step === 5) && (
           <div className="pwd-spinner-wrapper">
             <FaCircleNotch className="pwd-loading-icon" />
           </div>
         )}
 
-        {/* STEP 3: ENTER OTP CODE VIEW (image_d97108.png) */}
+        {/* STEP 3: ENTER OTP CODE VIEW */}
         {step === 3 && (
           <form onSubmit={handleOtpSubmit} className="pwd-modal-step-container">
-            <button
-              type="button"
-              className="pwd-back-arrow-btn"
-              onClick={() => setStep(1)}
-            >
-              <FiArrowLeft />
-            </button>
+            <div className="pwd-nav-header-row">
+              <button
+                type="button"
+                className="pwd-back-arrow-btn"
+                onClick={() => setStep(1)}
+              >
+                <FiArrowLeft />
+              </button>
+            </div>
 
-            <h2 className="pwd-modal-title margin-top-md">Enter OTP</h2>
+            <h2 className="pwd-modal-title">Enter OTP</h2>
             <p className="pwd-modal-subtitle">
               A 6-digit code has been sent to this email <br />
               <span className="pwd-masked-email">
@@ -213,8 +253,12 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               ))}
             </div>
 
-            <button type="submit" className="pwd-btn-block-solid margin-top-md">
-              Next
+            <button
+              type="submit"
+              className="pwd-btn-block-solid margin-top-md"
+              disabled={isLoading}
+            >
+              {isLoading ? "Verifying..." : "Next"}
             </button>
 
             <div className="pwd-otp-footer-links">
@@ -242,23 +286,23 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
           </form>
         )}
 
-        {/* STEP 4: CREATE YOUR NEW PASSWORD (image_d970ad.png) */}
+        {/* STEP 4: CREATE YOUR NEW PASSWORD */}
         {step === 4 && (
           <form
             onSubmit={handlePasswordSubmit}
             className="pwd-modal-step-container"
           >
-            <button
-              type="button"
-              className="pwd-back-arrow-btn"
-              onClick={() => setStep(3)}
-            >
-              <FiArrowLeft />
-            </button>
+            <div className="pwd-nav-header-row">
+              <button
+                type="button"
+                className="pwd-back-arrow-btn"
+                onClick={() => setStep(3)}
+              >
+                <FiArrowLeft />
+              </button>
+            </div>
 
-            <h2 className="pwd-modal-title margin-top-md">
-              Create Your New Password
-            </h2>
+            <h2 className="pwd-modal-title">Create Your New Password</h2>
 
             <div className="pwd-input-group margin-top-md">
               <label className="pwd-input-label">New Password</label>
@@ -284,21 +328,22 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               />
             </div>
 
-            <button type="submit" className="pwd-btn-block-solid margin-top-lg">
-              Next
+            <button
+              type="submit"
+              className="pwd-btn-block-solid margin-top-lg"
+              disabled={isLoading}
+            >
+              {isLoading ? "Updating..." : "Next"}
             </button>
           </form>
         )}
 
-        {/* STEP 6: PASSWORD RESET SUCCESSFUL (image_d9704e.png) */}
+        {/* STEP 6: PASSWORD RESET SUCCESSFUL */}
         {step === 6 && (
           <div className="pwd-modal-step-container text-center align-center">
-            <div className="pwd-confetti-badge-circle">
-              {/* Clean decorative confetti canvas structure matching image mockup graphic */}
-              <div className="pwd-mini-confetti-particle p1"></div>
-              <div className="pwd-mini-confetti-particle p2"></div>
-              <div className="pwd-mini-confetti-particle p3"></div>
-              <div className="pwd-mini-confetti-particle p4"></div>
+            {/* Replaced old multi-colored particles with clean themed cone icon wrapper */}
+            <div className="pwd-success-icon-wrapper">
+              <GiPartyPopper className="pwd-success-icon" />
             </div>
 
             <h2 className="pwd-modal-title margin-top-lg font-size-xl">

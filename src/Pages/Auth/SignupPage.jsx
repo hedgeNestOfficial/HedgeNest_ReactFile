@@ -169,8 +169,19 @@ const SignupPage = () => {
 
               <label htmlFor="terms">
                 I agree to the{" "}
-                <span className="highlight-link">Terms & Conditions</span> and{" "}
-                <span className="highlight-link">Privacy Policy</span>
+                <span
+                  className="highlight-link"
+                  onClick={() => navigate("/regulatory")}
+                >
+                  Terms & Conditions
+                </span>{" "}
+                and{" "}
+                <span
+                  className="highlight-link"
+                  onClick={() => navigate("/policy")}
+                >
+                  Privacy Policy
+                </span>
               </label>
             </div>
 

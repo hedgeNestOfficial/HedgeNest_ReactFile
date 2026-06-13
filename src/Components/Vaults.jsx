@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
@@ -81,7 +81,7 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
   }, [topUpEvent]);
 
   const handleToggleAutoSave = (vaultId) => {
-    setSetVaults((prevList) =>
+    setVaults((prevList) =>
       prevList.map((vault) =>
         vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
       ),

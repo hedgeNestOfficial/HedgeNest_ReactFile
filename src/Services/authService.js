@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
 export const registerUser = async (payload) => {
@@ -29,39 +28,25 @@ export const verifyOtp = async (payload) => {
   return response.data;
 };
 
-// export const resendOtp = async (payload) => {
-//   const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
-//     headers: API_CONFIG.headers,
-//     timeout: API_CONFIG.timeout,
-//   });
-
-//   return response.data;
-// };
 export const resendOtp = async (payload) => {
   try {
-    console.log("Sending OTP:", payload);
-    console.log("URL:", ENDPOINTS.AUTH.RESEND_OTP);
-
     const response = await axios.post(ENDPOINTS.AUTH.RESEND_OTP, payload, {
       headers: API_CONFIG.headers,
       timeout: API_CONFIG.timeout,
     });
 
-    console.log("OTP RESPONSE:", response);
-
     return response.data;
   } catch (error) {
     console.log("OTP ERROR:", error);
-    console.log("OTP ERROR CODE:", error.code);
-    console.log("OTP ERROR RESPONSE:", error.response);
-
     throw error;
   }
 };
-export const submitKyc = async (formData, token) => {
-  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, formData, {
+
+export const submitKyc = async (payload, token) => {
+  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
@@ -82,22 +67,8 @@ export const createPin = async (payload, token) => {
     return response.data;
   } catch (error) {
     console.log("CREATE PIN ERROR:", error);
-
-    console.log("CREATE PIN RESPONSE:", error?.response);
-
-    console.log("CREATE PIN DATA:", error?.response?.data);
-
     throw error;
   }
-};
-
-export const resetPassword = async (payload) => {
-  const response = await axios.post(ENDPOINTS.USER.RESET_PASSWORD, payload, {
-    headers: API_CONFIG.headers,
-    timeout: API_CONFIG.timeout,
-  });
-
-  return response.data;
 };
 
 export const updateProfile = async (formData, token) => {
@@ -105,6 +76,37 @@ export const updateProfile = async (formData, token) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  });
+
+  return response.data;
+};
+
+// =====================================
+// FORGOT PASSWORD FLOW
+// =====================================
+
+export const forgotPassword = async (payload) => {
+  const response = await axios.post(ENDPOINTS.AUTH.FORGOT_PASSWORD, payload, {
+    headers: API_CONFIG.headers,
+    timeout: API_CONFIG.timeout,
+  });
+
+  return response.data;
+};
+
+export const verifyResetOtp = async (payload) => {
+  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_RESET_OTP, payload, {
+    headers: API_CONFIG.headers,
+    timeout: API_CONFIG.timeout,
+  });
+
+  return response.data;
+};
+
+export const resetPassword = async (payload) => {
+  const response = await axios.post(ENDPOINTS.AUTH.RESET_PASSWORD, payload, {
+    headers: API_CONFIG.headers,
+    timeout: API_CONFIG.timeout,
   });
 
   return response.data;

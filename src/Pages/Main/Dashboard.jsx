@@ -118,37 +118,59 @@
 // };
 
 // export default Dashboard;
-
 import React from "react";
 
 import "../../Css/DashBoard.css";
 
 import { IoNotificationsSharp } from "react-icons/io5";
-
 import { IoIosArrowRoundForward } from "react-icons/io";
 
 import { useSelector } from "react-redux";
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, wallet } = useSelector((state) => state.user);
 
-  const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
+  const fullName = `${user?.firstName || ""} ${
+    user?.lastName || ""
+  }`;
 
   const profileImage =
-    user?.profilePicture?.url || "https://via.placeholder.com/150";
+    user?.profilePicture?.url ||
+    "https://via.placeholder.com/150";
+
+  const formatCurrency = (amount) => {
+    return Number(amount || 0).toLocaleString("en-NG", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const availableBalance =
+    wallet?.availableBalance ?? 0;
+
+  const nairaBalance =
+    wallet?.balanceInNaira ?? 0;
+
+  const usdtBalance =
+    wallet?.balanceInUSDT ?? 0;
+
+  const smartVaults =
+    wallet?.smartVaults ?? 0;
+
+  const investments =
+    wallet?.investments ?? 0;
 
   return (
     <section>
-      {" "}
       <div className="Dash-container">
-        {" "}
         <section className="Dash-right">
-          {" "}
           <section className="dr-holder">
             {/* HEADER */}
             <article className="dr-header">
               <div>
-                <p>Welcome {user?.firstName || "User"},</p>
+                <p>
+                  Welcome {user?.firstName || "User"},
+                </p>
 
                 <h3>Your nest, today.</h3>
               </div>
@@ -159,7 +181,10 @@ const Dashboard = () => {
                 </button>
 
                 <div className="user-prof">
-                  <img src={profileImage} alt={fullName} />
+                  <img
+                    src={profileImage}
+                    alt={fullName}
+                  />
                 </div>
               </div>
             </article>
@@ -170,7 +195,9 @@ const Dashboard = () => {
                 <div className="total-available">
                   <p>Available Balance</p>
 
-                  <h2>₦ 0</h2>
+                  <h2>
+                    ₦ {formatCurrency(availableBalance)}
+                  </h2>
                 </div>
 
                 <div className="other-balances">
@@ -180,22 +207,29 @@ const Dashboard = () => {
                     <h2>
                       <span>₦ </span>
 
-                      <span>0</span>
+                      <span>
+                        {formatCurrency(nairaBalance)}
+                      </span>
                     </h2>
                   </div>
 
                   <div className="usdt-balance">
                     <p>USDT BALANCE</p>
 
-                    <h2>0 USDT</h2>
+                    <h2>{usdtBalance} USDT</h2>
                   </div>
                 </div>
               </div>
 
               <div className="insight">
-                <h3>Financial Insight Of The Day</h3>
+                <h3>
+                  Financial Insight Of The Day
+                </h3>
 
-                <p>Insights On How To Grow Your Wealth Better</p>
+                <p>
+                  Insights On How To Grow Your Wealth
+                  Better
+                </p>
               </div>
             </article>
 
@@ -214,13 +248,18 @@ const Dashboard = () => {
               </div>
             </article>
 
-            {/* VAULT */}
+            {/* VAULT & INVESTMENTS */}
             <article className="vault-section">
               <div className="vault">
                 <div className="upper-section">
                   <h3>Smart Vaults</h3>
 
-                  <div style={{ display: "flex", gap: "10px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                    }}
+                  >
                     <p>View all</p>
 
                     <div className="icon-holder">
@@ -230,7 +269,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="lower-section">
-                  <p>0</p>
+                  <p>{smartVaults}</p>
 
                   <p>Active Savings Plan</p>
                 </div>
@@ -240,7 +279,12 @@ const Dashboard = () => {
                 <div className="upper-section">
                   <h3>Investments</h3>
 
-                  <div style={{ display: "flex", gap: "10px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                    }}
+                  >
                     <p>View all</p>
 
                     <div className="icon-holder">
@@ -250,7 +294,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="lower-section">
-                  <p>0</p>
+                  <p>{investments}</p>
 
                   <p>Earnings Yield</p>
                 </div>
@@ -272,7 +316,9 @@ const Dashboard = () => {
               </div>
 
               <div className="transaction-body">
-                <p>No transaction yet, fund your wallet</p>
+                <p>
+                  No transaction yet, fund your wallet
+                </p>
               </div>
             </section>
           </section>
