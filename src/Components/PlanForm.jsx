@@ -1,8 +1,9 @@
 import React from "react";
-import { FaArrowLeft } from "react-icons/fa";
+// 🔄 Exchanged FaArrowLeft for FaChevronDown
+import { FaChevronDown } from "react-icons/fa6";
 import Button from "../Components/Button";
 
-import "../Style/Planform.css"
+import "../Style/Planform.css";
 
 const PlanForm = ({
   formData,
@@ -93,12 +94,13 @@ const PlanForm = ({
                   onChange={handleInputChange}
                   className="form-select"
                 >
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Weekly</option>
-                  <option value="Monthly">Monthly</option>
+                  <option value="DAILY">Daily</option>
+                  <option value="WEEKLY">Weekly</option>
+                  <option value="MONTHLY">Monthly</option>
                 </select>
                 <div className="select-arrow-icon">
-                  <FaArrowLeft className="select-arrow-icon-style" />
+                  {/* 🎯 New Down Chevron Rendered Here */}
+                  <FaChevronDown className="select-arrow-icon-style" />
                 </div>
               </div>
             </>
@@ -114,10 +116,14 @@ const PlanForm = ({
         </div>
 
         <div className="modal-actions-footer">
-          <Button type="button" onClick={onCancel} className="btn-secondary" text="Cancel" />
-           
-          <Button type="submit" className="btn-primary"text="Create Plan " />
-           
+          <Button
+            type="button"
+            onClick={onCancel}
+            className="btn-secondary"
+            text="Cancel"
+          />
+
+          <Button type="submit" className="btn-primary" text="Create Plan " />
         </div>
       </form>
     </div>

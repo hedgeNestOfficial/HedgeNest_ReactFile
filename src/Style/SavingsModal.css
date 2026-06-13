@@ -10,19 +10,23 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 16px; /* Prevents container from jamming edge-to-edge on mobile viewports */
+  box-sizing: border-box;
 }
 
 .modal-container {
   width: 520px;
   min-height: 320px;
   height: auto;
-  background-color: #FFFFFF;
+  max-height: 90vh; /* Keeps container safely scaled inside the screen frame */
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 40px;
   box-sizing: border-box;
   box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Gracefully allows internal scrolling if keyboard reduces space */
 }
 
 .modal-container.layout-centered {
@@ -30,11 +34,14 @@
   justify-content: center;
 }
 
-.modal-title, .summary-title, .pin-screen-title {
+.modal-title,
+.summary-title,
+.pin-screen-title {
   font-size: 24px;
   font-weight: 700;
   color: #111111;
   margin: 0 0 32px 0;
+  line-height: 1.3;
 }
 
 .back-arrow-btn {
@@ -57,17 +64,18 @@
 /* Core Form Action Button Bottom Standard Sizing Elements */
 .modal-actions-footer {
   width: 100%;
-  height: 50px;
+  height: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  margin-top: 32px; /* Keeps action rows separated safely if layout isn't stretched */
+  gap: 16px;
 }
 
 .btn-secondary {
   width: 204px;
   height: 50px;
-  background-color: #FFFFFF;
+  background: #ffffff;
   border: 1px solid #111111;
   border-radius: 8px;
   color: #111111;
@@ -83,10 +91,10 @@
 .btn-primary {
   width: 204px;
   height: 50px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -101,14 +109,18 @@
   width: 50px;
   height: 50px;
   border: 4px solid rgba(226, 185, 59, 0.2);
-  border-top: 4px solid #E2B93B;
+  border-top: 4px solid #e2b93b;
   border-radius: 50%;
   animation: spinSmooth 0.8s linear infinite;
 }
 
 @keyframes spinSmooth {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Stage E Success Card Interface Structure Settings */
@@ -130,7 +142,7 @@
 .success-inner-dot {
   width: 16px;
   height: 16px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border-radius: 50%;
 }
 
@@ -145,10 +157,10 @@
 .success-close-btn {
   width: 100%;
   height: 52px;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -156,4 +168,59 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+}
+
+/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+
+@media (max-width: 576px) {
+  .modal-overlay {
+    align-items: flex-end; /* Transforms modal layout into a sleek bottom sheet on mobile screens */
+    padding: 0;
+  }
+
+  .modal-container {
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0; /* Premium mobile design framing */
+    padding: 24px 20px;
+    animation: slideUpMobile 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .modal-title,
+  .summary-title,
+  .pin-screen-title {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+
+  .back-arrow-btn {
+    margin-bottom: 16px;
+  }
+
+  /* Structural action alignments */
+  .modal-actions-footer {
+    flex-direction: column-reverse; /* Stacks button lines seamlessly for quick thumb targeting */
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%; /* Spans the dynamic screen canvas */
+    height: 48px;
+    font-size: 15px;
+  }
+
+  .modal-container.success-card-padding {
+    padding: 40px 20px;
+  }
+}
+
+@keyframes slideUpMobile {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

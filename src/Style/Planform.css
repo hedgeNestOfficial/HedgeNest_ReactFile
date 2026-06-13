@@ -1,7 +1,7 @@
 /* Stage A Input Form Layout Rules */
 .modal-form {
   width: 100%;
-  height: 60vh;
+  height: auto; /* Changed from 60vh to prevent form squeezing/clipping */
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -16,7 +16,7 @@
 
 .relative-group {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 24px; /* Expanded space context to hold formatting cleanly */
 }
 
 .form-label {
@@ -26,7 +26,8 @@
   margin-bottom: 10px;
 }
 
-.form-input, .form-select {
+.form-input,
+.form-select {
   width: 100%;
   height: 52px;
   border: 1px solid #757575;
@@ -36,11 +37,12 @@
   color: #111111;
   box-sizing: border-box;
   outline: none;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .read-only-input {
   cursor: default;
+  background-color: #f5f5f5; /* Visual indicator that field is read-only */
 }
 
 .select-wrapper {
@@ -52,29 +54,82 @@
 .form-select {
   appearance: none;
   cursor: pointer;
+  padding-right: 40px; /* Leave breathing room for arrow icon */
 }
 
 .select-arrow-icon {
   position: absolute;
-  top: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg); /* Automatically centers vertically and points arrow down */
   right: 16px;
   pointer-events: none;
+  display: flex;
+  align-items: center;
 }
 
 .select-arrow-icon-style {
-  font-size: 24px;
+  font-size: 16px; /* Adjusted from 24px to fit elegantly inside input height */
   color: #111111;
 }
 
 .toggle-flexible-btn {
   background: none;
   border: none;
-  color: #E2B93B;
+  color: #e2b93b;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  position: absolute;
-  bottom: -45px;
-  right: 0;
-  /* padding: 0; */
+  margin-top: 8px;
+  align-self: flex-end; /* Clean flow placement instead of absolute layout breaks */
+  padding: 4px 0;
+}
+
+/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+
+@media (max-width: 540px) {
+  .modal-form {
+    gap: 16px; /* Tighter padding array mapping for mobile screens */
+  }
+
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .form-input,
+  .form-select,
+  .select-wrapper {
+    height: 48px; /* Slightly lower height layout context for small touch surfaces */
+    font-size: 15px;
+  }
+
+  .relative-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toggle-flexible-btn {
+    font-size: 14px;
+    margin-top: 6px;
+    margin-bottom: 12px; /* Adds clear buffer area above action footer button rows */
+  }
+
+  /* Footer Action Control Configurations */
+  .modal-actions-footer {
+    display: flex;
+    flex-direction: column-reverse; /* Places main confirmation action directly under thumb bounds */
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* Forces your custom global Button wrappers to align properly */
+  .modal-actions-footer button,
+  .modal-actions-footer > div,
+  .btn-primary,
+  .btn-secondary {
+    width: 100% !important;
+    height: 48px;
+  }
 }

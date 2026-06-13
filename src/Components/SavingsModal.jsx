@@ -3,6 +3,8 @@ import PlanForm from "../Components/PlanForm";
 import PlanSummary from "../Components/PlanSummary";
 import PlanPinScreen from "../Components/PlanPinScreen";
 import "../Style/SavingsModal.css";
+// FIX 1: Corrected the import syntax and cased it properly to match your usage below
+import Swal from "sweetalert2";
 
 const SavingsModal = ({
   modalScreen,
@@ -17,7 +19,7 @@ const SavingsModal = ({
   handlePinChange,
   handlePinKeyDown,
   handlePinSubmit,
-  handleCloseSuccess
+  handleCloseSuccess,
 }) => {
   if (modalScreen === "NONE") return null;
 
@@ -45,7 +47,11 @@ const SavingsModal = ({
       )}
 
       {modalScreen === "LOADING" && (
-        <div className="modal-container layout-centered" role="dialog" aria-modal="true">
+        <div
+          className="modal-container layout-centered"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="loading-spinner"></div>
         </div>
       )}
@@ -60,13 +66,28 @@ const SavingsModal = ({
         />
       )}
 
-      {modalScreen === "SUCCESS" && (
-        <div className="modal-container layout-centered success-card-padding" role="dialog" aria-modal="true">
-          <div className="success-pulse-ring"><div className="success-inner-dot"></div></div>
-          <h2 className="success-heading">Savings Plan Created!</h2>
-          <button type="button" onClick={handleCloseSuccess} className="success-close-btn">Close</button>
-        </div>
-      )}
+      {modalScreen === "SUCCESS" &&
+        /* SWEETALERT ALIGNMENT */
+        (() => {
+          // FIX 2: This now perfectly references 'Swal' from the import above
+          Swal.fire({
+            title: "Savings Plan Created!",
+            text: `Your plan "${formData?.title || "Nest"}" has been set up successfully.`,
+            icon: "success",
+            confirmButtonText: "Close",
+            confirmButtonColor: "#EDC344",
+            buttonsStyling: true,
+            allowOutsideClick: false,
+            customClass: {
+              popup: "swal-vault-radius",
+              title: "swal-vault-title",
+              confirmButton: "swal-vault-button",
+            },
+          }).then(() => {
+            handleCloseSuccess?.();
+          });
+          return null;
+        })()}
     </div>
   );
 };

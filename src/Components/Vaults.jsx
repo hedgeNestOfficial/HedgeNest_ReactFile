@@ -3,6 +3,7 @@ import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
 const Vaults = ({ onTopUp, onWithdraw }) => {
+  // The array data is kept completely inside this file
   const [vaults, setVaults] = useState([
     {
       id: "v-01",
@@ -49,6 +50,35 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
       autoSave: false,
     },
   ]);
+
+  // LISTEN FOR TOP UP STATE UPDATES FROM PARENT
+  useEffect(() => {
+    if (topUpEvent && topUpEvent.id) {
+      setSetVaults((prevList) =>
+        prevList.map((vault) => {
+          if (vault.id === topUpEvent.id) {
+            const newBalance = vault.balance + topUpEvent.amount;
+
+            // Recalculate progress micro-indicator proportionally (Max caps out at 100%)
+            const addedProgress = Math.floor(
+              (topUpEvent.amount / vault.balance) * 10,
+            );
+            const newProgress = Math.min(
+              vault.progress + (addedProgress || 5),
+              100,
+            );
+
+            return {
+              ...vault,
+              balance: newBalance,
+              progress: newProgress,
+            };
+          }
+          return vault;
+        }),
+      );
+    }
+  }, [topUpEvent]);
 
   const handleToggleAutoSave = (vaultId) => {
     setVaults((prevList) =>
