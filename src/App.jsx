@@ -32,6 +32,7 @@ import ScrollToTop from "./Components/ScrollToTop";
 import { InvestDashboard } from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
+import { TransactionHistory } from "./Features/TransactionHistory";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
+          <Route path="/notification" element={<TransactionHistory />} />
         </Route>
 
         <Route element={<PrivateRoute />}>
@@ -56,6 +58,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
+            <Route path="/payment-success" element={<PaymentSuccess />}/>
             {/* <Route path="/smart-safe" element={<SmartSafe />} /> */}
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
