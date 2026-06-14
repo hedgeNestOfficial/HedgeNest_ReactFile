@@ -11,6 +11,8 @@ const ConvertPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // ✅ STORE ONLY CLEAN DATA
   const [conversionData, setConversionData] = useState(null);
 
   // 🔐 GET TOKEN FROM REDUX
@@ -38,17 +40,19 @@ const ConvertPage = () => {
         amount: Number(inputValue),
       };
 
-      // 🔐 PASS TOKEN HERE (IMPORTANT FIX)
       const response = await convertCurrency(payload, token);
 
       console.log("CONVERSION RESPONSE:", response);
 
-      setConversionData(response);
+      // ✅ FIXED HERE
+      // API returns:
+      // { success: true, rate: { ... } }
+
+      setConversionData(response?.rate);
 
       setIsModalOpen(true);
 
       toast.success("Conversion calculated");
-      // window.reload
     } catch (error) {
       console.log(error);
 
@@ -61,9 +65,11 @@ const ConvertPage = () => {
   return (
     <div className="convert-layout-container">
       <main className="convert-main-content">
+        {/* HEADER */}
         <header className="convert-page-header">
           <div className="header-title-group">
             <h1>Hedge Your Naira</h1>
+
             <p>
               Convert NGN to USDT at live market rates.
               <FiHelpCircle className="tooltip-icon" />
@@ -71,10 +77,11 @@ const ConvertPage = () => {
           </div>
         </header>
 
-        {/* Live Market Rates */}
+        {/* LIVE RATE */}
         <section className="rate-banner-container">
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
+
             <h2 className="summary-value">
               ₦{conversionData?.rate || "1,397"} / 1 USDT
             </h2>
@@ -133,10 +140,17 @@ const ConvertPage = () => {
             </div>
           </div>
 
+          {/* OUTPUT */}
           <div className="full-width-output-banner">
-            <span className="output-value">{inputValue || "0"}</span>
+            <span className="output-value">
+              {conversionData?.value || inputValue || "0"}
+            </span>
+
             <span className="output-currency-mid">{activeCurrency}</span>
-            <span className="output-currency-end">{activeCurrency}</span>
+
+            <span className="output-currency-end">
+              {activeCurrency === "NGN" ? "USDT" : "NGN"}
+            </span>
           </div>
 
           <button
@@ -175,18 +189,23 @@ const ConvertPage = () => {
             <div className="summary-details-list">
               <div className="summary-row">
                 <span className="summary-label">Amount To Convert</span>
-                <span className="summary-value">{inputValue} NGN</span>
+
+                <span className="summary-value">
+                  {conversionData?.amount || inputValue} NGN
+                </span>
               </div>
 
               <div className="summary-row">
                 <span className="summary-label">Amount To Receive</span>
+
                 <span className="summary-value">
-                  {conversionData?.convertedAmount || 0} USDT
+                  {conversionData?.value || 0} USDT
                 </span>
               </div>
 
               <div className="summary-row">
                 <span className="summary-label">Conversion Fee</span>
+
                 <span className="summary-value">
                   {conversionData?.fee || 0}
                 </span>
@@ -194,6 +213,7 @@ const ConvertPage = () => {
 
               <div className="summary-row">
                 <span className="summary-label">USDT - Naira Rate</span>
+
                 <span className="summary-value">
                   ₦{conversionData?.rate || "1,397"} / 1 USDT
                 </span>
@@ -214,6 +234,7 @@ const ConvertPage = () => {
                 className="btn-modal-confirm"
                 onClick={() => {
                   toast.success("Conversion Confirmed!");
+
                   setIsModalOpen(false);
                 }}
               >
