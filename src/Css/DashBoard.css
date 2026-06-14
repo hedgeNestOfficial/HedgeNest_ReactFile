@@ -318,7 +318,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .transaction-header h3 {
@@ -355,6 +354,12 @@
   font-size: 14px;
   color: #888888;
   margin: 0;
+}
+
+.transactions-view-port {
+  width: 100%;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 8px;
 }
 
 @media (max-width: 1024px) {

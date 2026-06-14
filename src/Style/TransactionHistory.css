@@ -6,6 +6,13 @@
   width: 100%;
 }
 
+/* Fix for Dashboard nested views to avoid double padding/borders */
+.hide-container-styles {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
 .trans-item {
   display: flex;
   align-items: center;

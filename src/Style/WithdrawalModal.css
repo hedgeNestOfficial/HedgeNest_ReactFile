@@ -156,7 +156,7 @@
 .hn-divider {
   width: 100%;
   height: 1px;
-  background-color: #e5e7eb;
+  background: #e5e7eb;
   margin: 4px 0;
 }
 
@@ -197,7 +197,7 @@
 
 /* Brand Theme Gold Accent Action Base Button */
 .hn-btn-primary {
-  background-color: #e8b943;
+  background: #e8b943;
   color: #ffffff;
 }
 
@@ -207,20 +207,20 @@
 
 .hn-btn-primary.hn-disabled,
 .hn-btn-primary:disabled {
-  background-color: #f3f4f6;
+  background: #f3f4f6;
   color: #9ca3af;
   cursor: not-allowed;
 }
 
 /* Secondary Cancel/Back Variant Button Element Outline */
 .hn-btn-secondary {
-  background-color: transparent;
+  background: transparent;
   border: 1px solid #d1d5db;
   color: #4b5563;
 }
 
 .hn-btn-secondary:hover {
-  background-color: #f9fafb;
+  background: #f9fafb;
   border-color: #9ca3af;
 }
 

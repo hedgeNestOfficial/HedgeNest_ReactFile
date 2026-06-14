@@ -7,7 +7,6 @@ const DepositModalManager = ({ isOpen, onClose, amount }) => {
   const [step, setStep] = useState(1);
   const [copied, setCopied] = useState(false);
 
-  // Account Information State Holder
   const [virtualAccount, setVirtualAccount] = useState({
     bankName: "Korapay Virtual Account",
     accountName: "Abayomi Jeremiah Elijah",

@@ -17,25 +17,21 @@ export const API_CONFIG = {
 export const ENDPOINTS = {
   AUTH: {
     REGISTER: `${BASE_URL}/api/v1/create-user`,
-
     LOGIN: `${BASE_URL}/api/v1/login`,
-
     VERIFY_OTP: `${BASE_URL}/api/v1/verify/check`,
-
     RESEND_OTP: `${BASE_URL}/api/v1/resendOtp`,
-
     CREATE_PIN: `${BASE_URL}/api/v1/create-pin`,
-
     VERIFY_KYC: `${BASE_URL}/api/v1/verify`,
 
-    // PASSWORD RESET FLOW
     FORGOT_PASSWORD: `${BASE_URL}/api/v1/forgot-password`,
-
     VERIFY_RESET_OTP: `${BASE_URL}/api/v1/verify/check`,
-
     RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
+    CHANGE_PIN: `${BASE_URL}/api/v1/changePin`,
   },
 
+  KYC: {
+    UPLOAD_UTILITY_BILL: `${BASE_URL}/api/v1/uploadUtilityBill`,
+  },
   USER: {
     CHANGE_PASSWORD: `${BASE_URL}/api/v1/change-password`,
 
@@ -43,8 +39,7 @@ export const ENDPOINTS = {
   },
 
   WALLET: {
-    LINK_BANK_ACCOUNT: `${BASE_URL}/api/v1/link`,
-
+    LINK_BANK_ACCOUNT: `${BASE_URL}/api/v1/linkBank`,
     CONVERT: `${BASE_URL}/api/v1/convert`,
   },
   SMART_SAVE: {

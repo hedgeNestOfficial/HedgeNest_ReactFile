@@ -111,3 +111,34 @@ export const resetPassword = async (payload) => {
 
   return response.data;
 };
+
+export const changeTransactionPin = async (payload, token) => {
+  const response = await axios.post(ENDPOINTS.USER.CHANGE_PIN, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    timeout: API_CONFIG.timeout,
+  });
+
+  return response.data;
+};
+
+export const uploadUtilityBill = async (file, token) => {
+  const formData = new FormData();
+
+  formData.append("utilityBill", file);
+
+  const response = await axios.post(
+    ENDPOINTS.KYC.UPLOAD_UTILITY_BILL,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+
+  return response.data;
+};

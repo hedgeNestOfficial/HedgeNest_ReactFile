@@ -1,26 +1,29 @@
 /* Isolated Structural Overlay Layer */
 .link-account-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.45);
+  inset: 0;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
   z-index: 99999;
 }
 
 /* Modal Card Blueprint Container */
 .link-account-modal-card {
-  background-color: #ffffff;
-  width: 100%;
+  background: #ffffff;
+  width: min(100%, 480px);
   max-width: 480px;
+  max-height: calc(100dvh - 40px);
   border-radius: 12px;
   padding: 32px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  overflow-y: auto;
   transition: all 0.3s ease-in-out;
 }
 
@@ -46,6 +49,7 @@
   font-weight: 700;
   color: #111827;
   margin: 0 0 24px 0;
+  overflow-wrap: anywhere;
 }
 
 .link-account-modal-subtitle {
@@ -53,6 +57,7 @@
   color: #4b5563;
   line-height: 1.5;
   margin: 0 0 24px 0;
+  overflow-wrap: anywhere;
 }
 
 /* Form Controls and Input Rows */
@@ -243,6 +248,8 @@
 
 .link-account-btn-outline {
   flex: 1;
+  width: auto;
+  min-width: 0;
   height: 46px;
   background: transparent;
   border: 1px solid #9ca3af;
@@ -255,14 +262,16 @@
 }
 
 .link-account-btn-outline:hover {
-  background-color: #f9fafb;
+  background: #f9fafb;
   border-color: #4b5563;
 }
 
 .link-account-btn-solid {
   flex: 1;
+  width: auto;
+  min-width: 0;
   height: 46px;
-  background: #f2bf5e; /* Golden Yellow Primary Design Brand */
+  background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -273,7 +282,12 @@
 }
 
 .link-account-btn-solid:hover {
-  background: #e0ae4e;
+  opacity: 0.92;
+}
+
+.link-account-btn-solid:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 /* Spinner Loading Component Animations (image_d9e0f1.png / image_d9dde8.png) */
@@ -337,4 +351,27 @@
   max-width: 320px;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (max-width: 520px) {
+  .link-account-modal-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .link-account-modal-card {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    padding: 28px 20px;
+  }
+
+  .link-account-actions-row {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .link-account-btn-outline,
+  .link-account-btn-solid {
+    width: 100%;
+  }
 }

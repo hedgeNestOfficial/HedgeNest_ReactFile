@@ -1,13 +1,21 @@
 import "../Style/TransactionHistory.css";
 
-export const TransactionHistory = ({ transactions = [] }) => {
+export const TransactionHistory = ({
+  transactions = [],
+  hideHeader = false,
+  customClass = "",
+}) => {
   return (
-    <div className="transaction-card">
-      <div className="trans-header">
-        <button className="back-btn">←</button>
+    <div
+      className={`transaction-card ${customClass} ${hideHeader ? "hide-container-styles" : ""}`}
+    >
+      {!hideHeader && (
+        <div className="trans-header">
+          <button className="back-btn">←</button>
 
-        <h3>Transactions</h3>
-      </div>
+          <h3>Transactions</h3>
+        </div>
+      )}
 
       <div className="trans-list">
         {transactions.length > 0 ? (
