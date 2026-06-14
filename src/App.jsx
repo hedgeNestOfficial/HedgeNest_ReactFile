@@ -22,6 +22,7 @@ import Loading from "./Components/Loading";
 import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
+// import {  } from ";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
@@ -33,6 +34,7 @@ import { InvestDashboard } from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
 import { TransactionHistory } from "./Features/TransactionHistory";
+// import PaymentSuccess from "./"
 
 const App = () => {
   return (
@@ -58,7 +60,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
-            <Route path="/payment-success" element={<PaymentSuccess />}/>
+            {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
             {/* <Route path="/smart-safe" element={<SmartSafe />} /> */}
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
