@@ -1,20 +1,71 @@
-/* Stage B Details Summary Breakdown Fields Row Formatting */
+.modal-container {
+  display: block;
+  position: relative;
+  width: 30%;
+  height: 80vh;
+  /* max-width: 550px; */
+  margin: 16px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.back-arrow-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.back-arrow-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.back-icon-style {
+  font-size: 18px;
+  color: #111111;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111111;
+  margin-top: 0;
+  margin-bottom: 24px;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   2. MOBILE-FIRST DETAILS LIST (STCKED LAYOUT FOR SMARTPHONES)
+   ========================================================================== */
 .summary-details-list {
   width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-bottom: 40px;
+  gap: 16px;
+  margin-bottom: 32px;
+  box-sizing: border-box;
 }
 
 .summary-row {
   width: 100%;
-  height: auto;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px; /* Prevent text elements from touching on smaller screens */
+  flex-direction: column; /* Stack vertically by default for mobile */
+  align-items: flex-start;
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f2f2f2; /* Subtle divider for visibility on mobile screens */
+  box-sizing: border-box;
 }
 
 .summary-row.items-start {
@@ -22,54 +73,126 @@
 }
 
 .summary-label {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: #111111;
-  max-width: 260px;
-  line-height: 1.3;
+  color: #555555; /* Modern, distinct mobile hierarchy color */
+  width: 100%;
+  line-height: 1.4;
 }
 
 .summary-value {
-  font-size: 16px;
-  text-align: right;
+  font-size: 15px;
+  text-align: left; /* Left align values naturally on mobile viewports */
+  width: 100%;
 }
 
 .summary-value-stack {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start; /* Stack subtexts gracefully under main numbers */
   gap: 4px;
+  width: 100%;
 }
 
+/* ==========================================================================
+   3. TEXT UTILITIES & UTILITY STYLES
+   ========================================================================== */
 .text-dark {
-  color: #111111;
-  font-weight: 400;
-}
-.text-gold {
-  color: #e2b93b;
+  color: #111111 !important;
   font-weight: 500;
 }
+
+.text-gold {
+  color: #e2b93b !important;
+  font-weight: 600;
+}
+
 .text-gold.font-bold {
   font-weight: 700;
 }
+
 .calculation-subtext {
-  font-size: 13px;
-  color: #111111;
+  font-size: 12px;
+  color: #777777;
   font-weight: 400;
+  text-align: left;
+  word-break: break-word; /* Prevents raw formula chains from exploding screen bounds */
 }
 
-/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+/* ==========================================================================
+   4. THUMB-TAP RESPONSIVE ACTIONS FOOTER 
+   ========================================================================== */
+.modal-actions-footer {
+  display: flex;
+  flex-direction: column-reverse; /* Put Confirm on top, Cancel on bottom for easy thumb reach */
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
 
-@media (max-width: 540px) {
-  .summary-details-list {
-    gap: 16px;
+.btn-primary,
+.btn-secondary {
+  width: 100% !important; /* Full-width mobile buttons */
+  height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background-color: #111111;
+  color: #ffffff;
+  border: 1px solid #111111;
+}
+
+.btn-primary:hover {
+  background-color: #292929;
+  border-color: #292929;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #111111;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-secondary:hover {
+  background-color: #f9f9f9;
+  border-color: #cccccc;
+}
+
+/* ==========================================================================
+   5. TABLET / DESKTOP UPGRADE BREAKPOINT (540px and higher)
+   ========================================================================== */
+@media (min-width: 540px) {
+  .modal-container {
+    padding: 32px;
+    margin: 40px auto;
+  }
+
+  .summary-title {
+    font-size: 22px;
     margin-bottom: 28px;
   }
 
+  .summary-details-list {
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
   .summary-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    flex-direction: row; /* Convert row back to modern horizontal format */
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 4px;
+    border-bottom: none; /* Strip dividers for cleaner desktop view */
   }
 
   .summary-row.items-start {
@@ -77,40 +200,37 @@
   }
 
   .summary-label {
-    max-width: 100%; /* Reset max width constraint so labels can span the container width */
-    font-size: 14px;
-    color: #555555; /* Slightly softer tone for clean structural hierarchy */
+    font-size: 16px;
+    color: #111111;
+    flex: 1;
+    max-width: 60%;
   }
 
   .summary-value {
-    text-align: left;
-    font-size: 15px;
+    font-size: 16px;
+    text-align: right;
+    flex: 1;
   }
 
   .summary-value-stack {
-    align-items: flex-start; /* Turn off right alignment for stacked items */
-    width: 100%;
+    align-items: flex-end;
+    flex: 1;
   }
 
   .calculation-subtext {
-    font-size: 12px;
-    text-align: left;
-    word-break: break-word; /* Prevents long formula structures from overflowing */
-    color: #666666;
+    font-size: 13px;
+    text-align: right;
   }
 
-  /* Optional wrapper management optimization for footer buttons */
   .modal-actions-footer {
-    display: flex;
-    flex-direction: column-reverse; /* Stack cancel under confirm for easier thumb taps */
-    gap: 12px;
-    width: 100%;
+    flex-direction: row; /* Side by side layout for wide views */
+    justify-content: flex-end;
+    gap: 16px;
   }
 
-  .modal-actions-footer button,
   .btn-primary,
   .btn-secondary {
-    width: 100% !important; /* Ensure buttons expand nicely to fill screen width */
-    height: 48px;
+    width: auto !important; /* Scale to fit standard desktop button dimensions */
+    padding: 0 28px;
   }
 }

@@ -1,8 +1,6 @@
-import React from "react";
-// 🔄 Exchanged FaArrowLeft for FaChevronDown
+import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import Button from "../Components/Button";
-
 import "../Style/Planform.css";
 
 const PlanForm = ({
@@ -13,108 +11,154 @@ const PlanForm = ({
   onCancel,
   onSubmit,
 }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hasSelectedType, setHasSelectedType] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState("");
+
+  // ✅ FIXED: sync BOTH UI + parent formData
+  const selectPlanType = (type, label) => {
+    setIsFlexibleMode(type === "FLEXIBLE");
+
+    handleInputChange({
+      target: {
+        name: "planType",
+        value: type,
+      },
+    });
+
+    setSelectedLabel(label);
+    setIsDropdownOpen(false);
+    setHasSelectedType(true);
+  };
+
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
       <h2 className="modal-title">Create a Savings Plan</h2>
+
       <form onSubmit={onSubmit} className="modal-form">
-        <div className="form-group">
-          <label htmlFor="plan-title" className="form-label">
-            Title
-          </label>
-          <input
-            id="plan-title"
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            placeholder="School fees, Birthday, Rent etc."
-            className="form-input"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="plan-amount" className="form-label">
-            Target Amount (NGN)
-          </label>
-          <input
-            id="plan-amount"
-            type="text"
-            name="targetAmount"
-            value={formData.targetAmount}
-            onChange={handleInputChange}
-            placeholder="500,000"
-            className="form-input"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="plan-type" className="form-label">
-            Type
-          </label>
-          <input
-            id="plan-type"
-            type="text"
-            readOnly
-            value={
-              isFlexibleMode ? "Flexible (10% p.a.)" : "Locked (14 - 17% p.a.)"
-            }
-            className="form-input read-only-input"
-          />
-        </div>
-
+        {/* DROPDOWN */}
         <div className="form-group relative-group">
-          {!isFlexibleMode ? (
-            <>
-              <label htmlFor="plan-duration" className="form-label">
-                Duration (Days)
-              </label>
+          <label className="form-label">Savings Type</label>
+
+          <div className="select-wrapper cursor-pointer">
+            {/* trigger ONLY here (prevents toggle bug) */}
+            <div
+              className="form-input custom-dropdown-trigger"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              {!hasSelectedType ? "Select a Savings Type..." : selectedLabel}
+            </div>
+
+            <div className="select-arrow-icon">
+              <FaChevronDown
+                className={`select-arrow-icon-style ${
+                  isDropdownOpen ? "rotate-icon" : ""
+                }`}
+              />
+            </div>
+
+            {/* OPTIONS */}
+            {isDropdownOpen && (
+              <div className="custom-dropdown-options animate-fade">
+                <div
+                  className="dropdown-option-item"
+                  onClick={() =>
+                    selectPlanType("FLEXIBLE", "Flexible (10% p.a.)")
+                  }
+                >
+                  Flexible (10% p.a.)
+                </div>
+
+                <div
+                  className="dropdown-option-item"
+                  onClick={() =>
+                    selectPlanType("LOCKED", "Locked (14 - 17% p.a.)")
+                  }
+                >
+                  Locked (14 - 17% p.a.)
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* FIELDS */}
+        {hasSelectedType && (
+          <div className="reveal-fields-wrapper animate-fade">
+            <div className="form-group">
+              <label className="form-label">Title</label>
               <input
-                id="plan-duration"
                 type="text"
-                name="duration"
-                value={formData.duration}
+                name="title"
+                value={formData.title || ""}
                 onChange={handleInputChange}
-                placeholder="7 - 1000 days"
                 className="form-input"
                 required
               />
-            </>
-          ) : (
-            <>
-              <label htmlFor="plan-frequency" className="form-label">
-                Saving Frequency
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Target Amount</label>
+              <input
+                type="text"
+                name="targetAmount"
+                value={formData.targetAmount || ""}
+                onChange={handleInputChange}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div className="form-group relative-group">
+              {!isFlexibleMode ? (
+                <>
+                  <label className="form-label">Duration (Days)</label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={formData.duration || ""}
+                    onChange={handleInputChange}
+                    className="form-input"
+                    required
+                  />
+                </>
+              ) : (
+                <>
+                  <label className="form-label">Saving Frequency</label>
+
+                  <select
+                    name="savingFrequency"
+                    value={formData.savingFrequency || "DAILY"}
+                    onChange={handleInputChange}
+                    className="form-select"
+                  >
+                    <option value="DAILY">Daily</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                  </select>
+                </>
+              )}
+            </div>
+
+            {/* IMPORTANT FIELD (API: amountPerFrequency) */}
+            <div className="form-group">
+              <label className="form-label">
+                Input Amount (To get started)
               </label>
-              <div className="select-wrapper">
-                <select
-                  id="plan-frequency"
-                  name="savingFrequency"
-                  value={formData.savingFrequency}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  <option value="DAILY">Daily</option>
-                  <option value="WEEKLY">Weekly</option>
-                  <option value="MONTHLY">Monthly</option>
-                </select>
-                <div className="select-arrow-icon">
-                  {/* 🎯 New Down Chevron Rendered Here */}
-                  <FaChevronDown className="select-arrow-icon-style" />
-                </div>
-              </div>
-            </>
-          )}
 
-          <button
-            type="button"
-            onClick={() => setIsFlexibleMode(!isFlexibleMode)}
-            className="toggle-flexible-btn"
-          >
-            {isFlexibleMode ? "Enable Locked?" : "Enable Flexible?"}
-          </button>
-        </div>
+              <input
+                type="text"
+                name="initialAmount"
+                value={formData.initialAmount || ""}
+                onChange={handleInputChange}
+                className="form-input"
+                required
+              />
+            </div>
+          </div>
+        )}
 
+        {/* ACTIONS */}
         <div className="modal-actions-footer">
           <Button
             type="button"
@@ -123,7 +167,12 @@ const PlanForm = ({
             text="Cancel"
           />
 
-          <Button type="submit" className="btn-primary" text="Create Plan " />
+          <Button
+            type="submit"
+            className="btn-primary"
+            text="Create Plan"
+            disabled={!hasSelectedType}
+          />
         </div>
       </form>
     </div>

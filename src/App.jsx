@@ -26,10 +26,10 @@ import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProfilePage from "./Pages/Main/ProfilePage";
-// import SmartSafe from "./Pages/SmartSafe";
+import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
-import { InvestDasboard } from "./Pages/Main/InvestDashboard";
+import { InvestDashboard } from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
 
@@ -56,7 +56,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
-            {/* <Route path="/smart-safe" element={<SmartSafe />} /> */}
+            <Route path="/SmartSafe" element={<SmartSafe />} />
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
         </Route>

@@ -5,7 +5,7 @@ import InvestModal from "../../Components/KycModals/InvestModal.jsx";
 import KycModalManager from "../../Components/KycModals/KycModalManager.jsx";
 import "../../Style/InvestDashboard.css";
 
-export const InvestDasboard = ({ activeInvestments, userTier = 1 }) => {
+export const InvestDashboard = ({ activeInvestments, userTier = 1 }) => {
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);

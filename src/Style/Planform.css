@@ -51,6 +51,17 @@
   position: relative;
 }
 
+/* HELPER CLASS UTILITIES FOR CUSTOM DROPDOWN SCREEN */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.custom-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
 .form-select {
   appearance: none;
   cursor: pointer;
@@ -60,7 +71,7 @@
 .select-arrow-icon {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%) rotate(-90deg); /* Automatically centers vertically and points arrow down */
+  transform: translateY(-50%);
   right: 16px;
   pointer-events: none;
   display: flex;
@@ -70,6 +81,45 @@
 .select-arrow-icon-style {
   font-size: 16px; /* Adjusted from 24px to fit elegantly inside input height */
   color: #111111;
+  transition: transform 0.2s ease;
+}
+
+/* Rotates icon upwards when open */
+.rotate-icon {
+  transform: rotate(180deg);
+}
+
+/* CUSTOM POPUP DROPDOWN OPTIONS (MATCHES IMAGE 3) */
+.custom-dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #757575;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.dropdown-option-item {
+  padding: 14px 16px;
+  font-size: 16px;
+  color: #111111;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-option-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* BRAND SELECTED STATE (MATCHES IMAGE 3 YELLOW SELECTION) */
+.dropdown-option-item.selected {
+  background-color: #edc344;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .toggle-flexible-btn {
@@ -84,11 +134,37 @@
   padding: 4px 0;
 }
 
+/* TRANSITION ANIMATIONS */
+.animate-fade {
+  animation: planform-fade-in 0.2s ease-out;
+}
+
+@keyframes planform-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-fields-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
 /* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
 
 @media (max-width: 540px) {
   .modal-form {
     gap: 16px; /* Tighter padding array mapping for mobile screens */
+  }
+  .reveal-fields-wrapper {
+    gap: 16px; /* Follows your mobile compression guidelines */
   }
 
   .form-label {
@@ -100,6 +176,11 @@
   .form-select,
   .select-wrapper {
     height: 48px; /* Slightly lower height layout context for small touch surfaces */
+    font-size: 15px;
+  }
+
+  .dropdown-option-item {
+    padding: 12px 16px;
     font-size: 15px;
   }
 
