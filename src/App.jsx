@@ -29,7 +29,7 @@ import ProfilePage from "./Pages/Main/ProfilePage";
 import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
-import { InvestDashboard } from "./Pages/Main/InvestDashboard";
+import { InvestDasboard } from "./Pages/Main/InvestDasboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 
 const App = () => {
@@ -55,7 +55,7 @@ const App = () => {
           <Route path="/convert" element={<ConvertPage />} />
           <Route path="/wallet" element={<WalletDashboard />} />
           <Route path="/smart-safe" element={<SmartSafe />} />
-          <Route path="/invest" element={<InvestDashboard />} />
+          <Route path="/invest" element={<InvestDasboard />} />
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />
