@@ -12,8 +12,7 @@ const KycSuccessModal = ({ onClose }) => {
       <p className="kyc-modal-subtitle">Welcome to Tier 2!!!</p>
 
       <button
-        className="kyc-btn kyc-btn-continue"
-        style={{ width: "100%", marginTop: "20px" }}
+        className="kyc-btn kyc-btn-continue kyc-btn-full kyc-success-action"
         onClick={onClose}
       >
         Close

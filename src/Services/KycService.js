@@ -16,3 +16,22 @@ export const submitKyc = async (formData, token) => {
     throw error;
   }
 };
+
+export const uploadUtilityBill = async (file, token) => {
+  const formData = new FormData();
+
+  formData.append("utilityBill", file);
+
+  const response = await axios.post(
+    ENDPOINTS.KYC.UPLOAD_UTILITY_BILL,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+
+  return response.data;
+};

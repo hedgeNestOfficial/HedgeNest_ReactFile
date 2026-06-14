@@ -4,7 +4,7 @@ import PlanSummary from "../Components/PlanSummary";
 import PlanPinScreen from "../Components/PlanPinScreen";
 import "../Style/SavingsModal.css";
 // FIX 1: Corrected the import syntax and cased it properly to match your usage below
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 
 const SavingsModal = ({
   modalScreen,

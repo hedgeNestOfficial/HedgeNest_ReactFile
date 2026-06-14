@@ -125,18 +125,17 @@ import "../../Css/DashBoard.css";
 import { IoNotificationsSharp } from "react-icons/io5";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
+import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
+import { historyData } from "../../JS/Transactions.js";
 import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const { user, wallet } = useSelector((state) => state.user);
 
-  const fullName = `${user?.firstName || ""} ${
-    user?.lastName || ""
-  }`;
+  const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
 
   const profileImage =
-    user?.profilePicture?.url ||
-    "https://via.placeholder.com/150";
+    user?.profilePicture?.url || "https://via.placeholder.com/150";
 
   const formatCurrency = (amount) => {
     return Number(amount || 0).toLocaleString("en-NG", {
@@ -145,20 +144,15 @@ const Dashboard = () => {
     });
   };
 
-  const availableBalance =
-    wallet?.availableBalance ?? 0;
+  const availableBalance = wallet?.availableBalance ?? 0;
 
-  const nairaBalance =
-    wallet?.balanceInNaira ?? 0;
+  const nairaBalance = wallet?.balanceInNaira ?? 0;
 
-  const usdtBalance =
-    wallet?.balanceInUSDT ?? 0;
+  const usdtBalance = wallet?.balanceInUSDT ?? 0;
 
-  const smartVaults =
-    wallet?.smartVaults ?? 0;
+  const smartVaults = wallet?.smartVaults ?? 0;
 
-  const investments =
-    wallet?.investments ?? 0;
+  const investments = wallet?.investments ?? 0;
 
   return (
     <section>
@@ -168,9 +162,7 @@ const Dashboard = () => {
             {/* HEADER */}
             <article className="dr-header">
               <div>
-                <p>
-                  Welcome {user?.firstName || "User"},
-                </p>
+                <p>Welcome {user?.firstName || "User"},</p>
 
                 <h3>Your nest, today.</h3>
               </div>
@@ -181,10 +173,7 @@ const Dashboard = () => {
                 </button>
 
                 <div className="user-prof">
-                  <img
-                    src={profileImage}
-                    alt={fullName}
-                  />
+                  <img src={profileImage} alt={fullName} />
                 </div>
               </div>
             </article>
@@ -195,9 +184,7 @@ const Dashboard = () => {
                 <div className="total-available">
                   <p>Available Balance</p>
 
-                  <h2>
-                    ₦ {formatCurrency(availableBalance)}
-                  </h2>
+                  <h2>₦ {formatCurrency(availableBalance)}</h2>
                 </div>
 
                 <div className="other-balances">
@@ -207,9 +194,7 @@ const Dashboard = () => {
                     <h2>
                       <span>₦ </span>
 
-                      <span>
-                        {formatCurrency(nairaBalance)}
-                      </span>
+                      <span>{formatCurrency(nairaBalance)}</span>
                     </h2>
                   </div>
 
@@ -222,14 +207,9 @@ const Dashboard = () => {
               </div>
 
               <div className="insight">
-                <h3>
-                  Financial Insight Of The Day
-                </h3>
+                <h3>Financial Insight Of The Day</h3>
 
-                <p>
-                  Insights On How To Grow Your Wealth
-                  Better
-                </p>
+                <p>Insights On How To Grow Your Wealth Better</p>
               </div>
             </article>
 
@@ -315,10 +295,18 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="transaction-body">
-                <p>
-                  No transaction yet, fund your wallet
-                </p>
+              <div className="transactions-view-port">
+                {historyData.length === 0 ? (
+                  <div className="transaction-body">
+                    <p>No transactions yet, fund your wallet</p>
+                  </div>
+                ) : (
+                  <TransactionHistory
+                    transactions={historyData.slice(0, 4)}
+                    hideHeader={true}
+                    customClass="dashboard-variant"
+                  />
+                )}
               </div>
             </section>
           </section>

@@ -1,0 +1,351 @@
+.not-found-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, #09091a 0%, #161432 48%, #070712 100%);
+  background-size:
+    44px 44px,
+    44px 44px,
+    auto;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.not-found-card {
+  position: relative;
+  width: min(100%, 760px);
+  min-height: 548px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045)),
+    rgba(14, 13, 35, 0.88);
+  box-shadow: 0 26px 74px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(18px);
+  animation: notFoundCardIn 0.38s ease-out both;
+}
+
+.not-found-card::before,
+.not-found-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.not-found-card::before {
+  inset: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 6px;
+}
+
+.not-found-card::after {
+  width: 180px;
+  height: 3px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, #d2af26, transparent);
+}
+
+.not-found-brand {
+  position: absolute;
+  top: 30px;
+  left: 34px;
+  right: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.not-found-logo {
+  width: 144px;
+  height: auto;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.96);
+  object-fit: contain;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.not-found-visual {
+  position: relative;
+  width: 206px;
+  height: 206px;
+  display: grid;
+  place-items: center;
+  margin: 52px 0 28px;
+}
+
+.not-found-orbit {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(210, 175, 38, 0.4);
+  border-radius: 50%;
+  animation: notFoundSpin 10s linear infinite;
+}
+
+.not-found-orbit::before,
+.not-found-orbit::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+.not-found-orbit::before {
+  inset: 22px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.not-found-orbit::after {
+  width: 12px;
+  height: 12px;
+  top: 22px;
+  right: 38px;
+  background: #d2af26;
+  box-shadow: 0 0 24px rgba(210, 175, 38, 0.7);
+}
+
+.not-found-logo-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  height: 86px;
+  padding: 7px;
+  border: 1px solid rgba(210, 175, 38, 0.34);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.28),
+    0 0 0 10px rgba(210, 175, 38, 0.08);
+  transform: translate(-50%, -50%);
+}
+
+.not-found-logo-badge img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.not-found-icon {
+  position: absolute;
+  right: 50px;
+  bottom: 52px;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 50%;
+  color: #d2af26;
+  background: rgba(8, 8, 20, 0.9);
+  opacity: 0.95;
+  filter: drop-shadow(0 10px 22px rgba(210, 175, 38, 0.3));
+}
+
+.not-found-visual strong {
+  color: rgba(255, 255, 255, 0.08);
+  font-size: 94px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.not-found-eyebrow {
+  color: #d2af26;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.not-found-card h1 {
+  max-width: 560px;
+  color: #ffffff;
+  font-size: 42px;
+  font-weight: 750;
+  line-height: 1.12;
+  margin-bottom: 18px;
+}
+
+.not-found-copy {
+  max-width: 540px;
+  color: #dcdbeb;
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 34px;
+}
+
+.not-found-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.not-found-actions a {
+  min-width: 168px;
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  outline: none;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.not-found-actions a:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.not-found-actions a:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(8, 8, 18, 0.95),
+    0 0 0 6px rgba(210, 175, 38, 0.7);
+}
+
+.not-found-actions svg {
+  width: 18px;
+  height: 18px;
+}
+
+.not-found-primary {
+  color: #ffffff;
+  background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
+  box-shadow: 0 10px 26px rgba(201, 146, 42, 0.28);
+}
+
+.not-found-secondary {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.not-found-secondary:hover {
+  border-color: #d2af26;
+  color: #f6c15c;
+  background: rgba(210, 175, 38, 0.08);
+}
+
+@keyframes notFoundCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes notFoundSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .not-found-page {
+    padding: 18px;
+  }
+
+  .not-found-card {
+    min-height: auto;
+    padding: 34px 22px;
+  }
+
+  .not-found-brand {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .not-found-logo {
+    width: 132px;
+  }
+
+  .not-found-visual {
+    width: 180px;
+    height: 180px;
+    margin: 12px 0 28px;
+  }
+
+  .not-found-logo-badge {
+    width: 78px;
+    height: 78px;
+  }
+
+  .not-found-icon {
+    right: 42px;
+    bottom: 44px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .not-found-visual strong {
+    font-size: 78px;
+  }
+
+  .not-found-card h1 {
+    font-size: 32px;
+  }
+
+  .not-found-copy {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .not-found-actions {
+    width: 100%;
+  }
+
+  .not-found-actions a {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .not-found-card,
+  .not-found-orbit {
+    animation: none;
+  }
+
+  .not-found-actions a {
+    transition: none;
+  }
+}

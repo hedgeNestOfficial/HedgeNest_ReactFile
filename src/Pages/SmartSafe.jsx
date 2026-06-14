@@ -9,14 +9,13 @@ import toast from "react-hot-toast";
 
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
-import TopUpModal from "../Components/TopUpModal";
+// import TopUpModal from "../Components/TopUpModal";
 
 import {
   previewPlan,
   createPlan,
   breakPlan,
 } from "../Services/smartSafeService";
-
 import "../Css/SmartSafe.css";
 
 const SmartSafe = () => {
