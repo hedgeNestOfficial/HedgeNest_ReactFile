@@ -234,9 +234,7 @@ const WalletPage = () => {
               </div>
             ) : (
               <div className="transactions-list">
-                {historyData.map((item, index) => (
-                  <TransactionHistory key={index} item={item} />
-                ))}
+                <TransactionHistory transactions={historyData} />
               </div>
             )}
           </div>

@@ -1,14 +1,15 @@
 /* Deposit Modal Overlay Layer */
 .deposit-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
   z-index: 2000;
 }
 
@@ -16,14 +17,16 @@
 .deposit-modal-content {
   background: #ffffff;
   border-radius: 16px;
-  width: 92%;
+  width: min(100%, 440px);
   max-width: 440px;
+  max-height: calc(100dvh - 40px);
   min-height: 250px;
   padding: 32px 28px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   box-sizing: border-box;
   animation: depositPop 0.25s ease-out;
 }
@@ -46,6 +49,7 @@
   color: #111827;
   margin-bottom: 12px;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .deposit-modal-subtitle {
@@ -54,6 +58,7 @@
   margin-bottom: 24px;
   text-align: center;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 /* Data Row List (Transfer Information Screen) */
@@ -68,6 +73,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
 .deposit-label {
@@ -83,6 +89,9 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .deposit-copy-btn {
@@ -155,6 +164,10 @@
 
 .deposit-btn {
   flex: 1;
+  width: auto;
+  min-width: 0;
+  min-height: 48px;
+  height: auto;
   padding: 14px 0;
   border-radius: 8px;
   font-weight: 600;
@@ -173,13 +186,13 @@
 }
 
 .deposit-btn-primary {
-  background-color: #f2c94c; /* HedgeNest Primary Yellow */
+  background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
   border: none;
   color: #ffffff;
 }
 
 .deposit-btn-primary:hover {
-  background-color: #e2ba3b;
+  opacity: 0.92;
 }
 
 /* Confetti Success Graphic */
@@ -189,6 +202,32 @@
   font-size: 3.5rem;
   margin-bottom: 16px;
   animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@media (max-width: 520px) {
+  .deposit-modal-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .deposit-modal-content {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    padding: 28px 20px;
+    border-radius: 12px;
+  }
+
+  .deposit-detail-row {
+    align-items: flex-start;
+  }
+
+  .deposit-btn-group {
+    flex-direction: column-reverse;
+  }
+
+  .deposit-btn {
+    width: 100%;
+  }
 }
 
 @keyframes popScale {

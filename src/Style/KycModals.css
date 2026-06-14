@@ -1,34 +1,31 @@
 /* Modal Overlay and Container */
 .kyc-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* Slightly darker overlay for better backdrop isolation */
+  inset: 0;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2500; /* Ensures it sits neatly above all profile card layouts */
+  overflow-y: auto;
+  z-index: 2500;
 }
 
 .kyc-modal-content {
-  background-color: #ffffff;
+  background: #ffffff;
   border-radius: 12px;
-  width: 92%; /* Clean margins on small mobile frames */
-  max-width: 420px; /* Perfect moderate desktop popup width */
-  min-height: 200px;
-  padding: 32px 24px;
+  width: min(100%, 440px);
+  max-height: calc(100dvh - 40px);
+  min-height: 220px;
+  padding: 32px 26px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   position: relative;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box; /* Prevents text overflow padding issues */
+  overflow-y: auto;
+  box-sizing: border-box;
   animation: modalFadeIn 0.25s ease-out;
 }
 
@@ -48,36 +45,46 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .kyc-modal-subtitle {
   font-size: 0.9rem;
   color: #6b7280;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
   text-align: center;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 /* Buttons */
 .kyc-btn-group {
   display: flex;
-  gap: 15px;
-  margin-top: auto; /* Pushes action block to the bottom dynamically */
+  gap: 12px;
+  margin-top: auto;
+  width: 100%;
 }
 
 .kyc-btn {
   flex: 1;
-  padding: 12px 0;
+  width: auto;
+  min-width: 0;
+  min-height: 48px;
+  height: auto;
+  padding: 12px 18px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .kyc-btn-cancel {
@@ -87,7 +94,7 @@
 }
 
 .kyc-btn-continue {
-  background: #f2c94c; /* HedgeNest Yellow */
+  background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
   border: none;
   color: #ffffff;
 }
@@ -95,6 +102,15 @@
 .kyc-btn-continue:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.kyc-btn-full {
+  width: 100%;
+  flex: none;
+}
+
+.kyc-success-action {
+  margin-top: 20px;
 }
 
 /* Upload Fields */
@@ -115,11 +131,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   padding: 12px 16px;
   cursor: pointer;
-  background-color: #fafafa;
+  background: #fafafa;
   transition: border-color 0.2s ease;
 }
 
@@ -138,15 +155,17 @@
 
 /* PIN Inputs */
 .kyc-pin-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
-  margin-bottom: 30px;
+  margin: 28px 0 30px;
 }
 
 .kyc-pin-input {
-  width: 45px;
-  height: 55px;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+  height: auto;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 1.5rem;
@@ -166,7 +185,9 @@
   position: absolute;
   top: 22px;
   left: 20px;
-  background: none;
+  width: 36px;
+  height: 36px;
+  background: transparent;
   border: none;
   font-size: 1.4rem;
   cursor: pointer;
@@ -176,6 +197,10 @@
   justify-content: center;
 }
 
+.kyc-title-with-back {
+  margin-top: 24px;
+}
+
 /* Success State */
 .kyc-success-icon-wrapper {
   display: flex;
@@ -183,4 +208,30 @@
   margin-bottom: 20px;
   font-size: 3.5rem;
   color: #f2c94c;
+}
+
+@media (max-width: 520px) {
+  .kyc-modal-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .kyc-modal-content {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    padding: 28px 20px;
+    border-radius: 12px;
+  }
+
+  .kyc-btn-group {
+    flex-direction: column-reverse;
+  }
+
+  .kyc-btn {
+    width: 100%;
+  }
+
+  .kyc-pin-container {
+    gap: 6px;
+  }
 }

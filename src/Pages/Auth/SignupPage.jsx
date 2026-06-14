@@ -50,16 +50,6 @@ const SignupPage = () => {
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
 
-  useEffect(() => {
-    if (
-      password?.length >= 8 &&
-      confirmPassword?.length >= 8 &&
-      password !== confirmPassword
-    ) {
-      toast.error("Passwords do not match");
-    }
-  }, [password, confirmPassword]);
-
   const isFormFilled =
     watchedFields.firstName?.trim() &&
     watchedFields.email?.trim() &&
@@ -69,6 +59,11 @@ const SignupPage = () => {
     watchedFields.terms;
 
   const onSubmitForm = async (data) => {
+    if (data.password !== data.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     try {
       const payload = {
         firstName: data.firstName.trim(),
@@ -100,11 +95,8 @@ const SignupPage = () => {
       }, 1500);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
-
-      console.log(error);
     }
   };
-
   return (
     <section className="signup-section">
       <div className="image-container">
@@ -193,7 +185,8 @@ const SignupPage = () => {
               text={
                 isSubmitting ? (
                   <div className="loader-wrapper">
-                    <OrbitProgress color="#bdbdbd" size="small" />
+                    <OrbitProgress color="#ffffff" size="small" />
+                    <span>signing up...</span>
                   </div>
                 ) : (
                   "Sign Up"
