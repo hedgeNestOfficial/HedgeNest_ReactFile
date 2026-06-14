@@ -34,7 +34,6 @@ export const ENDPOINTS = {
   },
   USER: {
     CHANGE_PASSWORD: `${BASE_URL}/api/v1/change-password`,
-
     UPDATE_PROFILE: `${BASE_URL}/api/v1/update`,
   },
 
@@ -47,4 +46,13 @@ export const ENDPOINTS = {
     CREATE_PLAN: `${BASE_URL}/api/v1/create-plan`,
     BREAK_PLAN: `${BASE_URL}/api/v1/break-plan`,
   },
+  INVESTMENT: {
+  GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,
+},
+
+PAYMENT: {
+  FUND_WALLET: `${BASE_URL}/api/v1/fundWallet`,
+  VERIFY_PAYMENT: `${BASE_URL}/api/v1/verify-payment`, // adjust when backend sends actual endpoint
+},
 };
+

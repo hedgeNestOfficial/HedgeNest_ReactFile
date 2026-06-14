@@ -48,6 +48,7 @@ const ConvertPage = () => {
       setIsModalOpen(true);
 
       toast.success("Conversion calculated");
+      // window.reload
     } catch (error) {
       console.log(error);
 
