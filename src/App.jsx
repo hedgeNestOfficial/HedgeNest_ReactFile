@@ -22,6 +22,7 @@ import Loading from "./Components/Loading";
 import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
+// import {  } from ";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
@@ -29,9 +30,11 @@ import ProfilePage from "./Pages/Main/ProfilePage";
 // import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
-import { InvestDasboard } from "./Pages/Main/InvestDashboard";
+import { InvestDashboard } from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
+import { TransactionHistory } from "./Features/TransactionHistory";
+// import PaymentSuccess from "./"
 
 const App = () => {
   return (
@@ -48,6 +51,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
+          <Route path="/notification" element={<TransactionHistory />} />
         </Route>
 
         <Route element={<PrivateRoute />}>
@@ -56,7 +60,8 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
-            {/* <Route path="/smart-safe" element={<SmartSafe />} /> */}
+            {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
+            {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
         </Route>

@@ -11,7 +11,7 @@ export const TransactionHistory = ({
     >
       {!hideHeader && (
         <div className="trans-header">
-          <button className="back-btn">←</button>
+          {/* <button className="back-btn">←</button> */}
 
           <h3>Transactions</h3>
         </div>
