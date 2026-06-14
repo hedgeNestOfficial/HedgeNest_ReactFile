@@ -61,7 +61,7 @@ const App = () => {
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
             {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
-            {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
+            <Route path="/SmartSafe" element={<SmartSafe />} />
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
         </Route>
