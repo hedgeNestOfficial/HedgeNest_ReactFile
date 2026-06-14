@@ -1,8 +1,3 @@
-/* ==========================================================================
-   HedgeNest Custom Modal Layout System (Sandboxed Styling Namespace)
-   ========================================================================== */
-
-/* Dark frosted-glass layer across full screen background viewport */
 .hn-modal-overlay {
   position: fixed;
   top: 0;
