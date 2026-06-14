@@ -4,7 +4,7 @@ import { BiParty } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-import { linkBankAccount } from "../../Services/accountService";
+import { linkBankAccount } from "../../Services/AccountService";
 
 const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
   const { token } = useSelector((state) => state.user);
