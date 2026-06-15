@@ -1,32 +1,57 @@
+import React from "react";
 import "../Style/PositionCard.css";
-export const PositionCard = ({ position }) => {
-  const isPositive = position.change > 0;
-  const arrow = isPositive ? "▲" : "▼";
-  const changeClass = isPositive ? "positive" : "negative";
+import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 
+export const PositionCard = ({ position, onTopUpClick, onWithdrawClick }) => {
   return (
-    <div className="position-card">
-      <div className="pos-header">
-        <div className="pos-title">
-          <span className={changeClass}>{arrow}</span> <h3>{position.name}</h3>
+    <div className="position-product-card">
+      {/* Top Section containing Title and Trend Circle Indicator */}
+      <div className="position-card-top-row">
+        <div className="position-card-title-group">
+          <span className="position-product-tag-name">
+            {position.name?.toUpperCase()}
+          </span>
+          <h2 className="position-product-main-amount">
+            ₦{Number(position.amount).toLocaleString()}
+          </h2>
         </div>
-        <div className="pos-amount">₦{position.amount.toLocaleString()}</div>
-      </div>
-      <div className={`pos-change ${changeClass}`}>
-        <span className={changeClass}>{arrow}</span> {isPositive ? "+" : ""}
-        {position.change}%
+
+        <div className="position-trend-indicator-circle">
+          <HiMiniArrowTrendingUp className="position-trend-arrow-svg" />
+        </div>
       </div>
 
-      <div className="pos-footer">
-        <div className="info">
-          <span>Expected: ₦{position.expected.toLocaleString()}</span>
-          <span>Matures {position.maturityDate}</span>
+      {/* Center Metadata Row (Expected & Maturity tracking details) */}
+      <div className="position-card-metadata-row">
+        <div className="position-metadata-item">
+          <span className="meta-label-text">Expected:</span>
+          <span className="meta-value-text">
+            ₦{Number(position.expected).toLocaleString()}
+          </span>
         </div>
-        <div className="pos-actions">
-          <button className="btn-secondary">Top Up</button>
-          <button className="btn-outline">Withdraw</button>
+        <div className="position-metadata-item">
+          <span className="meta-label-text">Matures:</span>
+          <span className="meta-value-text">{position.maturityDate}</span>
         </div>
+      </div>
+
+      {/* Bottom Action Footer Row */}
+      <div className="position-card-action-row">
+        <button
+          className="position-btn-action position-btn-gold-fill"
+          onClick={() => onTopUpClick?.(position)}
+        >
+          Top Up
+        </button>
+        <button
+          className="position-btn-action position-btn-white-solid"
+          onClick={() => onWithdrawClick?.(position)}
+        >
+          Withdraw
+        </button>
       </div>
     </div>
   );
 };
+
+export default PositionCard;
