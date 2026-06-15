@@ -3,6 +3,9 @@ import "../Style/InvestmentCard.css";
 import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 
 export const InvestmentCard = ({ product, onInvestClick }) => {
+  // Safely fallback or read risk value (e.g., 'low', 'medium', 'high')
+  const riskStatus = product.risk?.toLowerCase() || "low";
+
   return (
     <div className="investment-product-card">
       <div className="card-header-row">
@@ -10,27 +13,31 @@ export const InvestmentCard = ({ product, onInvestClick }) => {
           <div className="premium-icon-container">
             <HiMiniArrowTrendingUp className="trending-growth-icon" />
           </div>
-
           <h3>{product.investmentName}</h3>
         </div>
+
+        {/* Added the missing risk badge node seen in image_9f86c1.png */}
+        <span className={`risk-badge-node ${riskStatus}`}>{riskStatus}</span>
       </div>
 
       <p className="investment-product-description">
-        Earn {product.roi}% ROI over a {product.term}-day investment period.
+        {product.description ||
+          `Earn ${product.roi}% ROI over a ${product.term}-day investment period.`}
       </p>
 
-      <div className="metrics-dashboard-grid">
-        <div className="metric-data-cell">
+      {/* Styled using a structured flex container layout to make individual boxes */}
+      <div className="metrics-dashboard-flex-row">
+        <div className="metric-data-box">
           <span className="metric-cell-label">ROI</span>
-          <span className="metric-cell-value text-gold">{product.roi}%</span>
+          <span className="metric-cell-value">{product.roi}%</span>
         </div>
 
-        <div className="metric-data-cell">
+        <div className="metric-data-box">
           <span className="metric-cell-label">Term</span>
-          <span className="metric-cell-value">{product.term} Days</span>
+          <span className="metric-cell-value">{product.term}days</span>
         </div>
 
-        <div className="metric-data-cell">
+        <div className="metric-data-box">
           <span className="metric-cell-label">MIN Amount</span>
           <span className="metric-cell-value">
             ₦{Number(product.minAmount).toLocaleString()}
