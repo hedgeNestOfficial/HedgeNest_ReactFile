@@ -1,6 +1,5 @@
 import axios from "axios";
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
-import { useSelector } from "react-redux";
 
 // NOTE: we will NOT use hook here (services must stay pure)
 // token will be passed in like your current pattern
