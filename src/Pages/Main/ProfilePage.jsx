@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Imported useNavigate for routing links
 import "../../Style/ProfilePage.css";
 import SettingView from "./SettingView";
 import { CgProfile } from "react-icons/cg";
@@ -6,22 +7,22 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { GiInjustice } from "react-icons/gi";
 import { MdPhotoCamera } from "react-icons/md";
-import { FiEdit2 } from "react-icons/fi";
+import { FiEdit2, FiMail, FiAlertTriangle } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { updateProfile } from "../../Services/authService";
 import { OrbitProgress } from "react-loading-indicators";
 import { updateUser } from "../../Store/UserSlice";
 
-// Import your exact 4-step modal manager from yesterday
 import KycModalManager from "../../Components/KycModals/KycModalManager";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialized route driver
   const { token, user } = useSelector((state) => state.user);
   const fileInputRef = useRef(null);
 
-  // Initialize empty state fields to safely wait for Redux rehydration
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -36,10 +37,8 @@ const ProfilePage = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
 
-  // Control state for your KYC popup canvas layer
   const [isKycOpen, setIsKycOpen] = useState(false);
 
-  // Sync state automatically whenever the Redux user object initializes or changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -63,7 +62,6 @@ const ProfilePage = () => {
     fileInputRef.current.click();
   };
 
-  // FIXED: Moved handleFileChange to the top-level scope of the component
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -78,12 +76,9 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
-
     try {
       setIsLoading(true);
-
       const profileFormData = new FormData();
-
       profileFormData.append("phoneNumber", formData.phoneNumber);
 
       if (profilePicture) {
@@ -91,17 +86,12 @@ const ProfilePage = () => {
       }
 
       const response = await updateProfile(profileFormData, token);
-
       dispatch(updateUser(response.data));
-
       toast.success(response.message || "Profile updated successfully");
-
       setIsEditing(false);
-
       setProfilePicture(null);
     } catch (error) {
       console.log(error);
-
       toast.error(error?.response?.data?.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
@@ -115,13 +105,11 @@ const ProfilePage = () => {
       phoneNumber: user?.phoneNumber || "",
       email: user?.email || "",
     });
-
     setPreviewUrl(user?.profilePicture?.url || "");
-
     setProfilePicture(null);
-
     setIsEditing(false);
   };
+
   return (
     <div className="profile-page-container">
       <div className="profile-header">
@@ -130,25 +118,19 @@ const ProfilePage = () => {
 
       <div className="profile-tabs-container">
         <button
-          className={`profile-tab-btn ${
-            activeTab === "profile" ? "active" : ""
-          }`}
+          className={`profile-tab-btn ${activeTab === "profile" ? "active" : ""}`}
           onClick={() => setActiveTab("profile")}
         >
           <CgProfile className="tab-icon" /> Profile
         </button>
         <button
-          className={`profile-tab-btn ${
-            activeTab === "settings" ? "active" : ""
-          }`}
+          className={`profile-tab-btn ${activeTab === "settings" ? "active" : ""}`}
           onClick={() => setActiveTab("settings")}
         >
           <IoSettingsOutline className="tab-icon" /> Settings
         </button>
         <button
-          className={`profile-tab-btn ${
-            activeTab === "support" ? "active" : ""
-          }`}
+          className={`profile-tab-btn ${activeTab === "support" ? "active" : ""}`}
           onClick={() => setActiveTab("support")}
         >
           <TfiHeadphoneAlt className="tab-icon" /> Help & Support
@@ -162,6 +144,7 @@ const ProfilePage = () => {
       </div>
 
       <div className="account-view-content-driver">
+        {/* PROFILE TAB */}
         {activeTab === "profile" && (
           <div className="profile-content-card">
             <div
@@ -255,7 +238,6 @@ const ProfilePage = () => {
               <div className="form-grid">
                 <div className="input-group">
                   <label>First Name</label>
-
                   <input
                     type="text"
                     value={user?.firstName || ""}
@@ -263,10 +245,8 @@ const ProfilePage = () => {
                     className="readonly-input"
                   />
                 </div>
-
                 <div className="input-group">
                   <label>Last Name</label>
-
                   <input
                     type="text"
                     value={user?.lastName || ""}
@@ -274,10 +254,8 @@ const ProfilePage = () => {
                     className="readonly-input"
                   />
                 </div>
-
                 <div className="input-group">
                   <label>Phone Number</label>
-
                   <input
                     type="tel"
                     name="phoneNumber"
@@ -286,10 +264,8 @@ const ProfilePage = () => {
                     disabled={!isEditing}
                   />
                 </div>
-
                 <div className="input-group">
                   <label>Email Address</label>
-
                   <input
                     type="email"
                     value={user?.email || ""}
@@ -323,7 +299,6 @@ const ProfilePage = () => {
                       "Save Changes"
                     )}
                   </button>
-
                   <button
                     type="button"
                     onClick={handleCancel}
@@ -356,6 +331,7 @@ const ProfilePage = () => {
           </div>
         )}
 
+        {/* SETTINGS TAB */}
         {activeTab === "settings" && (
           <SettingView
             accounts={linkedAccounts}
@@ -363,22 +339,150 @@ const ProfilePage = () => {
           />
         )}
 
-        {(activeTab === "support" || activeTab === "legal") && (
+        {/* HELP & SUPPORT TAB */}
+        {activeTab === "support" && (
           <div className="profile-content-card">
-            <p
-              style={{
-                color: "#6b7280",
-                textAlign: "center",
-                padding: "20px 0",
-              }}
-            >
-              Content coming soon...
-            </p>
+            <div className="info-cards-grid">
+              <div className="info-card">
+                <div className="icon-wrapper email-icon">
+                  <FiMail />
+                </div>
+                <h3>Email Support</h3>
+                <p>Replies within 4 hours</p>
+                <div className="card-links">
+                  <a href="mailto:hello.hedgenest@gmail.com">
+                    hello.hedgenest@gmail.com
+                  </a>
+                  <a href="mailto:info.hedgenest@gmail.com">
+                    info.hedgenest@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <div className="icon-wrapper wa-icon">
+                  <FaWhatsapp />
+                </div>
+                <h3>WhatsApp Support</h3>
+                <p>Chat with our team</p>
+                <div className="card-links">
+                  <a
+                    href="https://wa.me/2347047180205"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    +2347047180205
+                  </a>
+                  <a
+                    href="https://wa.me/2347063958038"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    +2347063958038
+                  </a>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <div className="icon-wrapper alert-icon">
+                  <FiAlertTriangle />
+                </div>
+                <h3>Report a problem</h3>
+                <p>Something's not right, let us know</p>
+                <div className="card-links">
+                  {/* Updated: Navigates straight to /contact route */}
+                  <span
+                    className="action-link"
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      color: "#374151",
+                    }}
+                    onClick={() => navigate("/contact")}
+                  >
+                    Open report form &gt;
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* LEGAL & COMPLIANCE TAB */}
+        {activeTab === "legal" && (
+          <div className="profile-content-card">
+            <div className="info-cards-grid">
+              <div className="info-card">
+                <h3>Terms of service</h3>
+                <p>
+                  The rules and obligations that govern your use of HedgeNest,
+                  including account responsibilities, fees, and dispute
+                  resolution.
+                </p>
+                <div className="card-links">
+                  {/* Updated: Navigates straight to /policy route */}
+                  <span
+                    className="action-link"
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      color: "#374151",
+                    }}
+                    onClick={() => navigate("/policy")}
+                  >
+                    Read more &gt;
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <h3>Privacy policy</h3>
+                <p>
+                  How we collect, use and protect your personal data, including
+                  KYC information and transaction history.
+                </p>
+                <div className="card-links">
+                  {/* Updated: Navigates straight to /policy route */}
+                  <span
+                    className="action-link"
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      color: "#374151",
+                    }}
+                    onClick={() => navigate("/policy")}
+                  >
+                    Read more &gt;
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <h3>Regulatory Information</h3>
+                <p>
+                  HedgeNest operates with licensed partners and complies with
+                  Nigerian financial regulations.
+                </p>
+                <div className="card-links">
+                  {/* Updated: Navigates straight to /policy route */}
+                  <span
+                    className="action-link"
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      color: "#374151",
+                    }}
+                    onClick={() => navigate("/policy")}
+                  >
+                    Read more &gt;
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Rendered cleanly on top without layout shifts */}
       <KycModalManager isOpen={isKycOpen} onClose={() => setIsKycOpen(false)} />
     </div>
   );
