@@ -47,12 +47,11 @@ export const ENDPOINTS = {
     BREAK_PLAN: `${BASE_URL}/api/v1/break-plan`,
   },
   INVESTMENT: {
-  GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,
-},
+    GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,
+  },
 
-PAYMENT: {
-  FUND_WALLET: `${BASE_URL}/api/v1/fundWallet`,
-  VERIFY_PAYMENT: `${BASE_URL}/api/v1/verify-payment`, // adjust when backend sends actual endpoint
-},
+  PAYMENT: {
+    FUND_WALLET: `${BASE_URL}/api/v1/fundWallet`,
+    VERIFY_PAYMENT: `${BASE_URL}/api/v1/verifyFund`,
+  },
 };
-
