@@ -65,7 +65,8 @@
   color: #a3a1b4;
 }
 
-.summary-value {
+/* ✅ SCOPED EXCLUSIVELY TO THE BANNER CONTAINER TO AVOID COLLIDING WITH THE MODAL CARDS */
+.rate-banner-container .summary-value {
   font-size: 24px !important;
   font-weight: 600;
   margin: 0;
@@ -245,6 +246,59 @@
   margin: 0;
 }
 
+/* ✅ NEW HOOKS: RENDERING STRATEGY FOR CONVERSION HISTORY LOGS */
+.history-list-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e1e0e6;
+}
+
+.history-item-row:last-child {
+  border-bottom: none;
+}
+
+.history-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-amount-sent {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0b0914;
+}
+
+.history-timestamp-label {
+  font-size: 12px;
+  color: #6c6a7b;
+}
+
+.history-item-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-amount-received {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1936;
+}
+
+.history-rate-factor {
+  font-size: 11px;
+  color: #a3a1b4;
+}
+
 .modal-backdrop-overlay {
   position: fixed;
   top: 0;
@@ -299,7 +353,8 @@
   color: #555462;
 }
 
-.summary-value {
+/* ✅ PREVENT AMBIGUOUS WHITE PROPERTIES OVERLAP FOR DISCRETE VALUES EXCLUSIVELY INSIDE DETAILED MODAL VIEWS */
+.modal-value-text {
   font-size: 15px;
   font-weight: 700;
   color: #0b0914;
