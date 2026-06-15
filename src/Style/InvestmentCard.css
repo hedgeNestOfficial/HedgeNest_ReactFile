@@ -1,25 +1,16 @@
 /* Core Structural Card Layout Box */
 .investment-product-card {
   background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 24px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  max-width: 380px;
-  min-height: 320px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.investment-product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  min-height: 340px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 /* Header Composition Elements */
@@ -28,7 +19,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
 .card-title-group {
@@ -38,18 +29,18 @@
 }
 
 .card-title-group h3 {
-  font-size: 18px;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #0f172a;
+  color: #000000;
   margin: 0;
 }
 
-/* Perfected Brand Golden Circle Framework */
+/* Golden Circle Framework */
 .premium-icon-container {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background-color: #fef08a; /* Soft theme gold tint backing fill */
+  background-color: #e6b042;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,11 +48,11 @@
 }
 
 .trending-growth-icon {
-  font-size: 18px;
-  color: #ca8a04; /* Core asset tone */
+  font-size: 16px;
+  color: #ffffff;
 }
 
-/* Adaptive Risk Metadata Badge Nodes */
+/* Risk Metadata Badge Nodes */
 .risk-badge-node {
   font-size: 11px;
   font-weight: 700;
@@ -72,75 +63,71 @@
 }
 
 .risk-badge-node.low {
-  background-color: #dcfce7;
-  color: #15803d;
+  background-color: #dcfee5;
+  color: #22c55e;
 }
 
 .risk-badge-node.medium {
-  background-color: #ffedd5;
-  color: #c2410c;
+  background-color: #fef3c7;
+  color: #d97706;
 }
 
 .risk-badge-node.high {
   background-color: #fee2e2;
-  color: #b91c1c;
+  color: #ef4444;
 }
 
 /* Typography Descriptions Blocks */
 .investment-product-description {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
-  color: #475569;
-  margin: 0 0 20px 0;
+  color: #374151;
+  margin: 0 0 24px 0;
   text-align: left;
   flex-grow: 1;
 }
 
-/* 3-Column Metrics Dashboard Grid System */
-.metrics-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  border-top: 1px solid #f1f5f9;
-  border-bottom: 1px solid #f1f5f9;
-  padding: 14px 0;
-  margin-bottom: 20px;
+/* Balanced 3-Column Box System using Flexbox */
+.metrics-dashboard-flex-row {
+  display: flex;
+  gap: 12px;
   width: 100%;
+  margin-bottom: 24px;
 }
 
-.metric-data-cell {
+.metric-data-box {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 4px;
+  border: 1px solid #111827; /* Distinct dark border outlines per cell */
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 
 .metric-cell-label {
   font-size: 11px;
-  font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  font-weight: 500;
+  color: #4b5563;
 }
 
 .metric-cell-value {
   font-size: 14px;
   font-weight: 700;
-  color: #1e293b;
-}
-
-.metric-cell-value.text-gold {
-  color: #ca8a04; /* Highlighting performance metric metrics */
+  color: #111827;
 }
 
 /* Bottom Action Buttons Framework */
 .invest-action-trigger-btn {
   width: 100%;
-  height: 44px;
-  background-color: #f2bf5e; /* Application synchronized branding accent */
+  height: 48px;
+  background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 15px;
   font-weight: 600;
   color: #ffffff;
   cursor: pointer;
@@ -148,5 +135,5 @@
 }
 
 .invest-action-trigger-btn:hover {
-  opacity: 0.93;
+  opacity: 0.9;
 }
