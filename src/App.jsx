@@ -34,7 +34,7 @@ import { InvestDashboard } from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
 import { TransactionHistory } from "./Features/TransactionHistory";
-// import PaymentSuccess from "./"
+import PaymentSuccess from "./Components/PaymentSuccess";
 
 const App = () => {
   return (
@@ -60,7 +60,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
-            {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>

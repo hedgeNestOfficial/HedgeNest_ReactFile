@@ -87,7 +87,6 @@ const WalletPage = () => {
       setIsLoading(false);
     }
   };
-
   // --- FORM SUBMISSION ROUTER ---
   const handleTransactionSubmit = async (e) => {
     e.preventDefault();
@@ -103,6 +102,7 @@ const WalletPage = () => {
       setAmount("");
     }
 
+    console.log("Deposit Modal State:", setIsDepositOpen);
     // B. WITHDRAWAL PROCESSING ROUTE
     if (activeTab === "withdraw") {
       // Snapshot balance validation threshold can go here if required
@@ -184,7 +184,7 @@ const WalletPage = () => {
               Link Account
             </button>
           </div>
-
+          {/* <button onClick={() => setIsDepositModalOpen(true)}>Add Funds</button> */}
           {/* DYNAMIC TRANSACTION SELECTION FORM */}
           <form className="operations-form" onSubmit={handleTransactionSubmit}>
             <div className="input-group">

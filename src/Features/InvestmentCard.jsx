@@ -10,27 +10,31 @@ export const InvestmentCard = ({ product, onInvestClick }) => {
           <div className="premium-icon-container">
             <HiMiniArrowTrendingUp className="trending-growth-icon" />
           </div>
-          <h3>{product.name}</h3>
+
+          <h3>{product.investmentName}</h3>
         </div>
-        <span className={`risk-badge-node ${product.risk?.toLowerCase()}`}>
-          {product.risk}
-        </span>
       </div>
 
-      <p className="investment-product-description">{product.description}</p>
+      <p className="investment-product-description">
+        Earn {product.roi}% ROI over a {product.term}-day investment period.
+      </p>
 
       <div className="metrics-dashboard-grid">
         <div className="metric-data-cell">
           <span className="metric-cell-label">ROI</span>
-          <span className="metric-cell-value text-gold">{product.roi}</span>
+          <span className="metric-cell-value text-gold">{product.roi}%</span>
         </div>
+
         <div className="metric-data-cell">
           <span className="metric-cell-label">Term</span>
-          <span className="metric-cell-value">{product.term}</span>
+          <span className="metric-cell-value">{product.term} Days</span>
         </div>
+
         <div className="metric-data-cell">
           <span className="metric-cell-label">MIN Amount</span>
-          <span className="metric-cell-value">{product.minAmount}</span>
+          <span className="metric-cell-value">
+            ₦{Number(product.minAmount).toLocaleString()}
+          </span>
         </div>
       </div>
 
@@ -43,3 +47,5 @@ export const InvestmentCard = ({ product, onInvestClick }) => {
     </div>
   );
 };
+
+export default InvestmentCard;
