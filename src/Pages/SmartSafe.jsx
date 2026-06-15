@@ -230,7 +230,9 @@ const SmartSafe = () => {
                   <p className="info-text">
                     Breaking Fees of 1.5% will be attracted for early Withdrawal
                     for locked Saving Plans while with Flexible plans, users can
-                    break savings without additional charges.
+                    break savings without additional charges,and lastly for
+                    Stealth plans, users can't break/withdraw their savings
+                    until the maturity date.
                   </p>
 
                   <div className="rate-banner">Interest Rate Details</div>
