@@ -2,13 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../Style/InvestModal.css";
 import { FiArrowLeft } from "react-icons/fi";
 import toast from "react-hot-toast";
-const InvestModal = ({ isOpen, product }) => {
+
+const InvestModal = ({ isOpen, onClose, product }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
 
   const pinRefs = useRef([]);
+
+  if (!isOpen || !product) return null;
+
+  const { investmentName, roi, term, minAmount } = product;
 
   useEffect(() => {
     if (isOpen) {
@@ -19,9 +24,76 @@ const InvestModal = ({ isOpen, product }) => {
     }
   }, [isOpen]);
 
-  if (!isOpen || !product) {
-    return null;
-  }
+  const expectedReturn =
+    amount && Number(amount) > 0
+      ? (
+          Number(amount) +
+          Number(amount) * (Number(roi) / 100) * (Number(term) / 365)
+        ).toFixed(2)
+      : "0.00";
+
+  const handleAmountSubmit = (e) => {
+    e.preventDefault();
+
+    if (Number(amount) < Number(minAmount)) {
+      toast.error(
+        `Minimum investment is ₦${Number(minAmount).toLocaleString()}`,
+      );
+      return;
+    }
+
+    setStep(2);
+  };
+
+  const handlePinChange = (value, index) => {
+    const digit = value.replace(/\D/g, "").slice(-1);
+
+    const updated = [...pin];
+    updated[index] = digit;
+
+    setPin(updated);
+
+    if (digit && index < 5) {
+      pinRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handlePinBackspace = (e, index) => {
+    if (e.key === "Backspace" && !pin[index] && index > 0) {
+      pinRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleInvestmentSubmit = async (e) => {
+    e.preventDefault();
+
+    const transactionPin = pin.join("");
+
+    if (transactionPin.length !== 6) {
+      toast.error("Enter your 6-digit transaction pin");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      /*
+      Backend call goes here
+
+      await createInvestment({
+        planId: product._id,
+        amount: Number(amount),
+        transactionPin
+      });
+      */
+
+      setStep(3);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Investment failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="invest-modal-overlay">

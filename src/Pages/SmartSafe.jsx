@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
 import { CiCircleQuestion } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { LuPiggyBank } from "react-icons/lu";
-
 import toast from "react-hot-toast";
-
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
 import TopUpModal from "../Components/TopUpModal";
-
 import {
-  previewPlan,
-  createPlan,
-  breakPlan,
-} from "../Services/smartSafeService";
+  previewPlan, // Corrected import path casing
+  createPlan, // Corrected import path casing
+  breakPlan, // Corrected import path casing
+} from "../Services/Smartsafeservice";
 import "../Css/SmartSafe.css";
 
 const SmartSafe = () => {
