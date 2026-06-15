@@ -31,7 +31,7 @@ const Sidebar = () => {
     { name: "dashboard", icon: FaGripHorizontal },
     { name: "wallet", icon: FaWallet },
     { name: "convert", icon: FaExchangeAlt },
-    { name: "smart-safe", icon: FaPiggyBank },
+    { name: "SmartSafe", icon: FaPiggyBank },
     { name: "invest", icon: FaChartLine },
   ];
 
