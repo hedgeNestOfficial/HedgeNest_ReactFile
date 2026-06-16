@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-
 import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import { TransactionHistory } from "../../Features/TransactionHistory";
 import { historyData } from "../../JS/Transactions";
 import { updateWallet } from "../../Store/UserSlice";
-import { getMyWallet } from "../../Services/walletService";
+import { getMyWallet } from "../../Services/WalletService";
 
 import "../../Style/Wallet.css";
 
