@@ -8,8 +8,9 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  width: 150px;
-  min-height: 340px;
+  width: 100%;
+  max-width: 460px;
+  min-height: 240px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
