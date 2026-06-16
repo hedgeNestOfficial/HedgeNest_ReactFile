@@ -8,7 +8,7 @@ import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import { TransactionHistory } from "../../Features/TransactionHistory";
 import { historyData } from "../../JS/Transactions";
 import { updateWallet } from "../../Store/UserSlice";
-import { getMyWallet } from "../../Services/WalletService";
+import { getMyWallet } from "../../Services/Walletservice.js";
 
 import "../../Style/Wallet.css";
 

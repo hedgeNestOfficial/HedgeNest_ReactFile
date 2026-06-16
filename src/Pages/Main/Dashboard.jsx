@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import { historyData } from "../../JS/Transactions.js";
 import SplashScreen from "../../Components/SplashScreen.jsx"; // Double check your relative path!
-import { getMyWallet } from "../../Services/walletService.js";
+import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
 
 const Dashboard = () => {
