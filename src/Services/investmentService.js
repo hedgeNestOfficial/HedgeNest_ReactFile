@@ -12,6 +12,44 @@ export const getInvestmentPlans = async (token) => {
   return response.data;
 };
 
+// import axios from "axios";
+// import { ENDPOINTS } from "../Config/apiConfig";
+
+// export const getInvestmentPlans = async (token) => {
+//   const response = await axios.get(ENDPOINTS.INVESTMENT.GET_PLANS, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   return response.data;
+// };
+
+export const getUserInvestments = async (token) => {
+  const response = await axios.get(ENDPOINTS.INVESTMENT.GET_USER_INVESTMENTS, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+export const initiateInvestment = async (payload, token) => {
+  const response = await axios.post(
+    ENDPOINTS.INVESTMENT.INITIATE_INVESTMENT,
+    payload,
+    {
+      headers: {
+        ...API_CONFIG.headers,
+        Authorization: `Bearer ${token}`,
+      },
+      timeout: API_CONFIG.timeout,
+    },
+  );
+
+  return response.data;
+};
 // Services/investmentService.js
 
 // import axios from "axios";

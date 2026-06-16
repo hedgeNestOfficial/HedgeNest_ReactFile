@@ -12,14 +12,16 @@ import { OrbitProgress } from "react-loading-indicators";
 
 const Pin = () => {
   const navigate = useNavigate();
-
   const inputRefs = useRef([]);
 
-  const { token, user } = useSelector((state) => state.user);
+  // FIX: Extract tempUser to gain access to the onboarding token and temporary email state
+  const { tempUser } = useSelector((state) => state.user);
+  const onboardingToken = tempUser?.authToken;
+  const userEmail = tempUser?.email;
+
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
-  const [splashscreen, setSplashScreen] = useState(null);
 
   const handleChange = (value, index, type) => {
     if (!/^\d?$/.test(value)) return;
@@ -61,7 +63,6 @@ const Pin = () => {
     e.preventDefault();
 
     const pinCode = pin.join("");
-
     const confirmPinCode = confirmPin.join("");
 
     if (pinCode.length !== 6) {
@@ -79,20 +80,25 @@ const Pin = () => {
       return;
     }
 
+    // Safety Guard: Handle scenario if session context was lost
+    if (!onboardingToken || !userEmail) {
+      toast.error("Session expired. Please restart registration.");
+      return;
+    }
+
     try {
       setIsLoading(true);
 
       const payload = {
-        email: user?.email,
-
+        email: userEmail, // FIX: Use userEmail pulled from tempUser
         transactionPin: pinCode,
-
         confirmTransactionPin: confirmPinCode,
       };
 
       console.log("PIN PAYLOAD:", payload);
 
-      const response = await createPin(payload, token);
+      // FIX: Pass onboardingToken instead of the logged-in token instance
+      const response = await createPin(payload, onboardingToken);
 
       console.log("PIN SUCCESS:", response);
 
@@ -101,13 +107,12 @@ const Pin = () => {
       );
 
       setTimeout(() => {
+        // Registration is complete! Send them to login to get their permanent user token
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
       console.log("FULL PIN ERROR:", error);
-
       console.log("PIN ERROR RESPONSE:", error?.response);
-
       console.log("PIN ERROR DATA:", error?.response?.data);
 
       toast.error(error?.response?.data?.message || "Failed to create PIN");
@@ -115,6 +120,7 @@ const Pin = () => {
       setIsLoading(false);
     }
   };
+
   return (
     <section className="signup-section">
       <div className="image-container">
@@ -138,7 +144,6 @@ const Pin = () => {
               alt="HedgeNest Logo"
             />
           </div>
-
           <span className="brand-name">HedgeNest</span>
         </div>
       </div>
@@ -168,7 +173,6 @@ const Pin = () => {
             {/* ENTER PIN */}
             <div className="otp-inputs-row">
               <label>Enter PIN</label>
-
               <div className="otp-input-container">
                 {pin.map((digit, index) => (
                   <input
@@ -189,7 +193,6 @@ const Pin = () => {
             {/* CONFIRM PIN */}
             <div className="otp-inputs-row">
               <label>Confirm PIN</label>
-
               <div className="otp-input-container">
                 {confirmPin.map((digit, index) => (
                   <input

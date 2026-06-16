@@ -362,12 +362,12 @@
 ========================= */
 
 .forgot-password-text {
-  color: #fac156;
+  color: #eab308;
 
   cursor: pointer;
 
   font-size: 0.95rem;
-
+  font-weight: 600;
   margin-top: 14px;
 
   text-align: right;

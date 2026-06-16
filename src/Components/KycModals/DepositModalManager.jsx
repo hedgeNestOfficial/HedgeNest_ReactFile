@@ -19,7 +19,9 @@ const DepositModalManager = ({ isOpen, onClose, amount }) => {
 
       toast.success(response?.message || "Redirecting...");
 
-      window.location.href = response?.data?.checkout_url;
+      if (response?.data?.checkout_url) {
+        window.location.href = response.data.checkout_url;
+      }
     } catch (error) {
       toast.error(
         error?.response?.data?.message || "Unable to initialize payment",
@@ -65,7 +67,18 @@ const DepositModalManager = ({ isOpen, onClose, amount }) => {
             disabled={loading}
           >
             {loading ? (
-              <OrbitProgress color="#fff" size="small" />
+              // THE FIX: Strict inline constraints to stop the library from stretching
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "20px",
+                  transform: "scale(0.5)", // Silver bullet: scales the native SVG down perfectly
+                }}
+              >
+                <OrbitProgress color="#ffffff" size="small" />
+              </div>
             ) : (
               "Proceed To Payment"
             )}
