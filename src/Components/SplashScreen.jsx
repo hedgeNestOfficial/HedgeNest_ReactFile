@@ -1,55 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import "../../Style/Signup.css";
-import Signupimg from "../../assets/Signupimg.jpg";
-import { inputTex } from "../../JS/signupCard";
-import Input from "../../Components/Input";
-import Button from "../../Components/Button";
-import { FcGoogle } from "react-icons/fc";
-import { LuArrowLeft } from "react-icons/lu";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import axios from "axios";
-import { ENDPOINTS } from "../../Config/apiConfig";
-import { signup } from "../../Store/UserSlice";
+import React, { useEffect, useState } from "react";
+import goldLogo from "../assets/logoG.png";
+import "../Style/SplashScreen.css";
 
-const SignupPage = () => {
-  const navigate = useNavigate();
+const SplashScreen = ({ onLoadingComplete }) => {
+  const [showText, setShowText] = useState(false);
 
-  const dispatch = useDispatch();
-  const [apiError, setApiError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  useEffect(() => {
+    // 1. First milestone: Reveal the text after the logo animation runs (1.2 seconds)
+    const textTimer = setTimeout(() => {
+      setShowText(true);
+    }, 1200);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm({
-    resolver: zodResolver(signupSchema),
+    // 2. Second milestone: Notify parent component (Dashboard) to display actual content (3 seconds)
+    const completeTimer = setTimeout(() => {
+      if (onLoadingComplete) {
+        onLoadingComplete();
+      }
+    }, 3000);
 
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      terms: false,
-    },
-  });
+    return () => {
+      clearTimeout(textTimer);
+      clearTimeout(completeTimer);
+    };
+  }, [onLoadingComplete]);
 
   return (
-    <section className="signup-section">
-      <div className="image-container">
-        <img src={Signupimg} alt="HedgeNest Protection Illustration" />
-      </div>
+    <div className="splash-screen-overlay">
+      <div className="splash-content-wrapper">
+        {/* LOGO CONTAINER WITH ANIMATION */}
+        <div className="splash-logo-container">
+          <img
+            src={goldLogo}
+            alt="HedgeNest Gold Shield Logo"
+            className="splash-logo-image"
+          />
+        </div>
 
-      <div className="form-container">
-        <img src="" alt="" />
+        {/* BRAND TEXT WITH DELAYED DROP-DOWN REVEAL */}
+        <div className={`splash-text-container ${showText ? "reveal" : ""}`}>
+          <h3 className="splash-brand-name">HedgeNest</h3>
+        </div>
+
+        {/* NATIVE INTEGRATED LOADING SKELETON STRIP */}
+        <div className="splash-skeleton-loader">
+          <div className="skeleton-bar"></div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

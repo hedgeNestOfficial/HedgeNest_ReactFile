@@ -55,6 +55,9 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  /* Horizontal padding creates safe space so absolute buttons don't overflow the screen */
+  padding: 0 48px;
+  box-sizing: border-box;
 }
 
 .carousel-viewport {
@@ -74,36 +77,37 @@
   padding: 4px; /* Room for card drop shadows */
 }
 
-/* Floating Absolute Buttons */
+/* Floating Absolute Buttons — positioned inside the padding zone */
 .carousel-btn {
   position: absolute;
-  top: 42%; /* Centered vertically relative to the card body */
+  top: 42%;
   transform: translateY(-50%);
   z-index: 5;
-  background: #0f172a; /* Dark navy */
-  color: #eab308; /* Gold icon */
+  background: #0f172a;
+  color: #eab308;
   border: none;
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .prev-btn {
-  left: -14px; /* Pushes button into the section padding edge */
+  left: 4px; /* Sits inside the 48px padding zone — never clips the screen */
 }
 
 .next-btn {
-  right: -14px; /* Pushes button into the section padding edge */
+  right: 4px; /* Sits inside the 48px padding zone — never clips the screen */
 }
 
-/* Muted / Inactive Style (Matches the Left Arrow in your image) */
+/* Muted / Inactive Style */
 .carousel-btn.disabled {
   background: #b9b2a2;
   color: #ffffff;
@@ -123,21 +127,25 @@
 .dot {
   width: 8px;
   height: 8px;
-  background: #e2d9c2; /* Light beige-gold dot */
+  background: #e2d9c2;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .dot.active-dot {
-  background: #eab308; /* Active Gold Dot */
+  background: #eab308;
   transform: scale(1.2);
 }
 
 /* Mobile Media Breakpoint */
 @media screen and (max-width: 768px) {
   .why-section {
-    padding: 60px 36px; /* High side padding ensures floating buttons don't clip the screen */
+    padding: 60px 20px; /* Balanced side padding — buttons live inside .mobile-carousel-container padding */
+  }
+
+  .why-container {
+    width: 100%;
   }
 
   .why-header h2 {

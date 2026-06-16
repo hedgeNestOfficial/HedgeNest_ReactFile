@@ -21,26 +21,26 @@ const Sidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  // const userInitial = user?.firstName?.charAt(0)?.toUpperCase() || "U";
+
   const userInitial = `${user?.firstName?.charAt(0) || ""}${
     user?.lastName?.charAt(0) || ""
   }`.toUpperCase();
   const profileImage = user?.profilePicture?.url;
   const currentPath = location.pathname;
+
+  // FIX: Formatted names with correct capitalization directly for UI display
   const menuItems = [
-    { name: "dashboard", icon: FaGripHorizontal },
-    { name: "wallet", icon: FaWallet },
-    { name: "convert", icon: FaExchangeAlt },
+    { name: "Dashboard", icon: FaGripHorizontal },
+    { name: "Wallet", icon: FaWallet },
+    { name: "Convert", icon: FaExchangeAlt },
     { name: "SmartSafe", icon: FaPiggyBank },
-    { name: "invest", icon: FaChartLine },
+    { name: "Invest", icon: FaChartLine },
   ];
 
   const handleLogout = () => {
     dispatch(logout());
-
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
-
     navigate("/");
   };
 
@@ -52,7 +52,6 @@ const Sidebar = () => {
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
-
           <span className="brand-name">HedgeNest</span>
         </div>
 
@@ -75,7 +74,6 @@ const Sidebar = () => {
         </div>
       </header>
 
-      {/* DESKTOP SIDEBAR */}
       <aside className="desktop-sidebar">
         <div
           className="sidebar-brand"
@@ -85,7 +83,6 @@ const Sidebar = () => {
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
-
           <span className="brand-name">HedgeNest</span>
         </div>
 
@@ -94,25 +91,22 @@ const Sidebar = () => {
             {menuItems.map((item) => {
               const Icon = item.icon;
 
-              const isActive = currentPath === `/${item.name}`;
+              const targetRoute = `/${item.name.toLowerCase()}`;
+              const isActive = currentPath === targetRoute;
 
               return (
                 <li key={item.name}>
                   <button
-                    onClick={() => navigate(`/${item.name}`)}
+                    onClick={() => navigate(targetRoute)}
                     className={`menu-item ${isActive ? "active" : ""}`}
                   >
                     <Icon className="menu-icon" size={18} />
-
-                    <span className="menu-text">
-                      {item.name.replace("-", " ")}
-                    </span>
+                    <span className="menu-text">{item.name}</span>
                   </button>
                 </li>
               );
             })}
 
-            {/* PROFILE */}
             <li>
               <button
                 onClick={() => navigate("/profile")}
@@ -121,7 +115,6 @@ const Sidebar = () => {
                 }`}
               >
                 <FaUserCircle className="menu-icon" size={18} />
-
                 <span className="menu-text">Profile</span>
               </button>
             </li>
@@ -132,7 +125,6 @@ const Sidebar = () => {
         <div className="sidebar-footer">
           <button className="menu-item logout-btn" onClick={handleLogout}>
             <FaSignOutAlt className="menu-icon" size={18} />
-
             <span className="menu-text">Sign Out</span>
           </button>
         </div>
@@ -143,19 +135,18 @@ const Sidebar = () => {
         {menuItems.map((item) => {
           const Icon = item.icon;
 
-          const isActive = currentPath === `/${item.name}`;
+          // FIX: Convert item name to lowercase for mobile paths as well
+          const targetRoute = `/${item.name.toLowerCase()}`;
+          const isActive = currentPath === targetRoute;
 
           return (
             <button
               key={item.name}
-              onClick={() => navigate(`/${item.name}`)}
+              onClick={() => navigate(targetRoute)}
               className={`bottom-nav-item ${isActive ? "active" : ""}`}
             >
               <Icon className="bottom-nav-icon" size={20} />
-
-              <span className="bottom-nav-text">
-                {item.name.replace("-", " ")}
-              </span>
+              <span className="bottom-nav-text">{item.name}</span>
             </button>
           );
         })}
