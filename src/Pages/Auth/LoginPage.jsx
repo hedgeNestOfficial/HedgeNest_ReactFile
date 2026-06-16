@@ -27,7 +27,6 @@ const LoginPage = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
-
     defaultValues: {
       email: "",
       password: "",
@@ -39,29 +38,31 @@ const LoginPage = () => {
   const isFormFilled =
     watchedFields.email?.trim() && watchedFields.password?.trim();
 
-  const onSubmitForm = async (data) => {
+  const onSubmitForm = async (formDataFields) => {
     try {
       const payload = {
-        email: data.email.trim(),
-        password: data.password,
+        email: formDataFields.email.trim(),
+        password: formDataFields.password,
       };
 
       const response = await loginUser(payload);
 
-      const { message, user, wallet, token } = response;
+      // Extract properties according to the updated backend JSON scheme:
+      // response = { message, data: { ...userProps }, wallet, token }
+      const { message, data: userData, wallet, token } = response;
 
+      // Dispatch payload using the key names expected by your global state slice
       dispatch(
         login({
-          user,
+          user: userData, // Maps backend "data" object straight into Redux "user" field
           wallet,
           token,
         }),
       );
 
+      // Persistent synchronous cache mirroring
       localStorage.setItem("authToken", token);
-
-      localStorage.setItem("user", JSON.stringify(user));
-
+      localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("wallet", JSON.stringify(wallet));
 
       toast.success(message || "Login Successful");
@@ -71,7 +72,6 @@ const LoginPage = () => {
       }, 1500);
     } catch (error) {
       console.log("LOGIN ERROR:", error);
-
       toast.error(
         error?.response?.data?.message || "Invalid email or password",
       );
@@ -102,7 +102,6 @@ const LoginPage = () => {
               alt="HedgeNest Logo"
             />
           </div>
-
           <span className="brand-name">HedgeNest</span>
         </div>
       </div>
@@ -159,19 +158,12 @@ const LoginPage = () => {
             <p
               onClick={() => navigate("/reset")}
               className="forgot-password-text"
-              style={{
-                textAlign: "left",
-              }}
+              style={{ textAlign: "left" }}
             >
               Forgotten password?
             </p>
 
-            <p
-              className="auth-switch-footer"
-              style={{
-                textAlign: "left",
-              }}
-            >
+            <p className="auth-switch-footer" style={{ textAlign: "left" }}>
               Don’t have an account?{" "}
               <span
                 className="highlight-link bold-link"

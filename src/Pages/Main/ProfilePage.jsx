@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Imported useNavigate for routing links
+import { useNavigate } from "react-router-dom";
 import "../../Style/ProfilePage.css";
 import SettingView from "./SettingView";
 import { CgProfile } from "react-icons/cg";
@@ -19,7 +19,7 @@ import KycModalManager from "../../Components/KycModals/KycModalManager";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialized route driver
+  const navigate = useNavigate();
   const { token, user } = useSelector((state) => state.user);
   const fileInputRef = useRef(null);
 
@@ -39,6 +39,7 @@ const ProfilePage = () => {
 
   const [isKycOpen, setIsKycOpen] = useState(false);
 
+  // Synchronize state values directly against the clean state.user structure
   useEffect(() => {
     if (user) {
       setFormData({
@@ -47,8 +48,11 @@ const ProfilePage = () => {
         phoneNumber: user.phoneNumber || "",
         email: user.email || "",
       });
+
       if (user.profilePicture?.url) {
         setPreviewUrl(user.profilePicture.url);
+      } else {
+        setPreviewUrl("");
       }
     }
   }, [user]);
@@ -86,7 +90,10 @@ const ProfilePage = () => {
       }
 
       const response = await updateProfile(profileFormData, token);
-      dispatch(updateUser(response.data));
+
+      // Dispatch the response directly. The slice handler handles both data and raw objects safely!
+      dispatch(updateUser(response.data || response));
+
       toast.success(response.message || "Profile updated successfully");
       setIsEditing(false);
       setProfilePicture(null);
@@ -165,7 +172,7 @@ const ProfilePage = () => {
                     gap: "8px",
                     alignSelf: "flex-end",
                     textAlign: "center",
-                    padding: "8px 8px",
+                    padding: "8px 12px",
                     borderRadius: "4px",
                     border: "1px solid #ccc",
                     background: "transparent",
@@ -320,7 +327,8 @@ const ProfilePage = () => {
                         e.target.style.backgroundColor = "#f5f5f7";
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = "transparent";
+                      if (!isLoading)
+                        e.target.style.backgroundColor = "transparent";
                     }}
                   >
                     Cancel
@@ -390,7 +398,6 @@ const ProfilePage = () => {
                 <h3>Report a problem</h3>
                 <p>Something's not right, let us know</p>
                 <div className="card-links">
-                  {/* Updated: Navigates straight to /contact route */}
                   <span
                     className="action-link"
                     style={{
@@ -420,7 +427,6 @@ const ProfilePage = () => {
                   resolution.
                 </p>
                 <div className="card-links">
-                  {/* Updated: Navigates straight to /policy route */}
                   <span
                     className="action-link"
                     style={{
@@ -442,7 +448,6 @@ const ProfilePage = () => {
                   KYC information and transaction history.
                 </p>
                 <div className="card-links">
-                  {/* Updated: Navigates straight to /policy route */}
                   <span
                     className="action-link"
                     style={{
@@ -464,7 +469,6 @@ const ProfilePage = () => {
                   Nigerian financial regulations.
                 </p>
                 <div className="card-links">
-                  {/* Updated: Navigates straight to /policy route */}
                   <span
                     className="action-link"
                     style={{
