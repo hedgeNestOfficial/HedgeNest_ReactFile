@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
@@ -20,6 +20,26 @@ const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Countdown timer states
+  const [countdown, setCountdown] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
+  // Timer Effect Logic
+  useEffect(() => {
+    let timerId;
+    if (countdown > 0) {
+      setCanResend(false);
+      timerId = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+
+    // Clean up interval on component unmount to prevent memory leaks
+    return () => clearInterval(timerId);
+  }, [countdown]);
+
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return;
     const updatedOtp = [...otp];
@@ -38,25 +58,21 @@ const Otp = () => {
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
-
     const otpCode = otp.join("");
 
     if (otpCode.length !== 6) {
       toast.error("Please enter the complete 6-digit OTP");
-
       return;
     }
 
     try {
       setIsLoading(true);
-
       const payload = {
         email: userEmail,
         otp: otpCode,
       };
 
       const response = await verifyOtp(payload);
-
       toast.success(response?.message || "OTP verified successfully");
 
       setTimeout(() => {
@@ -64,15 +80,12 @@ const Otp = () => {
           case "signup":
             navigate("/kycauth");
             break;
-
           case "reset-password":
             navigate("/newpass");
             break;
-
           case "pin":
             navigate("/dashboard");
             break;
-
           default:
             navigate("/");
         }
@@ -81,7 +94,6 @@ const Otp = () => {
       toast.error(
         error.response?.data?.message || "Invalid OTP. Please try again.",
       );
-
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -89,6 +101,9 @@ const Otp = () => {
   };
 
   const handleResendOtp = async () => {
+    // Structural Guard: prevent API requests if timer isn't up
+    if (!canResend) return;
+
     try {
       const response = await resendOtp({
         email: userEmail,
@@ -96,12 +111,14 @@ const Otp = () => {
 
       toast.success(response?.message || "OTP resent successfully");
 
+      // Reset layout defaults
       setOtp(["", "", "", "", "", ""]);
-
       inputRefs.current[0]?.focus();
+
+      // Restart countdown track back to 30 seconds
+      setCountdown(30);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to resend OTP");
-
       console.log(error);
     }
   };
@@ -128,7 +145,6 @@ const Otp = () => {
               alt="HedgeNest Logo"
             />
           </div>
-
           <span className="brand-name">HedgeNest</span>
         </div>
         <img src={Signupimg} alt="HedgeNest Protection Illustration" />
@@ -186,8 +202,19 @@ const Otp = () => {
 
             <div className="otp-footer-actions">
               <p>
-                Didn’t receive code?
-                <span onClick={handleResendOtp}>Resend</span>
+                Didn’t receive code?{" "}
+                {canResend ? (
+                  <span
+                    onClick={handleResendOtp}
+                    className="resend-link active-link"
+                  >
+                    Resend
+                  </span>
+                ) : (
+                  <span className="resend-link disabled-countdown">
+                    Resend in {countdown}s
+                  </span>
+                )}
               </p>
 
               <p className="edit-email" onClick={() => navigate("/signup")}>

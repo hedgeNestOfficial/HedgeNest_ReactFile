@@ -20,9 +20,9 @@ import { OrbitProgress } from "react-loading-indicators";
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleGoogleLogin = () => {
-    window.location.href = "https://hedgenest.onrender.com/api/v1/auth/google";
-  };
+  // const handleGoogleLogin = () => {
+  //   window.location.href = "https://enest.onrender.com/api/v1/auth/google";
+  // };
 
   const {
     register,
@@ -178,7 +178,9 @@ const SignupPage = () => {
             </div>
 
             {errors.terms && (
-              <span className="terms-error">{errors.terms.message}</span>
+              <span className="terms-error" style={{ color: "red" }}>
+                Accept terms & condition
+              </span>
             )}
 
             <Button
@@ -186,7 +188,6 @@ const SignupPage = () => {
                 isSubmitting ? (
                   <div className="loader-wrapper">
                     <OrbitProgress color="#ffffff" size="small" />
-                    <span>signing up...</span>
                   </div>
                 ) : (
                   "Sign Up"
