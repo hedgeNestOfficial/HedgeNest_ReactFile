@@ -50,6 +50,34 @@ export const initiateInvestment = async (payload, token) => {
 
   return response.data;
 };
+
+export const completeInvestment = async (payload, token) => {
+  const response = await axios.put(
+    `${BASE_URL}/api/v1/compInvestment`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const claimInvestment = async (payload, token) => {
+  const response = await axios.put(
+    `${BASE_URL}/api/v1/claimInvestment`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return response.data;
+};
 // Services/investmentService.js
 
 // import axios from "axios";
