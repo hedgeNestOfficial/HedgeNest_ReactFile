@@ -1,4 +1,7 @@
-/* Deposit Modal Overlay Layer */
+/* ==========================================
+   DEPOSIT MODAL OVERLAY & CONTAINER
+   ========================================== */
+
 .deposit-modal-overlay {
   position: fixed;
   inset: 0;
@@ -13,9 +16,13 @@
   z-index: 2000;
 }
 
-h1 {
+.deposit-amount-display {
   color: #111827;
+  text-align: center;
+  margin: 20px 0;
+  font-weight: 700;
 }
+
 /* Moderate Content Box for Desktop and Mobile */
 .deposit-modal-content {
   background: #ffffff;
@@ -45,7 +52,10 @@ h1 {
   }
 }
 
-/* Universal Layout Elements */
+/* ==========================================
+   UNIVERSAL LAYOUT ELEMENTS & TEXT
+   ========================================== */
+
 .deposit-modal-title {
   font-size: 1.3rem;
   font-weight: 700;
@@ -64,7 +74,10 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* Data Row List (Transfer Information Screen) */
+/* ==========================================
+   DATA ROW LIST (TRANSFER DETAILS)
+   ========================================== */
+
 .deposit-details-list {
   display: flex;
   flex-direction: column;
@@ -129,7 +142,10 @@ h1 {
   font-weight: 700;
 }
 
-/* Native CSS Loading Ring */
+/* ==========================================
+   SPINNERS & CONFETTI ACCENTS
+   ========================================== */
+
 .deposit-spinner-wrapper {
   display: flex;
   flex-direction: column;
@@ -143,22 +159,24 @@ h1 {
   width: 48px;
   height: 48px;
   border: 4px solid #f3f4f6;
-  border-top: 4px solid #f2c94c; /* HedgeNest Yellow Accent */
+  border-top: 4px solid #f2c94c;
   border-radius: 50%;
   animation: depositSpin 0.8s linear infinite;
   margin-bottom: 20px;
 }
 
-@keyframes depositSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.deposit-success-graphic {
+  display: flex;
+  justify-content: center;
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Control Action Buttons */
+/* ==========================================
+   CONTROL ACTION BUTTONS
+   ========================================== */
+
 .deposit-btn-group {
   display: flex;
   gap: 12px;
@@ -169,7 +187,7 @@ h1 {
   flex: 1;
   width: auto;
   min-width: 0;
-  min-height: 48px;
+  min-height: 20px;
   height: auto;
   padding: 14px 0;
   border-radius: 8px;
@@ -198,14 +216,9 @@ h1 {
   opacity: 0.92;
 }
 
-/* Confetti Success Graphic */
-.deposit-success-graphic {
-  display: flex;
-  justify-content: center;
-  font-size: 3.5rem;
-  margin-bottom: 16px;
-  animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+/* ==========================================
+   RESPONSIVE DESIGN (MOBILE MEDIA QUERY)
+   ========================================== */
 
 @media (max-width: 520px) {
   .deposit-modal-overlay {
@@ -233,11 +246,32 @@ h1 {
   }
 }
 
-@keyframes popScale {
-  from {
-    transform: scale(0.5);
-  }
-  to {
-    transform: scale(1);
-  }
+/* ==========================================
+   CRITICAL LOADER FIXES (STOPS OVERSIZING)
+   ========================================== */
+
+/* 1. Force the bounding region of the inline spinner to hold clean flex alignment */
+.deposit-btn .loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 24px;
+  line-height: 1;
+}
+
+/* 2. Overwrite third-party library child tags to match your crisp form UI metrics */
+.deposit-btn .loader-wrapper > div,
+.deposit-btn .loader-wrapper span,
+.deposit-btn .loader-wrapper svg {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  margin: 0 auto !important;
+}
+
+.deposit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
 }

@@ -1,29 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../Style/InvestModal.css";
+import { useSelector } from "react-redux";
 import { FiArrowLeft } from "react-icons/fi";
+import { HiOutlineShieldCheck } from "react-icons/hi";
 import toast from "react-hot-toast";
+import { initiateInvestment } from "../../Services/investmentService";
+import "../../Style/InvestModal.css";
 
-const InvestModal = ({ isOpen, onClose, product }) => {
+const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
+  // Step state tracker: 1 = Amount, 2 = PIN, 3 = Processing Loader, 4 = Success Screen
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(Array(6).fill(""));
-  const [loading, setLoading] = useState(false);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const pinRefs = useRef([]);
+  const { token } = useSelector((state) => state.user);
 
-  if (!isOpen || !product) return null;
-
-  const { investmentName, roi, term, minAmount } = product;
-
+  // Reset states safely whenever the modal opens or closes
   useEffect(() => {
     if (isOpen) {
       setStep(1);
       setAmount("");
       setPin(Array(6).fill(""));
-      setLoading(false);
+      setApiLoading(false);
     }
   }, [isOpen]);
 
+  if (!isOpen || !product) return null;
+
+  const { investmentName, roi, term, minAmount } = product;
+
+  // Exact compound matching expected calculation formula
   const expectedReturn =
     amount && Number(amount) > 0
       ? (
@@ -32,12 +39,18 @@ const InvestModal = ({ isOpen, onClose, product }) => {
         ).toFixed(2)
       : "0.00";
 
+  // Step 1 Submission: Validating minimum tier bounds
   const handleAmountSubmit = (e) => {
     e.preventDefault();
 
+    if (!amount || Number(amount) <= 0) {
+      toast.error("Please enter a valid investment amount");
+      return;
+    }
+
     if (Number(amount) < Number(minAmount)) {
       toast.error(
-        `Minimum investment is ₦${Number(minAmount).toLocaleString()}`,
+        `Minimum investment threshold is ₦${Number(minAmount).toLocaleString()}`,
       );
       return;
     }
@@ -45,13 +58,12 @@ const InvestModal = ({ isOpen, onClose, product }) => {
     setStep(2);
   };
 
+  // Safe auto-focus indexing handlers across individual PIN fields
   const handlePinChange = (value, index) => {
     const digit = value.replace(/\D/g, "").slice(-1);
-
-    const updated = [...pin];
-    updated[index] = digit;
-
-    setPin(updated);
+    const updatedPin = [...pin];
+    updatedPin[index] = digit;
+    setPin(updatedPin);
 
     if (digit && index < 5) {
       pinRefs.current[index + 1]?.focus();
@@ -64,106 +76,142 @@ const InvestModal = ({ isOpen, onClose, product }) => {
     }
   };
 
-  const handleInvestmentSubmit = async (e) => {
-    e.preventDefault();
+  // Step 2 & 3 Dispatch Trigger: Sends transaction payload directly to service endpoints
+  const handleInvestmentExecution = async (e) => {
+    if (e) e.preventDefault();
 
     const transactionPin = pin.join("");
-
     if (transactionPin.length !== 6) {
-      toast.error("Enter your 6-digit transaction pin");
+      toast.error("Please enter your complete 6-digit transaction PIN");
       return;
     }
 
     try {
-      setLoading(true);
-
-      /*
-      Backend call goes here
-
-      await createInvestment({
-        planId: product._id,
-        amount: Number(amount),
-        transactionPin
-      });
-      */
-
+      // Immediately push UI layout into processing screen mode
       setStep(3);
+      setApiLoading(true);
+
+      const payload = {
+        investmentPlanId: product._id,
+        amount: Number(amount),
+        // transactionPin is captured here to be passed forward once integrated
+      };
+
+      const response = await initiateInvestment(payload, token);
+
+      // Trigger tracking refresh functions in main workspace dashboard view
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Hand over focus display to target custom success confirmation slide
+      setStep(4);
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Investment failed");
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to process investment request",
+      );
+      // Kick view context backwards safely to pin correction lane on operational network failure
+      setStep(2);
     } finally {
-      setLoading(false);
+      setApiLoading(false);
     }
   };
 
   return (
     <div className="invest-modal-overlay">
-      <div className="invest-modal-card">
-        {/* STEP 1 */}
-
+      <div
+        className={`invest-modal-card ${step === 3 ? "invest-loader-card-dims" : ""}`}
+      >
+        {/* STEP 1: AMOUNT SPECIFICATION ENTRY SCREEN */}
         {step === 1 && (
-          <form onSubmit={handleAmountSubmit}>
-            <h2>{investmentName}</h2>
-
-            <p>
-              Earn {roi}% ROI over {term} days.
+          <form
+            onSubmit={handleAmountSubmit}
+            className="invest-modal-step-wrapper"
+          >
+            <h2 className="invest-modal-title">{investmentName}</h2>
+            <p className="invest-modal-description">
+              Capital-protected {term}-day fixed income note. Ideal for
+              first-time investors.
             </p>
 
-            <div className="invest-info-box">
-              <p>
-                Minimum Investment:
-                <strong>₦{Number(minAmount).toLocaleString()}</strong>
+            <p className="invest-modal-description">
+              Your money is been invested in Treasury Bills,FGN, saving Bonds ,
+              Fixed Deposits, Money Market Mutual Funds with a 100% Guarantee in
+              safe investment returns
+            </p>
+
+            <div className="invest-lock-notification-banner">
+              <HiOutlineShieldCheck className="invest-shield-icon" />
+              <p className="invest-lock-banner-text">
+                Funds locked for {term} days at {roi}% p.a.
               </p>
             </div>
 
-            <div className="invest-input-group">
-              <label>Amount</label>
-
-              <input
-                type="number"
-                value={amount}
-                placeholder={minAmount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
+            <div className="invest-input-field-container">
+              <label className="invest-input-field-label">Amount (NGN)</label>
+              <div className="invest-input-box-wrapper">
+                <input
+                  type="number"
+                  className="invest-numeric-text-input"
+                  value={amount}
+                  placeholder={Number(minAmount).toString()}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div className="invest-summary">
-              <span>Expected Return</span>
-
-              <strong>₦{Number(expectedReturn).toLocaleString()}</strong>
+            <div className="invest-returns-summary-row">
+              <span className="invest-summary-label">Expected Return</span>
+              <span className="invest-summary-value-highlight">
+                ₦
+                {Number(expectedReturn).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
             </div>
 
-            <div className="invest-actions">
-              <button type="button" className="btn-secondary" onClick={onClose}>
+            <div className="invest-modal-action-buttons-container">
+              <button
+                type="button"
+                className="invest-btn-secondary-cancel"
+                onClick={onClose}
+              >
                 Cancel
               </button>
-
-              <button type="submit" className="btn-primary">
+              <button type="submit" className="invest-btn-primary-solid">
                 Continue
               </button>
             </div>
           </form>
         )}
 
-        {/* STEP 2 */}
-
+        {/* STEP 2: SECURITY VERIFICATION PIN SUBMISSION */}
         {step === 2 && (
-          <form onSubmit={handleInvestmentSubmit}>
+          <form
+            onSubmit={handleInvestmentExecution}
+            className="invest-modal-step-wrapper"
+          >
             <button
               type="button"
-              className="back-btn"
+              className="invest-modal-back-navigation-arrow"
               onClick={() => setStep(1)}
             >
               <FiArrowLeft />
             </button>
 
-            <h2>Enter Transaction Pin</h2>
+            <h2 className="invest-modal-title margin-top-xs">
+              Enter Your Transaction Pin
+            </h2>
 
-            <div className="pin-container">
+            <div className="invest-pin-box-grid-row">
               {pin.map((digit, index) => (
                 <input
                   key={index}
                   type="password"
                   maxLength={1}
+                  className="invest-square-box-input"
                   value={digit}
                   ref={(el) => (pinRefs.current[index] = el)}
                   onChange={(e) => handlePinChange(e.target.value, index)}
@@ -174,25 +222,74 @@ const InvestModal = ({ isOpen, onClose, product }) => {
 
             <button
               type="submit"
-              className="btn-primary full-width"
-              disabled={loading}
+              className="invest-btn-block-action margin-top-xl"
             >
-              {loading ? "Processing..." : "Invest"}
+              Next
             </button>
           </form>
         )}
 
-        {/* STEP 3 */}
-
+        {/* STEP 3: TRANSACTION PIPELINE PROCESSING LOADER */}
         {step === 3 && (
-          <div className="success-container">
-            <div className="success-icon">✓</div>
+          <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
+            {/* PLACEHOLDER IMAGE SLOT: Swap standard src link paths with your local assets whenever you're ready */}
+            <div className="invest-processing-image-wrapper">
+              <img
+                src="/assets/investing-future-loader.svg"
+                alt="Investing Pipeline Processing illustration"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+                style={{ width: "120px", marginBottom: "20px" }}
+              />
+            </div>
 
-            <h2>Investment Created</h2>
+            <h2 className="invest-modal-title text-center-forced">
+              Investing In Your Future
+            </h2>
+            <p className="invest-modal-processing-subtext margin-top-xs">
+              Please wait...
+            </p>
 
-            <p>Your investment request has been submitted successfully.</p>
+            <div className="invest-processing-button-loader-banner">
+              {/* Spinning status tracking node circle overlay */}
+              <div className="invest-full-card-spinner-centered">
+                <p className="invest-lock-banner-text">
+                  Securing transaction pipeline channels...
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-            <button className="btn-primary full-width" onClick={onClose}>
+        {/* STEP 4: ACCOUNT ACTIVATION CONFIRMATION SUCCESS ACCENT VIEW */}
+        {step === 4 && (
+          <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
+            <div className="invest-success-checkmark-animated-badge">
+              <div className="invest-checkmark-inner-circle">
+                <span
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "24px",
+                    fontWeight: "700",
+                  }}
+                >
+                  ✓
+                </span>
+              </div>
+            </div>
+
+            <h2 className="invest-modal-title text-center-forced margin-top-md">
+              Investment Activated!
+            </h2>
+            <p className="invest-modal-description text-center-forced max-width-text margin-top-xs">
+              We'll confirm and process your Investment within 1-2 days
+            </p>
+
+            <button
+              className="invest-btn-block-action margin-top-xl"
+              onClick={onClose}
+            >
               Close
             </button>
           </div>
