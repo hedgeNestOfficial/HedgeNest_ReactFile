@@ -136,11 +136,11 @@ const ConvertPage = () => {
             <span className="rate-label">CURRENT RATE</span>
             <h2 className="summary-value">
               {activeCurrency === "NGN" ? "₦" : "$"}
-              {liveRate ? liveRate.toLocaleString() : "---"} / 1 USDT
+              {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
             </h2>
           </div>
           <div className="rate-timestamp">
-            <span>Updated Just Now</span>
+            <span>{!liveRate ? " loading..." : " updated just now"}</span>
           </div>
         </section>
 
@@ -206,8 +206,8 @@ const ConvertPage = () => {
 
           <button type="submit" className="submit-conversion-btn">
             {activeCurrency === "NGN"
-              ? "Review NGN to USDT Conversion"
-              : "Review USDT to NGN Conversion"}
+              ? "Convert NGN to USDT Conversion"
+              : "Convert USDT to NGN Conversion"}
           </button>
         </form>
 
