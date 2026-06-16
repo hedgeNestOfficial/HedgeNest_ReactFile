@@ -30,7 +30,7 @@ import ProfilePage from "./Pages/Main/ProfilePage";
 import SmartSafe from "./Pages/SmartSafe";
 import PopupCard from "./Features/PopupCard";
 import ScrollToTop from "./Components/ScrollToTop";
-import { InvestDashboard } from "./Pages/Main/InvestDashboard";
+import InvestDashboard from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
 import { TransactionHistory } from "./Features/TransactionHistory";

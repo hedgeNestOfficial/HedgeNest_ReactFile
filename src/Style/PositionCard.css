@@ -117,7 +117,80 @@
 }
 
 /* Solid Secondary Button Configuration */
-.position-btn-white-solid {
+.position-btn-white-solid,
+.position-btn-disabled {
   background: #ffffff;
   color: #111827;
+}
+
+/* ==========================================================================
+   SKELETON ANIMATIONS & BASE STRUCTURAL TOKENS
+   ========================================================================== */
+
+/* Core Animation Wrapper - Disables interactions gracefully while pulling resources */
+.position-product-card.skeleton-card-pulse {
+  animation: investSkeletonPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+  user-select: none;
+  border-color: #e2e8f0; /* Soft state border divider fallback override */
+}
+
+@keyframes investSkeletonPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Common Global Layout Token Base rules for Core Placeholders */
+.skeleton-node {
+  background-color: #e2e8f0; /* Matching UI baseline color fill standard */
+  border-radius: 4px; /* Strict uniform parameters enforcement */
+}
+
+/* ==========================================================================
+   DIMENSION NODE COMPOSITIONS MAPS
+   ========================================================================== */
+
+/* Product Tracker Tag Line Component block */
+.skeleton-tag-placeholder {
+  width: 70px;
+  height: 12px;
+  margin-bottom: 8px;
+}
+
+/* Core Main Numeric Balance Row component block */
+.skeleton-amount-placeholder {
+  width: 135px;
+  height: 26px;
+}
+
+/* Upper Axis Trend Node element placeholder */
+.skeleton-trend-circle-placeholder {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%; /* Confined Circle constraint boundary parameter */
+  flex-shrink: 0;
+}
+
+/* Metadata Text Line Item Elements */
+.skeleton-meta-label-placeholder {
+  width: 50px;
+  height: 11px;
+  margin-bottom: 6px;
+}
+
+.skeleton-meta-value-placeholder {
+  width: 85px;
+  height: 13px;
+}
+
+/* Bottom Operational Buttons Row elements */
+.skeleton-btn-placeholder {
+  flex: 1;
+  height: 40px; /* Aligns 1:1 with operational button baseline structures */
+  border-radius: 4px; /* Explicit structural consistency guard */
 }

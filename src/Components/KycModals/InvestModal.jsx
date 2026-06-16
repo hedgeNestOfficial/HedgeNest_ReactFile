@@ -5,6 +5,7 @@ import { HiOutlineShieldCheck } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { initiateInvestment } from "../../Services/investmentService";
 import "../../Style/InvestModal.css";
+import investAni from "../../assets/investAni.gif";
 
 const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   // Step state tracker: 1 = Amount, 2 = PIN, 3 = Processing Loader, 4 = Success Screen
@@ -235,7 +236,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             {/* PLACEHOLDER IMAGE SLOT: Swap standard src link paths with your local assets whenever you're ready */}
             <div className="invest-processing-image-wrapper">
               <img
-                src="/assets/investing-future-loader.svg"
+                src={investAni}
                 alt="Investing Pipeline Processing illustration"
                 onError={(e) => {
                   e.target.style.display = "none";
