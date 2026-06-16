@@ -3,7 +3,7 @@
   background-color: #f1f5f9;
   display: flex;
   justify-content: center;
-  padding: 100px 0;
+  padding: 80px 24px;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
@@ -13,7 +13,6 @@
   /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
-  padding: 80px 24px;
   gap: 48px;
 }
 
@@ -52,11 +51,11 @@
 
 @media screen and (max-width: 768px) {
   .security-section {
-    padding: 60px 0;
+    padding: 60px 20px;
   }
 
   .security-container {
-    width: 88%;
+    width: 100%;
     gap: 36px;
   }
 

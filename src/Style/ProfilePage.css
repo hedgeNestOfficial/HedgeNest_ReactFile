@@ -251,3 +251,101 @@
     gap: 16px;
   }
 }
+/* =========================
+   SUPPORT & LEGAL CARDS
+========================= */
+.info-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.info-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.email-icon {
+  background-color: #fef3c7; /* Light gold/yellow */
+  color: #d97706; /* Deep yellow accent */
+}
+
+.wa-icon {
+  background-color: #dcfce7; /* Light green */
+  color: #16a34a; /* WhatsApp green accent */
+}
+
+.alert-icon {
+  background-color: #fee2e2; /* Light red */
+  color: #dc2626; /* Alert red accent */
+}
+
+.info-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
+}
+
+.info-card p {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+  flex-grow: 1; /* Pushes the links down to align at the bottom */
+}
+
+.card-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.card-links a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2563eb; /* Active blue link color */
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.card-links a.action-link {
+  color: #374151; /* Dark charcoal grey for regular "Read more" links */
+}
+
+.card-links a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* Responsiveness for grids */
+@media screen and (max-width: 1024px) {
+  .info-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .info-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

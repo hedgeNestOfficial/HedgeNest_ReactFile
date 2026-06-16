@@ -42,7 +42,8 @@ export const ENDPOINTS = {
   },
 
   CONVERSION: {
-    CONVERT: `${BASE_URL}/api/v1/convert`,
+    // CONVERT: `${BASE_URL}/api/v1/convert`,
+    GET_MY_WALLET: `${BASE_URL}/api/v1/myWallet`,
     LIVE_RATE: `${BASE_URL}/api/v1/liveRate`,
     HISTORY: `${BASE_URL}/api/v1/myConversion`,
   },

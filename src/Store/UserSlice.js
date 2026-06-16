@@ -8,14 +8,13 @@ const initialState = {
   tempUser: {
     email: "",
     phoneNumber: "",
+    authToken: null,
   },
 };
 
 const userSlice = createSlice({
   name: "user",
-
   initialState,
-
   reducers: {
     signup: (state, action) => {
       state.tempUser = action.payload;
@@ -26,13 +25,20 @@ const userSlice = createSlice({
       state.wallet = action.payload.wallet;
       state.token = action.payload.token;
 
+      // Note: Redux-persist handles saving user and wallet automatically!
+      // But we keep this string check for middleware or axios interceptor configurations if needed.
       localStorage.setItem("authToken", action.payload.token);
     },
 
     updateUser: (state, action) => {
+      const incomingData = action.payload?.data
+        ? action.payload.data
+        : action.payload;
+
+      // Simply update the state. Redux-persist detects this change and updates storage automatically.
       state.user = {
         ...state.user,
-        ...action.payload,
+        ...incomingData,
       };
     },
 
@@ -51,14 +57,16 @@ const userSlice = createSlice({
       state.tempUser = {
         email: "",
         phoneNumber: "",
+        authToken: null,
       };
 
       localStorage.removeItem("authToken");
+
+      sessionStorage.removeItem("dashboardSplashShown");
     },
   },
 });
 
 export const { signup, login, logout, updateUser, updateWallet } =
   userSlice.actions;
-
 export default userSlice.reducer;

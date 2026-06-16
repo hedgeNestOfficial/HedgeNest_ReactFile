@@ -1,6 +1,6 @@
 .shield-container {
   width: 100%;
-  min-height: 100vh;
+  min-height: 55vh;
   background: radial-gradient(#352e97, #181739);
 }
 
@@ -19,19 +19,20 @@
 .hero-wrapper {
   width: 90%;
   padding: 80px 20px;
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  margin-bottom: 60px;
+  /* margin-bottom: 60px; */
 }
 
 .hero-content {
   flex: 1 1 50%;
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .hero-content h1 {
@@ -40,6 +41,7 @@
   color: #ffffff;
   margin: 0 0 8px 0;
   line-height: 1.2;
+  width: 100%;
 }
 
 .hero-content h2 {
@@ -47,6 +49,8 @@
   font-weight: 700;
   color: #e5b324;
   margin: 0 0 16px 0;
+  text-align: left;
+  width: 100%;
 }
 
 .hero-content p {

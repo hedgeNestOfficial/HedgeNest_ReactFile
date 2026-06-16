@@ -164,7 +164,7 @@ const BvnAuth = () => {
                 alignSelf: "flex-start",
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/pin")}
             >
               Skip for now
             </p>

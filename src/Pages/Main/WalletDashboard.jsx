@@ -1,146 +1,116 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import Sidebar from "../../Components/Sidebar";
-import DepositModalManager from "../../Components/KycModals/DepositModalManager.jsx";
-import WithdrawalModal from "../../Components/KycModals/WithdrawalModal.jsx"; // <-- ADDED IMPORT
-import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
-import { historyData } from "../../JS/Transactions.js";
-import { linkBankAccount } from "../../Services/Walletservice.js";
+
+import DepositModalManager from "../../Components/KycModals/DepositModalManager";
+import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
+import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
+import { TransactionHistory } from "../../Features/TransactionHistory";
+import { historyData } from "../../JS/Transactions";
+import { updateWallet } from "../../Store/UserSlice";
+import { getMyWallet } from "../../Services/walletService";
+
 import "../../Style/Wallet.css";
-import { useNavigate } from "react-router-dom";
 
 const WalletPage = () => {
+  const dispatch = useDispatch();
+
   const { user, token, wallet } = useSelector((state) => state.user);
+
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [showAccountModal, setShowAccountModal] = useState(false);
+
   const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+
   const [confirmedDepositAmount, setConfirmedDepositAmount] = useState("");
-  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false); // <-- ADDED STATE
-  const [confirmedWithdrawAmount, setConfirmedWithdrawAmount] = useState(""); // <-- ADDED STATE
-  // const naviagte = useNavigate()
-  // const [balances] = useState({
-  //   ngn: "0.00",
-  //   usdt: "0.00",
-  // });
+  const [confirmedWithdrawAmount, setConfirmedWithdrawAmount] = useState("");
 
-  // Track currently filling form data
-  const [accountData, setAccountData] = useState({
-    bankName: "",
-    accountName: "",
-    accountNumber: "",
-  });
-
-  // Persisted state holding successfully linked bank profile for display inside Breakdown Step
   const [linkedBank, setLinkedBank] = useState(null);
 
-  const handleAccountChange = (e) => {
-    const { name, value } = e.target;
-    setAccountData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const formatAmount = (value) =>
+    Number(value || 0).toLocaleString("en-NG", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
-  // --- LINK WITHDRAWAL ACCOUNT ACTION ---
-  const handleLinkAccount = async (e) => {
-    e.preventDefault();
-
-    if (
-      !accountData.bankName ||
-      !accountData.accountName ||
-      !accountData.accountNumber
-    ) {
-      return toast.error("Please fill all fields");
-    }
-
-    if (accountData.accountNumber.length !== 10) {
-      return toast.error("Account number must be 10 digits");
-    }
-
+  const refreshWallet = async () => {
     try {
-      setIsLoading(true);
-      const payload = {
-        bankName: accountData.bankName,
-        accountName: accountData.accountName,
-        accountNumber: accountData.accountNumber,
-      };
+      if (!token) return;
 
-      const response = await linkBankAccount(payload, token);
-      toast.success(response?.message || "Account linked successfully");
+      const response = await getMyWallet(token);
 
-      // Save data locally so the breakdown sheet displays actual dynamic bank content
-      setLinkedBank({
-        name: accountData.bankName,
-        accountNumber: accountData.accountNumber,
-      });
+      const walletData = response?.data?.[0];
 
-      setShowAccountModal(false);
-      setAccountData({ bankName: "", accountName: "", accountNumber: "" });
+      if (walletData) {
+        dispatch(updateWallet(walletData));
+      }
     } catch (error) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || "Failed to link account");
-    } finally {
-      setIsLoading(false);
+      console.log("Wallet refresh failed:", error);
     }
   };
-  // --- FORM SUBMISSION ROUTER ---
-  const handleTransactionSubmit = async (e) => {
+
+  useEffect(() => {
+    refreshWallet();
+  }, [token]);
+
+  const handleTransactionSubmit = (e) => {
     e.preventDefault();
 
     if (!amount || Number(amount) <= 0) {
-      return toast.error("Enter a valid amount");
+      toast.error("Enter a valid amount");
+      return;
     }
 
-    // A. DEPOSIT PROCESSING ROUTE
     if (activeTab === "deposit") {
       setConfirmedDepositAmount(amount);
       setIsDepositOpen(true);
-      setAmount("");
     }
 
-    console.log("Deposit Modal State:", setIsDepositOpen);
-    // B. WITHDRAWAL PROCESSING ROUTE
     if (activeTab === "withdraw") {
-      // Snapshot balance validation threshold can go here if required
       setConfirmedWithdrawAmount(amount);
-      setIsWithdrawOpen(true); // <-- OPENS WITHDRAWAL FLOW MODAL
-      setAmount(""); // Wipe input panel clean
+      setIsWithdrawOpen(true);
     }
+
+    setAmount("");
   };
 
-  // Optional Callback execution after completion
-  const handleWithdrawalRefresh = () => {
-    console.log("Refresh ledger components or balance streams here!");
+  const handleLinkAccountSuccess = (bankData) => {
+    setLinkedBank(bankData);
+    toast.success("Account linked successfully");
+  };
+
+  const handleWithdrawalSuccess = async () => {
+    await refreshWallet();
+    toast.success("Withdrawal successful");
   };
 
   return (
     <div className="wallet-page-container">
-      {/* SIDEBAR NAVIGATION */}
-      {/* <Sidebar /> */}
-
       <div className="wallet-main-content">
-        {/* HEADER SECTION */}
+        {/* HEADER */}
         <header className="wallet-header">
           <div>
             <h1>Wallet</h1>
+
             <p>
-              Welcome back, <span>{user?.firstName || "User"}</span>
+              Welcome back,{" "}
+              <span>{user?.firstName || user?.name || "User"}</span>
             </p>
           </div>
         </header>
 
-        {/* ACCOUNT BALANCE METRICS CONTAINER */}
+        {/* BALANCES */}
         <section className="balance-cards-grid">
           <div className="balance-card card-ngn">
             <div className="card-currency-header">
               <span className="currency-label">NGN BALANCE</span>
             </div>
+
             <div className="balance-amount">
-              ₦{wallet?.balanceInNaira?.toLocaleString() || "0"}
+              ₦{formatAmount(wallet?.balanceInNaira)}
             </div>
           </div>
 
@@ -148,13 +118,14 @@ const WalletPage = () => {
             <div className="card-currency-header">
               <span className="currency-label">USDT BALANCE</span>
             </div>
+
             <div className="balance-amount">
-              {wallet?.balanceInUSDT?.toLocaleString() || "0"} USDT
+              {formatAmount(wallet?.balanceInUSDT)} USDT
             </div>
           </div>
         </section>
 
-        {/* CORE TRANSACTION OPERATION PANEL */}
+        {/* ACTIONS */}
         <section className="wallet-operations-card">
           <div className="operations-tabs-row">
             <button
@@ -184,11 +155,11 @@ const WalletPage = () => {
               Link Account
             </button>
           </div>
-          {/* <button onClick={() => setIsDepositModalOpen(true)}>Add Funds</button> */}
-          {/* DYNAMIC TRANSACTION SELECTION FORM */}
+
           <form className="operations-form" onSubmit={handleTransactionSubmit}>
             <div className="input-group">
               <label>Currency</label>
+
               <input
                 type="text"
                 value="Naira (NGN)"
@@ -199,6 +170,7 @@ const WalletPage = () => {
 
             <div className="input-group">
               <label>Amount</label>
+
               <input
                 type="number"
                 placeholder="Enter amount"
@@ -207,118 +179,56 @@ const WalletPage = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              className="form-submit-action-btn"
-              disabled={isLoading}
-            >
-              {isLoading
-                ? "Processing..."
-                : activeTab === "deposit"
-                  ? "Fund Wallet"
-                  : "Withdraw Funds"}
+            <button type="submit" className="form-submit-action-btn">
+              {activeTab === "deposit" ? "Fund Wallet" : "Withdraw Funds"}
             </button>
           </form>
         </section>
 
-        {/* AUDIT LOGS & TRANSACTION HISTORY CARD */}
+        {/* TRANSACTIONS */}
         <section className="transactions-history-card">
           <div className="card-title-bar">
             <h3>Transactions</h3>
           </div>
 
           <div className="transactions-view-port">
-            {historyData.length === 0 ? (
-              <div className="empty-state-container">
-                <p>No activities yet</p>
-              </div>
-            ) : (
+            {historyData?.length ? (
               <div className="transactions-list">
                 <TransactionHistory transactions={historyData} />
+              </div>
+            ) : (
+              <div className="empty-state-container">
+                <p>No activities yet</p>
               </div>
             )}
           </div>
         </section>
       </div>
 
-      {/* ==========================================
-          MODAL INTERFACES ORCHESTRATION LAYER
-         ========================================== */}
-
-      {/* DEPOSIT GATEWAY WIZARD POPUP */}
+      {/* DEPOSIT */}
       <DepositModalManager
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
         amount={confirmedDepositAmount}
+        onSuccess={refreshWallet}
       />
 
-      {/* WITHDRAWAL TRANSACTION GATEWAY PORTAL */}
+      {/* WITHDRAW */}
       <WithdrawalModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         amount={confirmedWithdrawAmount}
         token={token}
         bankDetails={linkedBank}
-        onWithdrawalSuccess={handleWithdrawalRefresh}
+        onWithdrawalSuccess={handleWithdrawalSuccess}
       />
 
-      {/* BANK WITHDRAWAL LINKING PORTAL */}
-      {showAccountModal && (
-        <div className="wallet-modal-overlay">
-          <div className="wallet-modal">
-            <div className="wallet-modal-header">
-              <h3>Link Withdrawal Account</h3>
-              <button type="button" onClick={() => setShowAccountModal(false)}>
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleLinkAccount}>
-              <div className="input-group">
-                <label>Bank Name</label>
-                <input
-                  type="text"
-                  name="bankName"
-                  placeholder="Enter bank name"
-                  value={accountData.bankName}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Account Name</label>
-                <input
-                  type="text"
-                  name="accountName"
-                  placeholder="Enter account name"
-                  value={accountData.accountName}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Account Number</label>
-                <input
-                  type="text"
-                  name="accountNumber"
-                  placeholder="Enter account number"
-                  maxLength={10}
-                  value={accountData.accountNumber}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="form-submit-action-btn"
-                disabled={isLoading}
-              >
-                {isLoading ? "Linking..." : "Link Account"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* LINK ACCOUNT */}
+      <LinkAccountModal
+        isOpen={showAccountModal}
+        onClose={() => setShowAccountModal(false)}
+        onSuccessRefresh={handleLinkAccountSuccess}
+      />
     </div>
   );
 };
