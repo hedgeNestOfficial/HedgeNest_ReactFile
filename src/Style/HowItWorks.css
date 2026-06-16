@@ -87,10 +87,11 @@
 /* MOBILE LAYOUT (1 stacked item per row - Max width: 750px) */
 @media screen and (max-width: 750px) {
   .how-section {
-    padding: 60px 16px;
+    padding: 60px 20px;
   }
 
   .how-container {
+    width: 100%;
     gap: 36px;
   }
 

@@ -39,7 +39,8 @@ export const ENDPOINTS = {
 
   WALLET: {
     LINK_BANK_ACCOUNT: `${BASE_URL}/api/v1/linkBank`,
-    CONVERT: `${BASE_URL}/api/v1/convert`,
+    // CONVERT: `${BASE_URL}/api/v1/convert`,
+    GET_MY_WALLET: `${BASE_URL}/api/v1/myWallet`,
   },
   SMART_SAVE: {
     PREVIEW_PLAN: `${BASE_URL}/api/v1/preview-plan`,

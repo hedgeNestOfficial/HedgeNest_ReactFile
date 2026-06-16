@@ -62,8 +62,7 @@ const userSlice = createSlice({
 
       localStorage.removeItem("authToken");
 
-      // No manual removeItem("user") needed here;
-      // Setting states to null makes redux-persist overwrite the storage cache automatically!
+      sessionStorage.removeItem("dashboardSplashShown");
     },
   },
 });

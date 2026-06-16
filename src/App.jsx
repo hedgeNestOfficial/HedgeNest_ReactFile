@@ -35,6 +35,7 @@ import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
 import { TransactionHistory } from "./Features/TransactionHistory";
 import PaymentSuccess from "./Components/PaymentSuccess";
+import SplashScreen from "./Components/SplashScreen";
 
 const App = () => {
   return (
@@ -69,6 +70,7 @@ const App = () => {
         </Route>
 
         <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/splashscreen" element={<SplashScreen />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />

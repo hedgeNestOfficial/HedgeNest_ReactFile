@@ -5,6 +5,12 @@
   font-family: "Inter", sans-serif;
 }
 
+html,
+body {
+  overflow-x: hidden; /* Prevents horizontal scroll from absolutely-positioned carousel buttons */
+  width: 100%;
+}
+
 :root {
   --Hero-backgroundSecondary: #181739;
   --Hero-backgroundSecondary2: #42409c;
