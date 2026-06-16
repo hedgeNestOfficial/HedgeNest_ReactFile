@@ -14,7 +14,7 @@ import {
   claimInvestment,
 } from "../../Services/investmentService";
 
-import { getMyWallet } from "../../Services/walletService";
+import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice";
 
 import "../../Style/InvestDashboard.css";
