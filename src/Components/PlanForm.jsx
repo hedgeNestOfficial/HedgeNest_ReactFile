@@ -77,6 +77,14 @@ const PlanForm = ({
                 >
                   Locked (14 - 17% p.a.)
                 </div>
+                <div
+                  className="dropdown-option-item"
+                  onClick={() =>
+                    selectPlanType("STEALTH", "Stealth (14 - 17% p.a.)")
+                  }
+                >
+                  Stealth (14 - 17% p.a.)
+                </div>
               </div>
             )}
           </div>

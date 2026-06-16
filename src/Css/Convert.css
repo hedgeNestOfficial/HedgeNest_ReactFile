@@ -354,7 +354,7 @@
 }
 
 /* ✅ PREVENT AMBIGUOUS WHITE PROPERTIES OVERLAP FOR DISCRETE VALUES EXCLUSIVELY INSIDE DETAILED MODAL VIEWS */
-.modal-value-text {
+.summary-value {
   font-size: 15px;
   font-weight: 700;
   color: #0b0914;

@@ -91,11 +91,16 @@ const PlanSummary = ({
         {/* Interest Before Tax */}
         <div className="summary-row items-start">
           <span className="summary-label">Interest (before tax)</span>
-          <span className="summary-value text-gold">
-            N
-            {Number(estimatedInterest).toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-            })}
+          <div className="summary-value-stack ">
+            <span className="summary-value text-gold">
+              N
+              {Number(estimatedInterest).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
+            </span>
+          </div>
+          <span className="calculation-subtext">
+            ({Number(target).toLocaleString()} * 16% * {days}/365)
           </span>
         </div>
 
@@ -109,9 +114,9 @@ const PlanSummary = ({
                 minimumFractionDigits: 2,
               })}
             </span>
-            <span className="calculation-subtext">
+            {/* <span className="calculation-subtext">
               ({Number(target).toLocaleString()} * 16% * {days}/365)
-            </span>
+            </span> */}
           </div>
         </div>
 

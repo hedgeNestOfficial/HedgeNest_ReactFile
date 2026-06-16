@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import "../Style/PlanPin.css"
+import "../Style/PlanPin.css";
 
 const PlanPinScreen = ({
   pin,
@@ -26,15 +26,21 @@ const PlanPinScreen = ({
   };
 
   const onInputKeyDown = (e, idx) => {
-    handlePinKeyDown(e, idx);
-    if (
-      e.key === "Backspace" &&
-      !pin[idx] &&
-      idx > 0 &&
-      inputRefs.current[idx - 1]
-    ) {
-      inputRefs.current[idx - 1].focus();
-    }
+    const handlePinKeyDown = (e, index) => {
+      if (e.key === "Backspace") {
+        const newPin = [...pin];
+
+        if (!pin[index] && index > 0) {
+          // If current box is empty, clear the previous box and let the ref handle focus
+          newPin[index - 1] = "";
+        } else {
+          // Clear current box
+          newPin[index] = "";
+        }
+
+        setPin(newPin);
+      }
+    };
   };
 
   return (

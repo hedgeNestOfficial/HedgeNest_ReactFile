@@ -148,7 +148,7 @@ const Dashboard = () => {
 
   const nairaBalance = wallet?.balanceInNaira ?? 0;
 
-  const rawUsdt = wallet?.balanceInUSDT ?? wallet?.balanceInUsdt ?? 0;
+  const rawUsdt = wallet?.balanceInUSDT ?? allet?.balanceInUsdt ?? 0;
   const usdtBalance = Number(rawUsdt).toFixed(2);
 
   const smartVaults = wallet?.smartVaults ?? 0;
