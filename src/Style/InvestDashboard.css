@@ -36,6 +36,32 @@ h2 {
   flex: 1 1 350px;
 }
 
+.empty-positions-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.empty-positions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.empty-positions-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
 /* Mobile Specific Tweaks */
 @media (max-width: 480px) {
   .dashboard-wrapper {
