@@ -8,6 +8,7 @@ const initialState = {
   tempUser: {
     email: "",
     phoneNumber: "",
+    authToken: null,
   },
 };
 

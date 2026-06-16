@@ -4,89 +4,31 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Sidebar from "../../Components/Sidebar";
 import DepositModalManager from "../../Components/KycModals/DepositModalManager.jsx";
-import WithdrawalModal from "../../Components/KycModals/WithdrawalModal.jsx"; // <-- ADDED IMPORT
+import WithdrawalModal from "../../Components/KycModals/WithdrawalModal.jsx";
 import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import { historyData } from "../../JS/Transactions.js";
-import { linkBankAccount } from "../../Services/Walletservice.js";
 import "../../Style/Wallet.css";
 import { useNavigate } from "react-router-dom";
+
+// Consuming your custom modular standalone account linking modal component
+import LinkAccountModal from "../../Components/KycModals/LinkAccountModal.jsx";
 
 const WalletPage = () => {
   const { user, token, wallet } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Handles structural modal visibilities
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [confirmedDepositAmount, setConfirmedDepositAmount] = useState("");
-  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false); // <-- ADDED STATE
-  const [confirmedWithdrawAmount, setConfirmedWithdrawAmount] = useState(""); // <-- ADDED STATE
-  // const naviagte = useNavigate()
-  // const [balances] = useState({
-  //   ngn: "0.00",
-  //   usdt: "0.00",
-  // });
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [confirmedWithdrawAmount, setConfirmedWithdrawAmount] = useState("");
 
-  // Track currently filling form data
-  const [accountData, setAccountData] = useState({
-    bankName: "",
-    accountName: "",
-    accountNumber: "",
-  });
-
-  // Persisted state holding successfully linked bank profile for display inside Breakdown Step
+  // Placeholder state to update if components down the data line require structural cache
   const [linkedBank, setLinkedBank] = useState(null);
 
-  const handleAccountChange = (e) => {
-    const { name, value } = e.target;
-    setAccountData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // --- LINK WITHDRAWAL ACCOUNT ACTION ---
-  const handleLinkAccount = async (e) => {
-    e.preventDefault();
-
-    if (
-      !accountData.bankName ||
-      !accountData.accountName ||
-      !accountData.accountNumber
-    ) {
-      return toast.error("Please fill all fields");
-    }
-
-    if (accountData.accountNumber.length !== 10) {
-      return toast.error("Account number must be 10 digits");
-    }
-
-    try {
-      setIsLoading(true);
-      const payload = {
-        bankName: accountData.bankName,
-        accountName: accountData.accountName,
-        accountNumber: accountData.accountNumber,
-      };
-
-      const response = await linkBankAccount(payload, token);
-      toast.success(response?.message || "Account linked successfully");
-
-      // Save data locally so the breakdown sheet displays actual dynamic bank content
-      setLinkedBank({
-        name: accountData.bankName,
-        accountNumber: accountData.accountNumber,
-      });
-
-      setShowAccountModal(false);
-      setAccountData({ bankName: "", accountName: "", accountNumber: "" });
-    } catch (error) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || "Failed to link account");
-    } finally {
-      setIsLoading(false);
-    }
-  };
   // --- FORM SUBMISSION ROUTER ---
   const handleTransactionSubmit = async (e) => {
     e.preventDefault();
@@ -102,17 +44,20 @@ const WalletPage = () => {
       setAmount("");
     }
 
-    console.log("Deposit Modal State:", setIsDepositOpen);
     // B. WITHDRAWAL PROCESSING ROUTE
     if (activeTab === "withdraw") {
-      // Snapshot balance validation threshold can go here if required
       setConfirmedWithdrawAmount(amount);
-      setIsWithdrawOpen(true); // <-- OPENS WITHDRAWAL FLOW MODAL
-      setAmount(""); // Wipe input panel clean
+      setIsWithdrawOpen(true);
+      setAmount("");
     }
   };
 
-  // Optional Callback execution after completion
+  // Callback executed after a successful account linkage inside the modal
+  const handleLinkAccountSuccess = () => {
+    console.log("Account linked successfully! Refreshing data streams...");
+    // If you need to refetch profile parameters or wallet data from your backend API, trigger it here.
+  };
+
   const handleWithdrawalRefresh = () => {
     console.log("Refresh ledger components or balance streams here!");
   };
@@ -184,7 +129,7 @@ const WalletPage = () => {
               Link Account
             </button>
           </div>
-          {/* <button onClick={() => setIsDepositModalOpen(true)}>Add Funds</button> */}
+
           {/* DYNAMIC TRANSACTION SELECTION FORM */}
           <form className="operations-form" onSubmit={handleTransactionSubmit}>
             <div className="input-group">
@@ -262,63 +207,12 @@ const WalletPage = () => {
         onWithdrawalSuccess={handleWithdrawalRefresh}
       />
 
-      {/* BANK WITHDRAWAL LINKING PORTAL */}
-      {showAccountModal && (
-        <div className="wallet-modal-overlay">
-          <div className="wallet-modal">
-            <div className="wallet-modal-header">
-              <h3>Link Withdrawal Account</h3>
-              <button type="button" onClick={() => setShowAccountModal(false)}>
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleLinkAccount}>
-              <div className="input-group">
-                <label>Bank Name</label>
-                <input
-                  type="text"
-                  name="bankName"
-                  placeholder="Enter bank name"
-                  value={accountData.bankName}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Account Name</label>
-                <input
-                  type="text"
-                  name="accountName"
-                  placeholder="Enter account name"
-                  value={accountData.accountName}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Account Number</label>
-                <input
-                  type="text"
-                  name="accountNumber"
-                  placeholder="Enter account number"
-                  maxLength={10}
-                  value={accountData.accountNumber}
-                  onChange={handleAccountChange}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="form-submit-action-btn"
-                disabled={isLoading}
-              >
-                {isLoading ? "Linking..." : "Link Account"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* NEW CLEANED-UP CUSTOM ACCOUNT LINKING MODAL */}
+      <LinkAccountModal
+        isOpen={showAccountModal}
+        onClose={() => setShowAccountModal(false)}
+        onSuccessRefresh={handleLinkAccountSuccess}
+      />
     </div>
   );
 };
