@@ -25,9 +25,6 @@ export const linkBankAccount = async (payload, token) => {
   }
 };
 
-// import axios from "axios";
-// import { ENDPOINTS } from "../Config/apiConfig";
-
 export const getMyWallet = async (token) => {
   const response = await axios.get(ENDPOINTS.WALLET.GET_MY_WALLET, {
     headers: {
