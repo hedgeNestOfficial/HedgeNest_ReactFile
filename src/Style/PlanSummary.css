@@ -45,9 +45,6 @@
   line-height: 1.3;
 }
 
-/* ==========================================================================
-   2. MOBILE-FIRST DETAILS LIST (STCKED LAYOUT FOR SMARTPHONES)
-   ========================================================================== */
 .summary-details-list {
   width: 100%;
   display: flex;
@@ -60,11 +57,11 @@
 .summary-row {
   width: 100%;
   display: flex;
-  flex-direction: column; /* Stack vertically by default for mobile */
+  flex-direction: column;
   align-items: flex-start;
   gap: 6px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f2f2f2; /* Subtle divider for visibility on mobile screens */
+  border-bottom: 1px solid #f2f2f2;
   box-sizing: border-box;
 }
 
@@ -75,14 +72,14 @@
 .summary-label {
   font-size: 14px;
   font-weight: 600;
-  color: #555555; /* Modern, distinct mobile hierarchy color */
+  color: #555555;
   width: 100%;
   line-height: 1.4;
 }
 
 .summary-value {
   font-size: 15px;
-  text-align: left; /* Left align values naturally on mobile viewports */
+  text-align: left;
   width: 100%;
 }
 
@@ -94,9 +91,6 @@
   width: 100%;
 }
 
-/* ==========================================================================
-   3. TEXT UTILITIES & UTILITY STYLES
-   ========================================================================== */
 .text-dark {
   color: #111111 !important;
   font-weight: 500;
@@ -119,9 +113,6 @@
   word-break: break-word; /* Prevents raw formula chains from exploding screen bounds */
 }
 
-/* ==========================================================================
-   4. THUMB-TAP RESPONSIVE ACTIONS FOOTER 
-   ========================================================================== */
 .modal-actions-footer {
   display: flex;
   flex-direction: column-reverse; /* Put Confirm on top, Cancel on bottom for easy thumb reach */

@@ -8,9 +8,9 @@ import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
 import TopUpModal from "../Components/TopUpModal";
 import {
-  previewPlan, // Corrected import path casing
-  createPlan, // Corrected import path casing
-  breakPlan, // Corrected import path casing
+  previewPlan,
+  createPlan,
+  breakPlan,
 } from "../Services/Smartsafeservice";
 import "../Css/SmartSafe.css";
 
@@ -46,13 +46,17 @@ const SmartSafe = () => {
 
   const [hasVaults, setHasVaults] = useState(false);
 
+  //  Automatically clear inputs whenever the modal is closed
   useEffect(() => {
-    if (modalScreen === "LOADING") {
-      const timer = setTimeout(() => {
-        setModalScreen("PIN");
-      }, 1500);
-
-      return () => clearTimeout(timer);
+    if (modalScreen === "NONE") {
+      setFormData({
+        title: "",
+        targetAmount: "",
+        duration: "",
+        savingFrequency: "DAILY",
+        initialAmount: "",
+      });
+      setPin(["", "", "", "", "", ""]);
     }
   }, [modalScreen]);
 
@@ -153,34 +157,28 @@ const SmartSafe = () => {
       const payload = {
         title: formData.title,
         targetAmount: Number(formData.targetAmount),
-
-        duration: formData.duration,
+        planType: formData.planType,
+        duration: formData.duration ? Number(formData.duration) : 0,
 
         savingFrequency: formData.savingFrequency,
-
-        planType: formData.planType,
-
         amountPerFrequency: Number(formData.initialAmount),
+
+        transactionPin: pin.join(""),
       };
-      console.log("SMARTSAFE PAYLOAD:", payload);
 
-      // ✅ PREVIEW PLAN
-      const previewResponse = await previewPlan(payload, token);
+      console.log("SMARTSAFE PAYLOAD SENT TO API:", payload);
 
-      console.log("PREVIEW RESPONSE:", previewResponse);
-
-      // ✅ CREATE PLAN
+      //  API CALL
       const createResponse = await createPlan(payload, token);
-
       console.log("CREATE PLAN RESPONSE:", createResponse);
 
       toast.success("Vault created successfully");
-
       setModalScreen("SUCCESS");
     } catch (error) {
       console.log("SMARTSAFE ERROR:", error);
 
-      toast.error(error?.message || "Failed to create vault");
+      const serverMessage = error?.response?.data?.message || error?.message;
+      toast.error(serverMessage || "Failed to create vault");
 
       setModalScreen("SUMMARY");
     }
@@ -282,7 +280,6 @@ const SmartSafe = () => {
           </button>
         </div>
       </header>
-
       {/* EMPTY STATE / VAULTS */}
       {!hasVaults ? (
         <section className="empty-card">
@@ -310,7 +307,6 @@ const SmartSafe = () => {
           onWithdraw={handleWithdrawClick}
         />
       )}
-
       {/* TOP UP MODAL */}
       <TopUpModal
         isOpen={isTopUpOpen}
@@ -322,7 +318,6 @@ const SmartSafe = () => {
         vault={activeTopUpVault}
         onTopUpSuccess={handleTopUpSuccess}
       />
-
       {/* WITHDRAW WARNING */}
       {isWithdrawWarningOpen && (
         <div className="topup-overlay">
@@ -358,8 +353,7 @@ const SmartSafe = () => {
           </div>
         </div>
       )}
-
-      {/* SAVINGS MODAL */}
+      {/* SAVINGS MODAL  */}
       <SavingsModal
         modalScreen={modalScreen}
         setModalScreen={setModalScreen}
@@ -369,14 +363,13 @@ const SmartSafe = () => {
         handleInputChange={handleInputChange}
         handleFormSubmit={(e) => {
           e.preventDefault();
-
           setModalScreen("SUMMARY");
         }}
-        handleConfirmClick={handleCreateVault}
+        handleConfirmClick={() => setModalScreen("PIN")} //  Summary Confirm button routes to PIN screen
         pin={pin}
         handlePinChange={handlePinChange}
         handlePinKeyDown={handlePinKeyDown}
-        handlePinSubmit={() => setModalScreen("SUCCESS")}
+        handlePinSubmit={handleCreateVault} // PIN submit button triggers actual API request
         handleCloseSuccess={handleCloseSuccess}
       />
     </main>

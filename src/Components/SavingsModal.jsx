@@ -67,9 +67,7 @@ const SavingsModal = ({
       )}
 
       {modalScreen === "SUCCESS" &&
-        /* SWEETALERT ALIGNMENT */
         (() => {
-          // FIX 2: This now perfectly references 'Swal' from the import above
           Swal.fire({
             title: "Savings Plan Created!",
             text: `Your plan "${formData?.title || "Nest"}" has been set up successfully.`,
