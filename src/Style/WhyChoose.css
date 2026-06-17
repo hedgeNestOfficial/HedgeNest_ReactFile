@@ -153,3 +153,26 @@
     text-align: center;
   }
 }
+
+.carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%; /* 👈 FIX: Strictly forces the card to take full viewport width without shrinking */
+  box-sizing: border-box;
+  padding: 12px 4px; /* Leaves room for the drop shadow */
+  display: flex; /* Ensures inner card fills height */
+}
+
+.whychoose-card {
+  width: 100%;
+  height: 100%; /* 👈 FIX: Makes all cards uniform height */
+  background-color: #ffffff;
+  border: 1px solid rgba(241, 245, 249, 0.8);
+  border-radius: 14px;
+  padding: 36px 28px;
+  box-shadow: 0 4px 20px rgba(12, 17, 29, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  text-align: left;
+}

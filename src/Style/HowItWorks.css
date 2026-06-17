@@ -91,7 +91,7 @@
   }
 
   .how-container {
-    width: 100%;
+    width: 95%;
     gap: 36px;
   }
 
@@ -110,7 +110,7 @@
   }
 
   .how-card-wrapper {
-    width: 100%; /* Forces cards to take full safety width on mobile */
+    width: 95%; /* Forces cards to take full safety width on mobile */
   }
 
   .how-button {
