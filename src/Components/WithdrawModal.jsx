@@ -1,84 +1,111 @@
 import React, { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { LuLoaderCircle } from "react-icons/lu";
 import Swal from "sweetalert2";
 import PlanPinScreen from "./PlanPinScreen";
-import "../Style/WithdrawModal.css";
+import "../Style/WithdrawalModal.css";
 
-const WithdrawModal = ({ isOpen, onClose, vault, onWithdrawSuccess }) => {
-  // Navigation states: "WARNING" | "LOADING" | "PIN"
+const WithdrawModal = ({
+  isOpen,
+  onClose,
+  vault,
+  onWithdraw,
+  onWithdrawSuccess,
+}) => {
   const [screen, setScreen] = useState("WARNING");
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isLocked = vault?.type?.toUpperCase() === "LOCKED";
 
-  // Reset form layout parameters whenever the modal open status shifts
+  // RESET ON CLOSE
   useEffect(() => {
     if (!isOpen) {
       setScreen("WARNING");
       setPin(["", "", "", "", "", ""]);
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
-  // Manages the automated progression timing for the loader engine panel
+  // LOADING → PIN ROUTE
   useEffect(() => {
     if (screen === "LOADING") {
       const timer = setTimeout(() => {
         setScreen("PIN");
-      }, 1500); // Displays spinner view window for 1.5 seconds
+      }, 1500);
+
       return () => clearTimeout(timer);
     }
   }, [screen]);
 
   if (!isOpen || !vault) return null;
 
-  // ROUTING LOGIC: Triggers the native loading spinner page for both cards
   const handleProceedToLoading = () => {
     setScreen("LOADING");
   };
 
   const handlePinChange = (val, idx) => {
-    const cleanVal = val.substring(val.length - 1);
-    const updatedPin = [...pin];
-    updatedPin[idx] = cleanVal;
-    setPin(updatedPin);
+    const cleanVal = val.slice(-1);
+    const updated = [...pin];
+    updated[idx] = cleanVal;
+    setPin(updated);
   };
 
   const handlePinKeyDown = (e, idx) => {
     if (e.key === "Backspace" && !pin[idx] && idx > 0) {
-      const updatedPin = [...pin];
-      updatedPin[idx - 1] = "";
-      setPin(updatedPin);
+      const updated = [...pin];
+      updated[idx - 1] = "";
+      setPin(updated);
     }
   };
 
-  const handlePinSubmit = () => {
-    if (pin.includes("")) return;
+  // 🔥 REAL WITHDRAW FLOW
+  const handlePinSubmit = async () => {
+    try {
+      if (pin.includes("")) return;
+      if (!vault) return;
 
-    // Instantly terminate backdrop view canvas
-    onClose();
+      setIsSubmitting(true);
 
-    // Fire custom styled SweetAlert framework card block
-    Swal.fire({
-      title: "Withdrawal Successful!",
-      text: `₦${Number(vault.balance).toLocaleString()} has been safely moved from your "${vault.title}" nest to your main wallet.`,
-      icon: "success",
-      confirmButtonText: "Close",
-      confirmButtonColor: "#EDC344",
-      buttonsStyling: true,
-      customClass: {
-        popup: "swal-vault-radius",
-        title: "swal-vault-title",
-        confirmButton: "swal-vault-button",
-      },
-    }).then(() => {
-      onWithdrawSuccess?.(vault.id);
-    });
+      const payload = {
+        amount: vault.withdrawAmount || vault.balance,
+        transactionPin: pin.join(""),
+      };
+
+      const res = await onWithdraw?.(vault, payload);
+
+      const updatedBalance = res?.data?.newSavingsBalance ?? vault.balance;
+
+      onClose();
+
+      await Swal.fire({
+        title: "Withdrawal Successful 🏧",
+        text: `₦${Number(updatedBalance).toLocaleString()} has been moved successfully.`,
+        icon: "success",
+        confirmButtonText: "Close",
+        confirmButtonColor: "#EDC344",
+        customClass: {
+          popup: "swal-vault-radius",
+          title: "swal-vault-title",
+          confirmButton: "swal-vault-button",
+        },
+      });
+
+      onWithdrawSuccess?.(vault.id, updatedBalance);
+    } catch (error) {
+      await Swal.fire({
+        title: "Withdrawal Failed",
+        text: error?.message || "Please try again",
+        icon: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="withdraw-overlay">
       <div className="withdraw-box">
-        {/* SCREEN 1: CONDITIONAL DESIGNS DIRECTION ROUTING */}
+        {/* WARNING SCREEN */}
         {screen === "WARNING" && (
           <div className="withdraw-content animate-fade">
             <h2 className="withdraw-title">
@@ -87,18 +114,17 @@ const WithdrawModal = ({ isOpen, onClose, vault, onWithdrawSuccess }) => {
 
             {isLocked ? (
               <p className="withdraw-subtext">
-                Early Withdrawal will attract a{" "}
-                <span className="text-red">1.5% breaking fee</span> and all
-                accrued interest will be lost.
+                Early withdrawal will attract a{" "}
+                <span className="text-red">1.5% breaking fee</span> and loss of
+                interest.
               </p>
             ) : (
               <p className="withdraw-subtext">
-                You could wait till the next day to get your accrued interest.
+                You can wait to earn more interest before withdrawing.
               </p>
             )}
 
             <div className="withdraw-actions">
-              {/* Clicking Continue now pushes the state string directly forward */}
               <button
                 type="button"
                 className="withdraw-btn-continue"
@@ -107,7 +133,6 @@ const WithdrawModal = ({ isOpen, onClose, vault, onWithdrawSuccess }) => {
                 Continue
               </button>
 
-              {/* Go Back/Wait button safely targets cancellation handles */}
               <button
                 type="button"
                 className="withdraw-btn-yellow"
@@ -119,28 +144,25 @@ const WithdrawModal = ({ isOpen, onClose, vault, onWithdrawSuccess }) => {
           </div>
         )}
 
-        {/* SCREEN 2: CLEAN TRANSLUCENT REACT SPINNER LOADING LOOKUP */}
+        {/* LOADING SCREEN */}
         {screen === "LOADING" && (
           <div className="withdraw-loading-container animate-fade">
-            {/* Native spin animation styling handled directly without custom CSS keyframes */}
-            <Loader2 className="withdraw-lucide-spinner" />
+            <LuLoaderCircle className="withdraw-lucide-spinner" />
             <p className="withdraw-loading-text">
-              Securing secure channel window...
+              Securing transaction channel...
             </p>
           </div>
         )}
 
-        {/* SCREEN 3: HIGH-LEVEL TRANSACTION PIN INPUT COMPONENT INTEGRATION */}
+        {/* PIN SCREEN */}
         {screen === "PIN" && (
-          <div className="animate-fade">
-            <PlanPinScreen
-              pin={pin}
-              handlePinChange={handlePinChange}
-              handlePinKeyDown={handlePinKeyDown}
-              onBack={() => setScreen("WARNING")}
-              onSubmit={handlePinSubmit}
-            />
-          </div>
+          <PlanPinScreen
+            pin={pin}
+            handlePinChange={handlePinChange}
+            handlePinKeyDown={handlePinKeyDown}
+            onBack={() => setScreen("WARNING")}
+            onSubmit={isSubmitting ? null : handlePinSubmit}
+          />
         )}
       </div>
     </div>

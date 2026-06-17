@@ -1,137 +1,64 @@
-import React, { useState,useEffect } from "react";
+import React from "react";
 import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
-const Vaults = ({ onTopUp, onWithdraw }) => {
-  // The array data is kept completely inside this file
-  const [vaults, setVaults] = useState([
-    {
-      id: "v-01",
-      type: "locked",
-      title: "Vacation",
-      balance: 500000,
-      timelineSubtext: "339 Days left till maturity",
-      progress: 15,
-      rate: "16%",
-      frequency: "Matures 25 Apr, 2027",
-      autoSave: false,
-    },
-    {
-      id: "v-02",
-      type: "flexible",
-      title: "Food",
-      balance: 1000,
-      timelineSubtext: "5 hours left to gain interest",
-      progress: 13,
-      rate: "10%",
-      frequency: "Daily",
-      autoSave: false,
-    },
-    {
-      id: "v-03",
-      type: "flexible",
-      title: "Transportation",
-      balance: 10000,
-      timelineSubtext: "6 Days left to Withdrawal",
-      progress: 10,
-      rate: "12%",
-      frequency: "Weekly",
-      autoSave: false,
-    },
-    {
-      id: "v-04",
-      type: "flexible",
-      title: "Birthday Gift",
-      balance: 50000,
-      timelineSubtext: "23 Days left to Withdrawal",
-      progress: 40,
-      rate: "14%",
-      frequency: "Monthly",
-      autoSave: false,
-    },
-  ]);
-
-  // LISTEN FOR TOP UP STATE UPDATES FROM PARENT
-  useEffect(() => {
-    if (topUpEvent && topUpEvent.id) {
-      setSetVaults((prevList) =>
-        prevList.map((vault) => {
-          if (vault.id === topUpEvent.id) {
-            const newBalance = vault.balance + topUpEvent.amount;
-
-            // Recalculate progress micro-indicator proportionally (Max caps out at 100%)
-            const addedProgress = Math.floor(
-              (topUpEvent.amount / vault.balance) * 10,
-            );
-            const newProgress = Math.min(
-              vault.progress + (addedProgress || 5),
-              100,
-            );
-
-            return {
-              ...vault,
-              balance: newBalance,
-              progress: newProgress,
-            };
-          }
-          return vault;
-        }),
-      );
-    }
-  }, [topUpEvent]);
-
-  const handleToggleAutoSave = (vaultId) => {
-    setVaults((prevList) =>
-      prevList.map((vault) =>
-        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
-      ),
-    );
-  };
+const Vaults = ({
+  vaultsData = [],
+  onTopUp,
+  onWithdraw,
+  topUpEvent,
+  onToggleAutoSave,
+}) => {
+  // ⚡ NO LOCAL STATE — PURE RENDER COMPONENT
 
   return (
     <div className="vault-wrap">
-      {vaults.map((vault) => {
-        const isLocked = vault.type.toUpperCase() === "LOCKED";
+      {vaultsData.map((vault) => {
+        const isLocked = vault.planType?.toUpperCase() === "LOCKED";
 
         return (
           <article key={vault.id} className="vault-card">
-            {/* Badge Info Header */}
+            {/* Badge */}
             <div className="badge">
               {isLocked ? (
                 <RiLockLine className="badge-icon icon-gold" />
               ) : (
                 <RiLockUnlockLine className="badge-icon icon-gold" />
               )}
-              <span className="badge-text">{vault.type.toUpperCase()}</span>
-            </div>
 
-            {/* Core Vault Content */}
-            <h2 className="vault-name">{vault.title}</h2>
-
-            <div className="amount-group">
-              <span className="vault-currency">₦</span>
-              <span className="vault-balance">
-                {Number(vault.balance).toLocaleString()}
+              <span className="badge-text">
+                {vault.planType?.toUpperCase()}
               </span>
             </div>
 
-            <p className="timeline-text">{vault.timelineSubtext}</p>
+            {/* Title */}
+            <h2 className="vault-name">{vault.title}</h2>
 
-            {/* Progress Meter bar */}
+            {/* Amount */}
+            <div className="amount-group">
+              <span className="vault-currency">₦</span>
+              <span className="vault-balance">
+                {Number(
+                  vault.balance ?? vault.targetAmount ?? 0,
+                ).toLocaleString()}
+              </span>
+            </div>
+
+            {/* Progress */}
             <div className="progress-container">
               <div
                 className="progress-fill"
                 style={{ width: `${vault.progress || 0}%` }}
-              ></div>
+              />
             </div>
 
-            {/* Sub-metrics Row */}
+            {/* Meta */}
             <div className="metrics-row">
-              <span className="rate-lbl">{vault.rate} p.a.</span>
-              <span className="freq-lbl">{vault.frequency}</span>
+              <span className="rate-lbl">{vault.rate || "14%"} p.a.</span>
+              <span className="freq-lbl">{vault.frequency || "DAILY"}</span>
             </div>
 
-            {/* Context-Aware Action Buttons Group */}
+            {/* Actions */}
             <div className="action-row">
               {!isLocked && (
                 <button
@@ -141,6 +68,7 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
                   Top Up
                 </button>
               )}
+
               <button
                 className={isLocked ? "btn-gold-full" : "btn-white-action"}
                 onClick={() => onWithdraw?.(vault)}
@@ -149,7 +77,7 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
               </button>
             </div>
 
-            {/* Context-Aware Footer Row */}
+            {/* AutoSave */}
             {!isLocked && (
               <footer className="card-footer">
                 <span
@@ -157,11 +85,12 @@ const Vaults = ({ onTopUp, onWithdraw }) => {
                 >
                   {vault.autoSave ? "Auto-Save Enabled" : "Enable Auto-Save"}
                 </span>
+
                 <label className="toggle-switch">
                   <input
                     type="checkbox"
                     checked={!!vault.autoSave}
-                    onChange={() => handleToggleAutoSave(vault.id)}
+                    onChange={() => onToggleAutoSave(vault.id)}
                   />
                   <span className="toggle-slider"></span>
                 </label>

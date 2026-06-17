@@ -16,7 +16,6 @@ const ConvertPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Correctly named and safely initialized history state
   const [coversionHistory, setConversionHistory] = useState([]);
   const token = useSelector((state) => state.user.token);
 
@@ -39,16 +38,14 @@ const ConvertPage = () => {
       const res = await GetHistory(token);
       console.log("History API Response:", res);
 
-      // Extract the raw payload data (checking standard locations like res.data or res directly)
       const dataPayload = res?.data || res;
 
-      // ✅ Dynamically accommodate both a single object or an array of objects smoothly
       if (Array.isArray(dataPayload)) {
         setConversionHistory(dataPayload);
       } else if (dataPayload && typeof dataPayload === "object") {
-        setConversionHistory([dataPayload]); // Convert single item into a manageable single-element array
+        setConversionHistory([dataPayload]);
       } else {
-        setConversionHistory([]); // Fallback safety catch
+        setConversionHistory([]);
       }
     } catch (err) {
       console.log("History fetch error:", err);
@@ -90,7 +87,7 @@ const ConvertPage = () => {
 
   const handleFinalConfirm = async () => {
     try {
-      setLoading(true);
+      setLoading(true); // ✅ Fixed: Correct state setter function name here
 
       const payload = {
         from: activeCurrency,
@@ -106,7 +103,6 @@ const ConvertPage = () => {
       setIsModalOpen(false);
       setInputValue("");
 
-      // ✅ Refresh log listing automatically so your new transaction shows up right away
       fetchCoversionHistory();
     } catch (error) {
       console.log(error);
@@ -114,6 +110,18 @@ const ConvertPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "---";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-NG", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -136,11 +144,11 @@ const ConvertPage = () => {
             <span className="rate-label">CURRENT RATE</span>
             <h2 className="summary-value">
               {activeCurrency === "NGN" ? "₦" : "$"}
-              {liveRate ? liveRate.toLocaleString() : "---"} / 1 USDT
+              {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
             </h2>
           </div>
           <div className="rate-timestamp">
-            <span>Updated Just Now</span>
+            <span>{!liveRate ? " loading..." : " updated just now"}</span>
           </div>
         </section>
 
@@ -206,15 +214,15 @@ const ConvertPage = () => {
 
           <button type="submit" className="submit-conversion-btn">
             {activeCurrency === "NGN"
-              ? "Review NGN to USDT Conversion"
-              : "Review USDT to NGN Conversion"}
+              ? "Convert NGN to USDT "
+              : "Convert USDT to NGN "}
           </button>
         </form>
 
-        {/* HISTORY SECTION */}
+        {/* HIGHLY POLISHED TABLE CONVERSION HISTORY SECTION */}
         <section className="history-log-panel">
           <header className="history-panel-header">
-            <h3>Conversion history</h3>
+            <h3>Conversion History</h3>
           </header>
 
           {coversionHistory.length === 0 ? (
@@ -222,36 +230,75 @@ const ConvertPage = () => {
               <p>No conversions yet</p>
             </div>
           ) : (
-            <div className="history-list-wrapper" style={{ padding: "1rem" }}>
-              {coversionHistory.map((item, index) => (
-                <div
-                  key={item._id || item.id || index}
-                  className="history-item-row"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "0.75rem 0",
-                    borderBottom: "1px solid #eee",
-                  }}
-                >
-                  <div>
-                    <strong style={{ textTransform: "uppercase" }}>
-                      {item.from || "NGN"} ➔ {item.to || "USDT"}
-                    </strong>
-                    <div style={{ fontSize: "0.8rem", color: "#666" }}>
-                      Rate: {item.rate || "---"}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div>
-                      {item.amount} {item.from}
-                    </div>
-                    <div style={{ fontSize: "0.85rem", color: "#2ecc71" }}>
-                      +{item.value || item.receivedAmount || "---"} {item.to}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="history-table-responsive">
+              <table className="history-data-table">
+                <thead>
+                  <tr>
+                    <th>Date &amp; Time</th>
+                    <th>Type</th>
+                    <th>Rate</th>
+                    <th>Sent</th>
+                    <th>Received</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {coversionHistory.map((item, index) => {
+                    const fromCur = item.from || "NGN";
+                    const toCur = item.to || "USDT";
+                    const itemStatus = item.status || "completed";
+
+                    return (
+                      <tr key={item._id || item.id || index}>
+                        <td>
+                          <span className="table-txt-timestamp">
+                            {formatDate(item.createdAt || item.date)}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="table-txt-route">
+                            {fromCur} &rarr; {toCur}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="table-txt-rate">
+                            ₦
+                            {Number(
+                              item.rate || item.exchangeRate || 0,
+                            ).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                            })}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="table-txt-sent">
+                            {Number(
+                              item.amount || item.sentAmount || 0,
+                            ).toLocaleString()}{" "}
+                            {fromCur}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="table-txt-received">
+                            +
+                            {Number(
+                              item.value || item.receivedAmount || 0,
+                            ).toLocaleString()}{" "}
+                            {toCur}
+                          </span>
+                        </td>
+                        <td>
+                          <span
+                            className={`status-pill ${itemStatus.toLowerCase()}`}
+                          >
+                            {itemStatus}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
         </section>
@@ -315,7 +362,7 @@ const ConvertPage = () => {
                 onClick={handleFinalConfirm}
                 disabled={loading}
               >
-                {loading ? "Processing..." : "Confirm & Convert"}
+                {loading ? "Processing..." : "Confirm"}
               </button>
             </div>
           </div>
