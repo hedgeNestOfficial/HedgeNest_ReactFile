@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background-color: #fbf9f4;
-  display: block; /* Changed to block since parent shell layout controls the sidebar alignment */
+  display: block; /* Controlled by parent sidebar shell layout */
 }
 
 .convert-main-content {
@@ -65,7 +65,7 @@
   color: #a3a1b4;
 }
 
-/* ✅ SCOPED EXCLUSIVELY TO THE BANNER CONTAINER TO AVOID COLLIDING WITH THE MODAL CARDS */
+/* Scoped banner values */
 .rate-banner-container .summary-value {
   font-size: 24px !important;
   font-weight: 600;
@@ -190,13 +190,6 @@
   font-weight: 500;
 }
 
-.output-currency-end {
-  font-size: 14px;
-  color: #0b0914;
-  font-weight: 500;
-  margin-left: auto;
-}
-
 .submit-conversion-btn {
   width: 100%;
   height: 54px;
@@ -215,12 +208,17 @@
   opacity: 0.95;
 }
 
+/* ==========================================================================
+   UPDATED CONVERSION HISTORY LOG PANEL & RESPONSIVE DATA TABLE
+   ========================================================================== */
+
 .history-log-panel {
   background-color: #ffffff;
   border: 1px solid #e1e0e6;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Ensures table corners clip perfectly to the panel radius */
 }
 
 .history-panel-header {
@@ -246,58 +244,104 @@
   margin: 0;
 }
 
-/* ✅ NEW HOOKS: RENDERING STRATEGY FOR CONVERSION HISTORY LOGS */
-.history-list-wrapper {
-  display: flex;
-  flex-direction: column;
+/* Responsive container wrapper handling mobile overflow */
+.history-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
-.history-item-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.history-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+  min-width: 600px; /* Guarantees layout balance when sliding horizontally on mobile views */
+}
+
+.history-data-table th {
+  background-color: #fcfbfa;
+  color: #6c6a7b;
+  font-weight: 600;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e1e0e6;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.history-data-table td {
   padding: 18px 24px;
   border-bottom: 1px solid #e1e0e6;
+  color: #0b0914;
+  vertical-align: middle;
 }
 
-.history-item-row:last-child {
+.history-data-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.history-item-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.history-data-table tbody tr:hover {
+  background-color: #fbf9f4;
 }
 
-.history-amount-sent {
-  font-size: 15px;
+/* Premium Typography Elements for Table Rows */
+.table-txt-timestamp {
+  color: #555462;
+  font-size: 13px;
+}
+
+.table-txt-route {
   font-weight: 600;
-  color: #0b0914;
-}
-
-.history-timestamp-label {
-  font-size: 12px;
-  color: #6c6a7b;
-}
-
-.history-item-right {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.history-amount-received {
-  font-size: 15px;
-  font-weight: 700;
   color: #1a1936;
 }
 
-.history-rate-factor {
-  font-size: 11px;
-  color: #a3a1b4;
+.table-txt-rate {
+  color: #555462;
+  font-weight: 500;
 }
+
+.table-txt-sent {
+  font-weight: 500;
+  color: #0b0914;
+}
+
+.table-txt-received {
+  font-weight: 700;
+  color: #10b981; /* High conversion green accent */
+}
+
+/* Status Pill Microbadges */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-pill.completed {
+  background-color: #e6f9f0;
+  color: #10b981;
+}
+
+.status-pill.pending {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.status-pill.failed {
+  background-color: #fdf2f2;
+  color: #ef4444;
+}
+
+/* ==========================================================================
+   MODAL DIALOG STRUCTURE
+   ========================================================================== */
 
 .modal-backdrop-overlay {
   position: fixed;
@@ -353,7 +397,6 @@
   color: #555462;
 }
 
-/* ✅ PREVENT AMBIGUOUS WHITE PROPERTIES OVERLAP FOR DISCRETE VALUES EXCLUSIVELY INSIDE DETAILED MODAL VIEWS */
 .summary-value {
   font-size: 15px;
   font-weight: 700;
@@ -403,6 +446,7 @@
   opacity: 0.95;
 }
 
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -423,7 +467,9 @@
   }
 }
 
-/* --- RESPONSIVE MEDIA QUERIES --- */
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES 
+   ========================================================================== */
 
 @media (max-width: 768px) {
   .convert-main-content {
@@ -460,6 +506,12 @@
 
   .token-pill-group {
     align-items: flex-start;
+  }
+
+  /* Optimize spaces inside data table rows for smaller viewports */
+  .history-data-table th,
+  .history-data-table td {
+    padding: 14px 16px;
   }
 }
 

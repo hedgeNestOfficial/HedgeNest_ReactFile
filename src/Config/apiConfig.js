@@ -52,6 +52,9 @@ export const ENDPOINTS = {
     PREVIEW_PLAN: `${BASE_URL}/api/v1/preview-plan`,
     CREATE_PLAN: `${BASE_URL}/api/v1/create-plan`,
     BREAK_PLAN: `${BASE_URL}/api/v1/break-plan`,
+    GET_ONE_PLAN: `${BASE_URL}/api/v1/get-one-plan`,
+    GET_ALL_PLAN: `${BASE_URL}/api/v1/get-all-plan`,
+    TOP_UP: `${BASE_URL}/api/v1/top-up`,
   },
   INVESTMENT: {
     GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,

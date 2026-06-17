@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
-import Swal from "sweetalert2"; // 1. IMPORT SWEETALERT2
-import "../Style/TopUpModal.css"
+import Swal from "sweetalert2";
+import "../Style/TopUpModal.css";
 
 const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
-  // Modal screens: "AMOUNT" | "LOADING" | "PIN"
   const [screen, setScreen] = useState("AMOUNT");
   const [amount, setAmount] = useState("");
   const [isBtnLoading, setIsBtnLoading] = useState(false);
+
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
-  
   const pinRefs = useRef([]);
 
   useEffect(() => {
     if (!isOpen) {
       setScreen("AMOUNT");
       setAmount("");
-      setIsBtnLoading(false);
       setPin(["", "", "", "", "", ""]);
+      setIsBtnLoading(false);
     }
   }, [isOpen]);
 
@@ -26,7 +25,8 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
       const timer = setTimeout(() => {
         setScreen("PIN");
         setIsBtnLoading(false);
-      }, 1500);
+      }, 1200);
+
       return () => clearTimeout(timer);
     }
   }, [screen]);
@@ -35,30 +35,36 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
 
   const handleAmountChange = (e) => {
     const rawValue = e.target.value.replace(/,/g, "");
-    if (isNaN(rawValue)) return;
+
     if (rawValue === "") {
       setAmount("");
       return;
     }
+
+    if (isNaN(rawValue)) return;
+
     setAmount(Number(rawValue).toLocaleString());
   };
 
   const handleAmountSubmit = (e) => {
     e.preventDefault();
     if (!amount || isBtnLoading) return;
-    
+
     setIsBtnLoading(true);
+
     setTimeout(() => {
       setScreen("LOADING");
-    }, 1000);
+    }, 800);
   };
 
   const handlePinChange = (val, idx) => {
     if (isNaN(val)) return;
-    const cleanVal = val.substring(val.length - 1);
-    const updatedPin = [...pin];
-    updatedPin[idx] = cleanVal;
-    setPin(updatedPin);
+
+    const cleanVal = val.slice(-1);
+    const updated = [...pin];
+
+    updated[idx] = cleanVal;
+    setPin(updated);
 
     if (cleanVal && idx < 5) {
       pinRefs.current[idx + 1]?.focus();
@@ -67,125 +73,144 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
 
   const handlePinKeyDown = (e, idx) => {
     if (e.key === "Backspace" && !pin[idx] && idx > 0) {
-      const updatedPin = [...pin];
-      updatedPin[idx - 1] = "";
-      setPin(updatedPin);
+      const updated = [...pin];
+      updated[idx - 1] = "";
+      setPin(updated);
       pinRefs.current[idx - 1]?.focus();
     }
   };
 
-  // 2. TRIGGER SWEETALERT2 ON VALIDATION SUCCESS
-  const handlePinSubmit = () => {
+  const handlePinSubmit = async () => {
     if (pin.includes("") || isBtnLoading) return;
-    setIsBtnLoading(true);
 
-    // Simulate database transaction processing
-    setTimeout(() => {
-      setIsBtnLoading(false);
-      onClose(); // Close the top-up inner modal canvas background
+    try {
+      setIsBtnLoading(true);
 
-      // Trigger the specialized HedgeNest themed SweetAlert popup frame
+      const cleanAmount = parseInt(amount.replace(/,/g, ""), 10);
+
+      // IMPORTANT: wait for parent to finish update
+      await onTopUpSuccess(vault, cleanAmount, pin.join(""));
+
       Swal.fire({
         title: "Top Up Successful!",
-        text: `₦${amount} has been safely added to your "${vault.title}" nest.`,
+        text: `₦${amount} has been added to "${vault.title}".`,
         icon: "success",
         confirmButtonText: "Close",
-        confirmButtonColor: "#EDC344", // Matches your exact brand gold token hex
-        buttonsStyling: true,
+        confirmButtonColor: "#EDC344",
         customClass: {
           popup: "swal-vault-radius",
           title: "swal-vault-title",
-          confirmButton: "swal-vault-button"
-        }
-      }).then(() => {
-        // Execute the top-level parent dashboard update callback logic thread
-        onTopUpSuccess?.(vault.id, Number(amount.replace(/,/g, "")));
+          confirmButton: "swal-vault-button",
+        },
       });
 
-    }, 2000);
+      setIsBtnLoading(false);
+      onClose();
+    } catch (error) {
+      setIsBtnLoading(false);
+
+      Swal.fire({
+        title: "Top Up Failed",
+        text:
+          error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong",
+        icon: "error",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#d33",
+      });
+    }
   };
 
   return (
     <div className="topup-overlay">
       <div className="topup-box">
-        
         {screen === "PIN" && (
-          <button className="topup-back-btn" onClick={() => setScreen("AMOUNT")}>
+          <button
+            className="topup-back-btn"
+            onClick={() => setScreen("AMOUNT")}
+          >
             <FaArrowLeft />
           </button>
         )}
 
-        {/* SCREEN 1: AMOUNT INPUT SCREEN */}
         {screen === "AMOUNT" && (
-          <form onSubmit={handleAmountSubmit} className="topup-content animate-fade">
+          <form onSubmit={handleAmountSubmit} className="topup-content">
             <h2 className="topup-title">Top Up Savings</h2>
+
             <label className="topup-label">
               How much do you want to add to "{vault.title}" (NGN)
             </label>
-            <div className="topup-input-wrapper">
-              <input
-                type="text"
-                className="topup-input"
-                placeholder="5,000"
-                value={amount}
-                onChange={handleAmountChange}
-                required
-                autoFocus
-              />
-            </div>
+
+            <input
+              type="text"
+              className="topup-input"
+              placeholder="5,000"
+              value={amount}
+              onChange={handleAmountChange}
+              autoFocus
+            />
+
             <div className="topup-actions">
-              <button type="button" className="topup-btn-cancel" onClick={onClose}>
+              <button
+                type="button"
+                onClick={onClose}
+                className="topup-btn-cancel"
+              >
                 Cancel
               </button>
-              <button type="submit" className="topup-btn-submit" disabled={isBtnLoading}>
-                {isBtnLoading ? <span className="spinner-inline"></span> : "Top Up"}
+
+              <button
+                type="submit"
+                className="topup-btn-submit"
+                disabled={isBtnLoading}
+              >
+                {isBtnLoading ? "Loading..." : "Top Up"}
               </button>
             </div>
           </form>
         )}
 
-        {/* SCREEN 2: INTERMEDIATE LOADING OVERLAY */}
         {screen === "LOADING" && (
-          <div className="topup-loading-container animate-fade">
-            <div className="fullscreen-spinner"></div>
-            <p className="loading-text">Securing transaction window...</p>
+          <div className="topup-loading-container">
+            <div className="fullscreen-spinner" />
+            <p>Securing transaction window...</p>
           </div>
         )}
 
-        {/* SCREEN 3: TRANSACTION PIN INPUT SCREEN */}
         {screen === "PIN" && (
-          <div className="topup-content animate-fade">
-            <h2 className="topup-title pin-header-gap">Enter Your Transaction Pin</h2>
-            <p className="topup-subtext">
+          <div className="topup-content">
+            <h2>Enter Your Transaction PIN</h2>
+
+            <p>
               Confirming NGN {amount} for "{vault.title}"
             </p>
-            
+
             <div className="pin-grid">
               {pin.map((digit, idx) => (
                 <input
                   key={idx}
                   ref={(el) => (pinRefs.current[idx] = el)}
                   type="password"
-                  className="pin-box-input"
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handlePinChange(e.target.value, idx)}
                   onKeyDown={(e) => handlePinKeyDown(e, idx)}
+                  className="pin-box-input"
                   autoFocus={idx === 0}
                 />
               ))}
             </div>
 
-            <button 
-              className="topup-btn-full" 
+            <button
+              className="topup-btn-full"
               onClick={handlePinSubmit}
               disabled={pin.includes("") || isBtnLoading}
             >
-              {isBtnLoading ? <span className="spinner-inline"></span> : "Next"}
+              {isBtnLoading ? "Processing..." : "Confirm"}
             </button>
           </div>
         )}
-
       </div>
     </div>
   );

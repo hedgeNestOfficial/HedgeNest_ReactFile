@@ -13,7 +13,7 @@ const PlanPinScreen = ({
 
   useEffect(() => {
     const firstEmpty = pin.findIndex((val) => val === "");
-    const targetIdx = firstEmpty !== -1 ? firstEmpty : 0;
+    const targetIdx = firstEmpty !== -1 ? firstEmpty : 5;
     if (inputRefs.current[targetIdx]) inputRefs.current[targetIdx].focus();
   }, []);
 
@@ -26,19 +26,22 @@ const PlanPinScreen = ({
   };
 
   const onInputKeyDown = (e, idx) => {
-    const handlePinKeyDown = (e, index) => {
+    const onInputKeyDown = (e, idx) => {
       if (e.key === "Backspace") {
-        const newPin = [...pin];
+        e.preventDefault();
 
-        if (!pin[index] && index > 0) {
-          // If current box is empty, clear the previous box and let the ref handle focus
-          newPin[index - 1] = "";
-        } else {
-          // Clear current box
-          newPin[index] = "";
+        // Current box has value
+        if (pin[idx]) {
+          handlePinChange("", idx);
         }
+        // Current empty -> move back and clear previous
+        else if (idx > 0) {
+          handlePinChange("", idx - 1);
 
-        setPin(newPin);
+          if (inputRefs.current[idx - 1]) {
+            inputRefs.current[idx - 1].focus();
+          }
+        }
       }
     };
   };

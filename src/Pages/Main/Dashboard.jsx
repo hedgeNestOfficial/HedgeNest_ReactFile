@@ -135,7 +135,7 @@ const Dashboard = () => {
                 <p>Convert</p>
               </div>
 
-              <div className="save" onClick={() => navigate("/smart-save")}>
+              <div className="save" onClick={() => navigate("/SmartSafe")}>
                 <p>Save</p>
               </div>
 
