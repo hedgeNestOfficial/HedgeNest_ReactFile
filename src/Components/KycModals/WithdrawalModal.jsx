@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
 import "../../Style/WithdrawalModal.css";
 
 const WithdrawalModal = ({
@@ -22,6 +23,9 @@ const WithdrawalModal = ({
   const [timeLeft, setTimeLeft] = useState(86390);
 
   const pinInputsRef = useRef([]);
+
+  // 👈 Step 2: Initialize the wallet state refresher hook
+  const refreshWallet = useWalletRefresh();
 
   // Sync initial step & reset state whenever modal opens or closes
   useEffect(() => {
@@ -104,7 +108,10 @@ const WithdrawalModal = ({
 
     try {
       // Simulate backend response payload execution
-      setTimeout(() => {
+      setTimeout(async () => {
+        // 👈 Step 3: Refresh the local Redux wallet state layout on active withdrawal creation
+        await refreshWallet();
+
         setStep("SUCCESS");
         setIsSubmitting(false);
         if (onWithdrawalSuccess) onWithdrawalSuccess();
@@ -122,7 +129,10 @@ const WithdrawalModal = ({
 
     try {
       // Simulate backend API cancellation response payload
-      setTimeout(() => {
+      setTimeout(async () => {
+        // 👈 Step 4: Refresh the local Redux wallet state layout on active withdrawal cancellation
+        await refreshWallet();
+
         setStep("CANCEL_SUCCESS");
         if (onWithdrawalCancel) onWithdrawalCancel();
       }, 1500);

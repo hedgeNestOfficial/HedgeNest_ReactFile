@@ -4,11 +4,11 @@ import { FiArrowLeft } from "react-icons/fi";
 import { HiOutlineShieldCheck } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { initiateInvestment } from "../../Services/investmentService";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
 
 const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
-  // Step state tracker: 1 = Amount, 2 = PIN, 3 = Processing Loader, 4 = Success Screen
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(Array(6).fill(""));
@@ -17,7 +17,9 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const pinRefs = useRef([]);
   const { token } = useSelector((state) => state.user);
 
-  // Reset states safely whenever the modal opens or closes
+  // 👈 Step 2: Initialize the wallet state refresher hook
+  const refreshWallet = useWalletRefresh();
+
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -95,10 +97,13 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       const payload = {
         investmentPlanId: product._id,
         amount: Number(amount),
-        // transactionPin is captured here to be passed forward once integrated
+        // transactionPin can be appended safely here once the backend verification middleware handles it
       };
 
       const response = await initiateInvestment(payload, token);
+
+      // 👈 Step 3: Trigger the wallet state update immediately on transaction success
+      await refreshWallet();
 
       // Trigger tracking refresh functions in main workspace dashboard view
       if (onSuccess) {
@@ -233,7 +238,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
         {/* STEP 3: TRANSACTION PIPELINE PROCESSING LOADER */}
         {step === 3 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
-            {/* PLACEHOLDER IMAGE SLOT: Swap standard src link paths with your local assets whenever you're ready */}
             <div className="invest-processing-image-wrapper">
               <img
                 src={investAni}
@@ -253,7 +257,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             </p>
 
             <div className="invest-processing-button-loader-banner">
-              {/* Spinning status tracking node circle overlay */}
               <div className="invest-full-card-spinner-centered">
                 <p className="invest-lock-banner-text">
                   Securing transaction pipeline channels...
