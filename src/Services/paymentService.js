@@ -9,12 +9,11 @@ export const fundWallet = async (amount, token) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   return response.data;
 };
-
 // import axios from "axios";
 // import { ENDPOINTS } from "../Config/apiConfig";
 
