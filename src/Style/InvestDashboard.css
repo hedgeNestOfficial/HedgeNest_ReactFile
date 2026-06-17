@@ -1,10 +1,10 @@
 .dashboard-wrapper {
-  padding: 24px;
+  padding: 50px;
   max-width: 1200px;
   /* margin: 0 auto; Centers the dashboard */
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 50px;
   background-color: #fcfcf7;
   min-height: 100vh;
 }
