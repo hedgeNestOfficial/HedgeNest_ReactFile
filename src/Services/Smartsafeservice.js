@@ -60,7 +60,10 @@ export const breakPlan = async (planId, payload, token) => {
 
     return response.data;
   } catch (error) {
-    throw error.response?.data || { message: "Break plan failed" };
+    throw {
+      message:
+        error?.response?.data?.message || error?.message || "Break plan failed",
+    };
   }
 };
 export const getOnePlan = async (id, token) => {

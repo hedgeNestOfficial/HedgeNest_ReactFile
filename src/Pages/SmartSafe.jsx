@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
 import TopUpModal from "../Components/TopUpModal";
+import WithdrawModal from "../Components/WithdrawModal";
 
 import {
   createPlan,
@@ -28,7 +29,7 @@ const SmartSafe = () => {
   const [modalScreen, setModalScreen] = useState("NONE");
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFlexibleMode, setIsFlexibleMode] = useState(false);
-
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
 
   const [formData, setFormData] = useState({
@@ -45,7 +46,6 @@ const SmartSafe = () => {
   const [isWithdrawWarningOpen, setIsWithdrawWarningOpen] = useState(false);
   const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
 
-  // ---------------- NORMALIZE ----------------
   const normalizePlans = (plans = []) => {
     return plans.map((plan) => ({
       id: plan._id,
@@ -61,7 +61,6 @@ const SmartSafe = () => {
     }));
   };
 
-  // ---------------- FETCH VAULTS ----------------
   const fetchUserVaults = async () => {
     if (!token) return;
 
@@ -85,7 +84,6 @@ const SmartSafe = () => {
     fetchUserVaults();
   }, [token]);
 
-  // ---------------- RESET MODAL STATE ----------------
   useEffect(() => {
     if (modalScreen === "NONE") {
       setFormData({
@@ -100,7 +98,6 @@ const SmartSafe = () => {
     }
   }, [modalScreen]);
 
-  // ---------------- INPUT HANDLERS ----------------
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -136,7 +133,6 @@ const SmartSafe = () => {
     }
   };
 
-  // ---------------- CREATE VAULT ----------------
   const handleCreateVault = async () => {
     try {
       if (!token) {
@@ -168,7 +164,6 @@ const SmartSafe = () => {
     }
   };
 
-  // ---------------- TOP UP (FIXED) ----------------
   const handleTopUp = async (vault, amount, pinValue) => {
     try {
       const payload = {
@@ -185,7 +180,7 @@ const SmartSafe = () => {
           v.id === vault.id
             ? {
                 ...v,
-                balance: data.newSavingsBalance, // 🔥 THIS IS THE KEY FIX
+                balance: data.newSavingsBalance,
               }
             : v,
         ),
@@ -198,28 +193,16 @@ const SmartSafe = () => {
     }
   };
 
-  // ---------------- WITHDRAW ----------------
+  // WITHDRAW
+
+  const handleWithdraw = async (vault, payload) => {
+    return await breakPlan(vault.id, payload, token);
+  };
   const handleWithdrawClick = (vault) => {
     setActiveWithdrawVault(vault);
-    setIsWithdrawWarningOpen(true);
+    setIsWithdrawModalOpen(true);
   };
 
-  const handleConfirmWithdrawal = async () => {
-    try {
-      await breakPlan({ vaultId: activeWithdrawVault?.id }, token);
-
-      toast.success("Withdrawal successful");
-
-      setIsWithdrawWarningOpen(false);
-      setActiveWithdrawVault(null);
-
-      fetchUserVaults();
-    } catch (error) {
-      toast.error(error?.message || "Withdrawal failed");
-    }
-  };
-
-  // ---------------- AUTO SAVE TOGGLE ----------------
   const handleToggleAutoSave = (vaultId) => {
     setVaults((prev) =>
       prev.map((vault) =>
@@ -228,7 +211,6 @@ const SmartSafe = () => {
     );
   };
 
-  // ---------------- CLOSE SUCCESS RESET ----------------
   const handleCloseSuccess = () => {
     setPin(["", "", "", "", "", ""]);
     setFormData({
@@ -243,7 +225,6 @@ const SmartSafe = () => {
     fetchUserVaults();
   };
 
-  // ---------------- UI ----------------
   return (
     <main className="smart-container">
       <header className="dash-header">
@@ -362,21 +343,13 @@ const SmartSafe = () => {
       />
 
       {/* WITHDRAW MODAL */}
-      {isWithdrawWarningOpen && (
-        <div className="topup-overlay">
-          <div className="topup-box">
-            <h2>Confirm Withdrawal?</h2>
-
-            <div className="topup-actions">
-              <button onClick={handleConfirmWithdrawal}>Continue</button>
-
-              <button onClick={() => setIsWithdrawWarningOpen(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <WithdrawModal
+        isOpen={isWithdrawModalOpen}
+        vault={activeWithdrawVault}
+        onClose={() => setIsWithdrawModalOpen(false)}
+        onWithdraw={handleWithdraw}
+        onWithdrawSuccess={fetchUserVaults}
+      />
 
       <SavingsModal
         modalScreen={modalScreen}

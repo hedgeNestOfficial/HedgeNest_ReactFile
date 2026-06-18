@@ -2,22 +2,17 @@ import React from "react";
 import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
-const Vaults = ({
-  vaultsData = [],
-  onTopUp,
-  onWithdraw,
-  topUpEvent,
-  onToggleAutoSave,
-}) => {
-  // ⚡ NO LOCAL STATE — PURE RENDER COMPONENT
-
+const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
   return (
     <div className="vault-wrap">
       {vaultsData.map((vault) => {
-        const isLocked = vault.planType?.toUpperCase() === "LOCKED";
+        const vaultId = vault.id || vault._id;
+
+        const isLocked =
+          (vault.planType || vault.type)?.toUpperCase() === "LOCKED";
 
         return (
-          <article key={vault.id} className="vault-card">
+          <article key={vaultId} className="vault-card">
             {/* Badge */}
             <div className="badge">
               {isLocked ? (
@@ -27,7 +22,7 @@ const Vaults = ({
               )}
 
               <span className="badge-text">
-                {vault.planType?.toUpperCase()}
+                {(vault.planType || vault.type)?.toUpperCase()}
               </span>
             </div>
 
@@ -52,10 +47,12 @@ const Vaults = ({
               />
             </div>
 
-            {/* Meta */}
             <div className="metrics-row">
               <span className="rate-lbl">{vault.rate || "14%"} p.a.</span>
-              <span className="freq-lbl">{vault.frequency || "DAILY"}</span>
+
+              <span className="freq-lbl">
+                {vault.frequency || vault.savingFrequency || "DAILY"}
+              </span>
             </div>
 
             {/* Actions */}
@@ -90,7 +87,7 @@ const Vaults = ({
                   <input
                     type="checkbox"
                     checked={!!vault.autoSave}
-                    onChange={() => onToggleAutoSave(vault.id)}
+                    onChange={() => onToggleAutoSave(vaultId)}
                   />
                   <span className="toggle-slider"></span>
                 </label>
