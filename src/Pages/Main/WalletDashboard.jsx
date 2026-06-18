@@ -86,6 +86,8 @@ const WalletPage = () => {
     toast.success("Withdrawal successful");
   };
 
+  
+
   return (
     <div className="wallet-page-container">
       <div className="wallet-main-content">

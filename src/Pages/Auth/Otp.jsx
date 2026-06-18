@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // Added missing useDispatch
 import { useNavigate, useLocation } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import "../../Style/Otp.css";
@@ -7,24 +7,25 @@ import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
 import { LuArrowLeft } from "react-icons/lu";
 import { verifyOtp, resendOtp } from "../../Services/authService";
+import { updateTempUserToken } from "../../Store/UserSlice"; // Import your new slice action
 import whiteLogo from "../../assets/white logo.png";
 import toast from "react-hot-toast";
 
 const Otp = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch(); // Initialize dispatch hook instance
   const inputRefs = useRef([]);
+
   const tempUser = useSelector((state) => state.user.tempUser);
   const userEmail = tempUser?.email || "";
   const purpose = location.state?.purpose || "signup";
+
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Countdown timer states
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
 
-  // Timer Effect Logic
   useEffect(() => {
     let timerId;
     if (countdown > 0) {
@@ -35,8 +36,6 @@ const Otp = () => {
     } else {
       setCanResend(true);
     }
-
-    // Clean up interval on component unmount to prevent memory leaks
     return () => clearInterval(timerId);
   }, [countdown]);
 
@@ -75,6 +74,11 @@ const Otp = () => {
       const response = await verifyOtp(payload);
       toast.success(response?.message || "OTP verified successfully");
 
+      // Extract token out of payload response and assign it to tempUser
+      if (response?.token) {
+        dispatch(updateTempUserToken(response.token));
+      }
+
       setTimeout(() => {
         switch (purpose) {
           case "signup":
@@ -101,21 +105,12 @@ const Otp = () => {
   };
 
   const handleResendOtp = async () => {
-    // Structural Guard: prevent API requests if timer isn't up
     if (!canResend) return;
-
     try {
-      const response = await resendOtp({
-        email: userEmail,
-      });
-
+      const response = await resendOtp({ email: userEmail });
       toast.success(response?.message || "OTP resent successfully");
-
-      // Reset layout defaults
       setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
-
-      // Restart countdown track back to 30 seconds
       setCountdown(30);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to resend OTP");
@@ -212,7 +207,7 @@ const Otp = () => {
                   </span>
                 ) : (
                   <span className="resend-link disabled-countdown">
-                    Resend in {countdown}s
+                    Resend in {countdown}
                   </span>
                 )}
               </p>

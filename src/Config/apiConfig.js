@@ -58,6 +58,8 @@ export const ENDPOINTS = {
   },
   INVESTMENT: {
     GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,
+    GET_USER_INVESTMENTS: `${BASE_URL}/api/v1/investment`,
+    INITIATE_INVESTMENT: `${BASE_URL}/api/v1/initiateInvestment`,
   },
 
   PAYMENT: {

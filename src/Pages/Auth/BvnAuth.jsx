@@ -13,7 +13,9 @@ import whiteLogo from "../../assets/white logo.png";
 const BvnAuth = () => {
   const navigate = useNavigate();
 
-  const { token } = useSelector((state) => state.user);
+  // FIX: Extract tempUser out of state and use its nested authToken for signup flow KYC requests
+  const { tempUser } = useSelector((state) => state.user);
+  const onboardingToken = tempUser?.authToken;
 
   const [idNumber, setIdNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +39,13 @@ const BvnAuth = () => {
       return toast.error("NIN must be exactly 11 digits");
     }
 
+    // Safety Guard: Alert the developer if the preceding onboarding tokens didn't store correctly
+    if (!onboardingToken) {
+      return toast.error(
+        "Verification session expired. Please restart signup.",
+      );
+    }
+
     try {
       setIsLoading(true);
 
@@ -47,7 +56,8 @@ const BvnAuth = () => {
 
       console.log("VERIFY PAYLOAD:", payload);
 
-      const response = await submitKyc(payload, token);
+      // CHANGED: Sent onboardingToken instead of the logged-in token fallback instance
+      const response = await submitKyc(payload, onboardingToken);
 
       console.log("VERIFY RESPONSE:", response);
 
@@ -118,7 +128,6 @@ const BvnAuth = () => {
           <form className="auth-form" onSubmit={handleSubmitKyc}>
             <div className="Auth-inputs-row">
               <label>ID Type</label>
-
               <div className="input-tag">NIN</div>
             </div>
 
@@ -133,7 +142,6 @@ const BvnAuth = () => {
                   maxLength={11}
                   onChange={handleIdNumberChange}
                 />
-
                 <LuLock className="input-icon" />
               </div>
             </div>

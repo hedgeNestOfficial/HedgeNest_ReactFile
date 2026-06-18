@@ -62,11 +62,11 @@
 /* MOBILE LAYOUT (1 Card in a Row - Max width: 768px) */
 @media screen and (max-width: 768px) {
   .features-section {
-    padding: 60px 20px;
+    padding: 80px 40px;
   }
 
   .features-container {
-    width: 100%;
+    width: 85%;
     gap: 36px;
   }
 
