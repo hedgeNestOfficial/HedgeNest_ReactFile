@@ -25,26 +25,24 @@ const PlanPinScreen = ({
     }
   };
 
-  const onInputKeyDown = (e, idx) => {
-    const onInputKeyDown = (e, idx) => {
-      if (e.key === "Backspace") {
-        e.preventDefault();
+ const onInputKeyDown = (e, idx) => {
+  if (e.key === "Backspace") {
+    e.preventDefault();
 
-        // Current box has value
-        if (pin[idx]) {
-          handlePinChange("", idx);
-        }
-        // Current empty -> move back and clear previous
-        else if (idx > 0) {
-          handlePinChange("", idx - 1);
+    // Current box has value
+    if (pin[idx]) {
+      handlePinChange("", idx);
+    }
+    // Current empty -> move back and clear previous
+    else if (idx > 0) {
+      handlePinChange("", idx - 1);
 
-          if (inputRefs.current[idx - 1]) {
-            inputRefs.current[idx - 1].focus();
-          }
-        }
+      if (inputRefs.current[idx - 1]) {
+        inputRefs.current[idx - 1].focus();
       }
-    };
-  };
+    }
+  }
+};
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">

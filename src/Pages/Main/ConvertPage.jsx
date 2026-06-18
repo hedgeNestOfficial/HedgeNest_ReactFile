@@ -87,7 +87,7 @@ const ConvertPage = () => {
 
   const handleFinalConfirm = async () => {
     try {
-      setLoading(true); // ✅ Fixed: Correct state setter function name here
+      setLoading(true); 
 
       const payload = {
         from: activeCurrency,
@@ -220,7 +220,7 @@ const ConvertPage = () => {
           </button>
         </form>
 
-        {/* HIGHLY POLISHED TABLE CONVERSION HISTORY SECTION */}
+        {/* CONVERSION HISTORY SECTION */}
         <section className="history-log-panel">
           <header className="history-panel-header">
             <h3>Conversion History</h3>
@@ -248,21 +248,17 @@ const ConvertPage = () => {
                     const fromCur = item.from || "NGN";
                     const toCur = item.to || "USDT";
 
-                    // Fallback to "completed" as standard API success representation if status key isn't provided
-                    const itemStatus = item.status || "completed";
+                    // Fallback to "Success" if status is missing in the api response
+                    const itemStatus = item.status || "Success";
 
-                    // Calculate precise dynamic received amounts safely using backend payload rules
                     const exchangeRate = Number(item.rate || 0);
                     const baseAmount = Number(item.amount || 0);
                     const feeCost = Number(item.fee || 0);
 
                     let calculatedReceived = 0;
                     if (fromCur === "NGN" && exchangeRate > 0) {
-                      // Formula: (Sent Amount - Fee) / Rate
-                      calculatedReceived =
-                        (baseAmount - feeCost) / exchangeRate;
+                      calculatedReceived = (baseAmount - feeCost) / exchangeRate;
                     } else if (fromCur === "USDT") {
-                      // Formula: (Sent Amount * Rate) - Fee
                       calculatedReceived = baseAmount * exchangeRate - feeCost;
                     }
 
@@ -282,8 +278,9 @@ const ConvertPage = () => {
                         </td>
                         <td>
                           <span className="table-txt-rate">
-                            ₦
-                            {exchangeRate.toLocaleString(undefined, {
+                            {exchangeRate.toLocaleString("en-NG", {
+                              style: "currency",
+                              currency: "NGN",
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })}
@@ -292,7 +289,8 @@ const ConvertPage = () => {
                         <td>
                           <span className="table-txt-sent">
                             {baseAmount.toLocaleString(undefined, {
-                              maximumFractionDigits: 2,
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: fromCur === "USDT" ? 2 : 2,
                             })}{" "}
                             {fromCur}
                           </span>
@@ -302,7 +300,7 @@ const ConvertPage = () => {
                             +
                             {calculatedReceived.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
-                              maximumFractionDigits: 4, // Higher decimal precision layout for crypto values
+                              maximumFractionDigits: toCur === "USDT" ? 2 : 2, // Strictly two decimals for USDT values
                             })}{" "}
                             {toCur}
                           </span>

@@ -90,7 +90,7 @@ const Dashboard = () => {
                   <IoNotificationsSharp />
                 </button>
 
-                <div className="user-prof">
+                <div className="user-prof"  onClick={() => navigate("/profile")}>
                   <img
                     src={profileImage}
                     alt={fullName}
@@ -152,7 +152,7 @@ const Dashboard = () => {
 
                   <div className="view-all-action">
                     <p>View all</p>
-                    <div className="icon-holder">
+                    <div className="icon-holder"  onClick={() => navigate("/SmartSafe")}>
                       <IoIosArrowRoundForward className="arrow-icon" />
                     </div>
                   </div>
@@ -170,8 +170,8 @@ const Dashboard = () => {
 
                   <div className="view-all-action">
                     <p>View all</p>
-                    <div className="icon-holder">
-                      <IoIosArrowRoundForward className="arrow-icon" />
+                    <div className="icon-holder"  onClick={() => navigate("/invest")}>
+                      <IoIosArrowRoundForward className="arrow-icon"  />
                     </div>
                   </div>
                 </div>

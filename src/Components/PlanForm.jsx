@@ -96,7 +96,7 @@ const PlanForm = ({
               <input
                 type="text"
                 name="title"
-                value={formData.title || ""}
+                value={formData.title }
                 onChange={handleInputChange}
                 className="form-input"
                 required

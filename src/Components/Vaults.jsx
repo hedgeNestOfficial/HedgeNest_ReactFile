@@ -39,7 +39,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
               </span>
             </div>
 
-            {/* Progress */}
+            
             <div className="progress-container">
               <div
                 className="progress-fill"

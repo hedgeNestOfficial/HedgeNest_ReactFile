@@ -119,7 +119,7 @@ const WithdrawModal = ({
                 <p className="hn-modal-desc hn-text-center">
                   Early withdrawal will attract a{" "}
                   <span style={{ color: "#EF4444", fontWeight: "600" }}>
-                    1.5% breaking fee
+                    {data?.breakingFee} breaking fee
                   </span>{" "}
                   and loss of interest.
                 </p>
