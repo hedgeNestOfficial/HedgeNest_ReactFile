@@ -15,7 +15,6 @@ const PlanForm = ({
   const [hasSelectedType, setHasSelectedType] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
 
-  // ✅ FIXED: sync BOTH UI + parent formData
   const selectPlanType = (type, label) => {
     setIsFlexibleMode(type === "FLEXIBLE");
 
@@ -41,7 +40,6 @@ const PlanForm = ({
           <label className="form-label">Savings Type</label>
 
           <div className="select-wrapper cursor-pointer">
-            {/* trigger ONLY here (prevents toggle bug) */}
             <div
               className="form-input custom-dropdown-trigger"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}

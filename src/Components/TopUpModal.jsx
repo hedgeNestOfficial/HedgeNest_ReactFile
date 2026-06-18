@@ -88,7 +88,6 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
 
       const cleanAmount = parseInt(amount.replace(/,/g, ""), 10);
 
-      // IMPORTANT: wait for parent to finish update
       await onTopUpSuccess(vault, cleanAmount, pin.join(""));
 
       Swal.fire({
@@ -134,42 +133,44 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           </button>
         )}
 
-        {screen === "AMOUNT" && (
-          <form onSubmit={handleAmountSubmit} className="topup-content">
-            <h2 className="topup-title">Top Up Savings</h2>
+        <div className="top-up-container">
+          {screen === "AMOUNT" && (
+            <form onSubmit={handleAmountSubmit} className="topup-content">
+              <h2 className="topup-title">Top Up Savings</h2>
 
-            <label className="topup-label">
-              How much do you want to add to "{vault.title}" (NGN)
-            </label>
+              <label className="topup-label">
+                How much do you want to add to "{vault.title}" (NGN)
+              </label>
 
-            <input
-              type="text"
-              className="topup-input"
-              placeholder="5,000"
-              value={amount}
-              onChange={handleAmountChange}
-              autoFocus
-            />
+              <input
+                type="text"
+                className="topup-input"
+                placeholder="5,000"
+                value={amount}
+                onChange={handleAmountChange}
+                autoFocus
+              />
 
-            <div className="topup-actions">
-              <button
-                type="button"
-                onClick={onClose}
-                className="topup-btn-cancel"
-              >
-                Cancel
-              </button>
+              <div className="topup-actions">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="topup-btn-cancel"
+                >
+                  Cancel
+                </button>
 
-              <button
-                type="submit"
-                className="topup-btn-submit"
-                disabled={isBtnLoading}
-              >
-                {isBtnLoading ? "Loading..." : "Top Up"}
-              </button>
-            </div>
-          </form>
-        )}
+                <button
+                  type="submit"
+                  className="topup-btn-submit"
+                  disabled={isBtnLoading}
+                >
+                  {isBtnLoading ? "Loading..." : "Top Up"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
 
         {screen === "LOADING" && (
           <div className="topup-loading-container">

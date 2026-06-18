@@ -15,9 +15,8 @@ const WithdrawModal = ({
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isLocked = vault?.type?.toUpperCase() === "LOCKED";
+  const isLocked = vault?.planType?.toUpperCase() === "LOCKED";
 
-  // RESET ON CLOSE
   useEffect(() => {
     if (!isOpen) {
       setScreen("WARNING");
@@ -26,15 +25,14 @@ const WithdrawModal = ({
     }
   }, [isOpen]);
 
-  // LOADING → PIN ROUTE
   useEffect(() => {
-    if (screen === "LOADING") {
-      const timer = setTimeout(() => {
-        setScreen("PIN");
-      }, 1500);
+    if (screen !== "LOADING") return;
 
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => {
+      setScreen("PIN");
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, [screen]);
 
   if (!isOpen || !vault) return null;
@@ -58,10 +56,9 @@ const WithdrawModal = ({
     }
   };
 
-  // 🔥 REAL WITHDRAW FLOW
   const handlePinSubmit = async () => {
     try {
-      if (pin.includes("")) return;
+      if (pin.some((p) => p === "")) return;
       if (!vault) return;
 
       setIsSubmitting(true);
@@ -72,25 +69,22 @@ const WithdrawModal = ({
       };
 
       const res = await onWithdraw?.(vault, payload);
+      const creditedAmount = res?.data?.amountCredited ?? 0;
 
-      const updatedBalance = res?.data?.newSavingsBalance ?? vault.balance;
-
+      setScreen(null);
       onClose();
 
+      await new Promise((r) => setTimeout(r, 200));
+
       await Swal.fire({
-        title: "Withdrawal Successful 🏧",
-        text: `₦${Number(updatedBalance).toLocaleString()} has been moved successfully.`,
+        title: "Withdrawal Successful",
+        text: `₦${Number(creditedAmount).toLocaleString()} has been moved successfully.`,
         icon: "success",
         confirmButtonText: "Close",
         confirmButtonColor: "#EDC344",
-        customClass: {
-          popup: "swal-vault-radius",
-          title: "swal-vault-title",
-          confirmButton: "swal-vault-button",
-        },
       });
 
-      onWithdrawSuccess?.(vault.id, updatedBalance);
+      onWithdrawSuccess?.(vault.id, creditedAmount);
     } catch (error) {
       await Swal.fire({
         title: "Withdrawal Failed",
@@ -103,68 +97,69 @@ const WithdrawModal = ({
   };
 
   return (
-    <div className="withdraw-overlay">
-      <div className="withdraw-box">
-        {/* WARNING SCREEN */}
-        {screen === "WARNING" && (
-          <div className="withdraw-content animate-fade">
-            <h2 className="withdraw-title">
-              Are you sure you want to withdraw?
-            </h2>
+    <div className="hn-modal-overlay">
+      {screen === "PIN" ? (
+        <PlanPinScreen
+          pin={pin}
+          handlePinChange={handlePinChange}
+          handlePinKeyDown={handlePinKeyDown}
+          onBack={() => setScreen("WARNING")}
+          onSubmit={isSubmitting ? null : handlePinSubmit}
+        />
+      ) : (
+        <div className="hn-modal-card">
+          {/* WARNING SCREEN  */}
+          {screen === "WARNING" && (
+            <div className="hn-step-container animate-fade">
+              <h2 className="hn-modal-title hn-text-center">
+                Are you sure you want to withdraw?
+              </h2>
 
-            {isLocked ? (
-              <p className="withdraw-subtext">
-                Early withdrawal will attract a{" "}
-                <span className="text-red">1.5% breaking fee</span> and loss of
-                interest.
-              </p>
-            ) : (
-              <p className="withdraw-subtext">
-                You can wait to earn more interest before withdrawing.
-              </p>
-            )}
+              {isLocked ? (
+                <p className="hn-modal-desc hn-text-center">
+                  Early withdrawal will attract a{" "}
+                  <span style={{ color: "#EF4444", fontWeight: "600" }}>
+                    1.5% breaking fee
+                  </span>{" "}
+                  and loss of interest.
+                </p>
+              ) : (
+                <p className="hn-modal-desc hn-text-center">
+                  You can wait to earn more interest before withdrawing.
+                </p>
+              )}
 
-            <div className="withdraw-actions">
-              <button
-                type="button"
-                className="withdraw-btn-continue"
-                onClick={handleProceedToLoading}
-              >
-                Continue
-              </button>
+              <div className="hn-button-grid">
+                <button
+                  type="button"
+                  className="hn-btn-secondary"
+                  onClick={onClose}
+                >
+                  {isLocked ? "Go Back" : "Wait"}
+                </button>
 
-              <button
-                type="button"
-                className="withdraw-btn-yellow"
-                onClick={onClose}
-              >
-                {isLocked ? "Go Back" : "Wait"}
-              </button>
+                <button
+                  type="button"
+                  className="hn-btn-primary"
+                  onClick={handleProceedToLoading}
+                >
+                  Continue
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* LOADING SCREEN */}
-        {screen === "LOADING" && (
-          <div className="withdraw-loading-container animate-fade">
-            <LuLoaderCircle className="withdraw-lucide-spinner" />
-            <p className="withdraw-loading-text">
-              Securing transaction channel...
-            </p>
-          </div>
-        )}
-
-        {/* PIN SCREEN */}
-        {screen === "PIN" && (
-          <PlanPinScreen
-            pin={pin}
-            handlePinChange={handlePinChange}
-            handlePinKeyDown={handlePinKeyDown}
-            onBack={() => setScreen("WARNING")}
-            onSubmit={isSubmitting ? null : handlePinSubmit}
-          />
-        )}
-      </div>
+          {/* LOADING SCREEN */}
+          {screen === "LOADING" && (
+            <div className="hn-step-container hn-align-center hn-justify-center hn-py-xl animate-fade">
+              <div className="hn-loading-spinner"></div>
+              <p className="hn-modal-desc hn-margin-top-md hn-text-center">
+                Securing transaction channel...
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

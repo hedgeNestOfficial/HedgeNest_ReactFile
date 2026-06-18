@@ -109,6 +109,7 @@ const ConvertPage = () => {
       toast.error(error?.message || "Conversion failed");
     } finally {
       setLoading(false);
+      fetchCoversionHistory();
     }
   };
 
@@ -143,7 +144,7 @@ const ConvertPage = () => {
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
             <h2 className="summary-value">
-              {activeCurrency === "NGN" ? "₦" : "$"}
+              {"₦"}
               {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
             </h2>
           </div>
@@ -246,13 +247,32 @@ const ConvertPage = () => {
                   {coversionHistory.map((item, index) => {
                     const fromCur = item.from || "NGN";
                     const toCur = item.to || "USDT";
+
+                    // Fallback to "completed" as standard API success representation if status key isn't provided
                     const itemStatus = item.status || "completed";
+
+                    // Calculate precise dynamic received amounts safely using backend payload rules
+                    const exchangeRate = Number(item.rate || 0);
+                    const baseAmount = Number(item.amount || 0);
+                    const feeCost = Number(item.fee || 0);
+
+                    let calculatedReceived = 0;
+                    if (fromCur === "NGN" && exchangeRate > 0) {
+                      // Formula: (Sent Amount - Fee) / Rate
+                      calculatedReceived =
+                        (baseAmount - feeCost) / exchangeRate;
+                    } else if (fromCur === "USDT") {
+                      // Formula: (Sent Amount * Rate) - Fee
+                      calculatedReceived = baseAmount * exchangeRate - feeCost;
+                    }
 
                     return (
                       <tr key={item._id || item.id || index}>
                         <td>
                           <span className="table-txt-timestamp">
-                            {formatDate(item.createdAt || item.date)}
+                            {formatDate(
+                              item.createdAt || item.updatedAt || item.date,
+                            )}
                           </span>
                         </td>
                         <td>
@@ -263,27 +283,27 @@ const ConvertPage = () => {
                         <td>
                           <span className="table-txt-rate">
                             ₦
-                            {Number(
-                              item.rate || item.exchangeRate || 0,
-                            ).toLocaleString(undefined, {
+                            {exchangeRate.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
                             })}
                           </span>
                         </td>
                         <td>
                           <span className="table-txt-sent">
-                            {Number(
-                              item.amount || item.sentAmount || 0,
-                            ).toLocaleString()}{" "}
+                            {baseAmount.toLocaleString(undefined, {
+                              maximumFractionDigits: 2,
+                            })}{" "}
                             {fromCur}
                           </span>
                         </td>
                         <td>
                           <span className="table-txt-received">
                             +
-                            {Number(
-                              item.value || item.receivedAmount || 0,
-                            ).toLocaleString()}{" "}
+                            {calculatedReceived.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 4, // Higher decimal precision layout for crypto values
+                            })}{" "}
                             {toCur}
                           </span>
                         </td>
@@ -341,7 +361,7 @@ const ConvertPage = () => {
                 <span className="summary-label">USDT - Naira Rate</span>
                 <span className="summary-value">
                   {activeCurrency === "NGN" ? "₦" : "$"}
-                  {liveRate ? liveRate.toLocaleString() : "---"} / 1 USDT
+                  {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
                 </span>
               </div>
             </div>
