@@ -1,46 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
 import { InvestmentCard } from "../../Features/InvestmentCard";
 import PositionCard from "../../Features/PositionCard";
 import InvestModal from "../../Components/KycModals/InvestModal";
 import KycModalManager from "../../Components/KycModals/KycModalManager";
-
+import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";
 import {
   getInvestmentPlans,
   getUserInvestments,
   completeInvestment,
   claimInvestment,
+  breakInvestment,
+  confirmTransactionPin,
 } from "../../Services/investmentService";
-
-import { getMyWallet } from "../../Services/Walletservice.js";
+import { getMyWallet } from "../../Services/Walletservice";
 import { updateWallet } from "../../Store/UserSlice";
-
 import "../../Style/InvestDashboard.css";
 
-const InvestDashboard = ({ userTier = 2 }) => {
+const InvestDashboard = () => {
   const dispatch = useDispatch();
 
-  const { token } = useSelector((state) => state.user);
-
+  const { user, token } = useSelector((state) => state.user);
   const [plans, setPlans] = useState([]);
   const [userInvestments, setUserInvestments] = useState([]);
-
   const [loadingPlans, setLoadingPlans] = useState(true);
   const [loadingInvestments, setLoadingInvestments] = useState(true);
-
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState(null);
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
-
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showBreakModal, setShowBreakModal] = useState(false);
 
   useEffect(() => {
     if (!token) return;
-
-    fetchPlans();
-    fetchUserInvestments();
+    initializeDashboard();
   }, [token]);
+  const initializeDashboard = async () => {
+    await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
+  };
 
   const refreshWallet = async () => {
     try {
@@ -52,7 +50,7 @@ const InvestDashboard = ({ userTier = 2 }) => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      console.log(error);
+      console.log("Wallet refresh failed:", error);
     }
   };
 
@@ -62,15 +60,17 @@ const InvestDashboard = ({ userTier = 2 }) => {
 
       const response = await getInvestmentPlans(token);
 
-      const uniquePlans = response?.investmentPlan?.filter(
-        (plan, index, self) =>
-          index ===
-          self.findIndex((p) => p.investmentName === plan.investmentName),
-      );
+      const uniquePlans =
+        response?.investmentPlan?.filter(
+          (plan, index, self) =>
+            index ===
+            self.findIndex(
+              (item) => item.investmentName === plan.investmentName,
+            ),
+        ) || [];
 
-      setPlans(uniquePlans || []);
+      setPlans(uniquePlans);
     } catch (error) {
-      console.log(error);
       toast.error("Unable to load investment plans");
     } finally {
       setLoadingPlans(false);
@@ -85,7 +85,6 @@ const InvestDashboard = ({ userTier = 2 }) => {
 
       setUserInvestments(response?.data || []);
     } catch (error) {
-      console.log(error);
       toast.error("Unable to load investments");
     } finally {
       setLoadingInvestments(false);
@@ -96,29 +95,47 @@ const InvestDashboard = ({ userTier = 2 }) => {
     setSelectedProduct(product);
     setIsInvestModalOpen(true);
   };
-
   const handleWithdrawInvestment = async (position) => {
     try {
       const payload = {
         investmentId: position._id,
         userId: position.userId,
       };
-
       await completeInvestment(payload, token);
-
       await claimInvestment(payload, token);
-
-      toast.success("Investment claimed successfully and added to wallet");
-
+      toast.success("Investment claimed successfully");
       await Promise.all([fetchUserInvestments(), refreshWallet()]);
     } catch (error) {
-      console.log(error);
-
       toast.error(
         error?.response?.data?.message ||
           error?.response?.data?.messagge ||
           "Unable to claim investment",
       );
+    }
+  };
+
+  const handleOpenBreakModal = (position) => {
+    setSelectedPosition(position);
+    setShowBreakModal(true);
+  };
+
+  const handleBreakInvestment = async (investmentId, transactionPin) => {
+    try {
+      await confirmTransactionPin(user._id, transactionPin, token);
+
+      const response = await breakInvestment(investmentId, token);
+
+      toast.success(response?.message || "Investment terminated successfully");
+
+      await Promise.all([fetchUserInvestments(), refreshWallet()]);
+
+      return response;
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Unable to terminate investment",
+      );
+
+      throw error;
     }
   };
 
@@ -130,8 +147,6 @@ const InvestDashboard = ({ userTier = 2 }) => {
         <p>Curated, beginner-friendly products from low to medium risk</p>
       </header>
 
-      {/* USER POSITIONS */}
-
       <section className="positions-section">
         <h2>Your Positions</h2>
 
@@ -139,10 +154,11 @@ const InvestDashboard = ({ userTier = 2 }) => {
           <p className="loading-state">Loading positions...</p>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 4).map((pos) => (
+            {userInvestments.slice(0, 6).map((position) => (
               <PositionCard
-                key={pos._id}
-                position={pos}
+                key={position._id}
+                position={position}
+                onBreakClick={handleOpenBreakModal}
                 onWithdrawClick={handleWithdrawInvestment}
               />
             ))}
@@ -152,14 +168,11 @@ const InvestDashboard = ({ userTier = 2 }) => {
             <p className="empty-positions-title">No Active Investments Yet</p>
 
             <p className="empty-positions-subtitle">
-              You don't have any open investment positions right now. Explore
-              the available products below to grow your wealth.
+              You don't have any active investments right now.
             </p>
           </div>
         )}
       </section>
-
-      {/* AVAILABLE PRODUCTS */}
 
       <section className="available-section">
         <h2>Available Products</h2>
@@ -179,19 +192,22 @@ const InvestDashboard = ({ userTier = 2 }) => {
         </div>
       </section>
 
-      {/* INVEST MODAL */}
-
       <InvestModal
         isOpen={isInvestModalOpen}
         onClose={() => setIsInvestModalOpen(false)}
         product={selectedProduct}
-        onSuccess={() => {
-          fetchUserInvestments();
-          refreshWallet();
-        }}
+        onSuccess={initializeDashboard}
       />
 
-      {/* KYC MODAL */}
+      <BreakInvestmentModalManager
+        isOpen={showBreakModal}
+        onClose={() => {
+          setShowBreakModal(false);
+          setSelectedPosition(null);
+        }}
+        position={selectedPosition}
+        onConfirmBreak={handleBreakInvestment}
+      />
 
       <KycModalManager
         isOpen={isKycModalOpen}

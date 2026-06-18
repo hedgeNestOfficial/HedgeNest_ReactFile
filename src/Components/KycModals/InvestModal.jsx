@@ -3,7 +3,10 @@ import { useSelector } from "react-redux";
 import { FiArrowLeft } from "react-icons/fi";
 import { HiOutlineShieldCheck } from "react-icons/hi";
 import toast from "react-hot-toast";
-import { initiateInvestment } from "../../Services/investmentService";
+import {
+  initiateInvestment,
+  confirmTransactionPin,
+} from "../../Services/investmentService"; /* 👈 Imported confirmTransactionPin service */
 import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
@@ -12,12 +15,15 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(Array(6).fill(""));
-  const [apiLoading, setApiLoading] = useState(false);
+  const [apiLoading, setApiLoading] =
+    useState(false); /* 👈 Synced loading naming conventions */
 
   const pinRefs = useRef([]);
-  const { token } = useSelector((state) => state.user);
 
-  // 👈 Step 2: Initialize the wallet state refresher hook
+  // 👈 Extract both user and token to make sure user._id is accessible for security checks
+  const { user, token } = useSelector((state) => state.user);
+
+  // Initialize the wallet state refresher hook
   const refreshWallet = useWalletRefresh();
 
   useEffect(() => {
@@ -79,45 +85,55 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   };
 
-  // Step 2 & 3 Dispatch Trigger: Sends transaction payload directly to service endpoints
+  // Step 2 & 3 Dispatch Trigger: Sends transaction payload securely after PIN approval
   const handleInvestmentExecution = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
 
-    const transactionPin = pin.join("");
-    if (transactionPin.length !== 6) {
+    const enteredPin = pin.join("");
+    if (enteredPin.length < 6) {
       toast.error("Please enter your complete 6-digit transaction PIN");
       return;
     }
 
+    // Move to Step 3 visually to render your "investAni" loading wrapper screen
+    setStep(3);
+    setApiLoading(true);
+
+    if (!user?._id) {
+      toast.error("User information not available");
+      return;
+    }
+
+    if (!token) {
+      toast.error("Authentication token missing");
+      return;
+    }
+
     try {
-      // Immediately push UI layout into processing screen mode
-      setStep(3);
-      setApiLoading(true);
+      // Step 1: Verify transaction authorization PIN via backend microservice parameters
+      await confirmTransactionPin(user?._id, enteredPin, token);
 
       const payload = {
         investmentPlanId: product._id,
         amount: Number(amount),
-        // transactionPin can be appended safely here once the backend verification middleware handles it
       };
 
+      // Step 2: Create investment profile only after successful authorization verification matching
       const response = await initiateInvestment(payload, token);
 
-      // 👈 Step 3: Trigger the wallet state update immediately on transaction success
+      // Step 3: Refresh local user account financial values layout updates smoothly
       await refreshWallet();
 
-      // Trigger tracking refresh functions in main workspace dashboard view
-      if (onSuccess) {
-        onSuccess();
-      }
+      toast.success(response?.message || "Investment created successfully");
 
-      // Hand over focus display to target custom success confirmation slide
+      // Step 4: Display final completion screen accent container panels smoothly
       setStep(4);
+      onSuccess?.();
     } catch (error) {
       toast.error(
-        error?.response?.data?.message ||
-          "Unable to process investment request",
+        error?.response?.data?.message || "Unable to create investment",
       );
-      // Kick view context backwards safely to pin correction lane on operational network failure
+      // Kick them back to Pin entry state securely if execution authorization parameters fail
       setStep(2);
     } finally {
       setApiLoading(false);
@@ -228,7 +244,8 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
             <button
               type="submit"
-              className="invest-btn-block-action margin-top-xl"
+              disabled={pin.includes("")}
+              className={`invest-btn-block-action margin-top-xl ${pin.includes("") ? "disabled-btn" : ""}`}
             >
               Next
             </button>
