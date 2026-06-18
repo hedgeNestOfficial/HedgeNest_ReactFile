@@ -239,7 +239,7 @@
 
 @media (max-width: 768px) {
   .smart-container {
-    padding: 80px 16px 24px 16px; /* Added 80px safe buffer context below app navigation layout header */
+    padding: 80px 16px 24px 16px; 
   }
 
   .dash-header {

@@ -13,9 +13,9 @@ import WithdrawModal from "../Components/WithdrawModal";
 import {
   createPlan,
   breakPlan,
-  getAllPlan,
   topUp,
   getOnePlan,
+  getAllPlan,
 } from "../Services/Smartsafeservice";
 
 import "../Css/SmartSafe.css";

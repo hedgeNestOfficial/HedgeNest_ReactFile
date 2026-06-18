@@ -1,10 +1,9 @@
-/* Stage A Input Form Layout Rules */
 .modal-form {
   width: 100%;
-  height: auto; /* Changed from 60vh to prevent form squeezing/clipping */
+  height: auto; 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px; 
 }
 
 .form-group {
@@ -16,24 +15,24 @@
 
 .relative-group {
   position: relative;
-  margin-bottom: 24px; /* Expanded space context to hold formatting cleanly */
+  margin-bottom: 12px; 
 }
 
 .form-label {
-  font-size: 16px;
+  font-size: 14px; 
   font-weight: 500;
   color: #111111;
-  margin-bottom: 10px;
+  margin-bottom: 4px; 
 }
 
 .form-input,
 .form-select {
   width: 100%;
-  height: 52px;
+  height: 44px; 
   border: 1px solid #757575;
   border-radius: 6px;
-  padding: 0 16px;
-  font-size: 16px;
+  padding: 0 12px; 
+  font-size: 15px; 
   color: #111111;
   box-sizing: border-box;
   outline: none;
@@ -42,16 +41,15 @@
 
 .read-only-input {
   cursor: default;
-  background-color: #f5f5f5; /* Visual indicator that field is read-only */
+  background-color: #f5f5f5; 
 }
 
 .select-wrapper {
   width: 100%;
-  height: 52px;
+  height: 44px; 
   position: relative;
 }
 
-/* HELPER CLASS UTILITIES FOR CUSTOM DROPDOWN SCREEN */
 .cursor-pointer {
   cursor: pointer;
 }
@@ -65,31 +63,29 @@
 .form-select {
   appearance: none;
   cursor: pointer;
-  padding-right: 40px; /* Leave breathing room for arrow icon */
+  padding-right: 36px; 
 }
 
 .select-arrow-icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 16px;
+  right: 12px;
   pointer-events: none;
   display: flex;
   align-items: center;
 }
 
 .select-arrow-icon-style {
-  font-size: 16px; /* Adjusted from 24px to fit elegantly inside input height */
+  font-size: 14px; 
   color: #111111;
   transition: transform 0.2s ease;
 }
 
-/* Rotates icon upwards when open */
 .rotate-icon {
   transform: rotate(180deg);
 }
 
-/* CUSTOM POPUP DROPDOWN OPTIONS (MATCHES IMAGE 3) */
 .custom-dropdown-options {
   position: absolute;
   top: 100%;
@@ -105,8 +101,8 @@
 }
 
 .dropdown-option-item {
-  padding: 14px 16px;
-  font-size: 16px;
+  padding: 10px 14px; 
+  font-size: 15px;
   color: #111111;
   transition: background-color 0.15s ease;
 }
@@ -115,7 +111,6 @@
   background-color: #f5f5f5;
 }
 
-/* BRAND SELECTED STATE (MATCHES IMAGE 3 YELLOW SELECTION) */
 .dropdown-option-item.selected {
   background-color: #edc344;
   color: #ffffff;
@@ -126,15 +121,14 @@
   background: none;
   border: none;
   color: #e2b93b;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 8px;
-  align-self: flex-end; /* Clean flow placement instead of absolute layout breaks */
-  padding: 4px 0;
+  margin-top: 4px; 
+  align-self: flex-end; 
+  padding: 2px 0; 
 }
 
-/* TRANSITION ANIMATIONS */
 .animate-fade {
   animation: planform-fade-in 0.2s ease-out;
 }
@@ -153,64 +147,60 @@
 .reveal-fields-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px; 
   width: 100%;
 }
 
-/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
-
 @media (max-width: 540px) {
   .modal-form {
-    gap: 16px; /* Tighter padding array mapping for mobile screens */
+    gap: 10px; 
   }
   .reveal-fields-wrapper {
-    gap: 16px; /* Follows your mobile compression guidelines */
+    gap: 10px; 
   }
 
   .form-label {
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 13px;
+    margin-bottom: 2px;
   }
 
   .form-input,
   .form-select,
   .select-wrapper {
-    height: 48px; /* Slightly lower height layout context for small touch surfaces */
-    font-size: 15px;
+    height: 40px; 
+    font-size: 14px;
   }
 
   .dropdown-option-item {
-    padding: 12px 16px;
-    font-size: 15px;
+    padding: 8px 12px;
+    font-size: 14px;
   }
 
   .relative-group {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     display: flex;
     flex-direction: column;
   }
 
   .toggle-flexible-btn {
-    font-size: 14px;
-    margin-top: 6px;
-    margin-bottom: 12px; /* Adds clear buffer area above action footer button rows */
+    font-size: 13px;
+    margin-top: 2px;
+    margin-bottom: 6px; 
   }
 
-  /* Footer Action Control Configurations */
   .modal-actions-footer {
     display: flex;
-    flex-direction: column-reverse; /* Places main confirmation action directly under thumb bounds */
-    gap: 12px;
+    flex-direction: column-reverse; 
+    gap: 8px; 
     width: 100%;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
-  /* Forces your custom global Button wrappers to align properly */
   .modal-actions-footer button,
   .modal-actions-footer > div,
   .btn-primary,
   .btn-secondary {
     width: 100% !important;
-    height: 48px;
+    height: 40px; 
   }
 }
