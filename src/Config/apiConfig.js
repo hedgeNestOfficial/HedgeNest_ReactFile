@@ -63,7 +63,7 @@ export const ENDPOINTS = {
     COMPLETE_INVESTMENT: `${BASE_URL}/api/v1/compInvestment`,
     CLAIM_INVESTMENT: `${BASE_URL}/api/v1/claimInvestment`,
     BREAK_INVESTMENT: `${BASE_URL}/api/v1/breakInvestment`,
-    CONFIRM_PIN: `${BASE_URL}/api/v1/entered-pin`,
+    CONFIRM_PIN: `${BASE_URL}/api/v1/investment/entered-pin`,
   },
 
   PAYMENT: {
