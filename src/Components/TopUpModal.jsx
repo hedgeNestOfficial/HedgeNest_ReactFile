@@ -35,14 +35,11 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
 
   const handleAmountChange = (e) => {
     const rawValue = e.target.value.replace(/,/g, "");
-
     if (rawValue === "") {
       setAmount("");
       return;
     }
-
     if (isNaN(rawValue)) return;
-
     setAmount(Number(rawValue).toLocaleString());
   };
 
@@ -51,7 +48,6 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
     if (!amount || isBtnLoading) return;
 
     setIsBtnLoading(true);
-
     setTimeout(() => {
       setScreen("LOADING");
     }, 800);
@@ -85,10 +81,14 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
 
     try {
       setIsBtnLoading(true);
-
       const cleanAmount = parseInt(amount.replace(/,/g, ""), 10);
 
-      await onTopUpSuccess(vault, cleanAmount, pin.join(""));
+      await onTopUpSuccess?.(vault, cleanAmount, pin.join(""));
+
+      setScreen("AMOUNT");
+      onClose();
+
+      await new Promise((r) => setTimeout(r, 200));
 
       Swal.fire({
         title: "Top Up Successful!",
@@ -102,11 +102,12 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           confirmButton: "swal-vault-button",
         },
       });
-
-      setIsBtnLoading(false);
-      onClose();
     } catch (error) {
-      setIsBtnLoading(false);
+      // Safely close modal layout first to clear overlay backdrop
+      setScreen("AMOUNT");
+      onClose();
+
+      await new Promise((r) => setTimeout(r, 200));
 
       Swal.fire({
         title: "Top Up Failed",
@@ -116,24 +117,18 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           "Something went wrong",
         icon: "error",
         confirmButtonText: "Try Again",
-        confirmButtonColor: "#d33",
+        confirmButtonColor: "#EF4444",
       });
+    } finally {
+      setIsBtnLoading(false);
     }
   };
 
   return (
     <div className="topup-overlay">
       <div className="topup-box">
-        {screen === "PIN" && (
-          <button
-            className="topup-back-btn"
-            onClick={() => setScreen("AMOUNT")}
-          >
-            <FaArrowLeft />
-          </button>
-        )}
-
         <div className="top-up-container">
+          {/* AMOUNT SCREEN */}
           {screen === "AMOUNT" && (
             <form onSubmit={handleAmountSubmit} className="topup-content">
               <h2 className="topup-title">Top Up Savings</h2>
@@ -172,6 +167,7 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           )}
         </div>
 
+        {/* LOADING SCREEN */}
         {screen === "LOADING" && (
           <div className="topup-loading-container">
             <div className="fullscreen-spinner" />
@@ -179,9 +175,18 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           </div>
         )}
 
+        {/* PIN SCREEN */}
         {screen === "PIN" && (
-          <div className="topup-content">
-            <h2>Enter Your Transaction PIN</h2>
+          <div className="topup-content topup-has-back-nav">
+            <button
+              type="button"
+              className="topup-back-btn"
+              onClick={() => setScreen("AMOUNT")}
+            >
+              <FaArrowLeft />
+            </button>
+
+            <h2 className="topup-pin-title">Enter Your Transaction PIN</h2>
 
             <p>
               Confirming NGN {amount} for "{vault.title}"

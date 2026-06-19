@@ -3,19 +3,19 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between; /* Automatically flushes cards to opposite horizontal sides */
-  row-gap: 24px;                  /* Creates uniform vertical rows spacing */
+  row-gap: 24px; /* Creates uniform vertical rows spacing */
   width: 100%;
   box-sizing: border-box;
 }
 
 /* Flex Item Sizing & Card Base Structure */
 .vault-card {
-  width: 48%;                     /* Flat percentage layout share */
+  width: 48%; /* Flat percentage layout share */
   min-width: 340px;
   max-width: 540px;
-  height: 400px;                  /* Locked strict card container bounds */
-  background-color: #FFFFFF;
-  border: 1px solid #C4C4C4;
+  height: 400px; /* Locked strict card container bounds */
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
   border-radius: 16px;
   padding: 32px 28px;
   display: flex;
@@ -44,7 +44,7 @@
 }
 
 .icon-gold {
-  color: #E2B93B;
+  color: #e2b93b;
 }
 
 /* Content Frame Headers */
@@ -60,6 +60,7 @@
   align-items: baseline;
   color: #111111;
   margin-bottom: 4px;
+  gap: 20px;
 }
 
 .vault-currency {
@@ -72,7 +73,11 @@
   font-size: 32px;
   font-weight: 700;
 }
-
+.top-up {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 .timeline-text {
   font-size: 13px;
   font-weight: 600;
@@ -84,7 +89,7 @@
 .progress-container {
   width: 100%;
   height: 6px;
-  background-color: #F7F3E3;
+  background-color: #f7f3e3;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 12px;
@@ -92,7 +97,7 @@
 
 .progress-fill {
   height: 100%;
-  background-color: #E2B93B;
+  background-color: #e2b93b;
   border-radius: 10px;
 }
 
@@ -104,7 +109,8 @@
   margin-bottom: 28px;
 }
 
-.rate-lbl, .freq-lbl {
+.rate-lbl,
+.freq-lbl {
   font-size: 13px;
   font-weight: 600;
   color: #111111;
@@ -121,10 +127,10 @@
 .btn-gold-full {
   width: 100%;
   height: 48px;
-  background-color: #EDC344 ;
+  background-color: #edc344;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -133,10 +139,10 @@
 .btn-gold-action {
   width: 48%; /* Splits action row side-by-side elements down evenly */
   height: 48px;
-  background-color: #EDC344;
+  background-color: #edc344;
   border: none;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -145,7 +151,7 @@
 .btn-white-action {
   width: 48%; /* Splits action row side-by-side elements down evenly */
   height: 48px;
-  background: #FFFFFF !important;
+  background: #ffffff !important;
   border: 1px solid #111111;
   border-radius: 8px;
   color: #111111;
@@ -159,9 +165,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; 
+  margin-top: auto;
   padding-top: 20px;
-  border-top: 1px solid #EAEAEA;
+  border-top: 1px solid #eaeaea;
 }
 
 .footer-lbl {
@@ -197,8 +203,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #C4C4C4;
-  transition: .3s;
+  background-color: #c4c4c4;
+  transition: 0.3s;
   border-radius: 24px;
 }
 
@@ -210,12 +216,12 @@
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 50%;
 }
 
 input:checked + .toggle-slider {
-  background-color: #EDC344;
+  background-color: #edc344;
 }
 
 input:checked + .toggle-slider:before {

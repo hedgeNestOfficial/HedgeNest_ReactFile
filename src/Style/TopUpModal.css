@@ -1,4 +1,3 @@
-/* Core Overlay Layout (Perfect Screen Centering) */
 .topup-overlay {
   position: fixed;
   top: 0;
@@ -14,7 +13,6 @@
   padding: 20px;
 }
 
-/* Modal Frame Setup */
 .topup-box {
   background-color: #ffffff;
   width: 100%;
@@ -26,7 +24,6 @@
   box-sizing: border-box;
 }
 
-/* Back navigation arrow position */
 .topup-back-btn {
   position: absolute;
   top: 24px;
@@ -44,11 +41,16 @@
   transition:
     background 0.2s,
     color 0.2s;
+  z-index: 10;
 }
 
 .topup-back-btn:hover {
   background: #f3f4f6;
   color: #111111;
+}
+
+.topup-has-back-nav .topup-pin-title {
+  margin-top: 14px;
 }
 
 .top-up-container {
@@ -63,7 +65,6 @@
   width: 100%;
 }
 
-/* Typography Layouts */
 .topup-content h2,
 .topup-title {
   font-size: 1.35rem;
@@ -73,7 +74,6 @@
   line-height: 1.4;
 }
 
-/* Dynamic subheaders/paragraphs inside screens */
 .topup-content p,
 .topup-subtext {
   font-size: 0.95rem;
@@ -92,7 +92,6 @@
   text-align: left;
 }
 
-/* Input Fields Grouping */
 .topup-input {
   width: 100%;
   height: 52px;
@@ -115,7 +114,6 @@
   box-shadow: 0 0 0 3px rgba(237, 195, 68, 0.15);
 }
 
-/* PIN Grid Inputs Style */
 .pin-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -144,7 +142,6 @@
   box-shadow: 0 0 0 3px rgba(237, 195, 68, 0.15);
 }
 
-/* Actions Layout Grid System */
 .topup-actions {
   display: flex;
   justify-content: space-between;
@@ -198,7 +195,6 @@
   cursor: not-allowed;
 }
 
-/* Full Width Button for Pin Screen Confirmation */
 .topup-btn-full {
   width: 100%;
   background: #edc344;
@@ -210,7 +206,6 @@
   background-color: #d6a732;
 }
 
-/* Sequential Loading Spinners */
 .topup-loading-container {
   display: flex;
   flex-direction: column;
@@ -246,9 +241,6 @@
   }
 }
 
-/* ==========================================================================
-   SWEETALERT2 CUSTOMIZATIONS
-   ========================================================================== */
 .swal-vault-radius {
   border-radius: 16px !important;
   padding: 36px !important;
@@ -270,22 +262,23 @@
   box-shadow: none !important;
 }
 
-/* ==========================================================================
-   MOBILE BREAKPOINTS
-   ========================================================================== */
 @media screen and (max-width: 480px) {
   .topup-overlay {
     padding: 16px;
   }
 
   .topup-box {
-    padding: 36px 20px 24px 20px;
+    padding: 40px 20px 24px 20px;
     border-radius: 12px;
   }
 
   .topup-back-btn {
-    top: 12px;
-    left: 12px;
+    top: 16px;
+    left: 16px;
+  }
+
+  .topup-has-back-nav .topup-pin-title {
+    margin-top: 20px;
   }
 
   .topup-title,

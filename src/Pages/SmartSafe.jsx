@@ -46,17 +46,31 @@ const SmartSafe = () => {
   const [isWithdrawWarningOpen, setIsWithdrawWarningOpen] = useState(false);
   const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
 
+  const formatMaturityDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   const normalizePlans = (plans = []) => {
+    if (!Array.isArray(plans)) return [];
+
     return plans.map((plan) => ({
       id: plan._id,
-      title: plan.title,
+      title: plan.title || "Untitled Vault",
       type: plan.planType,
       planType: plan.planType,
-      targetAmount: plan.targetAmount,
-      balance: plan.balance,
-      progress: plan.progress || 0,
-      rate: plan.rate,
-      frequency: plan.savingFrequency,
+      targetAmount: plan.targetAmount || 0,
+      balance: plan.currentBalance ?? 0,
+      interestRate: plan.interestRate || 0,
+      frequency:
+        plan.planType?.toUpperCase() === "LOCKED"
+          ? formatMaturityDate(plan.maturityDate)
+          : plan.savingFrequency || "MANUAL",
       autoSave: plan.autoSave ?? false,
     }));
   };
@@ -69,7 +83,9 @@ const SmartSafe = () => {
 
       const response = await getAllPlan(token);
 
-      const plansData = response?.plan || response?.data?.plan || [];
+      console.log("Raw API Hook Response:", response);
+
+      const plansData = response?.plans;
 
       setVaults(normalizePlans(plansData));
     } catch (error) {

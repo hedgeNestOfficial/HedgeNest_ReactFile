@@ -64,16 +64,20 @@ const WithdrawModal = ({
       setIsSubmitting(true);
 
       const payload = {
-        amount: vault.withdrawAmount || vault.balance,
+        amount: vault.balance || 0, // Using normalized balance value
         transactionPin: pin.join(""),
       };
 
       const res = await onWithdraw?.(vault, payload);
-      const creditedAmount = res?.data?.amountCredited ?? 0;
+
+      // Match the exact nesting structure of your withdrawal API response
+      const apiData = res?.data?.data || res?.data;
+      const creditedAmount = apiData?.amountCredited ?? 0;
 
       setScreen(null);
       onClose();
 
+      // Small delay to let modal transition clear before SweetAlert appears
       await new Promise((r) => setTimeout(r, 200));
 
       await Swal.fire({
@@ -84,11 +88,15 @@ const WithdrawModal = ({
         confirmButtonColor: "#EDC344",
       });
 
-      onWithdrawSuccess?.(vault.id, creditedAmount);
+      // Execute callback to refresh the parent container list cleanly
+      onWithdrawSuccess?.();
     } catch (error) {
       await Swal.fire({
         title: "Withdrawal Failed",
-        text: error?.message || "Please try again",
+        text:
+          error?.response?.data?.message ||
+          error?.message ||
+          "Please try again",
         icon: "error",
       });
     } finally {
@@ -108,7 +116,7 @@ const WithdrawModal = ({
         />
       ) : (
         <div className="hn-modal-card">
-          {/* WARNING SCREEN  */}
+          {/* WARNING SCREEN */}
           {screen === "WARNING" && (
             <div className="hn-step-container animate-fade">
               <h2 className="hn-modal-title hn-text-center">
@@ -119,7 +127,7 @@ const WithdrawModal = ({
                 <p className="hn-modal-desc hn-text-center">
                   Early withdrawal will attract a{" "}
                   <span style={{ color: "#EF4444", fontWeight: "600" }}>
-                    {data?.breakingFee} breaking fee
+                    breaking fee
                   </span>{" "}
                   and loss of interest.
                 </p>

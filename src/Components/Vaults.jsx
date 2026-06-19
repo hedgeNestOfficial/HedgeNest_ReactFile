@@ -3,13 +3,14 @@ import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
 const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
+  if (!Array.isArray(vaultsData) || vaultsData.length === 0) return null;
+
   return (
     <div className="vault-wrap">
       {vaultsData.map((vault) => {
-        const vaultId = vault.id || vault._id;
-
-        const isLocked =
-          (vault.planType || vault.type)?.toUpperCase() === "LOCKED";
+        const vaultId = vault.id;
+        const isLocked = vault.type?.toUpperCase() === "LOCKED";
+        const progressPercentage = vault.interestRate; // Explicitly driven by interestRate
 
         return (
           <article key={vaultId} className="vault-card">
@@ -20,10 +21,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
               ) : (
                 <RiLockUnlockLine className="badge-icon icon-gold" />
               )}
-
-              <span className="badge-text">
-                {(vault.planType || vault.type)?.toUpperCase()}
-              </span>
+              <span className="badge-text">{vault.type?.toUpperCase()}</span>
             </div>
 
             {/* Title */}
@@ -33,25 +31,35 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
             <div className="amount-group">
               <span className="vault-currency">₦</span>
               <span className="vault-balance">
-                {Number(
-                  vault.balance ?? vault.targetAmount ?? 0,
-                ).toLocaleString()}
+                {Number(vault.targetAmount).toLocaleString()}
               </span>
+              <div className="top-up">
+                <h3>Top Up</h3>
+                <div>
+                  <span className="vault-currency">₦</span>
+                  <span className="vault-balance">
+                    {Number(vault.balance).toLocaleString()}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            
+            {/* Progress Bar driven by Interest Rate */}
             <div className="progress-container">
               <div
                 className="progress-fill"
-                style={{ width: `${vault.progress || 0}%` }}
+                style={{ width: `${progressPercentage}%` }}
               />
             </div>
 
+            {/* Metrics Row */}
             <div className="metrics-row">
-              <span className="rate-lbl">{vault.rate || "14%"} p.a.</span>
-
-              <span className="freq-lbl">
-                {vault.frequency || vault.savingFrequency || "DAILY"}
+              <span className="rate-lbl">{vault.interestRate}% p.a.</span>
+              <span
+                className="freq-lbl"
+                style={{ textTransform: isLocked ? "none" : "uppercase" }}
+              >
+                {vault.frequency}
               </span>
             </div>
 
@@ -87,7 +95,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                   <input
                     type="checkbox"
                     checked={!!vault.autoSave}
-                    onChange={() => onToggleAutoSave(vaultId)}
+                    onChange={() => onToggleAutoSave?.(vaultId)}
                   />
                   <span className="toggle-slider"></span>
                 </label>
