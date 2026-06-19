@@ -5,16 +5,23 @@ import Button from "../../Components/Button";
 import "../../Style/Otp.css";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import {
+  useSelector,
+  useDispatch,
+} from "react-redux";
+import {
+  login,
+  clearTempUser,
+} from "../../Store/UserSlice";
 import { createPin } from "../../Services/authService";
 import whiteLogo from "../../assets/white logo.png";
 import { OrbitProgress } from "react-loading-indicators";
 
 const Pin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const inputRefs = useRef([]);
 
-  // FIX: Extract tempUser to gain access to the onboarding token and temporary email state
   const { tempUser } = useSelector((state) => state.user);
   const onboardingToken = tempUser?.authToken;
   const userEmail = tempUser?.email;
@@ -65,13 +72,8 @@ const Pin = () => {
     const pinCode = pin.join("");
     const confirmPinCode = confirmPin.join("");
 
-    if (pinCode.length !== 6) {
+    if (pinCode.length !== 6 || confirmPinCode.length !== 6) {
       toast.error("PIN must be 6 digits");
-      return;
-    }
-
-    if (confirmPinCode.length !== 6) {
-      toast.error("Confirm PIN must be 6 digits");
       return;
     }
 
@@ -80,7 +82,6 @@ const Pin = () => {
       return;
     }
 
-    // Safety Guard: Handle scenario if session context was lost
     if (!onboardingToken || !userEmail) {
       toast.error("Session expired. Please restart registration.");
       return;
@@ -90,31 +91,49 @@ const Pin = () => {
       setIsLoading(true);
 
       const payload = {
-        email: userEmail, // FIX: Use userEmail pulled from tempUser
+        email: userEmail,
         transactionPin: pinCode,
         confirmTransactionPin: confirmPinCode,
       };
 
-      console.log("PIN PAYLOAD:", payload);
-
-      // FIX: Pass onboardingToken instead of the logged-in token instance
       const response = await createPin(payload, onboardingToken);
 
-      console.log("PIN SUCCESS:", response);
-
       toast.success(
-        response?.message || "Transaction pin created successfully",
+        response?.message || "Transaction PIN created successfully",
       );
 
+      // Extract user data and token from response
+      // Adjust these keys if your backend returns a different structure
+      const userData = response?.user || response?.data || tempUser;
+      const sessionToken = response?.token || onboardingToken;
+      const walletData = response?.wallet || null;
+
+      // FIX: was dispatching setUser() which doesn't exist.
+      // Changed to login() which is the correct action in UserSlice
+      dispatch(
+        login({
+          user: userData,
+          wallet: walletData,
+          token: sessionToken,
+        }),
+      );
+
+      // IMPORTANT: Save to localStorage to enable redux-persist rehydration
+      // This mirrors what LoginPage.jsx does
+      localStorage.setItem("authToken", sessionToken);
+      localStorage.setItem("user", JSON.stringify(userData));
+      if (walletData) {
+        localStorage.setItem("wallet", JSON.stringify(walletData));
+      }
+
+      // Clean up onboarding temporary states
+      dispatch(clearTempUser());
+
       setTimeout(() => {
-        // Registration is complete! Send them to login to get their permanent user token
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      console.log("FULL PIN ERROR:", error);
-      console.log("PIN ERROR RESPONSE:", error?.response);
-      console.log("PIN ERROR DATA:", error?.response?.data);
-
+      console.log("PIN ERROR:", error);
       toast.error(error?.response?.data?.message || "Failed to create PIN");
     } finally {
       setIsLoading(false);
