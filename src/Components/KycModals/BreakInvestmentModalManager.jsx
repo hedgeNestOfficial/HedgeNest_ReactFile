@@ -52,14 +52,11 @@ const BreakInvestmentModalManager = ({
   |--------------------------------------------------------------------------
   */
   const handlePinChange = (value, index) => {
-    // Sanitize to only look at numeric input digits
     const digit = value.replace(/\D/g, "").slice(-1);
-
     const newPin = [...pin];
     newPin[index] = digit;
     setPin(newPin);
 
-    // Auto-focus the next isolated DOM node if a value was written
     if (digit && index < 5) {
       pinRefs.current[index + 1]?.focus();
     }
@@ -71,13 +68,12 @@ const BreakInvestmentModalManager = ({
     }
   };
 
-  // Step Navigations
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
   /*
   |--------------------------------------------------------------------------
-  | Submit Handler
+  | Submit Handler (With Fallback ID Resolution Setup)
   |--------------------------------------------------------------------------
   */
   const handleSubmitPin = async () => {
@@ -88,28 +84,39 @@ const BreakInvestmentModalManager = ({
       return;
     }
 
+    // Defensive check to find the correct ID across raw vs populated Mongo queries
+    const investmentId =
+      position?._id || position?.id || position?.investmentPlanId?._id;
+
+    if (!investmentId) {
+      toast.error("System Error: Unable to resolve data reference keys.");
+      console.error(
+        "❌ DATA CONTRACT ERROR: 'position' object properties mismatch:",
+        position,
+      );
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setCurrentStep(STEPS.LOADING);
 
-      // Execute Parent Pipeline Request
-      await onConfirmBreak(position._id, transactionPin);
+      // Fire Parent API pipeline pipeline
+      await onConfirmBreak(investmentId, transactionPin);
 
-      // Synced Account Balance Refresh Execution
+      // Synchronize client balance changes across active views
       await refreshWallet();
 
       setCurrentStep(STEPS.SUCCESS);
     } catch (error) {
       console.error("❌ BREAK TRANSACTION PIPELINE FAILURE:", error);
 
-      // Flash real message from server middleware response context
       toast.error(
         error?.response?.data?.message ||
           error?.message ||
           "Transaction verification failed. Please try again.",
       );
 
-      // Reset sequence tracking safely on pipeline failures
       setPin(["", "", "", "", "", ""]);
       setCurrentStep(STEPS.ENTER_PIN);
     } finally {
@@ -149,7 +156,7 @@ const BreakInvestmentModalManager = ({
           )}
         </div>
 
-        {/* STEP 1: WARNING WARNING */}
+        {/* STEP 1: WARNING */}
         {currentStep === STEPS.WARNING && (
           <div className="break-modal-step-content text-center">
             <h2 className="break-modal-title">
@@ -246,7 +253,7 @@ const BreakInvestmentModalManager = ({
           </div>
         )}
 
-        {/* STEP 4: RUNTIME LOADING PROFILE */}
+        {/* STEP 4: LOADING PROFILE */}
         {currentStep === STEPS.LOADING && (
           <div className="break-modal-step-content text-center py-4">
             <img
