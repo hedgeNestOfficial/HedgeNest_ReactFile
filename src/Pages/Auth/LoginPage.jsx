@@ -54,15 +54,27 @@ const LoginPage = () => {
       // Dispatch payload using the key names expected by your global state slice
       dispatch(
         login({
-          user: userData, // Maps backend "data" object straight into Redux "user" field
+          user: {
+            ...userData,
+            _id: wallet?.userId,
+          },
           wallet,
           token,
         }),
       );
-
       // Persistent synchronous cache mirroring
       localStorage.setItem("authToken", token);
-      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...userData,
+          _id: wallet?.userId,
+        }),
+      );
+      console.log("USER AFTER LOGIN:", {
+        ...userData,
+        _id: wallet?.userId,
+      });
       localStorage.setItem("wallet", JSON.stringify(wallet));
 
       toast.success(message || "Login Successful");
