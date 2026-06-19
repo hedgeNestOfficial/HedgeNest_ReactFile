@@ -14,25 +14,95 @@ import investAni from "../../assets/investAni.gif";
 const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
-  const [pin, setPin] = useState(Array(6).fill(""));
-  const [apiLoading, setApiLoading] = useState(false);
+  const [pin, setPin] = useState(["", "", "", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const pinRefs = useRef([]);
+  const modalRef = useRef(null);
+
   const { user, token } = useSelector((state) => state.user);
   const refreshWallet = useWalletRefresh();
 
+  /*
+  |--------------------------------------------------------------------------
+  | Reset Modal State
+  |--------------------------------------------------------------------------
+  */
   useEffect(() => {
     if (isOpen) {
       setStep(1);
       setAmount("");
-      setPin(Array(6).fill(""));
-      setApiLoading(false);
+      setPin(["", "", "", "", "", ""]);
+      setIsLoading(false);
     }
   }, [isOpen]);
 
+  /*
+  |--------------------------------------------------------------------------
+  | Close Modal On Outside Click
+  |--------------------------------------------------------------------------
+  */
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen || !product) return null;
 
-  const { investmentName, roi, term, minAmount } = product;
+  /*
+  |--------------------------------------------------------------------------
+  | 🧠 10X DATA NORMALIZATION LAYER
+  |--------------------------------------------------------------------------
+  | We explicitly detect if the incoming object is a user position or a raw plan,
+  | ensuring the correct ID is sent to the backend every single time.
+  */
+  const isPositionObject = !!product?.investmentPlanId;
+
+  let investmentPlanId = "";
+  if (isPositionObject) {
+    // If investmentPlanId is a populated object, grab its inner ID string
+    if (
+      typeof product.investmentPlanId === "object" &&
+      product.investmentPlanId !== null
+    ) {
+      investmentPlanId =
+        product.investmentPlanId._id || product.investmentPlanId.id;
+    } else {
+      // If it's already a plain string ID
+      investmentPlanId = product.investmentPlanId;
+    }
+  } else {
+    // Standard plan object fallback
+    investmentPlanId = product?._id || product?.id;
+  }
+
+  // Safely map display data based on object structural origin
+  const investmentName = isPositionObject
+    ? product?.investmentPlanId?.investmentName || "Investment Plan"
+    : product?.investmentName || "Investment Plan";
+
+  const roi = isPositionObject
+    ? product?.investmentPlanId?.roi || product?.roi || 0
+    : product?.roi || 0;
+
+  const term = isPositionObject
+    ? product?.investmentPlanId?.term || product?.term || 0
+    : product?.term || 0;
+
+  const minAmount = isPositionObject
+    ? product?.investmentPlanId?.minAmount || product?.minAmount || 0
+    : product?.minAmount || 0;
 
   const expectedReturn =
     amount && Number(amount) > 0
@@ -42,6 +112,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
         ).toFixed(2)
       : "0.00";
 
+  /*
+  |--------------------------------------------------------------------------
+  | Amount Step Submit
+  |--------------------------------------------------------------------------
+  */
   const handleAmountSubmit = (e) => {
     e.preventDefault();
 
@@ -52,7 +127,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
     if (Number(amount) < Number(minAmount)) {
       toast.error(
-        `Minimum investment threshold is ₦${Number(minAmount).toLocaleString()}`,
+        `Minimum investment is ₦${Number(minAmount).toLocaleString()}`,
       );
       return;
     }
@@ -60,6 +135,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     setStep(2);
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | PIN Inputs
+  |--------------------------------------------------------------------------
+  */
   const handlePinChange = (value, index) => {
     const digit = value.replace(/\D/g, "").slice(-1);
     const updatedPin = [...pin];
@@ -77,62 +157,94 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   };
 
-  const handleInvestmentExecution = async (e) => {
-    e.preventDefault();
-
+  /*
+  |--------------------------------------------------------------------------
+  | Confirm PIN + Create Investment
+  |--------------------------------------------------------------------------
+  */
+  const handlePinSubmit = async () => {
     const enteredPin = pin.join("");
 
-    // Fix: check length, not pin.includes("") — a cleared box leaves ""
-    // which would falsely block submission even if other 5 boxes are filled.
-    if (enteredPin.length < 6) {
-      toast.error("Please enter your complete 6-digit transaction PIN");
+    if (enteredPin.length !== 6) {
+      toast.error("Please enter your 6-digit transaction PIN");
       return;
     }
 
     if (!user?._id) {
-      toast.error("User session not found. Please log in again.");
+      toast.error("User profile session context missing. Please login again.");
       return;
     }
 
-    setStep(3);
-    setApiLoading(true);
+    if (!token) {
+      toast.error("Authentication session expired. Please login again.");
+      return;
+    }
+
+    // 🚨 HARD RUNTIME GUARD: Block the API call if the ID extraction failed
+    if (!investmentPlanId) {
+      console.error(
+        "❌ CRITICAL: Could not resolve investmentPlanId. Raw product context:",
+        product,
+      );
+      toast.error("System error: Missing investment plan identifier.");
+      return;
+    }
 
     try {
-      // Step 1: Verify PIN before creating investment
+      setIsLoading(true);
+      setStep(3);
+
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 1: Confirm Transaction PIN
+      |--------------------------------------------------------------------------
+      */
       await confirmTransactionPin(user._id, enteredPin, token);
 
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 2: Create Investment Operation
+      |--------------------------------------------------------------------------
+      */
       const payload = {
-        investmentPlanId: product._id,
+        investmentPlanId: investmentPlanId,
         amount: Number(amount),
       };
 
-      // Step 2: Create investment only after PIN is confirmed
+      console.log("🚀 EXECUTING INITIATE INVESTMENT. PAYLOAD:", payload);
+
       const response = await initiateInvestment(payload, token);
 
-      // Step 3: Refresh wallet balance
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 3: Refresh Wallet Profiles
+      |--------------------------------------------------------------------------
+      */
       await refreshWallet();
 
       toast.success(response?.message || "Investment created successfully");
-
       onSuccess?.();
       setStep(4);
     } catch (error) {
+      console.error("❌ INVESTMENT PIPELINE FAILURE:", error);
       toast.error(
-        error?.response?.data?.message || "Unable to create investment",
+        error?.response?.data?.message ||
+          "Unable to complete investment execution",
       );
-      // Return to PIN entry so the user can try again
-      setPin(Array(6).fill(""));
+
+      // Rollback gracefully to pin sequence on failure
+      setPin(["", "", "", "", "", ""]);
       setStep(2);
     } finally {
-      setApiLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const isPinComplete = pin.join("").length === 6;
+
   return (
     <div className="invest-modal-overlay">
-      <div
-        className={`invest-modal-card ${step === 3 ? "invest-loader-card-dims" : ""}`}
-      >
+      <div className="invest-modal-card" ref={modalRef}>
         {/* STEP 1: AMOUNT ENTRY */}
         {step === 1 && (
           <form
@@ -198,10 +310,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
         {/* STEP 2: PIN ENTRY */}
         {step === 2 && (
-          <form
-            onSubmit={handleInvestmentExecution}
-            className="invest-modal-step-wrapper"
-          >
+          <div className="invest-modal-step-wrapper">
             <button
               type="button"
               className="invest-modal-back-navigation-arrow"
@@ -220,6 +329,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
                   key={index}
                   type="password"
                   maxLength={1}
+                  inputMode="numeric"
                   className="invest-square-box-input"
                   value={digit}
                   ref={(el) => (pinRefs.current[index] = el)}
@@ -230,18 +340,19 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             </div>
 
             <button
-              type="submit"
-              disabled={pin.join("").length < 6}
+              type="button"
+              disabled={!isPinComplete || isLoading}
+              onClick={handlePinSubmit}
               className={`invest-btn-block-action margin-top-xl ${
-                pin.join("").length < 6 ? "disabled-btn" : ""
+                !isPinComplete || isLoading ? "disabled-btn" : ""
               }`}
             >
-              Next
+              {isLoading ? "Processing..." : "Next"}
             </button>
-          </form>
+          </div>
         )}
 
-        {/* STEP 3: LOADING */}
+        {/* STEP 3: LOADING TRACK */}
         {step === 3 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-processing-image-wrapper">
@@ -275,7 +386,13 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-success-checkmark-animated-badge">
               <div className="invest-checkmark-inner-circle">
-                <span style={{ color: "#ffffff", fontSize: "24px", fontWeight: "700" }}>
+                <span
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "24px",
+                    fontWeight: "700",
+                  }}
+                >
                   ✓
                 </span>
               </div>
