@@ -6,10 +6,10 @@ import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 | Investment Plans
 |--------------------------------------------------------------------------
 */
-
 export const getInvestmentPlans = async (token) => {
   const response = await axios.get(ENDPOINTS.INVESTMENT.GET_PLANS, {
     headers: {
+      ...API_CONFIG.headers,
       Authorization: `Bearer ${token}`,
     },
     timeout: API_CONFIG.timeout,
@@ -23,10 +23,10 @@ export const getInvestmentPlans = async (token) => {
 | User Investments
 |--------------------------------------------------------------------------
 */
-
 export const getUserInvestments = async (token) => {
   const response = await axios.get(ENDPOINTS.INVESTMENT.GET_USER_INVESTMENTS, {
     headers: {
+      ...API_CONFIG.headers,
       Authorization: `Bearer ${token}`,
     },
     timeout: API_CONFIG.timeout,
@@ -40,7 +40,6 @@ export const getUserInvestments = async (token) => {
 | Create Investment
 |--------------------------------------------------------------------------
 */
-
 export const initiateInvestment = async (payload, token) => {
   const response = await axios.post(
     ENDPOINTS.INVESTMENT.INITIATE_INVESTMENT,
@@ -62,15 +61,16 @@ export const initiateInvestment = async (payload, token) => {
 | Complete Investment
 |--------------------------------------------------------------------------
 */
-
 export const completeInvestment = async (payload, token) => {
   const response = await axios.put(
     ENDPOINTS.INVESTMENT.COMPLETE_INVESTMENT,
     payload,
     {
       headers: {
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
 
@@ -82,15 +82,16 @@ export const completeInvestment = async (payload, token) => {
 | Claim Investment
 |--------------------------------------------------------------------------
 */
-
 export const claimInvestment = async (payload, token) => {
   const response = await axios.put(
     ENDPOINTS.INVESTMENT.CLAIM_INVESTMENT,
     payload,
     {
       headers: {
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
 
@@ -102,41 +103,49 @@ export const claimInvestment = async (payload, token) => {
 | Break Investment
 |--------------------------------------------------------------------------
 */
+export const handleBreakInvestment = async (investmentId, transactionPin) => {
+  try {
+    /*
+    |--------------------------------------------------------------------------
+    | The Perfect Payload Matching your Network Logs
+    |--------------------------------------------------------------------------
+    | 1. URL path appends the ID: ${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}
+    | 2. Body Payload (Second Argument): Passes the object keys to satisfy the
+    |    backend "investment ID is required" verification layer.
+    */
+    const response = await axios.put(
+      `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`, 
+      {
+        investmentId: investmentId,   // ⚡ Crucial: Satisfies the backend body validation
+        enteredPin: transactionPin     // Passes the verified PIN along for authentication
+      }
+    );
 
-export const breakInvestment = async (investmentId, token) => {
-  const response = await axios.put(
-    `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
-    {
-      investmentId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("API Error during investment liquidation:", error);
+    throw error;
+  }
 };
+
 
 /*
 |--------------------------------------------------------------------------
 | Confirm Transaction Pin
 |--------------------------------------------------------------------------
 */
-
 export const confirmTransactionPin = async (userId, enteredPin, token) => {
   const response = await axios.post(
-    ENDPOINTS.INVESTMENT.CONFIRM_PIN, // 👈 Cleaned: Removed appended trailing slash + userId from URL path
+    `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
     {
-      userId, // 👈 Added: Sent explicitly inside the request body payload data mapping
       enteredPin,
     },
     {
       headers: {
-        ...API_CONFIG.headers, // Ensuring application/json header is assigned properly
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
 

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { HiOutlineArrowLeft } from "react-icons/hi";
+import toast from "react-hot-toast";
 import { useWalletRefresh } from "../../hooks/useWalletRefresh";
-import breakIllustration from "../../assets/investAni.gif"; // Place your illustration here
-import "../../Style/BreakModal.css"; // We'll style it beautifully below
+import breakIllustration from "../../assets/investAni.gif";
+import "../../Style/BreakModal.css";
 
 const STEPS = {
   WARNING: 1,
@@ -18,17 +19,24 @@ const BreakInvestmentModalManager = ({
   onClose,
   position,
   onConfirmBreak,
-  userId,
 }) => {
   const [currentStep, setCurrentStep] = useState(STEPS.WARNING);
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const pinRefs = useRef([]);
   const refreshWallet = useWalletRefresh();
 
-  // Reset modal state when opened/closed
+  /*
+  |--------------------------------------------------------------------------
+  | Reset Component State Lifecycles
+  |--------------------------------------------------------------------------
+  */
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(STEPS.WARNING);
       setPin(["", "", "", "", "", ""]);
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
@@ -38,58 +46,90 @@ const BreakInvestmentModalManager = ({
     position?.investmentPlanId?.investmentName || "Investment";
   const amount = Number(position?.amount || 0);
 
-  // Handle PIN input array updates
+  /*
+  |--------------------------------------------------------------------------
+  | Isolated Ref Input Array Tracking (Fixes Global ID Collisions)
+  |--------------------------------------------------------------------------
+  */
   const handlePinChange = (value, index) => {
-    if (isNaN(Number(value)) && value !== "") return;
+    // Sanitize to only look at numeric input digits
+    const digit = value.replace(/\D/g, "").slice(-1);
+
     const newPin = [...pin];
-    newPin[index] = value;
+    newPin[index] = digit;
     setPin(newPin);
 
-    // Auto-focus next input field
-    if (value !== "" && index < 5) {
-      document.getElementById(`pin-${index + 1}`).focus();
+    // Auto-focus the next isolated DOM node if a value was written
+    if (digit && index < 5) {
+      pinRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && pin[index] === "" && index > 0) {
-      document.getElementById(`pin-${index - 1}`).focus();
+    if (e.key === "Backspace" && !pin[index] && index > 0) {
+      pinRefs.current[index - 1]?.focus();
     }
   };
 
-  // Step transitions
+  // Step Navigations
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
+  /*
+  |--------------------------------------------------------------------------
+  | Submit Handler
+  |--------------------------------------------------------------------------
+  */
   const handleSubmitPin = async () => {
     const transactionPin = pin.join("");
 
     if (transactionPin.length !== 6) {
+      toast.error("Please fill out your 6-digit transaction PIN");
       return;
     }
 
-    setCurrentStep(STEPS.LOADING);
-
     try {
+      setIsSubmitting(true);
+      setCurrentStep(STEPS.LOADING);
+
+      // Execute Parent Pipeline Request
       await onConfirmBreak(position._id, transactionPin);
 
+      // Synced Account Balance Refresh Execution
       await refreshWallet();
 
       setCurrentStep(STEPS.SUCCESS);
     } catch (error) {
-      console.log(error);
+      console.error("❌ BREAK TRANSACTION PIPELINE FAILURE:", error);
 
+      // Flash real message from server middleware response context
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Transaction verification failed. Please try again.",
+      );
+
+      // Reset sequence tracking safely on pipeline failures
+      setPin(["", "", "", "", "", ""]);
       setCurrentStep(STEPS.ENTER_PIN);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const isPinComplete = pin.join("").length === 6;
 
   return (
     <div className="break-modal-overlay">
       <div className="break-modal-container">
-        {/* Step Header: Show Back Button / Close Button Conditionally */}
+        {/* MODAL NAVIGATION HEADER */}
         <div className="break-modal-header">
           {[STEPS.CONFIRM_DETAILS, STEPS.ENTER_PIN].includes(currentStep) ? (
-            <button className="break-modal-back-btn" onClick={prevStep}>
+            <button
+              type="button"
+              className="break-modal-back-btn"
+              onClick={prevStep}
+            >
               <HiOutlineArrowLeft size={20} />
             </button>
           ) : (
@@ -99,13 +139,17 @@ const BreakInvestmentModalManager = ({
           {[STEPS.WARNING, STEPS.CONFIRM_DETAILS, STEPS.ENTER_PIN].includes(
             currentStep,
           ) && (
-            <button className="break-modal-close-btn" onClick={onClose}>
+            <button
+              type="button"
+              className="break-modal-close-btn"
+              onClick={onClose}
+            >
               <IoClose size={24} />
             </button>
           )}
         </div>
 
-        {/* STEP 1: WARNING POPUP */}
+        {/* STEP 1: WARNING WARNING */}
         {currentStep === STEPS.WARNING && (
           <div className="break-modal-step-content text-center">
             <h2 className="break-modal-title">
@@ -115,10 +159,18 @@ const BreakInvestmentModalManager = ({
               Early Withdrawal will not earn full interest
             </p>
             <div className="break-modal-actions-stacked">
-              <button className="break-btn-gold" onClick={nextStep}>
+              <button
+                type="button"
+                className="break-btn-gold"
+                onClick={nextStep}
+              >
                 Continue
               </button>
-              <button className="break-btn-outline" onClick={onClose}>
+              <button
+                type="button"
+                className="break-btn-outline"
+                onClick={onClose}
+              >
                 Go Back
               </button>
             </div>
@@ -147,19 +199,24 @@ const BreakInvestmentModalManager = ({
 
             <div className="break-modal-actions-row">
               <button
+                type="button"
                 className="break-btn-outline half-width"
                 onClick={onClose}
               >
                 Cancel
               </button>
-              <button className="break-btn-gold half-width" onClick={nextStep}>
+              <button
+                type="button"
+                className="break-btn-gold half-width"
+                onClick={nextStep}
+              >
                 Withdraw
               </button>
             </div>
           </div>
         )}
 
-        {/* STEP 3: TRANSACTION PIN */}
+        {/* STEP 3: TRANSACTION PIN INPUT */}
         {currentStep === STEPS.ENTER_PIN && (
           <div className="break-modal-step-content text-center">
             <h2 className="break-modal-title">Enter Your Transaction Pin</h2>
@@ -167,41 +224,51 @@ const BreakInvestmentModalManager = ({
               {pin.map((digit, index) => (
                 <input
                   key={index}
-                  id={`pin-${index}`}
                   type="password"
-                  maxLength="1"
+                  maxLength={1}
+                  inputMode="numeric"
                   className="break-pin-input-box"
                   value={digit}
+                  ref={(el) => (pinRefs.current[index] = el)}
                   onChange={(e) => handlePinChange(e.target.value, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                 />
               ))}
             </div>
             <button
-              className="break-btn-gold mt-4"
+              type="button"
+              className={`break-btn-gold mt-4 ${!isPinComplete || isSubmitting ? "disabled-btn" : ""}`}
               onClick={handleSubmitPin}
-              disabled={pin.join("").length < 6}
+              disabled={!isPinComplete || isSubmitting}
             >
-              Next
+              {isSubmitting ? "Processing..." : "Next"}
             </button>
           </div>
         )}
 
-        {/* STEP 4: LOADING STATE */}
+        {/* STEP 4: RUNTIME LOADING PROFILE */}
         {currentStep === STEPS.LOADING && (
           <div className="break-modal-step-content text-center py-4">
             <img
               src={breakIllustration}
-              alt="Investing"
+              alt="Processing request"
               className="break-loading-illustration"
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+              style={{ width: "120px", margin: "0 auto" }}
             />
-            <h2 className="break-modal-title mt-3">Investing In Your Future</h2>
-            <p className="break-modal-subtitle">Please wait...</p>
+            <h2 className="break-modal-title mt-3">
+              Terminating Investment Position
+            </h2>
+            <p className="break-modal-subtitle">
+              Securing your liquidation profile, please wait...
+            </p>
             <div className="break-spinner-circle"></div>
           </div>
         )}
 
-        {/* STEP 5: CONFIRMATION SUCCESS */}
+        {/* STEP 5: LIQUIDATION SUCCESS */}
         {currentStep === STEPS.SUCCESS && (
           <div className="break-modal-step-content text-center py-4">
             <div className="break-success-icon-wrapper">
@@ -212,7 +279,12 @@ const BreakInvestmentModalManager = ({
               We'll confirm and process your Investment settlement within 1-2
               days
             </p>
-            <button className="break-btn-gold mt-4" onClick={onClose}>
+            <button
+              type="button"
+              className="break-btn-gold mt-4"
+              onClick={onClose}
+              style={{ alignSelf: "center" }}
+            >
               Close
             </button>
           </div>
