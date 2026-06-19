@@ -3,44 +3,41 @@ import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
 /*
 |--------------------------------------------------------------------------
-| Investment Plans
+| Fetch Active Investment Plans
 |--------------------------------------------------------------------------
 */
-
 export const getInvestmentPlans = async (token) => {
   const response = await axios.get(ENDPOINTS.INVESTMENT.GET_PLANS, {
     headers: {
+      ...API_CONFIG.headers,
       Authorization: `Bearer ${token}`,
     },
     timeout: API_CONFIG.timeout,
   });
-
   return response.data;
 };
 
 /*
 |--------------------------------------------------------------------------
-| User Investments
+| Fetch Specific Active User Investment Positions
 |--------------------------------------------------------------------------
 */
-
 export const getUserInvestments = async (token) => {
   const response = await axios.get(ENDPOINTS.INVESTMENT.GET_USER_INVESTMENTS, {
     headers: {
+      ...API_CONFIG.headers,
       Authorization: `Bearer ${token}`,
     },
     timeout: API_CONFIG.timeout,
   });
-
   return response.data;
 };
 
 /*
 |--------------------------------------------------------------------------
-| Create Investment
+| Initiate Fresh Investment Setup Flow
 |--------------------------------------------------------------------------
 */
-
 export const initiateInvestment = async (payload, token) => {
   const response = await axios.post(
     ENDPOINTS.INVESTMENT.INITIATE_INVESTMENT,
@@ -53,92 +50,93 @@ export const initiateInvestment = async (payload, token) => {
       timeout: API_CONFIG.timeout,
     },
   );
-
   return response.data;
 };
 
 /*
 |--------------------------------------------------------------------------
-| Complete Investment
+| Auto-Complete Mature Positions
 |--------------------------------------------------------------------------
 */
-
 export const completeInvestment = async (payload, token) => {
   const response = await axios.put(
     ENDPOINTS.INVESTMENT.COMPLETE_INVESTMENT,
     payload,
     {
       headers: {
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
-
   return response.data;
 };
 
 /*
 |--------------------------------------------------------------------------
-| Claim Investment
+| Claim Accrued Investment Settlement Dividends
 |--------------------------------------------------------------------------
 */
-
 export const claimInvestment = async (payload, token) => {
   const response = await axios.put(
     ENDPOINTS.INVESTMENT.CLAIM_INVESTMENT,
     payload,
     {
       headers: {
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
-
   return response.data;
 };
 
 /*
 |--------------------------------------------------------------------------
-| Break Investment
+| Break Investment (Liquidate Active Position Early)
 |--------------------------------------------------------------------------
 */
-
-export const breakInvestment = async (investmentId, token) => {
-  const response = await axios.put(
-    `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
-    {
-      investmentId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+export const breakInvestment = async (investmentId, transactionPin, token) => {
+  try {
+    const response = await axios.put(
+      `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
+      {
+        investmentId: investmentId, // Satisfies backend body verification layers
+        enteredPin: transactionPin, // Transmits security authorization payload
       },
-    },
-  );
-
-  return response.data;
+      {
+        headers: {
+          ...API_CONFIG.headers,
+          Authorization: `Bearer ${token}`, // Authorizes platform operation identity
+        },
+        timeout: API_CONFIG.timeout,
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);
+    throw error;
+  }
 };
 
 /*
 |--------------------------------------------------------------------------
-| Confirm Transaction Pin
+| Global Transaction PIN Core Validation Engine
 |--------------------------------------------------------------------------
 */
-
 export const confirmTransactionPin = async (userId, enteredPin, token) => {
   const response = await axios.post(
-    ENDPOINTS.INVESTMENT.CONFIRM_PIN, // 👈 Cleaned: Removed appended trailing slash + userId from URL path
-    {
-      userId, // 👈 Added: Sent explicitly inside the request body payload data mapping
-      enteredPin,
-    },
+    `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
+    { enteredPin },
     {
       headers: {
-        ...API_CONFIG.headers, // Ensuring application/json header is assigned properly
+        ...API_CONFIG.headers,
         Authorization: `Bearer ${token}`,
       },
+      timeout: API_CONFIG.timeout,
     },
   );
-
   return response.data;
 };

@@ -4,34 +4,34 @@ import { FaCheckCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 import { useWalletRefresh } from "../Hooks/useWalletRefresh";
-
 import "../Style/PaymentSuccess.css";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
-
   const refreshWallet = useWalletRefresh();
 
   useEffect(() => {
     const syncWallet = async () => {
       try {
-        // First refresh immediately
+        // Fires immediately when the component mounts onto the screen
         await refreshWallet();
-
-        // Refresh again after a short delay
-        // gives backend webhook enough time to update balance
-        setTimeout(async () => {
-          await refreshWallet();
-        }, 5000);
       } catch (error) {
-        console.log("Wallet refresh failed:", error);
+        console.error("Wallet refresh failed on mount:", error);
       }
     };
 
     syncWallet();
-
     toast.success("Payment successful");
-  }, [refreshWallet]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | ⚡ THE MOUNT LOCK
+    |--------------------------------------------------------------------------
+    | The empty array below guarantees that this entire block executes 
+    | EXACTLY ONCE. No matter how many times your global wallet balance updates 
+    | or how many re-renders happen, it will NEVER re-trigger.
+    */
+  }, []);
 
   return (
     <div className="payment-success-page">
@@ -48,6 +48,7 @@ const PaymentSuccess = () => {
         </p>
 
         <button
+          type="button"
           className="payment-success-btn"
           onClick={() => navigate("/dashboard")}
         >

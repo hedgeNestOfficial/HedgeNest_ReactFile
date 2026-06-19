@@ -30,7 +30,8 @@
   margin-bottom: 8px;
 }
 
-.break-modal-back-btn, .break-modal-close-btn {
+.break-modal-back-btn,
+.break-modal-close-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -95,26 +96,27 @@
   width: 100%;
   font-size: 16px;
   font-weight: 500;
-  color: #e04f4f; /* Matches Red Highlight Variant from Figma */
+  color: #e04f4f;
 }
 
-/* Button Structural Elements Using Flexbox */
-.break-modal-actions-stacked {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
+/* |--------------------------------------------------------------------------
+| Perfect Side-by-Side Flexbox Actions
+|--------------------------------------------------------------------------
+*/
+.break-modal-actions-stacked,
 .break-modal-actions-row {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Aligns all buttons horizontally side-by-side */
   gap: 12px;
   width: 100%;
 }
 
-.half-width {
-  flex: 1;
+/* Enforces equal sizing rules across all action buttons */
+.break-modal-actions-stacked button,
+.break-modal-actions-row button {
+  flex: 1; /* Allocates space 50/50 evenly */
+  width: 100%; /* Allows flexible internal box boundary limits */
+  white-space: nowrap; /* Stops text from wrapping awkwardly on smaller viewports */
 }
 
 .break-btn-gold {
@@ -127,7 +129,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
-  width: 100%;
 }
 
 .break-btn-gold:hover {
@@ -148,6 +149,11 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.break-btn-outline:hover {
+  background: #f9f9f9;
 }
 
 /* PIN Verification Elements */
@@ -193,8 +199,12 @@
 }
 
 @keyframes spinBreak {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Success Checkmark Ring Styles */
@@ -208,7 +218,7 @@
 .break-success-circle-checkmark {
   width: 64px;
   height: 64px;
-  background: #f39c12; /* Custom orange accent matching Figma screen confirm */
+  background: #f39c12;
   border-radius: 50%;
   color: white;
   font-size: 32px;

@@ -6,40 +6,104 @@ import toast from "react-hot-toast";
 import {
   initiateInvestment,
   confirmTransactionPin,
-// } from "../../Services/investmentService"; /* 👈 Imported confirmTransactionPin service */
-// // import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
+} from "../../Services/investmentService";
+import { useWalletRefresh } from "../../hooks/useWalletRefresh";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
 
 const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
-  const [pin, setPin] = useState(Array(6).fill(""));
-  const [apiLoading, setApiLoading] =
-    useState(false); /* 👈 Synced loading naming conventions */
+  const [pin, setPin] = useState(["", "", "", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const pinRefs = useRef([]);
+  const modalRef = useRef(null);
 
-  // 👈 Extract both user and token to make sure user._id is accessible for security checks
   const { user, token } = useSelector((state) => state.user);
-
-  // Initialize the wallet state refresher hook
   const refreshWallet = useWalletRefresh();
 
+  /*
+  |--------------------------------------------------------------------------
+  | Reset Modal State
+  |--------------------------------------------------------------------------
+  */
   useEffect(() => {
     if (isOpen) {
       setStep(1);
       setAmount("");
-      setPin(Array(6).fill(""));
-      setApiLoading(false);
+      setPin(["", "", "", "", "", ""]);
+      setIsLoading(false);
     }
   }, [isOpen]);
 
+  /*
+  |--------------------------------------------------------------------------
+  | Close Modal On Outside Click
+  |--------------------------------------------------------------------------
+  */
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen || !product) return null;
 
-  const { investmentName, roi, term, minAmount } = product;
+  /*
+  |--------------------------------------------------------------------------
+  | 🧠 10X DATA NORMALIZATION LAYER
+  |--------------------------------------------------------------------------
+  | We explicitly detect if the incoming object is a user position or a raw plan,
+  | ensuring the correct ID is sent to the backend every single time.
+  */
+  const isPositionObject = !!product?.investmentPlanId;
 
-  // Exact compound matching expected calculation formula
+  let investmentPlanId = "";
+  if (isPositionObject) {
+    // If investmentPlanId is a populated object, grab its inner ID string
+    if (
+      typeof product.investmentPlanId === "object" &&
+      product.investmentPlanId !== null
+    ) {
+      investmentPlanId =
+        product.investmentPlanId._id || product.investmentPlanId.id;
+    } else {
+      // If it's already a plain string ID
+      investmentPlanId = product.investmentPlanId;
+    }
+  } else {
+    // Standard plan object fallback
+    investmentPlanId = product?._id || product?.id;
+  }
+
+  // Safely map display data based on object structural origin
+  const investmentName = isPositionObject
+    ? product?.investmentPlanId?.investmentName || "Investment Plan"
+    : product?.investmentName || "Investment Plan";
+
+  const roi = isPositionObject
+    ? product?.investmentPlanId?.roi || product?.roi || 0
+    : product?.roi || 0;
+
+  const term = isPositionObject
+    ? product?.investmentPlanId?.term || product?.term || 0
+    : product?.term || 0;
+
+  const minAmount = isPositionObject
+    ? product?.investmentPlanId?.minAmount || product?.minAmount || 0
+    : product?.minAmount || 0;
+
   const expectedReturn =
     amount && Number(amount) > 0
       ? (
@@ -48,7 +112,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
         ).toFixed(2)
       : "0.00";
 
-  // Step 1 Submission: Validating minimum tier bounds
+  /*
+  |--------------------------------------------------------------------------
+  | Amount Step Submit
+  |--------------------------------------------------------------------------
+  */
   const handleAmountSubmit = (e) => {
     e.preventDefault();
 
@@ -59,7 +127,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
     if (Number(amount) < Number(minAmount)) {
       toast.error(
-        `Minimum investment threshold is ₦${Number(minAmount).toLocaleString()}`,
+        `Minimum investment is ₦${Number(minAmount).toLocaleString()}`,
       );
       return;
     }
@@ -67,7 +135,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     setStep(2);
   };
 
-  // Safe auto-focus indexing handlers across individual PIN fields
+  /*
+  |--------------------------------------------------------------------------
+  | PIN Inputs
+  |--------------------------------------------------------------------------
+  */
   const handlePinChange = (value, index) => {
     const digit = value.replace(/\D/g, "").slice(-1);
     const updatedPin = [...pin];
@@ -85,67 +157,95 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   };
 
-  // Step 2 & 3 Dispatch Trigger: Sends transaction payload securely after PIN approval
-  const handleInvestmentExecution = async (e) => {
-    e.preventDefault();
-
+  /*
+  |--------------------------------------------------------------------------
+  | Confirm PIN + Create Investment
+  |--------------------------------------------------------------------------
+  */
+  const handlePinSubmit = async () => {
     const enteredPin = pin.join("");
-    if (enteredPin.length < 6) {
-      toast.error("Please enter your complete 6-digit transaction PIN");
+
+    if (enteredPin.length !== 6) {
+      toast.error("Please enter your 6-digit transaction PIN");
       return;
     }
 
-    // Move to Step 3 visually to render your "investAni" loading wrapper screen
-    setStep(3);
-    setApiLoading(true);
-
     if (!user?._id) {
-      toast.error("User information not available");
+      toast.error("User profile session context missing. Please login again.");
       return;
     }
 
     if (!token) {
-      toast.error("Authentication token missing");
+      toast.error("Authentication session expired. Please login again.");
+      return;
+    }
+
+    // 🚨 HARD RUNTIME GUARD: Block the API call if the ID extraction failed
+    if (!investmentPlanId) {
+      console.error(
+        "❌ CRITICAL: Could not resolve investmentPlanId. Raw product context:",
+        product,
+      );
+      toast.error("System error: Missing investment plan identifier.");
       return;
     }
 
     try {
-      // Step 1: Verify transaction authorization PIN via backend microservice parameters
-      await confirmTransactionPin(user?._id, enteredPin, token);
+      setIsLoading(true);
+      setStep(3);
 
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 1: Confirm Transaction PIN
+      |--------------------------------------------------------------------------
+      */
+      await confirmTransactionPin(user._id, enteredPin, token);
+
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 2: Create Investment Operation
+      |--------------------------------------------------------------------------
+      */
       const payload = {
-        investmentPlanId: product._id,
+        investmentPlanId: investmentPlanId,
         amount: Number(amount),
       };
 
-      // Step 2: Create investment profile only after successful authorization verification matching
+      console.log("🚀 EXECUTING INITIATE INVESTMENT. PAYLOAD:", payload);
+
       const response = await initiateInvestment(payload, token);
 
-      // Step 3: Refresh local user account financial values layout updates smoothly
+      /*
+      |--------------------------------------------------------------------------
+      | STEP 3: Refresh Wallet Profiles
+      |--------------------------------------------------------------------------
+      */
       await refreshWallet();
 
       toast.success(response?.message || "Investment created successfully");
-
-      // Step 4: Display final completion screen accent container panels smoothly
-      setStep(4);
       onSuccess?.();
+      setStep(4);
     } catch (error) {
+      console.error("❌ INVESTMENT PIPELINE FAILURE:", error);
       toast.error(
-        error?.response?.data?.message || "Unable to create investment",
+        error?.response?.data?.message ||
+          "Unable to complete investment execution",
       );
-      // Kick them back to Pin entry state securely if execution authorization parameters fail
+
+      // Rollback gracefully to pin sequence on failure
+      setPin(["", "", "", "", "", ""]);
       setStep(2);
     } finally {
-      setApiLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const isPinComplete = pin.join("").length === 6;
+
   return (
     <div className="invest-modal-overlay">
-      <div
-        className={`invest-modal-card ${step === 3 ? "invest-loader-card-dims" : ""}`}
-      >
-        {/* STEP 1: AMOUNT SPECIFICATION ENTRY SCREEN */}
+      <div className="invest-modal-card" ref={modalRef}>
+        {/* STEP 1: AMOUNT ENTRY */}
         {step === 1 && (
           <form
             onSubmit={handleAmountSubmit}
@@ -156,11 +256,10 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               Capital-protected {term}-day fixed income note. Ideal for
               first-time investors.
             </p>
-
             <p className="invest-modal-description">
-              Your money is been invested in Treasury Bills,FGN, saving Bonds ,
-              Fixed Deposits, Money Market Mutual Funds with a 100% Guarantee in
-              safe investment returns
+              Your money is invested in Treasury Bills, FGN Savings Bonds, Fixed
+              Deposits, and Money Market Mutual Funds with a 100% guarantee on
+              safe investment returns.
             </p>
 
             <div className="invest-lock-notification-banner">
@@ -209,12 +308,9 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           </form>
         )}
 
-        {/* STEP 2: SECURITY VERIFICATION PIN SUBMISSION */}
+        {/* STEP 2: PIN ENTRY */}
         {step === 2 && (
-          <form
-            onSubmit={handleInvestmentExecution}
-            className="invest-modal-step-wrapper"
-          >
+          <div className="invest-modal-step-wrapper">
             <button
               type="button"
               className="invest-modal-back-navigation-arrow"
@@ -233,6 +329,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
                   key={index}
                   type="password"
                   maxLength={1}
+                  inputMode="numeric"
                   className="invest-square-box-input"
                   value={digit}
                   ref={(el) => (pinRefs.current[index] = el)}
@@ -243,47 +340,48 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             </div>
 
             <button
-              type="submit"
-              disabled={pin.includes("")}
-              className={`invest-btn-block-action margin-top-xl ${pin.includes("") ? "disabled-btn" : ""}`}
+              type="button"
+              disabled={!isPinComplete || isLoading}
+              onClick={handlePinSubmit}
+              className={`invest-btn-block-action margin-top-xl ${
+                !isPinComplete || isLoading ? "disabled-btn" : ""
+              }`}
             >
-              Next
+              {isLoading ? "Processing..." : "Next"}
             </button>
-          </form>
+          </div>
         )}
 
-        {/* STEP 3: TRANSACTION PIPELINE PROCESSING LOADER */}
+        {/* STEP 3: LOADING TRACK */}
         {step === 3 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-processing-image-wrapper">
               <img
                 src={investAni}
-                alt="Investing Pipeline Processing illustration"
+                alt="Processing investment"
                 onError={(e) => {
                   e.target.style.display = "none";
                 }}
                 style={{ width: "120px", marginBottom: "20px" }}
               />
             </div>
-
             <h2 className="invest-modal-title text-center-forced">
               Investing In Your Future
             </h2>
             <p className="invest-modal-processing-subtext margin-top-xs">
               Please wait...
             </p>
-
             <div className="invest-processing-button-loader-banner">
               <div className="invest-full-card-spinner-centered">
                 <p className="invest-lock-banner-text">
-                  Securing transaction pipeline channels...
+                  Securing your transaction...
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* STEP 4: ACCOUNT ACTIVATION CONFIRMATION SUCCESS ACCENT VIEW */}
+        {/* STEP 4: SUCCESS */}
         {step === 4 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-success-checkmark-animated-badge">
@@ -304,7 +402,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               Investment Activated!
             </h2>
             <p className="invest-modal-description text-center-forced max-width-text margin-top-xs">
-              We'll confirm and process your Investment within 1-2 days
+              We'll confirm and process your investment within 1–2 days
             </p>
 
             <button

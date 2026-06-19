@@ -3,11 +3,8 @@ const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const API_CONFIG = {
   baseUrl: BASE_URL,
-
   frontendUrl: FRONTEND_URL,
-
   timeout: 60000,
-
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -22,13 +19,11 @@ export const ENDPOINTS = {
     RESEND_OTP: `${BASE_URL}/api/v1/resendOtp`,
     CREATE_PIN: `${BASE_URL}/api/v1/create-pin`,
     VERIFY_KYC: `${BASE_URL}/api/v1/verify`,
-
     FORGOT_PASSWORD: `${BASE_URL}/api/v1/forgot-password`,
     VERIFY_RESET_OTP: `${BASE_URL}/api/v1/verify/check`,
     RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
     CHANGE_PIN: `${BASE_URL}/api/v1/changePin`,
   },
-
   KYC: {
     UPLOAD_UTILITY_BILL: `${BASE_URL}/api/v1/uploadUtilityBill`,
   },
@@ -36,18 +31,15 @@ export const ENDPOINTS = {
     CHANGE_PASSWORD: `${BASE_URL}/api/v1/change-password`,
     UPDATE_PROFILE: `${BASE_URL}/api/v1/update`,
   },
-
   WALLET: {
     LINK_BANK_ACCOUNT: `${BASE_URL}/api/v1/linkBank`,
   },
-
   CONVERSION: {
     CONVERT: `${BASE_URL}/api/v1/convert`,
     GET_MY_WALLET: `${BASE_URL}/api/v1/myWallet`,
     LIVE_RATE: `${BASE_URL}/api/v1/liveRate`,
     HISTORY: `${BASE_URL}/api/v1/myConversion`,
   },
-
   SMART_SAVE: {
     PREVIEW_PLAN: `${BASE_URL}/api/v1/preview-plan`,
     CREATE_PLAN: `${BASE_URL}/api/v1/create-plan`,
@@ -65,7 +57,6 @@ export const ENDPOINTS = {
     BREAK_INVESTMENT: `${BASE_URL}/api/v1/breakInvestment`,
     CONFIRM_PIN: `${BASE_URL}/api/v1/entered-pin`,
   },
-
   PAYMENT: {
     FUND_WALLET: `${BASE_URL}/api/v1/fundWallet`,
     VERIFY_PAYMENT: `${BASE_URL}/api/v1/verifyFund`,

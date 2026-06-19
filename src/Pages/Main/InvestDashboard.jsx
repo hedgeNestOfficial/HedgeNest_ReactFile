@@ -20,8 +20,8 @@ import "../../Style/InvestDashboard.css";
 
 const InvestDashboard = () => {
   const dispatch = useDispatch();
-
   const { user, token } = useSelector((state) => state.user);
+
   const [plans, setPlans] = useState([]);
   const [userInvestments, setUserInvestments] = useState([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
@@ -36,16 +36,16 @@ const InvestDashboard = () => {
     if (!token) return;
     initializeDashboard();
   }, [token]);
+
   const initializeDashboard = async () => {
     await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
   };
-
+  console.log("USER:", user);
+  console.log("USER ID:", user?._id);
   const refreshWallet = async () => {
     try {
       const response = await getMyWallet(token);
-
       const walletData = response?.data?.[0];
-
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
@@ -57,9 +57,7 @@ const InvestDashboard = () => {
   const fetchPlans = async () => {
     try {
       setLoadingPlans(true);
-
       const response = await getInvestmentPlans(token);
-
       const uniquePlans =
         response?.investmentPlan?.filter(
           (plan, index, self) =>
@@ -68,7 +66,6 @@ const InvestDashboard = () => {
               (item) => item.investmentName === plan.investmentName,
             ),
         ) || [];
-
       setPlans(uniquePlans);
     } catch (error) {
       toast.error("Unable to load investment plans");
@@ -80,9 +77,7 @@ const InvestDashboard = () => {
   const fetchUserInvestments = async () => {
     try {
       setLoadingInvestments(true);
-
       const response = await getUserInvestments(token);
-
       setUserInvestments(response?.data || []);
     } catch (error) {
       toast.error("Unable to load investments");
@@ -95,6 +90,7 @@ const InvestDashboard = () => {
     setSelectedProduct(product);
     setIsInvestModalOpen(true);
   };
+
   const handleWithdrawInvestment = async (position) => {
     try {
       const payload = {
@@ -119,22 +115,40 @@ const InvestDashboard = () => {
     setShowBreakModal(true);
   };
 
+  const handleCloseBreakModal = () => {
+    setShowBreakModal(false);
+    setSelectedPosition(null);
+  };
+
+  // This is the single source of truth for PIN verification + break.
+  // The modal collects the PIN and calls this — it does not verify or break itself.
   const handleBreakInvestment = async (investmentId, transactionPin) => {
     try {
+      if (!user?._id) {
+        throw new Error("User session not found. Please log in again.");
+      }
+
+      // Step 1: Confirm PIN
       await confirmTransactionPin(user._id, transactionPin, token);
 
+      // Step 2: Break the investment
       const response = await breakInvestment(investmentId, token);
 
       toast.success(response?.message || "Investment terminated successfully");
 
+      // Step 3: Refresh data
       await Promise.all([fetchUserInvestments(), refreshWallet()]);
 
       return response;
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Unable to terminate investment",
-      );
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to terminate investment";
 
+      toast.error(message);
+
+      // Re-throw so the modal can catch it and return the user to PIN entry
       throw error;
     }
   };
@@ -143,7 +157,6 @@ const InvestDashboard = () => {
     <div className="dashboard-wrapper">
       <header className="invest-dashboard-header">
         <h1>Invest</h1>
-
         <p>Curated, beginner-friendly products from low to medium risk</p>
       </header>
 
@@ -154,7 +167,7 @@ const InvestDashboard = () => {
           <p className="loading-state">Loading positions...</p>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 6).map((position) => (
+            {userInvestments.slice(0, 12).map((position) => (
               <PositionCard
                 key={position._id}
                 position={position}
@@ -166,7 +179,6 @@ const InvestDashboard = () => {
         ) : (
           <div className="empty-positions-card">
             <p className="empty-positions-title">No Active Investments Yet</p>
-
             <p className="empty-positions-subtitle">
               You don't have any active investments right now.
             </p>
@@ -176,7 +188,6 @@ const InvestDashboard = () => {
 
       <section className="available-section">
         <h2>Available Products</h2>
-
         <div className="flex-container">
           {loadingPlans ? (
             <p>Loading investment plans...</p>
@@ -201,10 +212,7 @@ const InvestDashboard = () => {
 
       <BreakInvestmentModalManager
         isOpen={showBreakModal}
-        onClose={() => {
-          setShowBreakModal(false);
-          setSelectedPosition(null);
-        }}
+        onClose={handleCloseBreakModal}
         position={selectedPosition}
         onConfirmBreak={handleBreakInvestment}
       />
