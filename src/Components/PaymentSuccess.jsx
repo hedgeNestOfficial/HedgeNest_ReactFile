@@ -40,13 +40,11 @@ const PaymentSuccess = () => {
           <FaCheckCircle className="payment-success-icon" />
         </div>
 
-        <h1 className="payment-success-title">
-          Payment Successful
-        </h1>
+        <h1 className="payment-success-title">Payment Successful</h1>
 
         <p className="payment-success-message">
-          Your deposit was received successfully.
-          Your wallet balance is being updated automatically.
+          Your deposit was received successfully. Your wallet balance is being
+          updated automatically.
         </p>
 
         <button

@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 import {
   initiateInvestment,
   confirmTransactionPin,
-} from "../../Services/investmentService"; /* 👈 Imported confirmTransactionPin service */
-import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
+// } from "../../Services/investmentService"; /* 👈 Imported confirmTransactionPin service */
+// // import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
 
