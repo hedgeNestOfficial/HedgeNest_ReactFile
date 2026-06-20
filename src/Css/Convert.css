@@ -451,7 +451,12 @@
    ========================================================================== */
 
 .convert-skel {
-  background: linear-gradient(90deg, #f1f0f4 25%, #e1e0e6 50%, #f1f0f4 75%);
+  background: linear-gradient(
+    90deg,
+    #f1f0f479 25%,
+    #e1e0e63d 50%,
+    #f1f0f457 75%
+  );
   background-size: 200% 100%;
   animation: convertShimmer 1.5s infinite ease-in-out;
   border-radius: 4px;
