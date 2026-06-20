@@ -266,6 +266,53 @@
 /* =========================
    MOBILE RESPONSIVENESS
 ========================= */
+
+/* ==========================================================================
+   WALLET SKELETON LOADERS
+   ========================================================================== */
+
+.wallet-skel {
+  border-radius: 6px;
+  animation: walletPulse 1.5s infinite ease-in-out;
+  background-size: 200% 100%;
+  display: inline-block;
+}
+
+/* Layered mask for the Deep Navy card */
+.skel-dark {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+}
+
+/* Layered mask for the Golden Gradient card */
+.skel-gold {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.15) 75%
+  );
+}
+
+/* Size matches text scale effortlessly without content layout shifts */
+.skel-large {
+  height: 44px;
+  width: 60%;
+}
+
+@keyframes walletPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .wallet-page-container {
     padding: 20px;
