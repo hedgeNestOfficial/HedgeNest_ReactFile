@@ -1,5 +1,5 @@
 import React from "react";
-import { RiLockLine, RiLockUnlockLine } from "react-icons/ri";
+import { RiLockLine, RiLockUnlockLine, RiEyeOffLine } from "react-icons/ri";
 import "../Style/Vaults.css";
 
 const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
@@ -15,13 +15,18 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
         const isStealth = vaultTypeUpper === "STEALTH";
         const isFlexible = vaultTypeUpper === "FLEXIBLE";
 
-        const progressPercentage = vault.interestRate;
+        // Combines base target amount pool and current balance pool seamlessly
+        const totalCombinedBalance =
+          Number(vault.targetAmount || 0) + Number(vault.balance || 0);
+        const progressPercentage = vault.interestRate || 0;
 
         return (
           <article key={vaultId} className="vault-card">
             <div className="badge">
               {isFlexible ? (
                 <RiLockUnlockLine className="badge-icon icon-gold" />
+              ) : isStealth ? (
+                <RiEyeOffLine className="badge-icon icon-gold" /> // Fixed Stealth Plan Label & Icon
               ) : (
                 <RiLockLine className="badge-icon icon-gold" />
               )}
@@ -33,7 +38,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
             <div className="amount-group">
               <span className="vault-currency">₦</span>
               <span className="vault-balance">
-                {Number(vault.targetAmount).toLocaleString()}
+                {totalCombinedBalance.toLocaleString()}
               </span>
 
               {isFlexible && (
@@ -42,7 +47,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                   <div>
                     <span className="vault-currency">₦</span>
                     <span className="vault-balance">
-                      {Number(vault.balance).toLocaleString()}
+                      {Number(vault.balance || 0).toLocaleString()}
                     </span>
                   </div>
                 </div>

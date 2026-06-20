@@ -78,10 +78,6 @@ const Dashboard = () => {
     return <SplashScreen />;
   }
 
-  const currentTransactions = liveTransactions?.length
-    ? liveTransactions
-    : historyData;
-
   return (
     <section>
       <div className="Dash-container">
