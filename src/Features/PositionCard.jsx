@@ -23,19 +23,15 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
     ? position.maturityDate.split("T")[0]
     : "N/A";
 
-  /*
-  |--------------------------------------------------------------------------
-  | Early Termination / Broken Position Cooling State
-  |--------------------------------------------------------------------------
-  */
   let breakMessage = "";
   let isSettlementReady = false;
 
   if (isBroken) {
     const terminatedDate = new Date(position.terminatedAt);
-    // 48-hour cooling lock window
+
+    // ⏱️ UPDATED: 26-hour team approved cooling lock window
     const releaseDate = new Date(
-      terminatedDate.getTime() + 48 * 60 * 60 * 1000,
+      terminatedDate.getTime() + 26 * 60 * 60 * 1000,
     );
     const diffMs = releaseDate.getTime() - today.getTime();
 
@@ -53,7 +49,7 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
     }
   }
 
-  // A user can ONLY withdraw if it's naturally matured OR broken and passed the 48h window
+  // A user can ONLY withdraw if it's naturally matured OR broken and passed the 26h window
   const canWithdraw = isMatured || isSettlementReady;
 
   const handleBreakClick = () => {
@@ -64,7 +60,6 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
       );
       return;
     }
-    // Forward the fully validated position down the state stream
     onBreakClick?.(position);
   };
 
@@ -88,7 +83,8 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
             {investmentName.toUpperCase()}
           </span>
           <h2 className="position-product-main-amount">
-            ₦{amount.toLocaleString()}
+            {/* Render clear currency pricing layouts */}₦
+            {amount.toLocaleString()}
           </h2>
         </div>
 
@@ -112,46 +108,50 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
         </div>
       </div>
 
-      {/* Early Termination Alert Notice */}
+      {/* Early Termination Alert Notice (Maintained same countdown layout) */}
       {isBroken && (
-        <div
-          style={{
-            marginTop: "12px",
-            padding: "10px",
-            borderRadius: "8px",
-            background: "#fff7e6",
-            color: "#b7791f",
-            fontSize: "13px",
-            fontWeight: "600",
-            textAlign: "center",
-            marginBottom: "12px",
-          }}
-        >
+        <div className="position-card-termination-banner">
           Investment Terminated • {breakMessage}
         </div>
       )}
 
       {/* Interactive Action Controls */}
       <div className="position-card-action-row">
-        {!isBroken && (
+        {/* 1. Break Button: Only shows if NOT matured and NOT already broken. Styled white/neutral to deprioritize. */}
+        {!isMatured && !isBroken && (
           <button
             type="button"
-            className="position-btn-action position-btn-gold-fill"
+            className="position-btn-action position-btn-white-solid"
             onClick={handleBreakClick}
           >
             Break
           </button>
         )}
 
+        {/* 2. Primary/Secondary State Action Button:
+            - If Not Matured: Stays visible, disabled, and colored in Premium Gold.
+            - If Matured / Settled: Becomes an active, clickable Gold button to withdraw funds.
+            - If Broken but Cooling: Shows the countdown notice inline, greyed out.
+        */}
         <button
           type="button"
           className={`position-btn-action ${
-            canWithdraw ? "position-btn-white-solid" : "position-btn-disabled"
+            canWithdraw
+              ? "position-btn-gold-fill"
+              : !isBroken && !isMatured
+                ? "position-btn-gold-fill position-btn-disabled-gold"
+                : "position-btn-disabled"
           }`}
           disabled={!canWithdraw}
           onClick={handleWithdrawClick}
         >
-          {isBroken ? breakMessage : isMatured ? "Withdraw" : "Not Matured"}
+          {isBroken
+            ? isSettlementReady
+              ? "Withdraw"
+              : breakMessage
+            : isMatured
+              ? "Withdraw"
+              : "Not Matured"}
         </button>
       </div>
     </div>
