@@ -3,8 +3,7 @@ import toast from "react-hot-toast";
 import { OrbitProgress } from "react-loading-indicators";
 
 import { fundWallet } from "../../Services/paymentService";
-import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
-
+import { useWalletRefresh } from "../Hooks/useWalletRefresh.js";
 import "../../Style/DepositModals.css";
 
 const DepositModalManager = ({ isOpen, onClose, amount, token, onSuccess }) => {
