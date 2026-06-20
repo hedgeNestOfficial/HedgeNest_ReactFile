@@ -14,18 +14,11 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const { user, token, wallet } = useSelector((state) => state.user);
-
-  // Core Dashboard States
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
 
-  /*
-  |--------------------------------------------------------------------------
-  | Splash Screen Lifecycle Controller
-  |--------------------------------------------------------------------------
-  */
   useEffect(() => {
     if (!showSplash) return;
 
@@ -37,11 +30,6 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [showSplash]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | Data Pipeline (Wallet Profile Sync)
-  |--------------------------------------------------------------------------
-  */
   useEffect(() => {
     const initializeDashboardData = async () => {
       if (!token) return;
@@ -65,11 +53,6 @@ const Dashboard = () => {
     initializeDashboardData();
   }, [token, dispatch]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | UI Presentation Computations
-  |--------------------------------------------------------------------------
-  */
   const fullName =
     `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || "User";
   const profileImage =

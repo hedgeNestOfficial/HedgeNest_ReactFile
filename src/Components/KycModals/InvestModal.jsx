@@ -442,10 +442,9 @@ import {
   breakInvestment,
   confirmTransactionPin,
 } from "../../Services/investmentService";
-import { getMyWallet } from "../../Services/Walletservice";
-import { updateWallet } from "../../Store/UserSlice";
-
-import "../../Style/InvestDashboard.css";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
+import "../../Style/InvestModal.css";
+import investAni from "../../assets/investAni.gif";
 
 const InvestDashboard = () => {
   const dispatch = useDispatch();

@@ -1,11 +1,17 @@
 // import React, { useEffect, useState } from "react";
 // import { useSelector, useDispatch } from "react-redux";
 // import toast from "react-hot-toast";
+
+// // Feature Components
 // import { InvestmentCard } from "../../Features/InvestmentCard";
 // import PositionCard from "../../Features/PositionCard";
+
+// // Modals
 // import InvestModal from "../../Components/KycModals/InvestModal";
 // import KycModalManager from "../../Components/KycModals/KycModalManager";
 // import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";
+
+// // Services & Global State Actions
 // import {
 //   getInvestmentPlans,
 //   getUserInvestments,
@@ -16,16 +22,21 @@
 // } from "../../Services/investmentService";
 // import { getMyWallet } from "../../Services/Walletservice";
 // import { updateWallet } from "../../Store/UserSlice";
+
+// // Styles
 // import "../../Style/InvestDashboard.css";
 
 // const InvestDashboard = () => {
 //   const dispatch = useDispatch();
 //   const { user, token } = useSelector((state) => state.user);
 
+//   // --- Data State ---
 //   const [plans, setPlans] = useState([]);
 //   const [userInvestments, setUserInvestments] = useState([]);
 //   const [loadingPlans, setLoadingPlans] = useState(true);
 //   const [loadingInvestments, setLoadingInvestments] = useState(true);
+
+//   // --- UI/Modal State ---
 //   const [selectedProduct, setSelectedProduct] = useState(null);
 //   const [selectedPosition, setSelectedPosition] = useState(null);
 //   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
@@ -40,8 +51,6 @@
 //   const initializeDashboard = async () => {
 //     await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
 //   };
-//   console.log("USER:", user);
-//   console.log("USER ID:", user?._id);
 //   const refreshWallet = async () => {
 //     try {
 //       const response = await getMyWallet(token);
@@ -49,15 +58,15 @@
 //       if (walletData) {
 //         dispatch(updateWallet(walletData));
 //       }
-//     } catch (error) {
-//       console.log("Wallet refresh failed:", error);
-//     }
+//     } catch (error) {}
 //   };
 
 //   const fetchPlans = async () => {
 //     try {
 //       setLoadingPlans(true);
 //       const response = await getInvestmentPlans(token);
+
+//       // Filter out duplicate investment items by plan name
 //       const uniquePlans =
 //         response?.investmentPlan?.filter(
 //           (plan, index, self) =>
@@ -66,6 +75,7 @@
 //               (item) => item.investmentName === plan.investmentName,
 //             ),
 //         ) || [];
+
 //       setPlans(uniquePlans);
 //     } catch (error) {
 //       toast.error("Unable to load investment plans");
@@ -80,34 +90,22 @@
 //       const response = await getUserInvestments(token);
 //       setUserInvestments(response?.data || []);
 //     } catch (error) {
-//       toast.error("Unable to load investments");
+//       toast.error("Unable to load active positions");
 //     } finally {
 //       setLoadingInvestments(false);
 //     }
 //   };
 
+//   useEffect(() => {
+//     if (token) {
+//       initializeDashboard();
+//     }
+//   }, [token]);
+
+//   // --- Action Handlers ---
 //   const handleInvestActionTrigger = (product) => {
 //     setSelectedProduct(product);
 //     setIsInvestModalOpen(true);
-//   };
-
-//   const handleWithdrawInvestment = async (position) => {
-//     try {
-//       const payload = {
-//         investmentId: position._id,
-//         userId: position.userId,
-//       };
-//       await completeInvestment(payload, token);
-//       await claimInvestment(payload, token);
-//       toast.success("Investment claimed successfully");
-//       await Promise.all([fetchUserInvestments(), refreshWallet()]);
-//     } catch (error) {
-//       toast.error(
-//         error?.response?.data?.message ||
-//           error?.response?.data?.messagge ||
-//           "Unable to claim investment",
-//       );
-//     }
 //   };
 
 //   const handleOpenBreakModal = (position) => {
@@ -120,37 +118,50 @@
 //     setSelectedPosition(null);
 //   };
 
-//   // This is the single source of truth for PIN verification + break.
-//   // The modal collects the PIN and calls this — it does not verify or break itself.
-//   const handleBreakInvestment = async (investmentId, transactionPin) => {
+//   /**
+//    * Complete Withdrawal Logic (Matured Investments)
+//    */
+//   const handleWithdrawInvestment = async (position) => {
 //     try {
-//       if (!user?._id) {
-//         throw new Error("User session not found. Please log in again.");
-//       }
+//       const payload = {
+//         investmentId: position._id,
+//         userId: position.userId,
+//       };
 
-//       // Step 1: Confirm PIN
-//       await confirmTransactionPin(user._id, transactionPin, token);
+//       await completeInvestment(payload, token);
+//       await claimInvestment(payload, token);
 
-//       // Step 2: Break the investment
-//       const response = await breakInvestment(investmentId, token);
-
-//       toast.success(response?.message || "Investment terminated successfully");
-
-//       // Step 3: Refresh data
+//       toast.success("Investment claimed successfully");
 //       await Promise.all([fetchUserInvestments(), refreshWallet()]);
-
-//       return response;
 //     } catch (error) {
-//       const message =
+//       toast.error(
 //         error?.response?.data?.message ||
-//         error?.message ||
-//         "Unable to terminate investment";
-
-//       toast.error(message);
-
-//       // Re-throw so the modal can catch it and return the user to PIN entry
-//       throw error;
+//           error?.response?.data?.messagge ||
+//           "Unable to process withdrawal",
+//       );
 //     }
+//   };
+
+//   /**
+//    * Two-Step Liquidate/Break Flow (Early Terminations)
+//    * Handled sequentially, errors pass directly back up to the modal layout
+//    */
+//   const handleBreakInvestment = async (investmentId, transactionPin) => {
+//     if (!user?._id) {
+//       throw new Error("User session not found. Please log in again.");
+//     }
+
+//     // Step 1: Securely confirm transaction authorization matching user account profile
+//     await confirmTransactionPin(user._id, transactionPin, token);
+
+//     // Step 2: Terminate active position document reference
+//     const response = await breakInvestment(investmentId, token);
+//     toast.success(response?.message || "Investment terminated successfully");
+
+//     // Step 3: Refresh background parameters concurrently
+//     await Promise.all([fetchUserInvestments(), refreshWallet()]);
+
+//     return response;
 //   };
 
 //   return (
@@ -160,6 +171,7 @@
 //         <p>Curated, beginner-friendly products from low to medium risk</p>
 //       </header>
 
+//       {/* --- Positions Segment --- */}
 //       <section className="positions-section">
 //         <h2>Your Positions</h2>
 
@@ -167,7 +179,7 @@
 //           <p className="loading-state">Loading positions...</p>
 //         ) : userInvestments.length > 0 ? (
 //           <div className="flex-container">
-//             {userInvestments.slice(0, 12).map((position) => (
+//             {userInvestments.slice(0, 30).map((position) => (
 //               <PositionCard
 //                 key={position._id}
 //                 position={position}
@@ -186,11 +198,12 @@
 //         )}
 //       </section>
 
+//       {/* --- Catalog Products Segment --- */}
 //       <section className="available-section">
 //         <h2>Available Products</h2>
 //         <div className="flex-container">
 //           {loadingPlans ? (
-//             <p>Loading investment plans...</p>
+//             <p className="loading-state">Loading investment plans...</p>
 //           ) : (
 //             plans.map((product) => (
 //               <InvestmentCard
@@ -203,6 +216,7 @@
 //         </div>
 //       </section>
 
+//       {/* --- Modal Architecture Core Layer --- */}
 //       <InvestModal
 //         isOpen={isInvestModalOpen}
 //         onClose={() => setIsInvestModalOpen(false)}
@@ -230,17 +244,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
-// Feature Components
 import { InvestmentCard } from "../../Features/InvestmentCard";
 import PositionCard from "../../Features/PositionCard";
-
-// Modals
 import InvestModal from "../../Components/KycModals/InvestModal";
 import KycModalManager from "../../Components/KycModals/KycModalManager";
 import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";
-
-// Services & Global State Actions
 import {
   getInvestmentPlans,
   getUserInvestments,
@@ -251,21 +259,16 @@ import {
 } from "../../Services/investmentService";
 import { getMyWallet } from "../../Services/Walletservice";
 import { updateWallet } from "../../Store/UserSlice";
-
-// Styles
 import "../../Style/InvestDashboard.css";
 
 const InvestDashboard = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user);
 
-  // --- Data State ---
   const [plans, setPlans] = useState([]);
   const [userInvestments, setUserInvestments] = useState([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
   const [loadingInvestments, setLoadingInvestments] = useState(true);
-
-  // --- UI/Modal State ---
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
@@ -280,6 +283,8 @@ const InvestDashboard = () => {
   const initializeDashboard = async () => {
     await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
   };
+  console.log("USER:", user);
+  console.log("USER ID:", user?._id);
   const refreshWallet = async () => {
     try {
       const response = await getMyWallet(token);
@@ -287,15 +292,15 @@ const InvestDashboard = () => {
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("Wallet refresh failed:", error);
+    }
   };
 
   const fetchPlans = async () => {
     try {
       setLoadingPlans(true);
       const response = await getInvestmentPlans(token);
-
-      // Filter out duplicate investment items by plan name
       const uniquePlans =
         response?.investmentPlan?.filter(
           (plan, index, self) =>
@@ -304,7 +309,6 @@ const InvestDashboard = () => {
               (item) => item.investmentName === plan.investmentName,
             ),
         ) || [];
-
       setPlans(uniquePlans);
     } catch (error) {
       toast.error("Unable to load investment plans");
@@ -319,27 +323,34 @@ const InvestDashboard = () => {
       const response = await getUserInvestments(token);
       setUserInvestments(response?.data || []);
     } catch (error) {
-      toast.error("Unable to load active positions");
+      toast.error("Unable to load investments");
     } finally {
       setLoadingInvestments(false);
     }
   };
 
-  // Synchronized initialization runner
-  const initializeDashboard = async () => {
-    await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
-  };
-
-  useEffect(() => {
-    if (token) {
-      initializeDashboard();
-    }
-  }, [token]);
-
-  // --- Action Handlers ---
   const handleInvestActionTrigger = (product) => {
     setSelectedProduct(product);
     setIsInvestModalOpen(true);
+  };
+
+  const handleWithdrawInvestment = async (position) => {
+    try {
+      const payload = {
+        investmentId: position._id,
+        userId: position.userId,
+      };
+      await completeInvestment(payload, token);
+      await claimInvestment(payload, token);
+      toast.success("Investment claimed successfully");
+      await Promise.all([fetchUserInvestments(), refreshWallet()]);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.response?.data?.messagge ||
+          "Unable to claim investment",
+      );
+    }
   };
 
   const handleOpenBreakModal = (position) => {
@@ -352,50 +363,37 @@ const InvestDashboard = () => {
     setSelectedPosition(null);
   };
 
-  /**
-   * Complete Withdrawal Logic (Matured Investments)
-   */
-  const handleWithdrawInvestment = async (position) => {
-    try {
-      const payload = {
-        investmentId: position._id,
-        userId: position.userId,
-      };
-
-      await completeInvestment(payload, token);
-      await claimInvestment(payload, token);
-
-      toast.success("Investment claimed successfully");
-      await Promise.all([fetchUserInvestments(), refreshWallet()]);
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.response?.data?.messagge ||
-          "Unable to process withdrawal",
-      );
-    }
-  };
-
-  /**
-   * Two-Step Liquidate/Break Flow (Early Terminations)
-   * Handled sequentially, errors pass directly back up to the modal layout
-   */
+  // This is the single source of truth for PIN verification + break.
+  // The modal collects the PIN and calls this — it does not verify or break itself.
   const handleBreakInvestment = async (investmentId, transactionPin) => {
-    if (!user?._id) {
-      throw new Error("User session not found. Please log in again.");
+    try {
+      if (!user?._id) {
+        throw new Error("User session not found. Please log in again.");
+      }
+
+      // Step 1: Confirm PIN
+      await confirmTransactionPin(user._id, transactionPin, token);
+
+      // Step 2: Break the investment
+      const response = await breakInvestment(investmentId, token);
+
+      toast.success(response?.message || "Investment terminated successfully");
+
+      // Step 3: Refresh data
+      await Promise.all([fetchUserInvestments(), refreshWallet()]);
+
+      return response;
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to terminate investment";
+
+      toast.error(message);
+
+      // Re-throw so the modal can catch it and return the user to PIN entry
+      throw error;
     }
-
-    // Step 1: Securely confirm transaction authorization matching user account profile
-    await confirmTransactionPin(user._id, transactionPin, token);
-
-    // Step 2: Terminate active position document reference
-    const response = await breakInvestment(investmentId, token);
-    toast.success(response?.message || "Investment terminated successfully");
-
-    // Step 3: Refresh background parameters concurrently
-    await Promise.all([fetchUserInvestments(), refreshWallet()]);
-
-    return response;
   };
 
   return (
@@ -405,7 +403,6 @@ const InvestDashboard = () => {
         <p>Curated, beginner-friendly products from low to medium risk</p>
       </header>
 
-      {/* --- Positions Segment --- */}
       <section className="positions-section">
         <h2>Your Positions</h2>
 
@@ -413,7 +410,7 @@ const InvestDashboard = () => {
           <p className="loading-state">Loading positions...</p>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 30).map((position) => (
+            {userInvestments.slice(0, 12).map((position) => (
               <PositionCard
                 key={position._id}
                 position={position}
@@ -432,12 +429,11 @@ const InvestDashboard = () => {
         )}
       </section>
 
-      {/* --- Catalog Products Segment --- */}
       <section className="available-section">
         <h2>Available Products</h2>
         <div className="flex-container">
           {loadingPlans ? (
-            <p className="loading-state">Loading investment plans...</p>
+            <p>Loading investment plans...</p>
           ) : (
             plans.map((product) => (
               <InvestmentCard
@@ -450,7 +446,6 @@ const InvestDashboard = () => {
         </div>
       </section>
 
-      {/* --- Modal Architecture Core Layer --- */}
       <InvestModal
         isOpen={isInvestModalOpen}
         onClose={() => setIsInvestModalOpen(false)}
