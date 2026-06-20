@@ -40,8 +40,6 @@ const InvestDashboard = () => {
   const initializeDashboard = async () => {
     await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
   };
-  console.log("USER:", user);
-  console.log("USER ID:", user?._id);
   const refreshWallet = async () => {
     try {
       const response = await getMyWallet(token);
@@ -49,9 +47,7 @@ const InvestDashboard = () => {
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
-    } catch (error) {
-      console.log("Wallet refresh failed:", error);
-    }
+    } catch (error) {}
   };
 
   const fetchPlans = async () => {
@@ -167,7 +163,7 @@ const InvestDashboard = () => {
           <p className="loading-state">Loading positions...</p>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 12).map((position) => (
+            {userInvestments.slice(0, 30).map((position) => (
               <PositionCard
                 key={position._id}
                 position={position}

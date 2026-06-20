@@ -52,7 +52,6 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
-          <Route path="/notification" element={<TransactionHistory />} />
         </Route>
 
         <Route element={<PrivateRoute />}>
@@ -62,6 +61,7 @@ const App = () => {
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/notification" element={<TransactionHistory />} />
             {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
             {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
             <Route path="/SmartSafe" element={<SmartSafe />} />

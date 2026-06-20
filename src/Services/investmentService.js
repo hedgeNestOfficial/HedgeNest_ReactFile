@@ -98,13 +98,12 @@ export const claimInvestment = async (payload, token) => {
 | Break Investment (Liquidate Active Position Early)
 |--------------------------------------------------------------------------
 */
-export const breakInvestment = async (investmentId, transactionPin, token) => {
+export const breakInvestment = async (investmentId, token) => {
   try {
     const response = await axios.put(
       `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
       {
-        investmentId: investmentId, // Satisfies backend body verification layers
-        enteredPin: transactionPin, // Transmits security authorization payload
+        investmentId, // Satisfies backend body verification layers
       },
       {
         headers: {
@@ -116,7 +115,7 @@ export const breakInvestment = async (investmentId, transactionPin, token) => {
     );
     return response.data;
   } catch (error) {
-    console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);
+    // console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);
     throw error;
   }
 };
