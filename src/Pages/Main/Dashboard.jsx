@@ -175,7 +175,10 @@ const Dashboard = () => {
                   >
                     <p>View all</p>
                     <div className="icon-holder">
-                      <IoIosArrowRoundForward className="arrow-icon" />
+                      <IoIosArrowRoundForward
+                        className="arrow-icon"
+                        style={{ alignSelf: "right" }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -199,7 +202,10 @@ const Dashboard = () => {
                   >
                     <p>View all</p>
                     <div className="icon-holder">
-                      <IoIosArrowRoundForward className="arrow-icon" />
+                      <IoIosArrowRoundForward
+                        className="arrow-icon"
+                        style={{ alignSelf: "right" }}
+                      />
                     </div>
                   </div>
                 </div>

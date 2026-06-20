@@ -11,7 +11,7 @@ export const submitKyc = async (formData, token) => {
 
     return response.data;
   } catch (error) {
-    console.log("UPLOAD ERROR:", error.response?.data);
+    // console.log("UPLOAD ERROR:", error.response?.data);
 
     throw error;
   }

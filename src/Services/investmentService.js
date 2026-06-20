@@ -328,18 +328,19 @@ export const breakInvestment = async (investmentId, token) => {
   try {
     const response = await axios.put(
       `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
-      { investmentId }, // Fixed: Explicitly passed inside the body to clear 400 validations
       {
-        investmentId, // Satisfies backend body verification layers
+        investmentId, // Parameter 2: data/body
       },
       {
+        // Parameter 3: config (headers, timeout, etc.)
         headers: {
           ...API_CONFIG.headers,
-          Authorization: `Bearer ${token}`, // Authorizes platform operation identity
+          Authorization: `Bearer ${token}`, // ✅ Token is here
         },
         timeout: API_CONFIG.timeout,
       },
     );
+
     return response.data;
   } catch (error) {
     // console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);

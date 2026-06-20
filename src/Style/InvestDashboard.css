@@ -1,12 +1,13 @@
 .dashboard-wrapper {
   padding: 50px;
   max-width: 1200px;
-  /* margin: 0 auto; Centers the dashboard */
+  margin: 0 auto; /* Centers the dashboard globally */
   display: flex;
   flex-direction: column;
   gap: 50px;
   background-color: #fcfcf7;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 header h1 {
@@ -25,16 +26,23 @@ h2 {
   margin-bottom: 20px;
   color: #333;
 }
+
+/* ==========================================================================
+   UNIFIED FLEXBOX LAYOUT ENGINE (2 COLUMNS PER ROW)
+   ========================================================================== */
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  /* justify-content: center; */
-  align-items: center;
+  gap: 15px; /* Uniform clean gutters across all cards and loading configurations */
+  width: 100%;
+  align-items: stretch; /* Ensures matching card heights per row */
 }
 
-.flex-container > div {
-  flex: 1 1 350px;
+/* Force both standard component wrapper divs and skeletons to match dimensions */
+.flex-container > div,
+.invest-skeleton-card {
+  flex: 0 1 49%; /* Allocates clean dual-column layout paths without processing overhead */
+  box-sizing: border-box;
 }
 
 .empty-positions-card {
@@ -63,19 +71,82 @@ h2 {
   margin: 0;
   line-height: 1.5;
 }
-/* Mobile Specific Tweaks */
-@media (max-width: 480px) {
+
+/* ==========================================================================
+   INVESTMENT DASHBOARD SKELETON SPECIFICS
+   ========================================================================== */
+.invest-skeleton-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Darker tone configurations to pop cleanly off pure light backgrounds */
+.skel-row {
+  background: linear-gradient(90deg, #e5e7eb 25%, #d1d5db 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: investShimmer 1.5s infinite ease-in-out;
+  border-radius: 4px;
+}
+
+.header-skel {
+  height: 24px;
+  width: 45%;
+  margin-bottom: 6px;
+}
+
+.body-skel-line {
+  height: 16px;
+  width: 85%;
+}
+
+.body-skel-line.short-skel {
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+.btn-skel {
+  height: 44px;
+  width: 100%;
+  border-radius: 6px;
+  margin-top: auto;
+}
+
+@keyframes investShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==========================================================================
+   MOBILE & RESPONSIVE VIEWPORTS
+   ========================================================================== */
+@media screen and (max-width: 768px) {
   .dashboard-wrapper {
-    padding-top: 80px;
-    padding-right: 20px;
+    padding: 30px 20px;
   }
 
   .flex-container {
-    gap: 16px;
+    gap: 16px; /* Switch to crisp pixel gaps on compact tracking viewports */
   }
 
-  /* Force cards to take full width on very small screens */
-  .flex-container > div {
-    flex: 1 1 100%;
+  /* Safely drop layout layers down to a single clean focus card column */
+  .flex-container > div,
+  .invest-skeleton-card {
+    flex: 0 1 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-wrapper {
+    padding-top: 80px;
   }
 }
