@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+
+// Presentation UI Blocks
 import { InvestmentCard } from "../../Features/InvestmentCard";
 import PositionCard from "../../Features/PositionCard";
+
+// Modal System Infrastructure
 import InvestModal from "../../Components/KycModals/InvestModal";
 import KycModalManager from "../../Components/KycModals/KycModalManager";
 import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";
+
+// Network Actions
 import {
   getInvestmentPlans,
   getUserInvestments,
@@ -16,6 +22,7 @@ import {
 } from "../../Services/investmentService";
 import { getMyWallet } from "../../Services/Walletservice";
 import { updateWallet } from "../../Store/UserSlice";
+
 import "../../Style/InvestDashboard.css";
 
 const InvestDashboard = () => {
@@ -26,23 +33,15 @@ const InvestDashboard = () => {
   const [userInvestments, setUserInvestments] = useState([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
   const [loadingInvestments, setLoadingInvestments] = useState(true);
+
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
   const [showBreakModal, setShowBreakModal] = useState(false);
 
-  useEffect(() => {
-    if (!token) return;
-    initializeDashboard();
-  }, [token]);
-
-  const initializeDashboard = async () => {
-    await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
-  };
-  console.log("USER:", user);
-  console.log("USER ID:", user?._id);
   const refreshWallet = async () => {
+    if (!token) return;
     try {
       const response = await getMyWallet(token);
       const walletData = response?.data?.[0];
@@ -50,11 +49,12 @@ const InvestDashboard = () => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      console.log("Wallet refresh failed:", error);
+      console.error("Wallet data sync suspended:", error);
     }
   };
 
   const fetchPlans = async () => {
+    if (!token) return;
     try {
       setLoadingPlans(true);
       const response = await getInvestmentPlans(token);
@@ -75,6 +75,7 @@ const InvestDashboard = () => {
   };
 
   const fetchUserInvestments = async () => {
+    if (!token) return;
     try {
       setLoadingInvestments(true);
       const response = await getUserInvestments(token);
@@ -86,28 +87,19 @@ const InvestDashboard = () => {
     }
   };
 
+  const initializeDashboard = async () => {
+    await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
+  };
+
+  useEffect(() => {
+    if (token) {
+      initializeDashboard();
+    }
+  }, [token]);
+
   const handleInvestActionTrigger = (product) => {
     setSelectedProduct(product);
     setIsInvestModalOpen(true);
-  };
-
-  const handleWithdrawInvestment = async (position) => {
-    try {
-      const payload = {
-        investmentId: position._id,
-        userId: position.userId,
-      };
-      await completeInvestment(payload, token);
-      await claimInvestment(payload, token);
-      toast.success("Investment claimed successfully");
-      await Promise.all([fetchUserInvestments(), refreshWallet()]);
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.response?.data?.messagge ||
-          "Unable to claim investment",
-      );
-    }
   };
 
   const handleOpenBreakModal = (position) => {
@@ -120,37 +112,39 @@ const InvestDashboard = () => {
     setSelectedPosition(null);
   };
 
-  // This is the single source of truth for PIN verification + break.
-  // The modal collects the PIN and calls this — it does not verify or break itself.
-  const handleBreakInvestment = async (investmentId, transactionPin) => {
-    try {
-      if (!user?._id) {
-        throw new Error("User session not found. Please log in again.");
-      }
-
-      // Step 1: Confirm PIN
-      await confirmTransactionPin(user._id, transactionPin, token);
-
-      // Step 2: Break the investment
-      const response = await breakInvestment(investmentId, token);
-
-      toast.success(response?.message || "Investment terminated successfully");
-
-      // Step 3: Refresh data
-      await Promise.all([fetchUserInvestments(), refreshWallet()]);
-
-      return response;
-    } catch (error) {
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Unable to terminate investment";
-
-      toast.error(message);
-
-      // Re-throw so the modal can catch it and return the user to PIN entry
-      throw error;
+  const handleWithdrawInvestment = async (position) => {
+    if (!token) {
+      toast.error("Your login session has expired");
+      return;
     }
+    try {
+      const payload = {
+        investmentId: position?._id || position?.id,
+        userId: position?.userId,
+      };
+      await completeInvestment(payload, token);
+      await claimInvestment(payload, token);
+      toast.success("Investment claimed successfully");
+      await Promise.all([fetchUserInvestments(), refreshWallet()]);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Unable to claim investment",
+      );
+    }
+  };
+
+  const handleBreakInvestment = async (investmentId, transactionPin) => {
+    if (!token || !user?._id) {
+      toast.error("Authentication session missing. Please log in again.");
+      throw new Error("Missing auth credentials context tokens.");
+    }
+
+    await confirmTransactionPin(user._id, transactionPin, token);
+    const response = await breakInvestment(investmentId, token);
+
+    toast.success(response?.message || "Investment terminated successfully");
+    await Promise.all([fetchUserInvestments(), refreshWallet()]);
+    return response;
   };
 
   return (
@@ -160,21 +154,33 @@ const InvestDashboard = () => {
         <p>Curated, beginner-friendly products from low to medium risk</p>
       </header>
 
+      {/* POSITIONS SECTION */}
       <section className="positions-section">
         <h2>Your Positions</h2>
-
         {loadingInvestments ? (
-          <p className="loading-state">Loading positions...</p>
+          <div className="flex-container">
+            {Array(4)
+              .fill(0)
+              .map((_, idx) => (
+                <div key={idx} className="invest-skeleton-card">
+                  <div className="skel-row header-skel"></div>
+                  <div className="skel-row body-skel-line"></div>
+                  <div className="skel-row body-skel-line short-skel"></div>
+                  <div className="skel-row btn-skel"></div>
+                </div>
+              ))}
+          </div>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 12).map((position) => (
+            {userInvestments.map((position) => (
               <PositionCard
-                key={position._id}
+                key={position?._id || position?.id}
                 position={position}
                 onBreakClick={handleOpenBreakModal}
                 onWithdrawClick={handleWithdrawInvestment}
               />
             ))}
+            <span>Position</span>
           </div>
         ) : (
           <div className="empty-positions-card">
@@ -186,15 +192,27 @@ const InvestDashboard = () => {
         )}
       </section>
 
+      {/* AVAILABLE PRODUCTS SECTION */}
       <section className="available-section">
         <h2>Available Products</h2>
         <div className="flex-container">
           {loadingPlans ? (
-            <p>Loading investment plans...</p>
+            <div className="flex-container">
+              {Array(4)
+                .fill(0)
+                .map((_, idx) => (
+                  <div key={idx} className="invest-skeleton-card">
+                    <div className="skel-row header-skel"></div>
+                    <div className="skel-row body-skel-line"></div>
+                    <div className="skel-row body-skel-line short-skel"></div>
+                    <div className="skel-row btn-skel"></div>
+                  </div>
+                ))}
+            </div>
           ) : (
             plans.map((product) => (
               <InvestmentCard
-                key={product._id}
+                key={product?._id || product?.id}
                 product={product}
                 onInvestClick={handleInvestActionTrigger}
               />
@@ -203,6 +221,7 @@ const InvestDashboard = () => {
         </div>
       </section>
 
+      {/* MODAL SYSTEM LAYER */}
       <InvestModal
         isOpen={isInvestModalOpen}
         onClose={() => setIsInvestModalOpen(false)}

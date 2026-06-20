@@ -446,6 +446,40 @@
   opacity: 0.95;
 }
 
+/* ==========================================================================
+   CONVERSION BACKDROP SKELETON LOADERS (MID-TONE GRAY LIGHT THEME MIX)
+   ========================================================================== */
+
+.convert-skel {
+  background: linear-gradient(90deg, #e5e7eb 25%, #d1d5db 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: convertShimmer 1.5s infinite ease-in-out;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Rate Banner Display Size Contexts */
+.sk-rate-headline {
+  height: 32px;
+  width: 220px;
+  margin-top: 4px;
+}
+
+/* Selector Pill Display Contexts */
+.sk-pill-balance {
+  height: 14px;
+  width: 80px;
+  margin-bottom: 2px;
+}
+
+@keyframes convertShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
 /* Animations */
 @keyframes fadeIn {
   from {
