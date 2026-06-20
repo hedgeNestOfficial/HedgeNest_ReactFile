@@ -4,18 +4,8 @@
   background-color: #fbf7e9;
   display: flex;
   border: 0;
-
   /* box-sizing: border-box; */
 }
-
-/* .Dash-left {
-  width: 260px;
-  min-width: 260px;
-  height: 100%;
-  position: sticky;
-  background: #000;
-  top: 0;
-} */
 
 .Dash-right {
   flex: 1;
@@ -28,7 +18,6 @@
 
 .dr-holder {
   width: 92%;
-
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -60,11 +49,11 @@
   align-items: center;
   gap: 10px;
 }
+
 .notify-button {
   width: 32px !important;
   background: none;
   border: none;
-
   color: rgb(1, 1, 75);
   cursor: pointer;
   padding: 4px;
@@ -72,6 +61,7 @@
   align-items: center;
   font-size: 24px;
 }
+
 .user-prof img {
   width: 32px;
   height: 32px;
@@ -289,7 +279,13 @@
   font-size: 13px;
   color: #666666;
 }
-
+.view-all-action {
+  display: flex;
+  width: 80px;
+}
+.view-all-action p {
+  width: 60%;
+}
 .lower-section {
   width: 100%;
   display: flex;
@@ -363,6 +359,7 @@
   margin: 0;
 }
 
+/* TRANSACTION LAYOUT INTERFACE OVERRIDES */
 .transactions-view-port {
   width: 100%;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -504,6 +501,17 @@
   .lower-section p:first-child {
     font-size: 24px;
   }
+
+  /* Compact padding alignments on tablet/mobile views */
+  .transaction-section {
+    padding: 16px;
+  }
+
+  .dashboard-variant .transaction-item,
+  .dashboard-variant .tx-item,
+  .dashboard-variant > div > div {
+    padding: 12px 0 !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -515,11 +523,19 @@
   .dr-actions {
     flex-direction: column;
     gap: 8px;
+    height: auto;
   }
 
   .convert,
   .save,
   .invest {
     width: 100%;
+    height: 48px;
+  }
+
+  /* Tiny screen responsive structural adjustments for data items */
+  .dashboard-variant p,
+  .dashboard-variant span {
+    font-size: 13px !important;
   }
 }

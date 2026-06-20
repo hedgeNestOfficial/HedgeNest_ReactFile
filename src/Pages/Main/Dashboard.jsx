@@ -8,6 +8,7 @@ import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import SplashScreen from "../../Components/SplashScreen.jsx";
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
+import { getTransactionHistory } from "../../Services/authService.js";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const Dashboard = () => {
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
+
+  const [liveTransactions, setLiveTransactions] = useState([]);
 
   useEffect(() => {
     if (!showSplash) return;

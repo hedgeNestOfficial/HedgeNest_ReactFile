@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { LuLoaderCircle } from "react-icons/lu";
 import Swal from "sweetalert2";
 import PlanPinScreen from "./PlanPinScreen";
 import "../Style/WithdrawalModal.css";
@@ -63,22 +62,23 @@ const WithdrawModal = ({
 
       setIsSubmitting(true);
 
+      // The live balance pool is the actual money real asset
+      const realAmountToWithdraw = Number(vault.balance || 0);
+
       const payload = {
-        amount: vault.balance || 0, // Using normalized balance value
+        amount: realAmountToWithdraw,
         transactionPin: pin.join(""),
       };
 
       const res = await onWithdraw?.(vault, payload);
-
-      // Match the exact nesting structure of your withdrawal API response
       const apiData = res?.data?.data || res?.data;
-      const creditedAmount = apiData?.amountCredited ?? 0;
+      const creditedAmount = apiData?.amountCredited ?? realAmountToWithdraw;
 
+      // SUCCESS PATH: Teardown React modal layout completely
       setScreen(null);
       onClose();
 
-      // Small delay to let modal transition clear before SweetAlert appears
-      await new Promise((r) => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 250));
 
       await Swal.fire({
         title: "Withdrawal Successful",
@@ -88,9 +88,15 @@ const WithdrawModal = ({
         confirmButtonColor: "#EDC344",
       });
 
-      // Execute callback to refresh the parent container list cleanly
       onWithdrawSuccess?.();
     } catch (error) {
+      // FAILURE PATH: Close local component layers instantly to clear the backdrop layout
+      setScreen(null);
+      onClose();
+
+      // Pause briefly for DOM unmounting before mounting SweetAlert frame
+      await new Promise((r) => setTimeout(r, 250));
+
       await Swal.fire({
         title: "Withdrawal Failed",
         text:
@@ -98,6 +104,7 @@ const WithdrawModal = ({
           error?.message ||
           "Please try again",
         icon: "error",
+        confirmButtonColor: "#EF4444",
       });
     } finally {
       setIsSubmitting(false);
@@ -116,7 +123,6 @@ const WithdrawModal = ({
         />
       ) : (
         <div className="hn-modal-card">
-          {/* WARNING SCREEN */}
           {screen === "WARNING" && (
             <div className="hn-step-container animate-fade">
               <h2 className="hn-modal-title hn-text-center">
@@ -127,7 +133,7 @@ const WithdrawModal = ({
                 <p className="hn-modal-desc hn-text-center">
                   Early withdrawal will attract a{" "}
                   <span style={{ color: "#EF4444", fontWeight: "600" }}>
-                    breaking fee
+                    {vault.breakingFeePercentage || 1.5}% breaking fee
                   </span>{" "}
                   and loss of interest.
                 </p>
@@ -157,7 +163,6 @@ const WithdrawModal = ({
             </div>
           )}
 
-          {/* LOADING SCREEN */}
           {screen === "LOADING" && (
             <div className="hn-step-container hn-align-center hn-justify-center hn-py-xl animate-fade">
               <div className="hn-loading-spinner"></div>

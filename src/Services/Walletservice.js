@@ -25,27 +25,22 @@ export const linkBankAccount = async (payload, token) => {
   }
 };
 
-
 // import axios from "axios";
 // import { ENDPOINTS } from "../Config/apiConfig";
 
 export const getMyWallet = async (token) => {
   try {
-    const response = await axios.get(
-      ENDPOINTS.CONVERSION.GET_MY_WALLET,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(ENDPOINTS.CONVERSION.GET_MY_WALLET, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-
 
 export const fundWallet = async (amount, token) => {
   const response = await axios.post(
@@ -55,7 +50,7 @@ export const fundWallet = async (amount, token) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;

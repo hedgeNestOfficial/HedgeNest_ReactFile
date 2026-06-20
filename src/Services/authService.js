@@ -142,3 +142,17 @@ export const uploadUtilityBill = async (file, token) => {
 
   return response.data;
 };
+
+export const getTransactionHistory = async (token) => {
+  try {
+    const response = await axios.get(ENDPOINTS.AUTH.TRANSACTION, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error?.response?.data || error.message;
+  }
+};
