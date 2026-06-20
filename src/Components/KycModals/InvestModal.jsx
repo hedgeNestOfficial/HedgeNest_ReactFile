@@ -7,7 +7,7 @@ import {
   initiateInvestment,
   confirmTransactionPin,
 } from "../../Services/investmentService";
-import { useWalletRefresh } from "../../hooks/useWalletRefresh";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
 
