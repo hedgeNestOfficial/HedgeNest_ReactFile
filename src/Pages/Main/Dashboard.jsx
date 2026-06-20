@@ -5,8 +5,7 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
-import { historyData } from "../../JS/Transactions.js";
-import SplashScreen from "../../Components/SplashScreen.jsx"; // Double check your relative path!
+import SplashScreen from "../../Components/SplashScreen.jsx";
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
 import { getTransactionHistory } from "../../Services/authService.js";
@@ -16,7 +15,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const { user, token, wallet } = useSelector((state) => state.user);
-
+  const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
@@ -36,22 +35,21 @@ const Dashboard = () => {
 
   useEffect(() => {
     const initializeDashboardData = async () => {
+      if (!token) return;
+
       try {
-        if (token) {
-          const response = await getMyWallet(token);
-          const walletData = response?.data?.[0];
+        setIsLoadingWallet(true);
+        // Transaction fetch removed as it is now natively handled by <TransactionHistory />
+        const walletResponse = await getMyWallet(token);
 
-          if (walletData) {
-            dispatch(updateWallet(walletData));
-          }
-
-          const txResponse = await getTransactionHistory(token);
-
-          const transactions = txResponse?.data || txResponse || [];
-          setLiveTransactions(transactions);
+        const walletData = walletResponse?.data?.[0];
+        if (walletData) {
+          dispatch(updateWallet(walletData));
         }
       } catch (error) {
-        console.error("Dashboard metric initialization breakdown:", error);
+        // console.error("Failed to sync wallet data:", error);
+      } finally {
+        setIsLoadingWallet(false);
       }
     };
 
@@ -60,7 +58,6 @@ const Dashboard = () => {
 
   const fullName =
     `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || "User";
-
   const profileImage =
     user?.profilePicture?.url || "https://via.placeholder.com/150";
 
@@ -99,10 +96,16 @@ const Dashboard = () => {
 
               <div className="notify-user">
                 <button className="notify-button">
-                  <IoNotificationsSharp />
+                  <IoNotificationsSharp
+                    onClick={() => navigate("/notification")}
+                  />
                 </button>
 
-                <div className="user-prof" onClick={() => navigate("/profile")}>
+                <div
+                  className="user-prof"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate("/profile")}
+                >
                   <img
                     src={profileImage}
                     alt={fullName}
@@ -119,18 +122,30 @@ const Dashboard = () => {
               <div className="balance">
                 <div className="total-available">
                   <p>Available Balance</p>
-                  <h2>₦ {formatCurrency(availableBalance)}</h2>
+                  {isLoadingWallet ? (
+                    <div className="dash-skel sk-dark sk-large"></div>
+                  ) : (
+                    <h2>₦ {formatCurrency(availableBalance)}</h2>
+                  )}
                 </div>
 
                 <div className="other-balances">
                   <div className="Ngn-balance">
                     <p>NGN BALANCE</p>
-                    <h2>₦ {formatCurrency(nairaBalance)}</h2>
+                    {isLoadingWallet ? (
+                      <div className="dash-skel sk-dark sk-medium"></div>
+                    ) : (
+                      <h2>₦ {formatCurrency(nairaBalance)}</h2>
+                    )}
                   </div>
 
                   <div className="usdt-balance">
                     <p>USDT BALANCE</p>
-                    <h2>{usdtBalance} USDT</h2>
+                    {isLoadingWallet ? (
+                      <div className="dash-skel sk-dark sk-medium"></div>
+                    ) : (
+                      <h2>{usdtBalance} USDT</h2>
+                    )}
                   </div>
                 </div>
               </div>
@@ -161,20 +176,26 @@ const Dashboard = () => {
               <div className="vault">
                 <div className="upper-section">
                   <h3>Smart Vaults</h3>
-
-                  <div className="view-all-action">
+                  <div
+                    className="view-all-action"
+                    onClick={() => navigate("/SmartSafe")}
+                  >
                     <p>View all</p>
-                    <div
-                      className="icon-holder"
-                      onClick={() => navigate("/SmartSafe")}
-                    >
-                      <IoIosArrowRoundForward className="arrow-icon" />
+                    <div className="icon-holder">
+                      <IoIosArrowRoundForward
+                        className="arrow-icon"
+                        style={{ alignSelf: "right" }}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className="lower-section">
-                  <p>{smartVaults}</p>
+                  {isLoadingWallet ? (
+                    <div className="dash-skel sk-light sk-small"></div>
+                  ) : (
+                    <p>{smartVaults}</p>
+                  )}
                   <p>Active Savings Plan</p>
                 </div>
               </div>
@@ -182,30 +203,35 @@ const Dashboard = () => {
               <div className="investment">
                 <div className="upper-section">
                   <h3>Investments</h3>
-
-                  <div className="view-all-action">
+                  <div
+                    className="view-all-action"
+                    onClick={() => navigate("/invest")}
+                  >
                     <p>View all</p>
-                    <div
-                      className="icon-holder"
-                      onClick={() => navigate("/invest")}
-                    >
-                      <IoIosArrowRoundForward className="arrow-icon" />
+                    <div className="icon-holder">
+                      <IoIosArrowRoundForward
+                        className="arrow-icon"
+                        style={{ alignSelf: "right" }}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className="lower-section">
-                  <p>{investments}</p>
+                  {isLoadingWallet ? (
+                    <div className="dash-skel sk-light sk-small"></div>
+                  ) : (
+                    <p>{investments}</p>
+                  )}
                   <p>Investment Plans</p>
                 </div>
               </div>
             </article>
 
-            {/* TRANSACTIONS */}
+            {/* LIVE TRANSACTIONS MAPPER */}
             <section className="transaction-section">
               <div className="transaction-header">
                 <h3>Recent Transactions</h3>
-
                 <div className="tr-actions" onClick={() => navigate("/wallet")}>
                   <h5>View wallet</h5>
                   <div className="icon-holder">
@@ -215,36 +241,14 @@ const Dashboard = () => {
               </div>
 
               <div className="transactions-view-port">
-                {!currentTransactions?.length ? (
-                  <div className="transaction-body">
-                    <p>No transactions yet, fund your wallet</p>
-                  </div>
-                ) : (
-                  <TransactionHistory
-                    transactions={currentTransactions.slice(0, 4).map((tx) => {
-                      const isIncoming =
-                        tx.transactionType === "deposit" ||
-                        tx.transactionType === "return";
-
-                      return {
-                        id: tx._id,
-                        type: isIncoming ? "in" : "out",
-                        title: tx.transactionType
-                          ? tx.transactionType.charAt(0).toUpperCase() +
-                            tx.transactionType.slice(1)
-                          : "Transaction",
-
-                        description:
-                          tx.date ||
-                          new Date(tx.createdAt).toLocaleDateString(),
-
-                        amount: tx.amount,
-                      };
-                    })}
-                    hideHeader
-                    customClass="dashboard-variant"
-                  />
-                )}
+                {/* The component now fully handles its own loading state
+                  and data fetching. We just pass the limit!
+                */}
+                <TransactionHistory
+                  limit={4}
+                  hideHeader
+                  customClass="dashboard-variant"
+                />
               </div>
             </section>
           </section>

@@ -3,11 +3,10 @@ import toast from "react-hot-toast";
 import { OrbitProgress } from "react-loading-indicators";
 
 import { fundWallet } from "../../Services/paymentService";
-// import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
-
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
 import "../../Style/DepositModals.css";
 
-const DepositModalManager = ({ isOpen, onClose, amount }) => {
+const DepositModalManager = ({ isOpen, onClose, amount, token, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   const refreshWallet = useWalletRefresh();
@@ -18,17 +17,13 @@ const DepositModalManager = ({ isOpen, onClose, amount }) => {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("authToken");
+      console.log("TOKEN:", token);
 
       const response = await fundWallet(Number(amount), token);
 
       console.log("Payment Init:", response);
 
-      if (!response) {
-        throw new Error("No response returned from payment API");
-      }
-
-      toast.success(response.message || "Redirecting...");
+      toast.success(response?.message || "Redirecting...");
 
       if (response?.data?.checkout_url) {
         window.location.href = response.data.checkout_url;

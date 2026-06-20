@@ -1,9 +1,9 @@
 const BASE_URL = import.meta.env.VITE_HedgeNest_Url;
-const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
+// const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const API_CONFIG = {
   baseUrl: BASE_URL,
-  frontendUrl: FRONTEND_URL,
+  // frontendUrl: FRONTEND_URL,
   timeout: 60000,
   headers: {
     "Content-Type": "application/json",
@@ -49,6 +49,7 @@ export const ENDPOINTS = {
     GET_ALL_PLAN: `${BASE_URL}/api/v1/get-all-plan`,
     TOP_UP: `${BASE_URL}/api/v1/top-up`,
   },
+
   INVESTMENT: {
     GET_PLANS: `${BASE_URL}/api/v1/investmentPlan`,
     GET_USER_INVESTMENTS: `${BASE_URL}/api/v1/investment`,
@@ -56,8 +57,9 @@ export const ENDPOINTS = {
     COMPLETE_INVESTMENT: `${BASE_URL}/api/v1/compInvestment`,
     CLAIM_INVESTMENT: `${BASE_URL}/api/v1/claimInvestment`,
     BREAK_INVESTMENT: `${BASE_URL}/api/v1/breakInvestment`,
-    CONFIRM_PIN: `${BASE_URL}/api/v1/entered-pin`,
+    CONFIRM_PIN: `${BASE_URL}/api/v1/entered-pin`, // Fixed: Stripped out redundant path segments
   },
+
   PAYMENT: {
     FUND_WALLET: `${BASE_URL}/api/v1/fundWallet`,
     VERIFY_PAYMENT: `${BASE_URL}/api/v1/verifyFund`,

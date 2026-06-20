@@ -63,18 +63,18 @@ const LoginPage = () => {
         }),
       );
       // Persistent synchronous cache mirroring
-      localStorage.setItem("authToken", token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...userData,
-          _id: wallet?.userId,
-        }),
-      );
-      console.log("USER AFTER LOGIN:", {
-        ...userData,
-        _id: wallet?.userId,
-      });
+      // localStorage.setItem("authToken", token);
+      // localStorage.setItem(
+      //   "user",
+      //   JSON.stringify({
+      //     ...userData,
+      //     _id: wallet?.userId,
+      //   }),
+      // );
+      // console.log("USER AFTER LOGIN:", {
+      //   ...userData,
+      //   _id: wallet?.userId,
+      // });
       localStorage.setItem("wallet", JSON.stringify(wallet));
 
       toast.success(message || "Login Successful");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { FiArrowLeft } from "react-icons/fi";
 import { HiOutlineShieldCheck } from "react-icons/hi";
@@ -7,7 +7,6 @@ import {
   initiateInvestment,
   confirmTransactionPin,
 } from "../../Services/investmentService";
-// import { useWalletRefresh } from "../../hooks/useWalletRefresh";
 import "../../Style/InvestModal.css";
 import investAni from "../../assets/investAni.gif";
 
@@ -21,13 +20,8 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const modalRef = useRef(null);
 
   const { user, token } = useSelector((state) => state.user);
-  const refreshWallet = useWalletRefresh();
 
-  /*
-  |--------------------------------------------------------------------------
-  | Reset Modal State
-  |--------------------------------------------------------------------------
-  */
+  // Reset Modal State when opened
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -37,11 +31,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   }, [isOpen]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | Close Modal On Outside Click
-  |--------------------------------------------------------------------------
-  */
+  // Close Modal On Outside Click
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -58,76 +48,59 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen || !product) return null;
-
   /*
   |--------------------------------------------------------------------------
-  | 🧠 10X DATA NORMALIZATION LAYER
+  | Data Normalization Layer (Memoized)
   |--------------------------------------------------------------------------
-  | We explicitly detect if the incoming object is a user position or a raw plan,
-  | ensuring the correct ID is sent to the backend every single time.
   */
-  const isPositionObject = !!product?.investmentPlanId;
+  const normalizedPlan = useMemo(() => {
+    if (!product) return null;
 
-  let investmentPlanId = "";
-  if (isPositionObject) {
-    // If investmentPlanId is a populated object, grab its inner ID string
-    if (
-      typeof product.investmentPlanId === "object" &&
-      product.investmentPlanId !== null
-    ) {
-      investmentPlanId =
-        product.investmentPlanId._id || product.investmentPlanId.id;
-    } else {
-      // If it's already a plain string ID
-      investmentPlanId = product.investmentPlanId;
-    }
-  } else {
-    // Standard plan object fallback
-    investmentPlanId = product?._id || product?.id;
-  }
+    const isNestedObject =
+      product.investmentPlanId && typeof product.investmentPlanId === "object";
+    const datasource = isNestedObject ? product.investmentPlanId : product;
 
-  // Safely map display data based on object structural origin
-  const investmentName = isPositionObject
-    ? product?.investmentPlanId?.investmentName || "Investment Plan"
-    : product?.investmentName || "Investment Plan";
+    const planId = isNestedObject
+      ? product.investmentPlanId._id || product.investmentPlanId.id
+      : product.investmentPlanId || product._id || product.id;
 
-  const roi = isPositionObject
-    ? product?.investmentPlanId?.roi || product?.roi || 0
-    : product?.roi || 0;
+    return {
+      id: planId,
+      name: datasource?.investmentName || "Investment Plan",
+      roi: Number(datasource?.roi || product?.roi || 0),
+      term: Number(datasource?.term || product?.term || 0),
+      minAmount: Number(datasource?.minAmount || product?.minAmount || 0),
+    };
+  }, [product]);
 
-  const term = isPositionObject
-    ? product?.investmentPlanId?.term || product?.term || 0
-    : product?.term || 0;
+  // Derived Values
+  const investmentAmount = Number(amount) || 0;
 
-  const minAmount = isPositionObject
-    ? product?.investmentPlanId?.minAmount || product?.minAmount || 0
-    : product?.minAmount || 0;
+  const expectedReturn = useMemo(() => {
+    if (!normalizedPlan || investmentAmount <= 0) return "0.00";
+    const { roi, term } = normalizedPlan;
+    const interest = investmentAmount * (roi / 100) * (term / 365);
+    return (investmentAmount + interest).toFixed(2);
+  }, [investmentAmount, normalizedPlan]);
 
-  const expectedReturn =
-    amount && Number(amount) > 0
-      ? (
-          Number(amount) +
-          Number(amount) * (Number(roi) / 100) * (Number(term) / 365)
-        ).toFixed(2)
-      : "0.00";
+  if (!isOpen || !product || !normalizedPlan) return null;
 
   /*
   |--------------------------------------------------------------------------
-  | Amount Step Submit
+  | Form Actions & Handlers
   |--------------------------------------------------------------------------
   */
   const handleAmountSubmit = (e) => {
     e.preventDefault();
 
-    if (!amount || Number(amount) <= 0) {
+    if (investmentAmount <= 0) {
       toast.error("Please enter a valid investment amount");
       return;
     }
 
-    if (Number(amount) < Number(minAmount)) {
+    if (investmentAmount < normalizedPlan.minAmount) {
       toast.error(
-        `Minimum investment is ₦${Number(minAmount).toLocaleString()}`,
+        `Minimum investment is ₦${normalizedPlan.minAmount.toLocaleString()}`,
       );
       return;
     }
@@ -135,11 +108,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     setStep(2);
   };
 
-  /*
-  |--------------------------------------------------------------------------
-  | PIN Inputs
-  |--------------------------------------------------------------------------
-  */
   const handlePinChange = (value, index) => {
     const digit = value.replace(/\D/g, "").slice(-1);
     const updatedPin = [...pin];
@@ -157,11 +125,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   };
 
-  /*
-  |--------------------------------------------------------------------------
-  | Confirm PIN + Create Investment
-  |--------------------------------------------------------------------------
-  */
   const handlePinSubmit = async () => {
     const enteredPin = pin.join("");
 
@@ -170,22 +133,12 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       return;
     }
 
-    if (!user?._id) {
-      toast.error("User profile session context missing. Please login again.");
-      return;
-    }
-
-    if (!token) {
+    if (!user?._id || !token) {
       toast.error("Authentication session expired. Please login again.");
       return;
     }
 
-    // 🚨 HARD RUNTIME GUARD: Block the API call if the ID extraction failed
-    if (!investmentPlanId) {
-      console.error(
-        "❌ CRITICAL: Could not resolve investmentPlanId. Raw product context:",
-        product,
-      );
+    if (!normalizedPlan.id) {
       toast.error("System error: Missing investment plan identifier.");
       return;
     }
@@ -194,36 +147,20 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       setIsLoading(true);
       setStep(3);
 
-      /*
-      |--------------------------------------------------------------------------
-      | STEP 1: Confirm Transaction PIN
-      |--------------------------------------------------------------------------
-      */
+      // Step 1: Security Handshake Verification
       await confirmTransactionPin(user._id, enteredPin, token);
 
-      /*
-      |--------------------------------------------------------------------------
-      | STEP 2: Create Investment Operation
-      |--------------------------------------------------------------------------
-      */
+      // Step 2: Initialize Core Investment Position
       const payload = {
-        investmentPlanId: investmentPlanId,
-        amount: Number(amount),
+        investmentPlanId: normalizedPlan.id,
+        amount: investmentAmount,
       };
-
-      console.log("🚀 EXECUTING INITIATE INVESTMENT. PAYLOAD:", payload);
 
       const response = await initiateInvestment(payload, token);
 
-      /*
-      |--------------------------------------------------------------------------
-      | STEP 3: Refresh Wallet Profiles
-      |--------------------------------------------------------------------------
-      */
-      await refreshWallet();
-
+      // Step 3: Trigger Success Notification & Callbacks
       toast.success(response?.message || "Investment created successfully");
-      onSuccess?.();
+      await onSuccess?.();
       setStep(4);
     } catch (error) {
       console.error("❌ INVESTMENT PIPELINE FAILURE:", error);
@@ -231,8 +168,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
         error?.response?.data?.message ||
           "Unable to complete investment execution",
       );
-
-      // Rollback gracefully to pin sequence on failure
       setPin(["", "", "", "", "", ""]);
       setStep(2);
     } finally {
@@ -251,10 +186,10 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             onSubmit={handleAmountSubmit}
             className="invest-modal-step-wrapper"
           >
-            <h2 className="invest-modal-title">{investmentName}</h2>
+            <h2 className="invest-modal-title">{normalizedPlan.name}</h2>
             <p className="invest-modal-description">
-              Capital-protected {term}-day fixed income note. Ideal for
-              first-time investors.
+              Capital-protected {normalizedPlan.term}-day fixed income note.
+              Ideal for first-time investors.
             </p>
             <p className="invest-modal-description">
               Your money is invested in Treasury Bills, FGN Savings Bonds, Fixed
@@ -265,7 +200,8 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
             <div className="invest-lock-notification-banner">
               <HiOutlineShieldCheck className="invest-shield-icon" />
               <p className="invest-lock-banner-text">
-                Funds locked for {term} days at {roi}% p.a.
+                Funds locked for {normalizedPlan.term} days at{" "}
+                {normalizedPlan.roi}% p.a.
               </p>
             </div>
 
@@ -276,7 +212,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
                   type="number"
                   className="invest-numeric-text-input"
                   value={amount}
-                  placeholder={Number(minAmount).toString()}
+                  placeholder={normalizedPlan.minAmount.toString()}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
@@ -323,7 +259,10 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               Enter Your Transaction Pin
             </h2>
 
-            <div className="invest-pin-box-grid-row">
+            <div
+              className="invest-pin-box-flex-row"
+              style={{ display: "flex", gap: "10px", justifyContent: "center" }}
+            >
               {pin.map((digit, index) => (
                 <input
                   key={index}
@@ -343,16 +282,14 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               type="button"
               disabled={!isPinComplete || isLoading}
               onClick={handlePinSubmit}
-              className={`invest-btn-block-action margin-top-xl ${
-                !isPinComplete || isLoading ? "disabled-btn" : ""
-              }`}
+              className={`invest-btn-block-action margin-top-xl ${!isPinComplete || isLoading ? "disabled-btn" : ""}`}
             >
               {isLoading ? "Processing..." : "Next"}
             </button>
           </div>
         )}
 
-        {/* STEP 3: LOADING TRACK */}
+        {/* STEP 3: PROCESSING NOTE */}
         {step === 3 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-processing-image-wrapper">
@@ -381,7 +318,7 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           </div>
         )}
 
-        {/* STEP 4: SUCCESS */}
+        {/* STEP 4: SUCCESS STATE */}
         {step === 4 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-success-checkmark-animated-badge">

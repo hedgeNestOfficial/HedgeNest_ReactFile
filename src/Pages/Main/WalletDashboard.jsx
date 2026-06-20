@@ -20,6 +20,9 @@ const WalletPage = () => {
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
 
+  // Loading indicator for API Sync
+  const [isLoadingWallet, setIsLoadingWallet] = useState(true);
+
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -38,16 +41,18 @@ const WalletPage = () => {
   const refreshWallet = async () => {
     try {
       if (!token) return;
+      setIsLoadingWallet(true);
 
       const response = await getMyWallet(token);
-
       const walletData = response?.data?.[0];
 
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      console.log("Wallet refresh failed:", error);
+      // console.log("Wallet refresh failed:", error);
+    } finally {
+      setIsLoadingWallet(false);
     }
   };
 
@@ -86,8 +91,6 @@ const WalletPage = () => {
     toast.success("Withdrawal successful");
   };
 
-  
-
   return (
     <div className="wallet-page-container">
       <div className="wallet-main-content">
@@ -95,7 +98,6 @@ const WalletPage = () => {
         <header className="wallet-header">
           <div>
             <h1>Wallet</h1>
-
             <p>
               Welcome back,{" "}
               <span>{user?.firstName || user?.name || "User"}</span>
@@ -111,7 +113,11 @@ const WalletPage = () => {
             </div>
 
             <div className="balance-amount">
-              ₦{formatAmount(wallet?.balanceInNaira)}
+              {isLoadingWallet ? (
+                <div className="wallet-skel skel-dark skel-large"></div>
+              ) : (
+                <>₦{formatAmount(wallet?.balanceInNaira)}</>
+              )}
             </div>
           </div>
 
@@ -121,7 +127,11 @@ const WalletPage = () => {
             </div>
 
             <div className="balance-amount">
-              {formatAmount(wallet?.balanceInUSDT)} USDT
+              {isLoadingWallet ? (
+                <div className="wallet-skel skel-gold skel-large"></div>
+              ) : (
+                <>{formatAmount(wallet?.balanceInUSDT)} USDT</>
+              )}
             </div>
           </div>
         </section>
@@ -160,7 +170,6 @@ const WalletPage = () => {
           <form className="operations-form" onSubmit={handleTransactionSubmit}>
             <div className="input-group">
               <label>Currency</label>
-
               <input
                 type="text"
                 value="Naira (NGN)"
@@ -171,7 +180,6 @@ const WalletPage = () => {
 
             <div className="input-group">
               <label>Amount</label>
-
               <input
                 type="number"
                 placeholder="Enter amount"
@@ -194,9 +202,7 @@ const WalletPage = () => {
 
           <div className="transactions-view-port">
             {historyData?.length ? (
-              <div className="transactions-list">
-                <TransactionHistory transactions={historyData} />
-              </div>
+              <TransactionHistory transactions={historyData} />
             ) : (
               <div className="empty-state-container">
                 <p>No activities yet</p>
@@ -211,6 +217,7 @@ const WalletPage = () => {
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
         amount={confirmedDepositAmount}
+        token={token} // ⚙️ FIXED: Token is now correctly passed here
         onSuccess={refreshWallet}
       />
 

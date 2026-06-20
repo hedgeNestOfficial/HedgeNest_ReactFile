@@ -3,32 +3,50 @@ import "../../Css/Convert.css";
 import { FiHelpCircle } from "react-icons/fi";
 
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   convertCurrency,
   GetHistory,
   GetLiveRate,
 } from "../../Services/Conversionservice";
+import { getMyWallet } from "../../Services/Walletservice";
+import { updateWallet } from "../../Store/UserSlice";
 
 const ConvertPage = () => {
+  const dispatch = useDispatch();
   const [activeCurrency, setActiveCurrency] = useState("NGN");
   const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [coversionHistory, setConversionHistory] = useState([]);
-  const token = useSelector((state) => state.user.token);
-
   const [liveRate, setLiveRate] = useState(null);
   const [conversionData, setConversionData] = useState(null);
 
+  // Loading infrastructure synchronized with core application dashboards
+  const { token, wallet } = useSelector((state) => state.user);
+  const [isLoadingWallet, setIsLoadingWallet] = useState(true);
+  const [isLoadingRate, setIsLoadingRate] = useState(true);
+
+  // Monetary value formatting engine
+  const formatCurrency = (value = 0) =>
+    Number(value).toLocaleString("en-NG", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  const nairaBalance = wallet?.balanceInNaira ?? 0;
+  const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
+
   const fetchLiveRate = async () => {
     try {
+      setIsLoadingRate(true);
       const response = await GetLiveRate();
-      console.log("Res", response);
-      setLiveRate(response.rate);
+      setLiveRate(response?.rate || response);
     } catch (err) {
-      console.log(err);
+      console.error("Live market feed tracking suspended:", err);
+    } finally {
+      setIsLoadingRate(false);
     }
   };
 
@@ -36,8 +54,6 @@ const ConvertPage = () => {
     if (!token) return;
     try {
       const res = await GetHistory(token);
-      console.log("History API Response:", res);
-
       const dataPayload = res?.data || res;
 
       if (Array.isArray(dataPayload)) {
@@ -48,13 +64,33 @@ const ConvertPage = () => {
         setConversionHistory([]);
       }
     } catch (err) {
-      console.log("History fetch error:", err);
+      console.error("History logging pipeline error:", err);
     }
   };
 
+  const syncWalletData = async () => {
+    if (!token) return;
+    try {
+      setIsLoadingWallet(true);
+      const walletResponse = await getMyWallet(token);
+      const walletData = walletResponse?.data?.[0];
+      if (walletData) {
+        dispatch(updateWallet(walletData));
+      }
+    } catch (error) {
+      console.error("Wallet data structural fetch error:", error);
+    } finally {
+      setIsLoadingWallet(false);
+    }
+  };
+
+  // Primary data synchronization cycle
   useEffect(() => {
     fetchLiveRate();
-    fetchCoversionHistory();
+    if (token) {
+      syncWalletData();
+      fetchCoversionHistory();
+    }
   }, [token]);
 
   const getCalculatedPreview = () => {
@@ -81,13 +117,22 @@ const ConvertPage = () => {
       return;
     }
 
+    // Balance threshold verification logic
+    const currentLimit = activeCurrency === "NGN" ? nairaBalance : usdtBalance;
+    if (Number(inputValue) > Number(currentLimit)) {
+      toast.error(
+        `Insufficient ${activeCurrency} balance to complete this operation.`,
+      );
+      return;
+    }
+
     setConversionData(null);
     setIsModalOpen(true);
   };
 
   const handleFinalConfirm = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
 
       const payload = {
         from: activeCurrency,
@@ -96,20 +141,18 @@ const ConvertPage = () => {
       };
 
       const response = await convertCurrency(payload, token);
-      console.log("CONVERSION RESPONSE:", response);
-
       setConversionData(response?.rate);
+
       toast.success("Conversion successful!");
       setIsModalOpen(false);
       setInputValue("");
 
-      fetchCoversionHistory();
+      // Re-trigger global wallet data states to update layout balances instantly
+      await Promise.all([syncWalletData(), fetchCoversionHistory()]);
     } catch (error) {
-      console.log(error);
       toast.error(error?.message || "Conversion failed");
     } finally {
       setLoading(false);
-      fetchCoversionHistory();
     }
   };
 
@@ -139,21 +182,29 @@ const ConvertPage = () => {
           </div>
         </header>
 
-        {/* LIVE RATE */}
+        {/* LIVE RATE BANNER WITH CLEAN HIGH CONTRAST SKELETON */}
         <section className="rate-banner-container">
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
-            <h2 className="summary-value">
-              {"₦"}
-              {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
-            </h2>
+            {isLoadingRate ? (
+              <div className="convert-skel sk-dark sk-rate-headline"></div>
+            ) : (
+              <h2 className="summary-value">
+                {"₦"}
+                {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
+              </h2>
+            )}
           </div>
           <div className="rate-timestamp">
-            <span>{!liveRate ? " loading..." : " updated just now"}</span>
+            <span>
+              {isLoadingRate
+                ? "Syncing exchange tracking..."
+                : "updated just now"}
+            </span>
           </div>
         </section>
 
-        {/* FORM */}
+        {/* CONVERSION INTERACTION PANEL */}
         <form className="conversion-card-panel" onSubmit={handleFormSubmit}>
           <div className="conversion-split-grid">
             <div className="grid-left-input-pane">
@@ -167,8 +218,15 @@ const ConvertPage = () => {
             </div>
 
             <div className="grid-right-selectors-pane">
+              {/* NGN PILL TRIGGER CONTROL BLOCK */}
               <div className="token-pill-group">
-                <span className="balance-label">Bal: ₦0</span>
+                {isLoadingWallet ? (
+                  <div className="convert-skel sk-dark sk-pill-balance"></div>
+                ) : (
+                  <span className="balance-label">
+                    Bal: ₦{formatCurrency(nairaBalance)}
+                  </span>
+                )}
                 <button
                   type="button"
                   className={`currency-pill-btn ${
@@ -185,8 +243,13 @@ const ConvertPage = () => {
                 </button>
               </div>
 
+              {/* USDT PILL TRIGGER CONTROL BLOCK */}
               <div className="token-pill-group">
-                <span className="balance-label">Bal: 0 USDT</span>
+                {isLoadingWallet ? (
+                  <div className="convert-skel sk-dark sk-pill-balance"></div>
+                ) : (
+                  <span className="balance-label">Bal: {usdtBalance} USDT</span>
+                )}
                 <button
                   type="button"
                   className={`currency-pill-btn ${
@@ -205,7 +268,7 @@ const ConvertPage = () => {
             </div>
           </div>
 
-          {/* OUTPUT */}
+          {/* OUTPUT VIEWPORT PANEL */}
           <div className="full-width-output-banner">
             <span className="output-value">{getCalculatedPreview()}</span>
             <span className="output-currency-mid">
@@ -220,7 +283,7 @@ const ConvertPage = () => {
           </button>
         </form>
 
-        {/* CONVERSION HISTORY SECTION */}
+        {/* HISTORY MODULE ENGINE */}
         <section className="history-log-panel">
           <header className="history-panel-header">
             <h3>Conversion History</h3>
@@ -247,8 +310,6 @@ const ConvertPage = () => {
                   {coversionHistory.map((item, index) => {
                     const fromCur = item.from || "NGN";
                     const toCur = item.to || "USDT";
-
-                    // Fallback to "Success" if status is missing in the api response
                     const itemStatus = item.status || "Success";
 
                     const exchangeRate = Number(item.rate || 0);
@@ -257,7 +318,8 @@ const ConvertPage = () => {
 
                     let calculatedReceived = 0;
                     if (fromCur === "NGN" && exchangeRate > 0) {
-                      calculatedReceived = (baseAmount - feeCost) / exchangeRate;
+                      calculatedReceived =
+                        (baseAmount - feeCost) / exchangeRate;
                     } else if (fromCur === "USDT") {
                       calculatedReceived = baseAmount * exchangeRate - feeCost;
                     }
@@ -290,7 +352,7 @@ const ConvertPage = () => {
                           <span className="table-txt-sent">
                             {baseAmount.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
-                              maximumFractionDigits: fromCur === "USDT" ? 2 : 2,
+                              maximumFractionDigits: 2,
                             })}{" "}
                             {fromCur}
                           </span>
@@ -300,7 +362,7 @@ const ConvertPage = () => {
                             +
                             {calculatedReceived.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
-                              maximumFractionDigits: toCur === "USDT" ? 2 : 2, // Strictly two decimals for USDT values
+                              maximumFractionDigits: 2,
                             })}{" "}
                             {toCur}
                           </span>
@@ -322,7 +384,7 @@ const ConvertPage = () => {
         </section>
       </main>
 
-      {/* MODAL */}
+      {/* CONFIRMATION OVERLAY MODAL SYSTEM LAYER */}
       {isModalOpen && (
         <div
           className="modal-backdrop-overlay"
