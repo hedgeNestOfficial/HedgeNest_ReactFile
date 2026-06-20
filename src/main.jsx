@@ -11,18 +11,18 @@ import App from "./App.jsx";
 import "./index.css";
 
 import { Toaster } from "react-hot-toast";
+import SplashScreen from "./Components/SplashScreen.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<SplashScreen />} persistor={persistor}>
         <Toaster
           position="top-right"
           toastOptions={{
             duration: 3000,
           }}
         />
-
         <App />
       </PersistGate>
     </Provider>

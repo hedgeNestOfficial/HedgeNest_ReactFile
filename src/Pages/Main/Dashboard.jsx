@@ -175,6 +175,7 @@ const Dashboard = () => {
                   >
                     <p>View all</p>
                     <div className="icon-holder">
+                      {" "}
                       <IoIosArrowRoundForward
                         className="arrow-icon"
                         style={{ alignSelf: "right" }}
@@ -200,6 +201,7 @@ const Dashboard = () => {
                     className="view-all-action"
                     onClick={() => navigate("/invest")}
                   >
+                    {" "}
                     <p>View all</p>
                     <div className="icon-holder">
                       <IoIosArrowRoundForward

@@ -5,7 +5,7 @@ import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 export const InvestmentCard = ({ product, onInvestClick }) => {
   // Safely fallback or read risk value (e.g., 'low', 'medium', 'high')
   const riskStatus = product.risk?.toLowerCase() || "low";
-
+  const productName = product.investmentName?.toUpperCase();
   return (
     <div className="investment-product-card">
       <div className="card-header-row">
@@ -13,7 +13,7 @@ export const InvestmentCard = ({ product, onInvestClick }) => {
           <div className="premium-icon-container">
             <HiMiniArrowTrendingUp className="trending-growth-icon" />
           </div>
-          <h3>{product.investmentName}</h3>
+          <h3>{productName}</h3>
         </div>
 
         {/* Added the missing risk badge node seen in image_9f86c1.png */}
