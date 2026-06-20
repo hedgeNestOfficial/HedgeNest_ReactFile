@@ -20,7 +20,7 @@ export const convertCurrency = async (payload, token) => {
 export const GetLiveRate = async () => {
   try {
     const response = await axios.get(ENDPOINTS.CONVERSION.LIVE_RATE);
-    console.log(response);
+    // console.log(response);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Live rate failed, try again" };
