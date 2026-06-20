@@ -8,14 +8,13 @@ import toast from "react-hot-toast";
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
 import TopUpModal from "../Components/TopUpModal";
-import WithdrawModal from "../Components/WithdrawModal";
 
 import {
   createPlan,
   breakPlan,
+  getAllPlan,
   topUp,
   getOnePlan,
-  getAllPlan,
 } from "../Services/Smartsafeservice";
 
 import "../Css/SmartSafe.css";
@@ -29,7 +28,7 @@ const SmartSafe = () => {
   const [modalScreen, setModalScreen] = useState("NONE");
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFlexibleMode, setIsFlexibleMode] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
 
   const [formData, setFormData] = useState({
@@ -46,31 +45,17 @@ const SmartSafe = () => {
   const [isWithdrawWarningOpen, setIsWithdrawWarningOpen] = useState(false);
   const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
 
-  const formatMaturityDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
-
   const normalizePlans = (plans = []) => {
-    if (!Array.isArray(plans)) return [];
-
     return plans.map((plan) => ({
       id: plan._id,
-      title: plan.title || "Untitled Vault",
+      title: plan.title,
       type: plan.planType,
       planType: plan.planType,
-      targetAmount: plan.targetAmount || 0,
-      balance: plan.currentBalance ?? 0,
-      interestRate: plan.interestRate || 0,
-      frequency:
-        plan.planType?.toUpperCase() === "LOCKED"
-          ? formatMaturityDate(plan.maturityDate)
-          : plan.savingFrequency || "MANUAL",
+      targetAmount: plan.targetAmount,
+      balance: plan.balance,
+      progress: plan.progress || 0,
+      rate: plan.rate,
+      frequency: plan.savingFrequency,
       autoSave: plan.autoSave ?? false,
     }));
   };
@@ -83,9 +68,7 @@ const SmartSafe = () => {
 
       const response = await getAllPlan(token);
 
-      console.log("Raw API Hook Response:", response);
-
-      const plansData = response?.plans;
+      const plansData = response?.plan || response?.data?.plan || [];
 
       setVaults(normalizePlans(plansData));
     } catch (error) {
@@ -164,7 +147,9 @@ const SmartSafe = () => {
         planType: isFlexibleMode ? "FLEXIBLE" : "LOCKED",
         duration: formData.duration,
         savingFrequency: formData.savingFrequency,
-        amountPerFrequency: Number(formData.initialAmount),
+        amountPerFrequency: isFlexibleMode
+          ? Number(formData.initialAmount)
+          : Number(formData.targetAmount),
         transactionPin: pin.join(""),
       };
 
@@ -209,14 +194,24 @@ const SmartSafe = () => {
     }
   };
 
-  // WITHDRAW
-
-  const handleWithdraw = async (vault, payload) => {
-    return await breakPlan(vault.id, payload, token);
-  };
   const handleWithdrawClick = (vault) => {
     setActiveWithdrawVault(vault);
-    setIsWithdrawModalOpen(true);
+    setIsWithdrawWarningOpen(true);
+  };
+
+  const handleConfirmWithdrawal = async () => {
+    try {
+      await breakPlan({ vaultId: activeWithdrawVault?.id }, token);
+
+      toast.success("Withdrawal successful");
+
+      setIsWithdrawWarningOpen(false);
+      setActiveWithdrawVault(null);
+
+      fetchUserVaults();
+    } catch (error) {
+      toast.error(error?.message || "Withdrawal failed");
+    }
   };
 
   const handleToggleAutoSave = (vaultId) => {
@@ -315,7 +310,6 @@ const SmartSafe = () => {
         </div>
       </header>
 
-      {/* VAULT LIST */}
       {isLoadingVaults ? (
         <div style={{ padding: 40, textAlign: "center" }}>
           Loading your Nests...
@@ -347,7 +341,6 @@ const SmartSafe = () => {
         />
       )}
 
-      {/* TOP UP MODAL */}
       <TopUpModal
         isOpen={isTopUpOpen}
         onClose={() => {
@@ -358,14 +351,21 @@ const SmartSafe = () => {
         onTopUpSuccess={handleTopUp}
       />
 
-      {/* WITHDRAW MODAL */}
-      <WithdrawModal
-        isOpen={isWithdrawModalOpen}
-        vault={activeWithdrawVault}
-        onClose={() => setIsWithdrawModalOpen(false)}
-        onWithdraw={handleWithdraw}
-        onWithdrawSuccess={fetchUserVaults}
-      />
+      {isWithdrawWarningOpen && (
+        <div className="topup-overlay">
+          <div className="topup-box">
+            <h2>Confirm Withdrawal?</h2>
+
+            <div className="topup-actions">
+              <button onClick={handleConfirmWithdrawal}>Continue</button>
+
+              <button onClick={() => setIsWithdrawWarningOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <SavingsModal
         modalScreen={modalScreen}

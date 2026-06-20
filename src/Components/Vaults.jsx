@@ -9,42 +9,46 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
     <div className="vault-wrap">
       {vaultsData.map((vault) => {
         const vaultId = vault.id;
-        const isLocked = vault.type?.toUpperCase() === "LOCKED";
-        const progressPercentage = vault.interestRate; // Explicitly driven by interestRate
+        const vaultTypeUpper = vault.type?.toUpperCase();
+
+        const isLocked = vaultTypeUpper === "LOCKED";
+        const isStealth = vaultTypeUpper === "STEALTH";
+        const isFlexible = vaultTypeUpper === "FLEXIBLE";
+
+        const progressPercentage = vault.interestRate;
 
         return (
           <article key={vaultId} className="vault-card">
-            {/* Badge */}
             <div className="badge">
-              {isLocked ? (
-                <RiLockLine className="badge-icon icon-gold" />
-              ) : (
+              {isFlexible ? (
                 <RiLockUnlockLine className="badge-icon icon-gold" />
+              ) : (
+                <RiLockLine className="badge-icon icon-gold" />
               )}
-              <span className="badge-text">{vault.type?.toUpperCase()}</span>
+              <span className="badge-text">{vaultTypeUpper}</span>
             </div>
 
-            {/* Title */}
             <h2 className="vault-name">{vault.title}</h2>
 
-            {/* Amount */}
             <div className="amount-group">
               <span className="vault-currency">₦</span>
               <span className="vault-balance">
                 {Number(vault.targetAmount).toLocaleString()}
               </span>
-              <div className="top-up">
-                <h3>Top Up</h3>
-                <div>
-                  <span className="vault-currency">₦</span>
-                  <span className="vault-balance">
-                    {Number(vault.balance).toLocaleString()}
-                  </span>
+
+              {isFlexible && (
+                <div className="top-up">
+                  <h3>Top Up</h3>
+                  <div>
+                    <span className="vault-currency">₦</span>
+                    <span className="vault-balance">
+                      {Number(vault.balance).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* Progress Bar driven by Interest Rate */}
             <div className="progress-container">
               <div
                 className="progress-fill"
@@ -52,12 +56,11 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
               />
             </div>
 
-            {/* Metrics Row */}
             <div className="metrics-row">
               <span className="rate-lbl">{vault.interestRate}% p.a.</span>
               <span
                 className="freq-lbl"
-                style={{ textTransform: isLocked ? "none" : "uppercase" }}
+                style={{ textTransform: isFlexible ? "uppercase" : "none" }}
               >
                 {vault.frequency}
               </span>
@@ -65,7 +68,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
 
             {/* Actions */}
             <div className="action-row">
-              {!isLocked && (
+              {isFlexible && (
                 <button
                   className="btn-gold-action"
                   onClick={() => onTopUp?.(vault)}
@@ -75,15 +78,26 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
               )}
 
               <button
-                className={isLocked ? "btn-gold-full" : "btn-white-action"}
+                className={isFlexible ? "btn-white-action" : "btn-gold-full"}
+                disabled={isStealth}
                 onClick={() => onWithdraw?.(vault)}
+                style={
+                  isStealth
+                    ? {
+                        background: "#fef9e7",
+                        color: "#b89047",
+                        borderColor: "#e8d7b0",
+                        cursor: "not-allowed",
+                        opacity: 0.9,
+                      }
+                    : undefined
+                }
               >
                 Withdraw
               </button>
             </div>
 
-            {/* AutoSave */}
-            {!isLocked && (
+            {isFlexible && (
               <footer className="card-footer">
                 <span
                   className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}

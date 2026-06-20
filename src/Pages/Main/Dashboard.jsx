@@ -9,6 +9,7 @@ import { historyData } from "../../JS/Transactions.js";
 import SplashScreen from "../../Components/SplashScreen.jsx"; // Double check your relative path!
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
+import { getTransactionHistory } from "../../Services/authService.js";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const Dashboard = () => {
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
+
+  const [liveTransactions, setLiveTransactions] = useState([]);
 
   useEffect(() => {
     if (!showSplash) return;
@@ -41,6 +44,11 @@ const Dashboard = () => {
           if (walletData) {
             dispatch(updateWallet(walletData));
           }
+
+          const txResponse = await getTransactionHistory(token);
+
+          const transactions = txResponse?.data || txResponse || [];
+          setLiveTransactions(transactions);
         }
       } catch (error) {
         console.error("Dashboard metric initialization breakdown:", error);
@@ -72,6 +80,10 @@ const Dashboard = () => {
   if (showSplash) {
     return <SplashScreen />;
   }
+
+  const currentTransactions = liveTransactions?.length
+    ? liveTransactions
+    : historyData;
 
   return (
     <section>
@@ -203,13 +215,32 @@ const Dashboard = () => {
               </div>
 
               <div className="transactions-view-port">
-                {!historyData?.length ? (
+                {!currentTransactions?.length ? (
                   <div className="transaction-body">
                     <p>No transactions yet, fund your wallet</p>
                   </div>
                 ) : (
                   <TransactionHistory
-                    transactions={historyData.slice(0, 4)}
+                    transactions={currentTransactions.slice(0, 4).map((tx) => {
+                      const isIncoming =
+                        tx.transactionType === "deposit" ||
+                        tx.transactionType === "return";
+
+                      return {
+                        id: tx._id,
+                        type: isIncoming ? "in" : "out",
+                        title: tx.transactionType
+                          ? tx.transactionType.charAt(0).toUpperCase() +
+                            tx.transactionType.slice(1)
+                          : "Transaction",
+
+                        description:
+                          tx.date ||
+                          new Date(tx.createdAt).toLocaleDateString(),
+
+                        amount: tx.amount,
+                      };
+                    })}
                     hideHeader
                     customClass="dashboard-variant"
                   />
