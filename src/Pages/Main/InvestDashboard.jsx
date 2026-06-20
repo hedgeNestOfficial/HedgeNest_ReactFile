@@ -272,7 +272,14 @@ const InvestDashboard = () => {
   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
   const [showBreakModal, setShowBreakModal] = useState(false);
 
-  // --- Core Fetching & Logic ---
+  useEffect(() => {
+    if (!token) return;
+    initializeDashboard();
+  }, [token]);
+
+  const initializeDashboard = async () => {
+    await Promise.all([fetchPlans(), fetchUserInvestments(), refreshWallet()]);
+  };
   const refreshWallet = async () => {
     try {
       const response = await getMyWallet(token);
@@ -280,9 +287,7 @@ const InvestDashboard = () => {
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
-    } catch (error) {
-      console.error("Wallet refresh background failure:", error);
-    }
+    } catch (error) {}
   };
 
   const fetchPlans = async () => {
@@ -408,7 +413,7 @@ const InvestDashboard = () => {
           <p className="loading-state">Loading positions...</p>
         ) : userInvestments.length > 0 ? (
           <div className="flex-container">
-            {userInvestments.slice(0, 12).map((position) => (
+            {userInvestments.slice(0, 30).map((position) => (
               <PositionCard
                 key={position._id}
                 position={position}

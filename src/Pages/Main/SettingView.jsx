@@ -77,11 +77,11 @@ const SettingView = ({ accounts = [], onAddAccount }) => {
       <LinkAccountModal
         isOpen={isAccountModalOpen}
         onClose={() => setIsAccountModalOpen(false)}
-        onSuccessRefresh={() => {
-          console.log(
-            "Bank linked successfully. Refresh global user data context.",
-          );
-        }}
+        // onSuccessRefresh={() => {
+        //   console.log(
+        //     "Bank linked successfully. Refresh global user data context.",
+        // );
+        // }}
       />
 
       <ChangePasswordModal

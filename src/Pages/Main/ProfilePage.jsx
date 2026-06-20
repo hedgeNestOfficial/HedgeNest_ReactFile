@@ -343,7 +343,7 @@ const ProfilePage = () => {
         {activeTab === "settings" && (
           <SettingView
             accounts={linkedAccounts}
-            onAddAccount={() => console.log("Open Add Account")}
+            // onAddAccount={() => console.log("Open Add Account")}
           />
         )}
 

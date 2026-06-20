@@ -25,18 +25,14 @@ const ConvertPage = () => {
   const fetchLiveRate = async () => {
     try {
       const response = await GetLiveRate();
-      console.log("Res", response);
       setLiveRate(response.rate);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const fetchCoversionHistory = async () => {
     if (!token) return;
     try {
       const res = await GetHistory(token);
-      console.log("History API Response:", res);
 
       const dataPayload = res?.data || res;
 
@@ -47,9 +43,7 @@ const ConvertPage = () => {
       } else {
         setConversionHistory([]);
       }
-    } catch (err) {
-      console.log("History fetch error:", err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -87,7 +81,7 @@ const ConvertPage = () => {
 
   const handleFinalConfirm = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
 
       const payload = {
         from: activeCurrency,
@@ -96,7 +90,6 @@ const ConvertPage = () => {
       };
 
       const response = await convertCurrency(payload, token);
-      console.log("CONVERSION RESPONSE:", response);
 
       setConversionData(response?.rate);
       toast.success("Conversion successful!");
@@ -105,7 +98,6 @@ const ConvertPage = () => {
 
       fetchCoversionHistory();
     } catch (error) {
-      console.log(error);
       toast.error(error?.message || "Conversion failed");
     } finally {
       setLoading(false);
@@ -257,7 +249,8 @@ const ConvertPage = () => {
 
                     let calculatedReceived = 0;
                     if (fromCur === "NGN" && exchangeRate > 0) {
-                      calculatedReceived = (baseAmount - feeCost) / exchangeRate;
+                      calculatedReceived =
+                        (baseAmount - feeCost) / exchangeRate;
                     } else if (fromCur === "USDT") {
                       calculatedReceived = baseAmount * exchangeRate - feeCost;
                     }

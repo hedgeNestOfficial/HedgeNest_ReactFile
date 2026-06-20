@@ -319,22 +319,30 @@ export const confirmTransactionPin = async (userId, enteredPin, token) => {
   return response.data;
 };
 
-/**
- * Breaks An Active Investment Position Early
- */
+/*
+|--------------------------------------------------------------------------
+| Break Investment (Liquidate Active Position Early)
+|--------------------------------------------------------------------------
+*/
 export const breakInvestment = async (investmentId, token) => {
   try {
     const response = await axios.put(
       `${ENDPOINTS.INVESTMENT.BREAK_INVESTMENT}/${investmentId}`,
       { investmentId }, // Fixed: Explicitly passed inside the body to clear 400 validations
       {
-        headers: { ...API_CONFIG.headers, Authorization: `Bearer ${token}` },
+        investmentId, // Satisfies backend body verification layers
+      },
+      {
+        headers: {
+          ...API_CONFIG.headers,
+          Authorization: `Bearer ${token}`, // Authorizes platform operation identity
+        },
         timeout: API_CONFIG.timeout,
       },
     );
     return response.data;
   } catch (error) {
-    console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);
+    // console.error("❌ API FAILURE DURING INVESTMENT LIQUIDATION:", error);
     throw error;
   }
 };

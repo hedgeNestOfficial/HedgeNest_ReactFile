@@ -64,11 +64,11 @@
 // };
 
 const BASE_URL = import.meta.env.VITE_HedgeNest_Url;
-const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
+// const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 export const API_CONFIG = {
   baseUrl: BASE_URL,
-  frontendUrl: FRONTEND_URL,
+  // frontendUrl: FRONTEND_URL,
   timeout: 60000,
   headers: {
     "Content-Type": "application/json",

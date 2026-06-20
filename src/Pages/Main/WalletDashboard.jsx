@@ -47,7 +47,7 @@ const WalletPage = () => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      console.log("Wallet refresh failed:", error);
+      // console.log("Wallet refresh failed:", error);
     }
   };
 
@@ -85,8 +85,6 @@ const WalletPage = () => {
     await refreshWallet();
     toast.success("Withdrawal successful");
   };
-
-  
 
   return (
     <div className="wallet-page-container">
@@ -194,9 +192,7 @@ const WalletPage = () => {
 
           <div className="transactions-view-port">
             {historyData?.length ? (
-              <div className="transactions-list">
-                <TransactionHistory transactions={historyData} />
-              </div>
+              <TransactionHistory transactions={historyData} />
             ) : (
               <div className="empty-state-container">
                 <p>No activities yet</p>
