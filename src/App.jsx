@@ -56,11 +56,11 @@ const App = () => {
 
         <Route element={<PrivateRoute />}>
           <Route element={<DashboardLayout />}>
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/notification" element={<TransactionHistory />} />
             {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
             {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}

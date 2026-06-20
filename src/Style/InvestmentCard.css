@@ -19,7 +19,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 150px;
+  width: 100%;
+  /* background: #0805d4; */
   margin-bottom: 20px;
 }
 
@@ -27,6 +28,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  /* justify-content: space-between; */
+  width: 100%;
+  /* background-color: #9c1515; */
 }
 
 .card-title-group h3 {

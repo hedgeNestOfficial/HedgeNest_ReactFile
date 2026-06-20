@@ -224,13 +224,19 @@
   background-color: rgba(210, 175, 38, 0.05);
 }
 
+.view-all-action {
+  width: 100px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
 .icon {
   color: #d2af26;
   font-size: 16px;
 }
 
 .icon-holder {
-  width: 16px;
+  width: 15px;
   height: 16px;
   border-radius: 50%;
   background-color: #d2af26;
@@ -266,6 +272,7 @@
 .upper-section {
   width: 100%;
   display: flex;
+  background-color: #fff;
   justify-content: space-between;
   align-items: center;
 }
