@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import toast from "react-hot-toast";
-import { useWalletRefresh } from "../Hooks/useWalletRefresh.js";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
 import breakIllustration from "../../assets/investAni.gif";
 import "../../Style/BreakModal.css";
 
