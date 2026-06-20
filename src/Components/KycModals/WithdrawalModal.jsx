@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { useWalletRefresh } from "../Hooks/useWalletRefresh.js";
+import { useWalletRefresh } from "../../Hooks/useWalletRefresh.js";
 import "../../Style/WithdrawalModal.css";
 
 const WithdrawalModal = ({
