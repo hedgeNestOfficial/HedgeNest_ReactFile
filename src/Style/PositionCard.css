@@ -2,13 +2,15 @@
 .position-product-card {
   background-color: #181739; /* Exact HedgeNest deep dashboard navy */
   border-radius: 12px;
-  padding: 32px 24px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
   max-width: 460px;
-  min-height: 240px;
+  /* 🔐 FIXED AXIS BOUNDS: Ensures absolute symmetric shape matches across item lists */
+  height: 265px;
+  position: relative;
 }
 
 /* Top Block Flex Layout */
@@ -17,27 +19,40 @@
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .position-card-title-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 /* Caps tracking header */
 .position-product-tag-name {
-  color: #9ca3af;
-  font-size: 12px;
+  color: #ffffff;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.5px;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  margin-bottom: 20px;
 }
 
 /* Large Balance Typography */
 .position-product-main-amount {
   color: #ffffff;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   margin: 0;
 }
@@ -65,13 +80,15 @@
   align-items: center;
   gap: 32px; /* Generous gap separating data clusters */
   width: 100%;
-  margin-bottom: 24px;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
 .position-metadata-item {
   display: flex;
   align-items: center;
   gap: 6px;
+  justify-content: space-between;
 }
 
 .meta-label-text {
@@ -84,6 +101,20 @@
   font-size: 13px;
   color: #ffffff;
   font-weight: 600;
+}
+
+/* Termination Alert Notification Banner style wrapper */
+.position-card-termination-banner {
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff7e6;
+  color: #b7791f;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Action Trigger Elements Row Alignment */
@@ -103,36 +134,57 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.position-btn-action:hover {
-  opacity: 0.9;
-}
-
-/* Filled Primary Button Configuration */
+/* Filled Primary Action Button Configuration (Gold) */
 .position-btn-gold-fill {
   background-color: #e6b042;
   color: #000000;
 }
 
-/* Solid Secondary Button Configuration */
-.position-btn-white-solid,
-.position-btn-disabled {
+.position-btn-gold-fill:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* Neutralized White/Muted Secondary Button Configuration */
+.position-btn-white-solid {
   background: #ffffff;
   color: #111827;
+}
+
+.position-btn-white-solid:hover {
+  background: #f3f4f6;
+}
+
+/* Disabled State for Standard Content */
+.position-btn-disabled {
+  background: #374151;
+  color: #9ca3af;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 🌟 Incentivization State: Beautiful gold background but clearly unclickable until maturity */
+.position-btn-disabled-gold {
+  background-color: #e6b042;
+  color: #000000;
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* ==========================================================================
    SKELETON ANIMATIONS & BASE STRUCTURAL TOKENS
    ========================================================================== */
 
-/* Core Animation Wrapper - Disables interactions gracefully while pulling resources */
 .position-product-card.skeleton-card-pulse {
   animation: investSkeletonPulse 1.5s ease-in-out infinite;
   pointer-events: none;
   user-select: none;
-  border-color: #e2e8f0; /* Soft state border divider fallback override */
 }
 
 @keyframes investSkeletonPulse {
@@ -145,52 +197,37 @@
   }
 }
 
-/* Common Global Layout Token Base rules for Core Placeholders */
 .skeleton-node {
-  background-color: #e2e8f0; /* Matching UI baseline color fill standard */
-  border-radius: 4px; /* Strict uniform parameters enforcement */
+  background-color: #e2e8f0;
+  border-radius: 4px;
 }
 
-/* ==========================================================================
-   DIMENSION NODE COMPOSITIONS MAPS
-   ========================================================================== */
-
-/* Product Tracker Tag Line Component block */
 .skeleton-tag-placeholder {
   width: 70px;
   height: 12px;
   margin-bottom: 8px;
 }
-
-/* Core Main Numeric Balance Row component block */
 .skeleton-amount-placeholder {
   width: 135px;
   height: 26px;
 }
-
-/* Upper Axis Trend Node element placeholder */
 .skeleton-trend-circle-placeholder {
   width: 34px;
   height: 34px;
-  border-radius: 50%; /* Confined Circle constraint boundary parameter */
+  border-radius: 50%;
   flex-shrink: 0;
 }
-
-/* Metadata Text Line Item Elements */
 .skeleton-meta-label-placeholder {
   width: 50px;
   height: 11px;
   margin-bottom: 6px;
 }
-
 .skeleton-meta-value-placeholder {
   width: 85px;
   height: 13px;
 }
-
-/* Bottom Operational Buttons Row elements */
 .skeleton-btn-placeholder {
   flex: 1;
-  height: 40px; /* Aligns 1:1 with operational button baseline structures */
-  border-radius: 4px; /* Explicit structural consistency guard */
+  height: 40px;
+  border-radius: 4px;
 }
