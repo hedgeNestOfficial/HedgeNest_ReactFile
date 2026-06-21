@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react"; // 🟢 Added useState for layout control
 import whiteLogo from "../assets/white logo.png";
 import Abayomi from "../assets/Abayomi.png";
 import {
@@ -16,11 +16,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Store/UserSlice";
 
+// 🟢 Import your existing components (adjust paths if your folder setup differs slightly)
+import SignOutModal from "./KycModals/SignoutModal";
+import SplashScreen from "../Components/SplashScreen"; // 💡 Using your existing splash component
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+
+  // 🟢 Modal and Splash Visibility States
+  const [isSignOutOpen, setIsSignOutOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
 
   const userInitial = `${user?.firstName?.charAt(0) || ""}${
     user?.lastName?.charAt(0) || ""
@@ -28,7 +36,6 @@ const Sidebar = () => {
   const profileImage = user?.profilePicture?.url;
   const currentPath = location.pathname;
 
-  // FIX: Formatted names with correct capitalization directly for UI display
   const menuItems = [
     { name: "Dashboard", icon: FaGripHorizontal },
     { name: "Wallet", icon: FaWallet },
@@ -37,15 +44,25 @@ const Sidebar = () => {
     { name: "Invest", icon: FaChartLine },
   ];
 
-  const handleLogout = () => {
-    dispatch(logout());
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    navigate("/");
+  // 🟢 Handles the high-polished confirmation sequence
+  const handleConfirmLogout = () => {
+    setIsSignOutOpen(false);
+    setShowSplash(true); // Mounts your splash screen layout
+
+    // Holds view for 2 seconds to showcase the animation before state wiping and routing
+    setTimeout(() => {
+      dispatch(logout());
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      navigate("/");
+    }, 2000);
   };
 
   return (
     <>
+      {/* 🟢 Render splash overlay at root level if active */}
+      {showSplash && <SplashScreen />}
+
       {/* MOBILE TOP NAVBAR */}
       <header className="mobile-top-navbar">
         <div className="brand-group" onClick={() => navigate("/")}>
@@ -123,7 +140,11 @@ const Sidebar = () => {
 
         {/* LOGOUT */}
         <div className="sidebar-footer">
-          <button className="menu-item logout-btn" onClick={handleLogout}>
+          {/* 🟢 Updated click listener to safely intercept and open the confirmation block */}
+          <button
+            className="menu-item logout-btn"
+            onClick={() => setIsSignOutOpen(true)}
+          >
             <FaSignOutAlt className="menu-icon" size={18} />
             <span className="menu-text">Sign Out</span>
           </button>
@@ -135,7 +156,6 @@ const Sidebar = () => {
         {menuItems.map((item) => {
           const Icon = item.icon;
 
-          // FIX: Convert item name to lowercase for mobile paths as well
           const targetRoute = `/${item.name.toLowerCase()}`;
           const isActive = currentPath === targetRoute;
 
@@ -151,6 +171,13 @@ const Sidebar = () => {
           );
         })}
       </nav>
+
+      {/* 🟢 Sign Out Confirmation Modal Portal Layer */}
+      <SignOutModal
+        isOpen={isSignOutOpen}
+        onClose={() => setIsSignOutOpen(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </>
   );
 };

@@ -132,7 +132,7 @@ const BreakInvestmentModalManager = ({
         {currentStep === STEPS.WARNING && (
           <div className="break-modal-step-content text-center">
             <h2 className="break-modal-title">
-              Are you sure you want to withdraw?
+              Are you sure you want to Break Investment?
             </h2>
             <p className="break-modal-subtitle text-muted">
               Early withdrawal will not earn full interest
@@ -165,11 +165,11 @@ const BreakInvestmentModalManager = ({
               How much do you want to withdraw
             </p>
             <div className="break-input-wrapper">
-              <span className="break-currency-prefix">₦</span>
+              <span className="break-currency-prefix"></span>
               <input
                 type="text"
                 className="break-disabled-input"
-                value={amount.toLocaleString()}
+                value={`₦ ${amount.toLocaleString()}`}
                 disabled
               />
             </div>
