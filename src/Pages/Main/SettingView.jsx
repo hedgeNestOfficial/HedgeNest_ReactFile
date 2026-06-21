@@ -104,7 +104,7 @@ import "../../Style/SettingView.css";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
 import ChangePinModal from "../../Components/KycModals/ChangePinModal";
-import { getLinkedAccounts } from "../../Services/walletService";
+import { getLinkedAccounts } from "../../Services/Walletservice";
 
 const SettingView = ({ onAddAccount }) => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
