@@ -11,7 +11,6 @@ const PlanSummary = ({
 }) => {
   console.log("formData from plan summary:", formData);
 
-  
   if (!formData) {
     return <div className="modal-container">Loading summary data...</div>;
   }
@@ -20,7 +19,14 @@ const PlanSummary = ({
   const days = parseInt(formData.duration) || 0;
   const isPlanFlexible = isFlexibleMode || formData.planType === "FLEXIBLE";
 
-// INTEREST
+  // Helper function to resolve exact Type labels cleanly
+  const getPlanTypeLabel = () => {
+    if (formData.planType === "STEALTH") return "Stealth";
+    if (isPlanFlexible) return "Flexible";
+    return "Locked";
+  };
+
+  // INTEREST
   const estimatedInterest = (target * 0.16 * (days / 365)).toFixed(2);
   const tax = (estimatedInterest * 0.1).toFixed(2);
   const finalInterest = (estimatedInterest - tax).toFixed(2);
@@ -35,15 +41,11 @@ const PlanSummary = ({
       <h2 className="summary-title">Savings Plan Overview/Summary</h2>
 
       <div className="summary-details-list">
-       
         <div className="summary-row">
           <span className="summary-label">Savings Name</span>
-          <span className="summary-value text-dark">
-            {formData.title }
-          </span>
+          <span className="summary-value text-dark">{formData.title}</span>
         </div>
 
-        
         <div className="summary-row">
           <span className="summary-label">Target Amount</span>
           <span className="summary-value text-dark">
@@ -54,30 +56,23 @@ const PlanSummary = ({
           </span>
         </div>
 
-       
         <div className="summary-row">
           <span className="summary-label">Savings Type</span>
-          <span className="summary-value text-dark">
-            {isPlanFlexible ? "Flexible" : "Locked"}
-          </span>
+          <span className="summary-value text-dark">{getPlanTypeLabel()}</span>
         </div>
 
-       
         {!isPlanFlexible && (
           <div className="summary-row">
             <span className="summary-label">Duration (Days)</span>
-            <span className="summary-value text-dark">{days }</span>
+            <span className="summary-value text-dark">{days}</span>
           </div>
         )}
 
-        
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>
-         
           <span className="summary-value text-dark">25 Apr, 2027</span>
         </div>
 
-        
         <div className="summary-row">
           <span className="summary-label">
             Breaking Fee For Early Withdrawal
@@ -87,7 +82,6 @@ const PlanSummary = ({
           </span>
         </div>
 
-        
         <div className="summary-row items-start">
           <span className="summary-label">Interest (before tax)</span>
           <div className="summary-value-stack ">
@@ -113,9 +107,6 @@ const PlanSummary = ({
                 minimumFractionDigits: 2,
               })}
             </span>
-            {/* <span className="calculation-subtext">
-              ({Number(target).toLocaleString()} * 16% * {days}/365)
-            </span> */}
           </div>
         </div>
 

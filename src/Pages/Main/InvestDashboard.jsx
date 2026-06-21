@@ -245,3 +245,338 @@ const InvestDashboard = () => {
 };
 
 export default InvestDashboard;
+
+// import React, { useState, useEffect } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import toast from "react-hot-toast";
+
+// // Presentation UI Blocks
+// import { InvestmentCard } from "../../Features/InvestmentCard";
+// import PositionCard from "../../Features/PositionCard";
+
+// // Modal System Infrastructure
+// import InvestModal from "../../Components/KycModals/InvestModal";
+// import KycModalManager from "../../Components/KycModals/KycModalManager";
+// import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";
+
+// // Network Actions
+// import {
+//   getInvestmentPlans,
+//   getUserInvestments,
+//   completeInvestment,
+//   claimInvestment,
+//   breakInvestment,
+//   confirmTransactionPin,
+// } from "../../Services/investmentService";
+// import { getMyWallet } from "../../Services/Walletservice";
+// import { updateWallet } from "../../Store/UserSlice";
+// import "../../Style/InvestDashboard.css";
+
+// const InvestDashboard = () => {
+//   const dispatch = useDispatch();
+//   const { user, token } = useSelector((state) => state.user);
+
+//   const [plans, setPlans] = useState([]);
+//   const [userInvestments, setUserInvestments] = useState([]);
+//   const [loadingPlans, setLoadingPlans] = useState(true);
+//   const [loadingInvestments, setLoadingInvestments] = useState(true);
+
+//   const [selectedProduct, setSelectedProduct] = useState(null);
+//   const [selectedPosition, setSelectedPosition] = useState(null);
+//   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
+//   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
+//   const [showBreakModal, setShowBreakModal] = useState(false);
+
+//   /**
+//    * Refresh user wallet balance from backend
+//    */
+//   const refreshWallet = async () => {
+//     if (!token) return;
+//     try {
+//       const response = await getMyWallet(token);
+//       const walletData = response?.data?.[0];
+//       if (walletData) {
+//         dispatch(updateWallet(walletData));
+//       }
+//     } catch (error) {
+//       console.error("Wallet refresh failed:", error);
+//     }
+//   };
+
+//   /**
+//    * Fetch available investment plans
+//    */
+//   const fetchPlans = async () => {
+//     if (!token) return;
+//     try {
+//       setLoadingPlans(true);
+//       const response = await getInvestmentPlans(token);
+//       const uniquePlans =
+//         response?.investmentPlan?.filter(
+//           (plan, index, self) =>
+//             index ===
+//             self.findIndex(
+//               (item) => item.investmentName === plan.investmentName,
+//             ),
+//         ) || [];
+//       setPlans(uniquePlans);
+//     } catch (error) {
+//       toast.error("Unable to load investment plans");
+//     } finally {
+//       setLoadingPlans(false);
+//     }
+//   };
+
+//   /**
+//    * Fetch user's active investments
+//    */
+//   const fetchUserInvestments = async () => {
+//     if (!token) return;
+//     try {
+//       setLoadingInvestments(true);
+//       const response = await getUserInvestments(token);
+//       setUserInvestments(response?.data || []);
+//     } catch (error) {
+//       toast.error("Unable to load investments");
+//     } finally {
+//       setLoadingInvestments(false);
+//     }
+//   };
+
+//   /**
+//    * Initialize dashboard by loading all data
+//    */
+//   const initializeDashboard = async () => {
+//     try {
+//       await Promise.all([
+//         fetchPlans(),
+//         fetchUserInvestments(),
+//         refreshWallet(),
+//       ]);
+//     } catch (error) {
+//       console.error("Dashboard initialization failed:", error);
+//     }
+//   };
+
+//   /**
+//    * Load data when token is available
+//    */
+//   useEffect(() => {
+//     if (token) {
+//       initializeDashboard();
+//     }
+//   }, [token]);
+
+//   /**
+//    * Open invest modal with selected product
+//    */
+//   const handleInvestActionTrigger = (product) => {
+//     setSelectedProduct(product);
+//     setIsInvestModalOpen(true);
+//   };
+
+//   /**
+//    * Open break investment modal
+//    */
+//   const handleOpenBreakModal = (position) => {
+//     setSelectedPosition(position);
+//     setShowBreakModal(true);
+//   };
+
+//   /**
+//    * Close break investment modal
+//    */
+//   const handleCloseBreakModal = () => {
+//     setShowBreakModal(false);
+//     setSelectedPosition(null);
+//   };
+
+//   /**
+//    * Handle withdrawal/claim based on investment state
+//    *
+//    * Flow 1: Naturally Matured Investment
+//    * - User clicks "Withdraw" on matured investment
+//    * - completeInvestment() marks it as complete
+//    * - claimInvestment() adds funds to wallet
+//    *
+//    * Flow 2: Broken Investment (after 26 hours)
+//    * - User clicks "Claim" on settled broken investment
+//    * - claimInvestment() directly adds funds to wallet
+//    */
+//   const handleWithdrawInvestment = async (position) => {
+//     if (!token) {
+//       toast.error("Your login session has expired");
+//       return;
+//     }
+
+//     try {
+//       const investmentId = position?._id || position?.id;
+//       const userId = position?.userId;
+//       const isBroken = !!position?.terminatedAt;
+
+//       if (!investmentId || !userId) {
+//         toast.error("Invalid investment data");
+//         return;
+//       }
+
+//       const payload = {
+//         investmentId,
+//         userId,
+//       };
+
+//       // Flow 1: Naturally matured investment
+//       if (!isBroken) {
+//         console.log("Processing naturally matured investment claim...");
+//         await completeInvestment(payload, token);
+//         await claimInvestment(payload, token);
+//         toast.success("Investment claimed successfully");
+//       }
+
+//       // Flow 2: Broken investment (already passed 26h cooling period)
+//       if (isBroken) {
+//         console.log("Processing broken investment settlement claim...");
+//         await claimInvestment(payload, token);
+//         toast.success("Broken investment settlement claimed successfully");
+//       }
+
+//       // Refresh data after claim
+//       await Promise.all([fetchUserInvestments(), refreshWallet()]);
+//     } catch (error) {
+//       console.error("Withdraw/Claim failed:", error);
+//       toast.error(
+//         error?.response?.data?.message || "Unable to complete withdrawal",
+//       );
+//     }
+//   };
+
+//   /**
+//    * Break investment with PIN confirmation
+//    *
+//    * Flow:
+//    * 1. Confirm transaction PIN
+//    * 2. Terminate investment (sets terminatedAt timestamp)
+//    * 3. Investment becomes claimable after 26 hours
+//    * 4. Refresh wallet and investments
+//    */
+//   const handleBreakInvestment = async (investmentId, transactionPin) => {
+//     try {
+//       // Validate session
+//       if (!token || !user?._id) {
+//         toast.error("Authentication session missing. Please log in again.");
+//         throw new Error("Missing auth credentials");
+//       }
+
+//       console.log("Breaking investment:", investmentId);
+
+//       // Step 1: Confirm PIN
+//       console.log("Confirming PIN...");
+//       await confirmTransactionPin(user._id, transactionPin, token);
+//       console.log("PIN confirmed successfully");
+
+//       // Step 2: Break investment
+//       console.log("Breaking investment...");
+//       const response = await breakInvestment(investmentId, token);
+//       console.log("Investment broken:", response);
+
+//       toast.success(response?.message || "Investment terminated successfully");
+
+//       // Step 3: Refresh data
+//       console.log("Refreshing data...");
+//       await Promise.all([fetchUserInvestments(), refreshWallet()]);
+//       console.log(
+//         "Data refreshed - investment now in 26-hour settlement period",
+//       );
+
+//       return response;
+//     } catch (error) {
+//       const errorMessage =
+//         error?.response?.data?.message ||
+//         error?.message ||
+//         "Unable to terminate investment";
+
+//       console.error("Break investment failed:", errorMessage);
+//       toast.error(errorMessage);
+
+//       // Re-throw so modal can catch it and return to PIN entry
+//       throw error;
+//     }
+//   };
+
+//   return (
+//     <div className="dashboard-wrapper">
+//       <header className="invest-dashboard-header">
+//         <h1>Invest</h1>
+//         <p>Curated, beginner-friendly products from low to medium risk</p>
+//       </header>
+
+//       {/* Your Positions Section */}
+//       <section className="positions-section">
+//         <h2>Your Positions</h2>
+
+//         {loadingInvestments ? (
+//           <p className="loading-state">Loading positions...</p>
+//         ) : userInvestments.length > 0 ? (
+//           <div className="flex-container">
+//             {userInvestments.slice(0, 12).map((position) => (
+//               <PositionCard
+//                 key={position?._id || position?.id}
+//                 position={position}
+//                 onBreakClick={handleOpenBreakModal}
+//                 onWithdrawClick={handleWithdrawInvestment}
+//               />
+//             ))}
+//           </div>
+//         ) : (
+//           <div className="empty-positions-card">
+//             <p className="empty-positions-title">No Active Investments Yet</p>
+//             <p className="empty-positions-subtitle">
+//               You don't have any active investments right now.
+//             </p>
+//           </div>
+//         )}
+//       </section>
+
+//       {/* Available Products Section */}
+//       <section className="available-section">
+//         <h2>Available Products</h2>
+//         <div className="flex-container">
+//           {loadingPlans ? (
+//             <p className="loading-state">Loading investment plans...</p>
+//           ) : (
+//             plans.map((product) => (
+//               <InvestmentCard
+//                 key={product?._id || product?.id}
+//                 product={product}
+//                 onInvestClick={handleInvestActionTrigger}
+//               />
+//             ))
+//           )}
+//         </div>
+//       </section>
+
+//       {/* Invest Modal */}
+//       <InvestModal
+//         isOpen={isInvestModalOpen}
+//         onClose={() => setIsInvestModalOpen(false)}
+//         product={selectedProduct}
+//         onSuccess={initializeDashboard}
+//       />
+
+//       {/* Break Investment Modal */}
+//       <BreakInvestmentModalManager
+//         isOpen={showBreakModal}
+//         onClose={handleCloseBreakModal}
+//         position={selectedPosition}
+//         onConfirmBreak={handleBreakInvestment}
+//       />
+
+//       {/* KYC Modal */}
+//       <KycModalManager
+//         isOpen={isKycModalOpen}
+//         onClose={() => setIsKycModalOpen(false)}
+//       />
+//     </div>
+//   );
+// };
+
+// export default InvestDashboard;
