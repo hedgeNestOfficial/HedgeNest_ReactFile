@@ -9,15 +9,14 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
     <div className="vault-wrap">
       {vaultsData.map((vault) => {
         const vaultId = vault.id;
-        const vaultTypeUpper = vault.type?.toUpperCase();
+        const vaultTypeUpper =
+          vault.type?.toUpperCase() || vault.planType?.toUpperCase();
 
-        const isLocked = vaultTypeUpper === "LOCKED";
-        const isStealth = vaultTypeUpper === "STEALTH";
         const isFlexible = vaultTypeUpper === "FLEXIBLE";
+        const isStealth = vaultTypeUpper === "STEALTH";
 
-        // Combines base target amount pool and current balance pool seamlessly
-        const totalCombinedBalance =
-          Number(vault.targetAmount || 0) + Number(vault.balance || 0);
+        const baseTargetAmount = Number(vault.targetAmount || 0);
+        const topUpAdditions = Number(vault.currentBalance || 0);
         const progressPercentage = vault.interestRate || 0;
 
         return (
@@ -26,7 +25,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
               {isFlexible ? (
                 <RiLockUnlockLine className="badge-icon icon-gold" />
               ) : isStealth ? (
-                <RiEyeOffLine className="badge-icon icon-gold" /> // Fixed Stealth Plan Label & Icon
+                <RiEyeOffLine className="badge-icon icon-gold" />
               ) : (
                 <RiLockLine className="badge-icon icon-gold" />
               )}
@@ -38,16 +37,16 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
             <div className="amount-group">
               <span className="vault-currency">₦</span>
               <span className="vault-balance">
-                {totalCombinedBalance.toLocaleString()}
+                {baseTargetAmount.toLocaleString()}
               </span>
 
               {isFlexible && (
                 <div className="top-up">
                   <h3>Top Up</h3>
                   <div>
-                    <span className="vault-currency">₦</span>
-                    <span className="vault-balance">
-                      {Number(vault.balance || 0).toLocaleString()}
+                    <span className="top-currency">₦</span>
+                    <span className="top-balance">
+                      {topUpAdditions.toLocaleString()}
                     </span>
                   </div>
                 </div>

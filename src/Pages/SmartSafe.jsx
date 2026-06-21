@@ -44,21 +44,21 @@ const SmartSafe = () => {
   const [activeTopUpVault, setActiveTopUpVault] = useState(null);
   const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
 
-  // Normalizes API schema down to your frontend's clean properties
   const normalizePlans = (plans = []) => {
-    return plans.map((plan) => ({
-      id: plan._id,
-      title: plan.title,
-      type: plan.planType,
-      planType: plan.planType,
-      targetAmount: Number(plan.targetAmount || 0), // Your static target goal (e.g. 5000)
-      balance: Number(plan.currentBalance || 0), // Your TRUE live balance pool (e.g. 6200)
-      progress: plan.progress || 0,
-      interestRate: plan.interestRate || 0,
-      frequency: plan.savingFrequency,
-      autoSave: plan.autoSave ?? false,
-      breakingFeePercentage: plan.breakingFeePercentage || 0,
-    }));
+    return plans
+      .filter((plan) => Number(plan.currentBalance || 0) > 0)
+      .map((plan) => ({
+        id: plan._id,
+        title: plan.title,
+        type: plan.planType,
+        planType: plan.planType,
+        targetAmount: Number(plan.targetAmount || 0),
+        currentBalance: Number(plan.currentBalance || 0),
+        interestRate: plan.interestRate || 0,
+        frequency: plan.savingFrequency,
+        autoSave: plan.autoSave ?? false,
+        breakingFeePercentage: plan.breakingFeePercentage || 0,
+      }));
   };
 
   const fetchUserVaults = async () => {
@@ -69,6 +69,7 @@ const SmartSafe = () => {
       const response = await getAllPlan(token);
       const plansData =
         response?.plans || response?.plan || response?.data?.plan || [];
+
       setVaults(normalizePlans(plansData));
     } catch (error) {
       toast.error("Could not load your savings vaults.");
@@ -141,7 +142,7 @@ const SmartSafe = () => {
       const payload = {
         title: formData.title,
         targetAmount: Number(formData.targetAmount),
-        planType: formData.planType, // Fixed: Sends user dropdown choice safely (e.g. STEALTH)
+        planType: formData.planType,
         duration: formData.planType === "FLEXIBLE" ? null : formData.duration,
         savingFrequency: formData.savingFrequency,
         amountPerFrequency: Number(formData.initialAmount),
@@ -160,31 +161,40 @@ const SmartSafe = () => {
 
   const handleTopUp = async (vault, amount, pinValue) => {
     try {
+      const vaultId =
+        vault?.id ||
+        vault?._id ||
+        activeTopUpVault?.id ||
+        activeTopUpVault?._id;
+      if (!vaultId) {
+        toast.error("Invalid vault profile data selection.");
+        return;
+      }
+
       const payload = {
         amount: Number(amount),
         transactionPin: pinValue,
       };
 
-      const res = await topUp(payload, vault.id, token);
-      const apiData = res?.data?.data || res?.data;
-
-      setVaults((prev) =>
-        prev.map((v) =>
-          v.id === vault.id
-            ? {
-                ...v,
-
-                balance:
-                  apiData?.newSavingsBalance !== undefined
-                    ? Number(apiData.newSavingsBalance)
-                    : Number(v.balance) + Number(amount),
-              }
-            : v,
-        ),
-      );
-
+      const response = await topUp(payload, vaultId, token);
       toast.success("Top up successful");
-      fetchUserVaults(); // Keep frontend synced perfectly with DB
+
+      const serverNewBalance =
+        response?.data?.newSavingsBalance ?? response?.newSavingsBalance;
+
+      if (serverNewBalance !== undefined && serverNewBalance !== null) {
+        setVaults((prevVaults) =>
+          prevVaults.map((v) =>
+            v.id === vaultId
+              ? { ...v, currentBalance: Number(serverNewBalance) }
+              : v,
+          ),
+        );
+      }
+
+      setTimeout(async () => {
+        await fetchUserVaults();
+      }, 500);
     } catch (error) {
       toast.error(error?.message || "Top up failed");
       throw error;
@@ -223,7 +233,7 @@ const SmartSafe = () => {
   };
 
   return (
-    <main className="smart-container">
+    <main className="smart-container" onClick={() => setIsHelpOpen(false)}>
       <header className="dash-header">
         <div className="header-titles">
           <h1 className="main-title">Smart Safe</h1>
@@ -231,7 +241,10 @@ const SmartSafe = () => {
         </div>
 
         <div className="header-actions">
-          <div className="dropdown-wrapper">
+          <div
+            className="dropdown-wrapper"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               className={`help-btn ${isHelpOpen ? "active" : ""}`}
               onClick={() => setIsHelpOpen(!isHelpOpen)}
@@ -288,7 +301,10 @@ const SmartSafe = () => {
 
           <button
             className="create-btn"
-            onClick={() => setModalScreen("CREATE")}
+            onClick={(e) => {
+              e.stopPropagation();
+              setModalScreen("CREATE");
+            }}
           >
             <FaPlus />
             New Vault
@@ -340,7 +356,12 @@ const SmartSafe = () => {
         vault={activeWithdrawVault}
         onClose={() => setIsWithdrawModalOpen(false)}
         onWithdraw={handleWithdraw}
-        onWithdrawSuccess={fetchUserVaults}
+        onWithdrawSuccess={() => {
+          setVaults((prev) =>
+            prev.filter((v) => v.id !== activeWithdrawVault?.id),
+          );
+          fetchUserVaults();
+        }}
       />
 
       <SavingsModal

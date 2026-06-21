@@ -103,7 +103,6 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
         },
       });
     } catch (error) {
-      // Safely close modal layout first to clear overlay backdrop
       setScreen("AMOUNT");
       onClose();
 
@@ -128,7 +127,6 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
     <div className="topup-overlay">
       <div className="topup-box">
         <div className="top-up-container">
-          {/* AMOUNT SCREEN */}
           {screen === "AMOUNT" && (
             <form onSubmit={handleAmountSubmit} className="topup-content">
               <h2 className="topup-title">Top Up Savings</h2>
@@ -167,7 +165,6 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           )}
         </div>
 
-        {/* LOADING SCREEN */}
         {screen === "LOADING" && (
           <div className="topup-loading-container">
             <div className="fullscreen-spinner" />
@@ -175,16 +172,17 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
           </div>
         )}
 
-        {/* PIN SCREEN */}
         {screen === "PIN" && (
-          <div className="topup-content topup-has-back-nav">
-            <button
-              type="button"
-              className="topup-back-btn"
-              onClick={() => setScreen("AMOUNT")}
-            >
-              <FaArrowLeft />
-            </button>
+          <div className="topup-content">
+            <div className="topup-nav-header">
+              <button
+                type="button"
+                className="topup-back-btn"
+                onClick={() => setScreen("AMOUNT")}
+              >
+                <FaArrowLeft />
+              </button>
+            </div>
 
             <h2 className="topup-pin-title">Enter Your Transaction PIN</h2>
 

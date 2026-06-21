@@ -16,8 +16,24 @@ const PlanSummary = ({
   }
 
   const target = parseFloat(formData.targetAmount) || 0;
-  const days = parseInt(formData.duration) || 0;
   const isPlanFlexible = isFlexibleMode || formData.planType === "FLEXIBLE";
+
+  // 1. Determine Interest Rate p.a. Based on Selected Type & Duration
+  const getInterestRate = () => {
+    if (isPlanFlexible) return 0.1; // 10% p.a.
+
+    const daysInput = parseInt(formData.duration, 10) || 0;
+    if (daysInput >= 7 && daysInput <= 90) return 0.14;
+    if (daysInput >= 91 && daysInput <= 180) return 0.15;
+    if (daysInput >= 181 && daysInput <= 364) return 0.16;
+    if (daysInput >= 365) return 0.17;
+    return 0.14; // Base fallback
+  };
+
+  const rateValue = getInterestRate();
+
+  // For calculation purposes: Flexible uses 365 days projection, Locked uses its exact duration value
+  const days = isPlanFlexible ? 365 : parseInt(formData.duration, 10) || 0;
 
   // Helper function to resolve exact Type labels cleanly
   const getPlanTypeLabel = () => {
@@ -26,8 +42,27 @@ const PlanSummary = ({
     return "Locked";
   };
 
-  // INTEREST
-  const estimatedInterest = (target * 0.16 * (days / 365)).toFixed(2);
+  // 2. Dynamic Maturity Date Calculation
+  const getCalculatedMaturityDate = () => {
+    if (isPlanFlexible) {
+      return "No lock-in (Withdraw anytime)";
+    }
+
+    const daysInput = parseInt(formData.duration, 10);
+    if (!daysInput || isNaN(daysInput)) return "Invalid duration entered";
+
+    const date = new Date();
+    date.setDate(date.getDate() + daysInput);
+
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // INTEREST MATH
+  const estimatedInterest = (target * rateValue * (days / 365)).toFixed(2);
   const tax = (estimatedInterest * 0.1).toFixed(2);
   const finalInterest = (estimatedInterest - tax).toFixed(2);
   const totalPayback = (target + parseFloat(finalInterest)).toFixed(2);
@@ -49,7 +84,7 @@ const PlanSummary = ({
         <div className="summary-row">
           <span className="summary-label">Target Amount</span>
           <span className="summary-value text-dark">
-            N
+            N{" "}
             {Number(target).toLocaleString(undefined, {
               minimumFractionDigits: 2,
             })}
@@ -70,7 +105,9 @@ const PlanSummary = ({
 
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>
-          <span className="summary-value text-dark">25 Apr, 2027</span>
+          <span className="summary-value text-dark">
+            {getCalculatedMaturityDate()}
+          </span>
         </div>
 
         <div className="summary-row">
@@ -86,23 +123,24 @@ const PlanSummary = ({
           <span className="summary-label">Interest (before tax)</span>
           <div className="summary-value-stack ">
             <span className="summary-value text-gold">
-              N
+              N{" "}
               {Number(estimatedInterest).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
             </span>
           </div>
           <span className="calculation-subtext">
-            ({Number(target).toLocaleString()} * 16% * {days}/365)
+            ({Number(target).toLocaleString()} * {rateValue * 100}% * {days}
+            /365)
           </span>
         </div>
 
         {/* Withholding Tax */}
         <div className="summary-row items-start">
-          <span className="summary-label">Withholding Tax</span>
+          <span className="summary-label">Withholding Tax (10%)</span>
           <div className="summary-value-stack">
             <span className="summary-value text-gold">
-              N
+              N{" "}
               {Number(tax).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
@@ -114,7 +152,7 @@ const PlanSummary = ({
         <div className="summary-row items-start">
           <span className="summary-label">Interest (after tax)</span>
           <span className="summary-value text-gold">
-            N
+            N{" "}
             {Number(finalInterest).toLocaleString(undefined, {
               minimumFractionDigits: 2,
             })}
@@ -126,7 +164,7 @@ const PlanSummary = ({
           <span className="summary-label">Total Payback</span>
           <div className="summary-value-stack">
             <span className="summary-value text-gold font-bold">
-              N
+              N{" "}
               {Number(totalPayback).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
