@@ -17,6 +17,7 @@ const PlanSummary = ({
 
   const target = parseFloat(formData.targetAmount) || 0;
   const isPlanFlexible = isFlexibleMode || formData.planType === "FLEXIBLE";
+  const isPlanStealth = formData.planType === "STEALTH";
 
   // 1. Determine Interest Rate p.a. Based on Selected Type & Duration
   const getInterestRate = () => {
@@ -32,12 +33,9 @@ const PlanSummary = ({
 
   const rateValue = getInterestRate();
 
-  // For calculation purposes: Flexible uses 365 days projection, Locked uses its exact duration value
-  const days = isPlanFlexible ? 365 : parseInt(formData.duration, 10) || 0;
-
   // Helper function to resolve exact Type labels cleanly
   const getPlanTypeLabel = () => {
-    if (formData.planType === "STEALTH") return "Stealth";
+    if (isPlanStealth) return "Stealth";
     if (isPlanFlexible) return "Flexible";
     return "Locked";
   };
@@ -61,11 +59,53 @@ const PlanSummary = ({
     });
   };
 
-  // INTEREST MATH
-  const estimatedInterest = (target * rateValue * (days / 365)).toFixed(2);
-  const tax = (estimatedInterest * 0.1).toFixed(2);
-  const finalInterest = (estimatedInterest - tax).toFixed(2);
-  const totalPayback = (target + parseFloat(finalInterest)).toFixed(2);
+  // --- INTEREST MATHEMATICS MATCHING YOUR EXACT EXAMPLES ---
+  let estimatedInterest = 0;
+  let mathSubtext = "";
+
+  if (isPlanFlexible) {
+    const durationCycles = parseFloat(formData.duration) || 0;
+    const frequency = (
+      formData.savingFrequency ||
+      formData.frequency ||
+      "DAILY"
+    ).toUpperCase();
+
+    let timeInYears = 0;
+    let frequencyLabel = "";
+
+    if (frequency === "DAILY") {
+      timeInYears = durationCycles / 365;
+      frequencyLabel = "days";
+    } else if (frequency === "WEEKLY") {
+      timeInYears = durationCycles / 52;
+      frequencyLabel = "weeks";
+    } else if (frequency === "MONTHLY") {
+      timeInYears = durationCycles / 12;
+      frequencyLabel = "months";
+    } else {
+      timeInYears = durationCycles / 365;
+      frequencyLabel = "days";
+    }
+
+    const averageBalance = target / 2;
+    // SI = Average Balance * Rate * TimeInYears
+    estimatedInterest = averageBalance * rateValue * timeInYears;
+
+    // Cleanly formats the percentage without trailing zeroes (e.g., 10% instead of 10.0000%)
+    const displayPercentage = rateValue * 100;
+
+    mathSubtext = `(Average Bal: ₦${Number(averageBalance).toLocaleString(undefined, { maximumFractionDigits: 2 })} * ${displayPercentage}% * Time: ${durationCycles} ${frequencyLabel} [${timeInYears.toFixed(4)} yrs])`;
+  } else {
+    const days = parseInt(formData.duration, 10) || 0;
+    estimatedInterest = target * rateValue * (days / 365);
+    mathSubtext = `(${Number(target).toLocaleString()} * ${rateValue * 100}% * ${days} / 365)`;
+  }
+
+  const tax = parseFloat((estimatedInterest * 0.1).toFixed(2));
+  const finalInterest = parseFloat((estimatedInterest - tax).toFixed(2));
+  const totalPayback = parseFloat((target + finalInterest).toFixed(2));
+  const formattedEstimatedInterest = parseFloat(estimatedInterest).toFixed(2);
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
@@ -84,9 +124,10 @@ const PlanSummary = ({
         <div className="summary-row">
           <span className="summary-label">Target Amount</span>
           <span className="summary-value text-dark">
-            N{" "}
+            ₦{" "}
             {Number(target).toLocaleString(undefined, {
               minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
             })}
           </span>
         </div>
@@ -96,12 +137,17 @@ const PlanSummary = ({
           <span className="summary-value text-dark">{getPlanTypeLabel()}</span>
         </div>
 
-        {!isPlanFlexible && (
-          <div className="summary-row">
-            <span className="summary-label">Duration (Days)</span>
-            <span className="summary-value text-dark">{days}</span>
-          </div>
-        )}
+        <div className="summary-row">
+          <span className="summary-label">
+            {isPlanFlexible ? "Savings Duration" : "Duration (Days)"}
+          </span>
+          <span className="summary-value text-dark">
+            {formData.duration}{" "}
+            {isPlanFlexible && formData.savingFrequency
+              ? formData.savingFrequency.toLowerCase() + "s"
+              : ""}
+          </span>
+        </div>
 
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>
@@ -121,57 +167,62 @@ const PlanSummary = ({
 
         <div className="summary-row items-start">
           <span className="summary-label">Interest (before tax)</span>
-          <div className="summary-value-stack ">
+          <div className="summary-value-stack">
             <span className="summary-value text-gold">
-              N{" "}
-              {Number(estimatedInterest).toLocaleString(undefined, {
+              ₦{" "}
+              {Number(formattedEstimatedInterest).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               })}
             </span>
           </div>
-          <span className="calculation-subtext">
-            ({Number(target).toLocaleString()} * {rateValue * 100}% * {days}
-            /365)
-          </span>
+          <span className="calculation-subtext">{mathSubtext}</span>
         </div>
 
-        {/* Withholding Tax */}
         <div className="summary-row items-start">
           <span className="summary-label">Withholding Tax (10%)</span>
           <div className="summary-value-stack">
             <span className="summary-value text-gold">
-              N{" "}
+              ₦{" "}
               {Number(tax).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               })}
             </span>
           </div>
         </div>
 
-        {/* Interest After Tax */}
         <div className="summary-row items-start">
           <span className="summary-label">Interest (after tax)</span>
           <span className="summary-value text-gold">
-            N{" "}
+            ₦{" "}
             {Number(finalInterest).toLocaleString(undefined, {
               minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
             })}
           </span>
         </div>
 
-        {/* Total Payback */}
         <div className="summary-row items-start">
           <span className="summary-label">Total Payback</span>
           <div className="summary-value-stack">
             <span className="summary-value text-gold font-bold">
-              N{" "}
+              ₦{" "}
               {Number(totalPayback).toLocaleString(undefined, {
                 minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
               })}
             </span>
             <span className="calculation-subtext">
-              ({Number(target).toLocaleString()} +{" "}
-              {Number(finalInterest).toLocaleString()})
+              (
+              {Number(target).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })}{" "}
+              +{" "}
+              {Number(finalInterest).toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })}
+              )
             </span>
           </div>
         </div>
