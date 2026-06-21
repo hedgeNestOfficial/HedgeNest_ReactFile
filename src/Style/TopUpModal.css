@@ -24,10 +24,14 @@
   box-sizing: border-box;
 }
 
+.topup-nav-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
 .topup-back-btn {
-  position: absolute;
-  top: 24px;
-  left: 24px;
   background: transparent;
   border: none;
   font-size: 1.1rem;
@@ -41,16 +45,11 @@
   transition:
     background 0.2s,
     color 0.2s;
-  z-index: 10;
 }
 
 .topup-back-btn:hover {
   background: #f3f4f6;
   color: #111111;
-}
-
-.topup-has-back-nav .topup-pin-title {
-  margin-top: 14px;
 }
 
 .top-up-container {
@@ -66,7 +65,8 @@
 }
 
 .topup-content h2,
-.topup-title {
+.topup-title,
+.topup-pin-title {
   font-size: 1.35rem;
   font-weight: 700;
   color: #0e131f;
@@ -268,21 +268,17 @@
   }
 
   .topup-box {
-    padding: 40px 20px 24px 20px;
+    padding: 24px 20px;
     border-radius: 12px;
   }
 
-  .topup-back-btn {
-    top: 16px;
-    left: 16px;
-  }
-
-  .topup-has-back-nav .topup-pin-title {
-    margin-top: 20px;
+  .topup-nav-header {
+    margin-bottom: 12px;
   }
 
   .topup-title,
-  .topup-content h2 {
+  .topup-content h2,
+  .topup-pin-title {
     font-size: 1.18rem;
   }
 

@@ -1,4 +1,3 @@
-/* Container Layout Base */
 .smart-container {
   width: 100%;
   min-height: 100vh;
@@ -10,7 +9,14 @@
   position: relative;
 }
 
-/* Header Element Styles */
+@media screen and (min-width: 1440px) {
+  .smart-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 60px 80px;
+  }
+}
+
 .dash-header {
   width: 100%;
   display: flex;
@@ -124,7 +130,6 @@
   margin: 20px 0 12px 0;
 }
 
-/* Flexbox Rate List Alternative */
 .rate-list {
   width: 100%;
   display: flex;
@@ -162,7 +167,6 @@
   font-weight: 500;
 }
 
-/* Call to Action Button */
 .create-btn {
   width: 154px;
   height: 46px;
@@ -184,7 +188,6 @@
   font-size: 18px;
 }
 
-/* Empty State Card Window */
 .empty-card {
   width: 100%;
   height: 360px;
@@ -235,19 +238,20 @@
   margin: 0;
 }
 
-/* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
-
 @media (max-width: 768px) {
   .smart-container {
-    padding: 80px 16px 24px 16px; 
+    padding: 32px 20px;
   }
 
   .dash-header {
     flex-direction: column;
     align-items: flex-start;
-    height: auto;
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 24px;
+  }
+
+  .header-titles {
+    width: 100%;
   }
 
   .header-actions {
@@ -256,28 +260,37 @@
   }
 
   .dropdown-panel {
-    width: calc(
-      100vw - 32px
-    ); /* Scale dynamically instead of staying a fixed 440px wide */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: calc(100vw - 32px);
     max-width: 380px;
-    right: -50px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0px 12px 36px rgba(0, 0, 0, 0.2);
+    z-index: 999;
   }
 
+  /* No tooltip arrow needed when panel turns into a centered modal */
   .arrow-top {
-    right: 54px;
+    display: none;
   }
 
   .empty-card {
-    height: 380px;
+    height: auto;
+    padding: 40px 20px;
   }
 }
 
 @media (max-width: 400px) {
-  .dropdown-panel {
-    right: -100px; /* Shift overlay balance for very tiny phone screens */
+  .main-title {
+    font-size: 24px;
   }
 
-  .arrow-top {
-    right: 104px;
+  .create-btn {
+    width: 130px;
+    font-size: 14px;
   }
 }

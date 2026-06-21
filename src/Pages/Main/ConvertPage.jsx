@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../Css/Convert.css";
 import { FiHelpCircle } from "react-icons/fi";
-
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -23,12 +22,10 @@ const ConvertPage = () => {
   const [liveRate, setLiveRate] = useState(null);
   const [conversionData, setConversionData] = useState(null);
 
-  // Loading infrastructure synchronized with core application dashboards
   const { token, wallet } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
-  // Monetary value formatting engine
   const formatCurrency = (value = 0) =>
     Number(value).toLocaleString("en-NG", {
       minimumFractionDigits: 2,
@@ -44,7 +41,6 @@ const ConvertPage = () => {
       const response = await GetLiveRate();
       setLiveRate(response?.rate || response);
     } catch (err) {
-      console.error("Live market feed tracking suspended:", err);
     } finally {
       setIsLoadingRate(false);
     }
@@ -63,9 +59,7 @@ const ConvertPage = () => {
       } else {
         setConversionHistory([]);
       }
-    } catch (err) {
-      console.error("History logging pipeline error:", err);
-    }
+    } catch (err) {}
   };
 
   const syncWalletData = async () => {
@@ -78,13 +72,11 @@ const ConvertPage = () => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      console.error("Wallet data structural fetch error:", error);
     } finally {
       setIsLoadingWallet(false);
     }
   };
 
-  // Primary data synchronization cycle
   useEffect(() => {
     fetchLiveRate();
     if (token) {
@@ -117,7 +109,6 @@ const ConvertPage = () => {
       return;
     }
 
-    // Balance threshold verification logic
     const currentLimit = activeCurrency === "NGN" ? nairaBalance : usdtBalance;
     if (Number(inputValue) > Number(currentLimit)) {
       toast.error(
@@ -147,7 +138,6 @@ const ConvertPage = () => {
       setIsModalOpen(false);
       setInputValue("");
 
-      // Re-trigger global wallet data states to update layout balances instantly
       await Promise.all([syncWalletData(), fetchCoversionHistory()]);
     } catch (error) {
       toast.error(error?.message || "Conversion failed");
@@ -171,7 +161,6 @@ const ConvertPage = () => {
   return (
     <div className="convert-layout-container">
       <main className="convert-main-content">
-        {/* HEADER */}
         <header className="convert-page-header">
           <div className="header-title-group">
             <h1>Hedge Your Naira</h1>
@@ -182,7 +171,6 @@ const ConvertPage = () => {
           </div>
         </header>
 
-        {/* LIVE RATE BANNER WITH CLEAN HIGH CONTRAST SKELETON */}
         <section className="rate-banner-container">
           <div className="rate-info">
             <span className="rate-label">CURRENT RATE</span>
@@ -204,7 +192,6 @@ const ConvertPage = () => {
           </div>
         </section>
 
-        {/* CONVERSION INTERACTION PANEL */}
         <form className="conversion-card-panel" onSubmit={handleFormSubmit}>
           <div className="conversion-split-grid">
             <div className="grid-left-input-pane">
@@ -218,7 +205,6 @@ const ConvertPage = () => {
             </div>
 
             <div className="grid-right-selectors-pane">
-              {/* NGN PILL TRIGGER CONTROL BLOCK */}
               <div className="token-pill-group">
                 {isLoadingWallet ? (
                   <div className="convert-skel sk-dark sk-pill-balance"></div>
@@ -243,7 +229,6 @@ const ConvertPage = () => {
                 </button>
               </div>
 
-              {/* USDT PILL TRIGGER CONTROL BLOCK */}
               <div className="token-pill-group">
                 {isLoadingWallet ? (
                   <div className="convert-skel sk-dark sk-pill-balance"></div>
@@ -268,7 +253,6 @@ const ConvertPage = () => {
             </div>
           </div>
 
-          {/* OUTPUT VIEWPORT PANEL */}
           <div className="full-width-output-banner">
             <span className="output-value">{getCalculatedPreview()}</span>
             <span className="output-currency-mid">
@@ -283,7 +267,6 @@ const ConvertPage = () => {
           </button>
         </form>
 
-        {/* HISTORY MODULE ENGINE */}
         <section className="history-log-panel">
           <header className="history-panel-header">
             <h3>Conversion History</h3>
@@ -384,7 +367,6 @@ const ConvertPage = () => {
         </section>
       </main>
 
-      {/* CONFIRMATION OVERLAY MODAL SYSTEM LAYER */}
       {isModalOpen && (
         <div
           className="modal-backdrop-overlay"
