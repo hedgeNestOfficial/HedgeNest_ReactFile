@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { useWalletRefresh } from "../Hooks/useWalletRefresh";
 
 // import { useWalletRefresh } from "../Hooks/useWalletRefresh";
 import "../Style/PaymentSuccess.css";
