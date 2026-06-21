@@ -4,6 +4,7 @@ import { CiCircleQuestion } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { LuPiggyBank } from "react-icons/lu";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
@@ -160,6 +161,23 @@ const SmartSafe = () => {
   };
 
   const handleTopUp = async (vault, amount, pinValue) => {
+    const targetCeiling = Number(vault?.targetAmount || 0);
+    const existingTopUpBalance = Number(vault?.currentBalance || 0);
+    const incomingAmount = Number(amount || 0);
+
+    if (existingTopUpBalance + incomingAmount > targetCeiling) {
+      const remainderSpace = Math.max(0, targetCeiling - existingTopUpBalance);
+
+      Swal.fire({
+        title: "Top Up Limit Exceeded",
+        text: `You cannot exceed your target limit of ₦${targetCeiling.toLocaleString()}. Maximum additional amount allowed is ₦${remainderSpace.toLocaleString()}.`,
+        icon: "error",
+        confirmButtonColor: "#EF4444",
+      });
+
+      throw new Error("Validation Limit Exceeded");
+    }
+
     try {
       const vaultId =
         vault?.id ||
@@ -172,7 +190,7 @@ const SmartSafe = () => {
       }
 
       const payload = {
-        amount: Number(amount),
+        amount: incomingAmount,
         transactionPin: pinValue,
       };
 
@@ -196,7 +214,9 @@ const SmartSafe = () => {
         await fetchUserVaults();
       }, 500);
     } catch (error) {
-      toast.error(error?.message || "Top up failed");
+      if (error.message !== "Validation Limit Exceeded") {
+        toast.error(error?.message || "Top up failed");
+      }
       throw error;
     }
   };
@@ -312,9 +332,25 @@ const SmartSafe = () => {
         </div>
       </header>
 
+      {/* SKELETON LOADER CONTAINER */}
       {isLoadingVaults ? (
-        <div style={{ padding: 40, textAlign: "center" }}>
-          Loading your Nests...
+        <div className="vault-wrap">
+          <div className="vault-card skeleton-card">
+            <div className="skeleton-element skeleton-badge"></div>
+            <div className="skeleton-element skeleton-title"></div>
+            <div className="skeleton-element skeleton-balance-block"></div>
+            <div className="skeleton-element skeleton-progress"></div>
+            <div className="skeleton-element skeleton-metrics"></div>
+            <div className="skeleton-element skeleton-actions"></div>
+          </div>
+          <div className="vault-card skeleton-card">
+            <div className="skeleton-element skeleton-badge"></div>
+            <div className="skeleton-element skeleton-title"></div>
+            <div className="skeleton-element skeleton-balance-block"></div>
+            <div className="skeleton-element skeleton-progress"></div>
+            <div className="skeleton-element skeleton-metrics"></div>
+            <div className="skeleton-element skeleton-actions"></div>
+          </div>
         </div>
       ) : vaults.length === 0 ? (
         <section className="empty-card">

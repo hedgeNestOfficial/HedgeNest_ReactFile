@@ -1,19 +1,17 @@
-/* Core Flex Workspace Layout Wrapper */
 .vault-wrap {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; /* Automatically flushes cards to opposite horizontal sides */
-  row-gap: 24px; /* Creates uniform vertical rows spacing */
+  justify-content: space-between;
+  row-gap: 24px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Flex Item Sizing & Card Base Structure */
 .vault-card {
-  width: 48%; /* Flat percentage layout share */
+  width: 48%;
   min-width: 340px;
   max-width: 540px;
-  height: 400px; /* Locked strict card container bounds */
+  height: 400px;
   background-color: #ffffff;
   border: 1px solid #c4c4c4;
   border-radius: 16px;
@@ -24,7 +22,6 @@
   position: relative;
 }
 
-/* Category Badge Layout Elements */
 .badge {
   display: flex;
   align-items: center;
@@ -47,7 +44,6 @@
   color: #e2b93b;
 }
 
-/* Content Frame Headers */
 .vault-name {
   font-size: 24px;
   font-weight: 700;
@@ -57,10 +53,16 @@
 
 .amount-group {
   display: flex;
-  align-items: baseline;
+  justify-content: space-between;
+  align-items: flex-end;
   color: #111111;
-  margin-bottom: 4px;
-  gap: 20px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.balance-main {
+  display: flex;
+  align-items: baseline;
 }
 
 .vault-currency {
@@ -73,12 +75,39 @@
   font-size: 32px;
   font-weight: 700;
 }
+
 .top-up {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  font-size: 12px;
+  align-items: flex-end;
+  text-align: right;
 }
+
+.top-up h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.2;
+}
+
+.top-up div {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+}
+
+.top-currency {
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 1px;
+}
+
+.top-balance {
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .timeline-text {
   font-size: 13px;
   font-weight: 600;
@@ -86,7 +115,6 @@
   margin: 0 0 16px 0;
 }
 
-/* Linear Progress Bar Elements */
 .progress-container {
   width: 100%;
   height: 6px;
@@ -102,7 +130,6 @@
   border-radius: 10px;
 }
 
-/* Info Labels Layout Row */
 .metrics-row {
   display: flex;
   justify-content: space-between;
@@ -117,10 +144,9 @@
   color: #111111;
 }
 
-/* Action Button Core Frameworks */
 .action-row {
   display: flex;
-  justify-content: space-between; /* Pushes child buttons to separate outer edge points */
+  justify-content: space-between;
   width: 100%;
   margin-bottom: auto;
 }
@@ -138,7 +164,7 @@
 }
 
 .btn-gold-action {
-  width: 48%; /* Splits action row side-by-side elements down evenly */
+  width: 48%;
   height: 48px;
   background-color: #edc344;
   border: none;
@@ -150,7 +176,7 @@
 }
 
 .btn-white-action {
-  width: 48%; /* Splits action row side-by-side elements down evenly */
+  width: 48%;
   height: 48px;
   background: #ffffff !important;
   border: 1px solid #111111;
@@ -161,7 +187,6 @@
   cursor: pointer;
 }
 
-/* Card Control Toggles Footer Frame */
 .card-footer {
   display: flex;
   justify-content: space-between;
@@ -183,7 +208,6 @@
   color: #111111;
 }
 
-/* Slider Controls Element Styles */
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -229,7 +253,6 @@ input:checked + .toggle-slider:before {
   transform: translateX(20px);
 }
 
-/* Mobile Media Break Handling */
 @media (max-width: 768px) {
   .vault-card {
     width: 100%;

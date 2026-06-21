@@ -14,6 +14,7 @@ const PlanForm = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasSelectedType, setHasSelectedType] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   const selectPlanType = (type, label) => {
     setIsFlexibleMode(type === "FLEXIBLE");
@@ -28,13 +29,32 @@ const PlanForm = ({
     setSelectedLabel(label);
     setIsDropdownOpen(false);
     setHasSelectedType(true);
+    setValidationError(""); // Reset errors on swap
+  };
+
+  // Intercept submit to run validation
+  const handleLocalSubmit = (e) => {
+    e.preventDefault();
+
+    const targetAmt = parseFloat(formData.targetAmount) || 0;
+    const initialAmt = parseFloat(formData.initialAmount) || 0;
+
+    if (initialAmt > targetAmt) {
+      setValidationError(
+        "Input amount to get started cannot be greater than the target amount.",
+      );
+      return; // Stops submission
+    }
+
+    setValidationError(""); // Clear error if all looks good
+    onSubmit(e);
   };
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
       <h2 className="modal-title">Create a Savings Plan</h2>
 
-      <form onSubmit={onSubmit} className="modal-form">
+      <form onSubmit={handleLocalSubmit} className="modal-form">
         {/* DROPDOWN */}
         <div className="form-group relative-group">
           <label className="form-label">Savings Type</label>
@@ -96,7 +116,7 @@ const PlanForm = ({
               <input
                 type="text"
                 name="title"
-                value={formData.title }
+                value={formData.title || ""}
                 onChange={handleInputChange}
                 className="form-input"
                 required
@@ -106,10 +126,13 @@ const PlanForm = ({
             <div className="form-group">
               <label className="form-label">Target Amount</label>
               <input
-                type="text"
+                type="number"
                 name="targetAmount"
                 value={formData.targetAmount || ""}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  setValidationError("");
+                  handleInputChange(e);
+                }}
                 className="form-input"
                 required
               />
@@ -153,14 +176,27 @@ const PlanForm = ({
               </label>
 
               <input
-                type="text"
+                type="number"
                 name="initialAmount"
                 value={formData.initialAmount || ""}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  setValidationError("");
+                  handleInputChange(e);
+                }}
                 className="form-input"
                 required
               />
             </div>
+          </div>
+        )}
+
+        {/* Error Feedback Display */}
+        {validationError && (
+          <div
+            className="error-message-text"
+            style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
+          >
+            {validationError}
           </div>
         )}
 
