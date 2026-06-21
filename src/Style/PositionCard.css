@@ -28,6 +28,36 @@
   gap: 8px;
 }
 
+/* 🟢 Header Right Alignment Layout Wrapper */
+.position-card-right-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* 🟢 Dark-Mode Optimized Tier Badge Tokens */
+.position-risk-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.position-risk-badge.low {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.position-risk-badge.medium {
+  background-color: rgba(230, 176, 66, 0.15);
+  color: #e6b042;
+  border: 1px solid rgba(230, 176, 66, 0.25);
+}
+
 /* Caps tracking header */
 .position-product-tag-name {
   color: #ffffff;
@@ -40,11 +70,6 @@
     BlinkMacSystemFont,
     "Segoe UI",
     Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
     sans-serif;
   margin-bottom: 20px;
 }
@@ -78,7 +103,7 @@
 .position-card-metadata-row {
   display: flex;
   align-items: center;
-  gap: 32px; /* Generous gap separating data clusters */
+  gap: 32px;
   width: 100%;
   justify-content: space-between;
   margin-bottom: 16px;

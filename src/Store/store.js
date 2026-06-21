@@ -209,11 +209,11 @@ if (process.env.NODE_ENV === "development") {
   persistor.subscribe(() => {
     const state = store.getState();
     const { rehydrating } = state.user;
-    console.log("📊 Redux Persist Status:", {
-      rehydrating,
-      hasUser: !!state.user.user,
-      hasToken: !!state.user.token,
-    });
+    // console.log("📊 Redux Persist Status:", {
+    //   rehydrating,
+    //   hasUser: !!state.user.user,
+    //   hasToken: !!state.user.token,
+    // });
   });
 }
 

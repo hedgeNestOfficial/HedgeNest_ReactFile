@@ -18,6 +18,15 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
   const amount = Number(position?.amount || 0);
   const expectedReturn = Number(position?.expectedReturn || 0);
 
+  // 🟢 FIXED RESOLUTION PATH: Checks both nested and root positions for 'investmentType' or 'risk' keys
+  const typeStatus = (
+    position?.investmentPlanId?.investmentType ||
+    position?.investmentType ||
+    position?.investmentPlanId?.risk ||
+    position?.risk ||
+    "Low"
+  ).toLowerCase();
+
   // Backend date formatter (e.g., 2026-09-15)
   const formattedMaturityDate = position?.maturityDate
     ? position.maturityDate.split("T")[0]
@@ -29,7 +38,7 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
   if (isBroken) {
     const terminatedDate = new Date(position.terminatedAt);
 
-    // ⏱️ UPDATED: 26-hour team approved cooling lock window
+    // ⏱️ 26-hour team approved cooling lock window
     const releaseDate = new Date(
       terminatedDate.getTime() + 26 * 60 * 60 * 1000,
     );
@@ -37,11 +46,7 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
 
     if (diffMs > 0) {
       const totalHours = Math.ceil(diffMs / (1000 * 60 * 60));
-      const days = Math.floor(totalHours / 24);
-      const hours = totalHours % 24;
-
-      breakMessage =
-        days > 0 ? `Available in ${days}d ${hours}h` : `Available in ${hours}h`;
+      breakMessage = `Available in ${totalHours}h`;
       isSettlementReady = false;
     } else {
       breakMessage = "Ready For Settlement";
@@ -83,13 +88,19 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
             {investmentName.toUpperCase()}
           </span>
           <h2 className="position-product-main-amount">
-            {/* Render clear currency pricing layouts */}₦
-            {amount.toLocaleString()}
+            ₦{amount.toLocaleString()}
           </h2>
         </div>
 
-        <div className="position-trend-indicator-circle">
-          <HiMiniArrowTrendingUp className="position-trend-arrow-svg" />
+        {/* Rightside Meta Group */}
+        <div className="position-card-right-group">
+          {/* 🟢 Badge now correctly renders 'medium' or 'low' dynamically */}
+          <span className={`position-risk-badge ${typeStatus}`}>
+            {typeStatus}
+          </span>
+          <div className="position-trend-indicator-circle">
+            <HiMiniArrowTrendingUp className="position-trend-arrow-svg" />
+          </div>
         </div>
       </div>
 
@@ -108,7 +119,7 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
         </div>
       </div>
 
-      {/* Early Termination Alert Notice (Maintained same countdown layout) */}
+      {/* Early Termination Alert Notice */}
       {isBroken && (
         <div className="position-card-termination-banner">
           Investment Terminated • {breakMessage}
@@ -117,7 +128,6 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
 
       {/* Interactive Action Controls */}
       <div className="position-card-action-row">
-        {/* 1. Break Button: Only shows if NOT matured and NOT already broken. Styled white/neutral to deprioritize. */}
         {!isMatured && !isBroken && (
           <button
             type="button"
@@ -128,11 +138,6 @@ const PositionCard = ({ position, onBreakClick, onWithdrawClick }) => {
           </button>
         )}
 
-        {/* 2. Primary/Secondary State Action Button:
-            - If Not Matured: Stays visible, disabled, and colored in Premium Gold.
-            - If Matured / Settled: Becomes an active, clickable Gold button to withdraw funds.
-            - If Broken but Cooling: Shows the countdown notice inline, greyed out.
-        */}
         <button
           type="button"
           className={`position-btn-action ${

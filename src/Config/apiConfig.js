@@ -34,6 +34,7 @@ export const ENDPOINTS = {
   },
   WALLET: {
     LINK_BANK_ACCOUNT: `${BASE_URL}/api/v1/linkBank`,
+    GET_LINKED_ACCOUNTS: `${BASE_URL}/api/v1/get-linked-account`,
   },
   CONVERSION: {
     CONVERT: `${BASE_URL}/api/v1/convert`,

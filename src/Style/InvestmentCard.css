@@ -3,15 +3,24 @@
   background-color: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 12px;
-  padding: 32px 24px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   max-width: 460px;
-  min-height: 240px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  /* 🔐 FIXED SHAPE LOCK: Guarantees 1:1 visual uniformity regardless of content length */
+  height: 310px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 🌟 MEDIUM TIER CONTAINER UPGRADE: Elegant Light Brown / Soft Warm Gold Finish */
+.investment-product-card.medium-tier {
+  background-color: #fdf8ee; /* Premium light warm gold-brown blend */
+  border: 1px solid #e6b042; /* Marked clearly with hedgeNest theme gold */
 }
 
 /* Header Composition Elements */
@@ -20,21 +29,17 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  /* background: #0805d4; */
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .card-title-group {
   display: flex;
   align-items: center;
   gap: 12px;
-  /* justify-content: space-between; */
-  width: 100%;
-  /* background-color: #9c1515; */
 }
 
 .card-title-group h3 {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #000000;
   margin: 0;
@@ -57,7 +62,7 @@
   color: #ffffff;
 }
 
-/* Risk Metadata Badge Nodes */
+/* Risk & Tier Metadata Badge Nodes */
 .risk-badge-node {
   font-size: 11px;
   font-weight: 700;
@@ -65,6 +70,7 @@
   padding: 4px 10px;
   border-radius: 20px;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .risk-badge-node.low {
@@ -77,19 +83,13 @@
   color: #d97706;
 }
 
-.risk-badge-node.high {
-  background-color: #fee2e2;
-  color: #ef4444;
-}
-
 /* Typography Descriptions Blocks */
 .investment-product-description {
   font-size: 14px;
   line-height: 1.5;
   color: #374151;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   text-align: left;
-  flex-grow: 1;
 }
 
 /* Balanced 3-Column Box System using Flexbox */
@@ -97,7 +97,8 @@
   display: flex;
   gap: 12px;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  margin-top: auto; /* Aligns data system precisely to the bottom block floor */
 }
 
 .metric-data-box {
@@ -106,11 +107,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   padding: 10px 4px;
-  border: 1px solid #111827; /* Distinct dark border outlines per cell */
+  border: 1px solid #111827;
   border-radius: 8px;
   background-color: #ffffff;
+}
+
+/* Dynamic sub-border correction for consistency on medium cards */
+.medium-tier .metric-data-box {
+  border-color: #e6b042;
 }
 
 .metric-cell-label {
@@ -128,7 +134,7 @@
 /* Bottom Action Buttons Framework */
 .invest-action-trigger-btn {
   width: 100%;
-  height: 48px;
+  height: 46px;
   background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
   border: none;
   border-radius: 6px;
@@ -137,6 +143,7 @@
   color: #ffffff;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .invest-action-trigger-btn:hover {
