@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; // ✅ Fixed: Added router navigation
 import toast from "react-hot-toast";
 import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import { TransactionHistory } from "../../Features/TransactionHistory";
-import { historyData } from "../../JS/Transactions";
 import { updateWallet } from "../../Store/UserSlice";
 import { getMyWallet } from "../../Services/Walletservice.js";
-
-import "../../Style/Wallet.css";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import "../../Style/Wallet.css";
 
 const WalletPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ Initialized navigation
 
   const { user, token, wallet } = useSelector((state) => state.user);
 
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
-
-  // Loading indicator for API Sync
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
 
   const [isDepositOpen, setIsDepositOpen] = useState(false);
@@ -51,7 +49,7 @@ const WalletPage = () => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      // console.log("Wallet refresh failed:", error);
+      console.error("Wallet refresh failed:", error);
     } finally {
       setIsLoadingWallet(false);
     }
@@ -89,7 +87,6 @@ const WalletPage = () => {
 
   const handleWithdrawalSuccess = async () => {
     await refreshWallet();
-    toast.success("Withdrawal successful");
   };
 
   return (
@@ -196,17 +193,6 @@ const WalletPage = () => {
         </section>
 
         {/* TRANSACTIONS */}
-
-        {/* <div className="transactions-view-port">
-          {historyData?.length ? (
-            <TransactionHistory transactions={historyData} />
-          ) : (
-            <div className="empty-state-container">
-              <p>No activities yet</p>
-            </div>
-          )}
-        </div> */}
-
         <section className="transaction-section">
           <div className="transaction-header">
             <h3>Recent Transactions</h3>
@@ -236,17 +222,17 @@ const WalletPage = () => {
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
         amount={confirmedDepositAmount}
-        token={token} // ⚙️ FIXED: Token is now correctly passed here
+        token={token}
         onSuccess={refreshWallet}
       />
 
-      {/* WITHDRAW */}
+      {/* WITHDRAWAL */}
       <WithdrawalModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
-        amount={confirmedWithdrawAmount}
+        amount={confirmedWithdrawAmount} // ✅ Receives the numeric value from dashboard input
+        userId={user?._id || user?.id} // ✅ Passes down the critical verification ID
         token={token}
-        bankDetails={linkedBank}
         onWithdrawalSuccess={handleWithdrawalSuccess}
       />
 
