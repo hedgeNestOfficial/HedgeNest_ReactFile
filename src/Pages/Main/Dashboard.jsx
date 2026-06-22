@@ -6,9 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import SplashScreen from "../../Components/SplashScreen.jsx";
-import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
 import { getTransactionHistory } from "../../Services/authService.js";
+
+// 🟢 Service Imports
+import { getMyWallet } from "../../Services/Walletservice.js";
+import { getFinancialInsight } from "../../Services/Walletinsight.js"; // ✅ Dedicated insight service import
 
 // 🟢 Premium Currency Icons
 import { SiTether } from "react-icons/si";
@@ -21,9 +24,9 @@ const NigeriaFlagIcon = () => (
     viewBox="0 0 32 32"
     style={{ borderRadius: "50%", display: "inline-block", shrink: 0 }}
   >
-    <rect width="10.67" height="32" fill="#008751" />
+    <rect width="10.67" height="32" fill="#05995e" />
     <rect x="10.67" width="10.67" height="32" fill="#ffffff" />
-    <rect x="21.34" width="10.67" height="32" fill="#008751" />
+    <rect x="21.34" width="10.67" height="32" fill="#05995e" />
   </svg>
 );
 
@@ -33,12 +36,16 @@ const Dashboard = () => {
 
   const { user, token, wallet } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
+  const [isLoadingInsight, setIsLoadingInsight] = useState(true); // ✅ Loading tracker for curated text
+  const [insight, setInsight] = useState(null); // ✅ State storage for text tip
+
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
 
   const [liveTransactions, setLiveTransactions] = useState([]);
 
+  // Splash Screen Lifecycle
   useEffect(() => {
     if (!showSplash) return;
 
@@ -50,6 +57,7 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [showSplash]);
 
+  // Core Data Synchronization Pipeline
   useEffect(() => {
     const initializeDashboardData = async () => {
       if (!token) return;
@@ -69,7 +77,30 @@ const Dashboard = () => {
       }
     };
 
+    const fetchDailyInsight = async () => {
+      if (!token) return;
+
+      try {
+        setIsLoadingInsight(true);
+        const insightResponse = await getFinancialInsight(token);
+
+        // Handles extraction clean whether matching a network object layout or returning text string directly
+        const tipText =
+          insightResponse?.insight ||
+          insightResponse?.data?.insight ||
+          insightResponse?.data;
+        if (tipText) {
+          setInsight(tipText);
+        }
+      } catch (error) {
+        console.error("Failed to retrieve daily financial insights:", error);
+      } finally {
+        setIsLoadingInsight(false);
+      }
+    };
+
     initializeDashboardData();
+    fetchDailyInsight();
   }, [token, dispatch]);
 
   const fullName =
@@ -148,7 +179,6 @@ const Dashboard = () => {
                 <div className="other-balances">
                   {/* NGN BALANCE BLOCK */}
                   <div className="Ngn-balance">
-                    {/* 🟢 Replaced old icon with clean custom Nigerian Flag component */}
                     <p
                       style={{
                         display: "flex",
@@ -187,9 +217,20 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              {/* DYNAMIC FINANCIAL INSIGHT BLOCK */}
               <div className="insight">
                 <h3>Financial Insight Of The Day</h3>
-                <p>Insights On How To Grow Your Wealth Better</p>
+                {isLoadingInsight ? (
+                  <div
+                    className="dash-skel sk-light sk-small"
+                    style={{ marginTop: "6px", width: "85%" }}
+                  ></div>
+                ) : (
+                  <p>
+                    {insight ||
+                      "Automating currency preservation shields capital allocations against structural erosion."}
+                  </p>
+                )}
               </div>
             </article>
 

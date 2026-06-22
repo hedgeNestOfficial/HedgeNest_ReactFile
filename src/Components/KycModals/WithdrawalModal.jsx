@@ -56,7 +56,7 @@ const WithdrawalModal = ({
     fetchAccounts();
   }, [isOpen, token, isPending]);
 
-  // ✅ Synchronize Dashboard input into the Modal local form state dynamically
+  // Synchronize Dashboard input into the Modal local form state dynamically
   useEffect(() => {
     if (!isOpen) {
       setPin(new Array(6).fill(""));
@@ -149,7 +149,7 @@ const WithdrawalModal = ({
       // Step 1: Force backend validation of transaction protection PIN
       await confirmTransactionPin(userId, pinString, token);
 
-      // Step 2: Dispatch the payout route payload
+      // Step 2: Dispatch the payout route payload (Only passes amount & linked bank account ID)
       await withdrawFunds(finalNumericAmount, selectedBankId, token);
 
       // Step 3: Trigger Redux state metrics sync
@@ -204,6 +204,7 @@ const WithdrawalModal = ({
               Make Withdrawal Request
             </h3>
 
+            {/* Destination Selector — Passes ID purely to backend */}
             <div className="hn-input-group hn-margin-top-md">
               <label className="hn-input-label">
                 Select Destination Bank Account
@@ -240,6 +241,7 @@ const WithdrawalModal = ({
               )}
             </div>
 
+            {/* Withdrawal Amount Input */}
             <div className="hn-input-group hn-margin-top-md">
               <label className="hn-input-label">
                 How much do you want to Withdraw? (₦)

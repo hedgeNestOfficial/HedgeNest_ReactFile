@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // ✅ Added useEffect
 import "../../Style/BvnAuth.css";
 import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
@@ -13,12 +13,25 @@ import whiteLogo from "../../assets/white logo.png";
 const BvnAuth = () => {
   const navigate = useNavigate();
 
-  // FIX: Extract tempUser out of state and use its nested authToken for signup flow KYC requests
-  const { tempUser } = useSelector((state) => state.user);
+  // ✅ Extract both authenticated 'user' and 'tempUser' out of the user slice
+  const { user, tempUser } = useSelector((state) => state.user);
   const onboardingToken = tempUser?.authToken;
 
   const [idNumber, setIdNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  /**
+   * 🛡️ ON-MOUNT ROUTE GUARD
+   * Stops fully authenticated users from re-accessing identity verification workflows.
+   */
+  useEffect(() => {
+    if (user) {
+      console.log(
+        "🛡️ User already authenticated. Redirecting away from identity verification...",
+      );
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleIdNumberChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -39,7 +52,7 @@ const BvnAuth = () => {
       return toast.error("NIN must be exactly 11 digits");
     }
 
-    // Safety Guard: Alert the developer if the preceding onboarding tokens didn't store correctly
+    // Safety Guard: Alert if preceding onboarding tokens didn't store correctly
     if (!onboardingToken) {
       return toast.error(
         "Verification session expired. Please restart signup.",
@@ -56,9 +69,7 @@ const BvnAuth = () => {
 
       console.log("VERIFY PAYLOAD:", payload);
 
-      // CHANGED: Sent onboardingToken instead of the logged-in token fallback instance
       const response = await submitKyc(payload, onboardingToken);
-
       console.log("VERIFY RESPONSE:", response);
 
       toast.success(response?.message || "Identity verified successfully");
