@@ -11,7 +11,7 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* 🟢 Centered vertically in the middle of the screen */
   overflow-y: auto;
   z-index: 2000;
 }
@@ -82,8 +82,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-    color: #111827;
-
+  color: #111827;
   margin-bottom: 28px;
 }
 
@@ -224,13 +223,13 @@
 
 @media (max-width: 520px) {
   .deposit-modal-overlay {
-    align-items: flex-end;
-    padding: 12px;
+    align-items: center; /* 🟢 Stays dead center in the middle on mobile too instead of sticking to the bottom/top */
+    padding: 16px;
   }
 
   .deposit-modal-content {
     width: 100%;
-    max-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 32px);
     padding: 28px 20px;
     border-radius: 12px;
   }

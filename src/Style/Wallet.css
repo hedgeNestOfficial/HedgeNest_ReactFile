@@ -8,6 +8,7 @@
   background-color: #fafaea; /* Light cream background from screenshot */
   font-family: "Inter", sans-serif;
   box-sizing: border-box;
+  margin-top: auto;
 }
 
 .wallet-header {
@@ -232,6 +233,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
 }
 
 .card-title-bar {
@@ -252,6 +254,7 @@
   align-items: center;
   justify-content: center;
   padding: 30px;
+  width: 100%;
 }
 
 .empty-state-container p {
@@ -316,6 +319,8 @@
 @media screen and (max-width: 768px) {
   .wallet-page-container {
     padding: 20px;
+    width: 100%;
+    margin-top: 55px;
   }
 
   .balance-cards-grid {
@@ -338,6 +343,7 @@
 
   /* FIX: Target the buttons on mobile */
   .tab-btn {
+    height: 75px;
     width: 100%; /* Force buttons to stretch full width */
     flex: none; /* Stop flex from distorting the height */
   }
