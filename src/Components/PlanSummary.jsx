@@ -9,13 +9,12 @@ const PlanSummary = ({
   onCancel,
   onConfirm,
 }) => {
-  console.log("formData from plan summary:", formData);
-
   if (!formData) {
     return <div className="modal-container">Loading summary data...</div>;
   }
 
   const target = parseFloat(formData.targetAmount) || 0;
+  const initialAmt = parseFloat(formData.initialAmount) || 0;
   const isPlanFlexible = isFlexibleMode || formData.planType === "FLEXIBLE";
   const isPlanStealth = formData.planType === "STEALTH";
 
@@ -33,12 +32,28 @@ const PlanSummary = ({
 
   const rateValue = getInterestRate();
 
-  // Helper function to resolve exact Type labels cleanly
   const getPlanTypeLabel = () => {
     if (isPlanStealth) return "Stealth";
     if (isPlanFlexible) return "Flexible";
     return "Locked";
   };
+
+  // --- FREQUENCY CONFIGURATION ---
+  const frequency = (formData.savingFrequency || "DAILY").toUpperCase();
+
+  // --- DURATION EXTRACTOR ---
+  let derivedDuration = 0;
+
+  if (isPlanFlexible) {
+    if (target > 0 && initialAmt > 0) {
+      derivedDuration = Math.ceil(target / initialAmt);
+    } else {
+      derivedDuration =
+        frequency === "MONTHLY" ? 12 : frequency === "WEEKLY" ? 52 : 365;
+    }
+  } else {
+    derivedDuration = parseInt(formData.duration, 10) || 0;
+  }
 
   // 2. Dynamic Maturity Date Calculation
   const getCalculatedMaturityDate = () => {
@@ -46,11 +61,11 @@ const PlanSummary = ({
       return "No lock-in (Withdraw anytime)";
     }
 
-    const daysInput = parseInt(formData.duration, 10);
-    if (!daysInput || isNaN(daysInput)) return "Invalid duration entered";
+    if (!derivedDuration || isNaN(derivedDuration))
+      return "Invalid duration entered";
 
     const date = new Date();
-    date.setDate(date.getDate() + daysInput);
+    date.setDate(date.getDate() + derivedDuration);
 
     return date.toLocaleDateString("en-GB", {
       day: "numeric",
@@ -59,47 +74,39 @@ const PlanSummary = ({
     });
   };
 
-  // --- INTEREST MATHEMATICS MATCHING YOUR EXACT EXAMPLES ---
+  // --- INTEREST MATHEMATICS WITH THE CLEAR STEP DIVISION ---
   let estimatedInterest = 0;
   let mathSubtext = "";
 
   if (isPlanFlexible) {
-    const durationCycles = parseFloat(formData.duration) || 0;
-    const frequency = (
-      formData.savingFrequency ||
-      formData.frequency ||
-      "DAILY"
-    ).toUpperCase();
-
     let timeInYears = 0;
-    let frequencyLabel = "";
+    let baseDivider = 365;
 
     if (frequency === "DAILY") {
-      timeInYears = durationCycles / 365;
-      frequencyLabel = "days";
+      timeInYears = derivedDuration / 365;
+      baseDivider = 365;
     } else if (frequency === "WEEKLY") {
-      timeInYears = durationCycles / 52;
-      frequencyLabel = "weeks";
+      timeInYears = derivedDuration / 52;
+      baseDivider = 52;
     } else if (frequency === "MONTHLY") {
-      timeInYears = durationCycles / 12;
-      frequencyLabel = "months";
+      timeInYears = derivedDuration / 12;
+      baseDivider = 12;
     } else {
-      timeInYears = durationCycles / 365;
-      frequencyLabel = "days";
+      timeInYears = derivedDuration / 365;
+      baseDivider = 365;
     }
 
+    // Step 2: Average Balance = Target / 2
     const averageBalance = target / 2;
-    // SI = Average Balance * Rate * TimeInYears
-    estimatedInterest = averageBalance * rateValue * timeInYears;
 
-    // Cleanly formats the percentage without trailing zeroes (e.g., 10% instead of 10.0000%)
+    // Step 3: Simple Interest
+    estimatedInterest = averageBalance * rateValue * timeInYears;
     const displayPercentage = rateValue * 100;
 
-    mathSubtext = `(Average Bal: ₦${Number(averageBalance).toLocaleString(undefined, { maximumFractionDigits: 2 })} * ${displayPercentage}% * Time: ${durationCycles} ${frequencyLabel} [${timeInYears.toFixed(4)} yrs])`;
+    mathSubtext = `(Average Bal: ₦${Number(averageBalance).toLocaleString(undefined, { maximumFractionDigits: 2 })} * ${displayPercentage}% * ${derivedDuration} / ${baseDivider})`;
   } else {
-    const days = parseInt(formData.duration, 10) || 0;
-    estimatedInterest = target * rateValue * (days / 365);
-    mathSubtext = `(${Number(target).toLocaleString()} * ${rateValue * 100}% * ${days} / 365)`;
+    estimatedInterest = target * rateValue * (derivedDuration / 365);
+    mathSubtext = `(${Number(target).toLocaleString()} * ${rateValue * 100}% * ${derivedDuration} / 365)`;
   }
 
   const tax = parseFloat((estimatedInterest * 0.1).toFixed(2));
@@ -139,12 +146,12 @@ const PlanSummary = ({
 
         <div className="summary-row">
           <span className="summary-label">
-            {isPlanFlexible ? "Savings Duration" : "Duration (Days)"}
+            {isPlanFlexible ? "Calculated Duration" : "Duration (Days)"}
           </span>
           <span className="summary-value text-dark">
-            {formData.duration}{" "}
-            {isPlanFlexible && formData.savingFrequency
-              ? formData.savingFrequency.toLowerCase() + "s"
+            {derivedDuration}{" "}
+            {isPlanFlexible
+              ? frequency.toLowerCase() + (derivedDuration === 1 ? "" : "s")
               : ""}
           </span>
         </div>
