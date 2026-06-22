@@ -11,6 +11,7 @@ import { updateWallet } from "../../Store/UserSlice";
 import { getMyWallet } from "../../Services/Walletservice.js";
 
 import "../../Style/Wallet.css";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 const WalletPage = () => {
   const dispatch = useDispatch();
@@ -195,19 +196,37 @@ const WalletPage = () => {
         </section>
 
         {/* TRANSACTIONS */}
-        <section className="transactions-history-card">
-          <div className="card-title-bar">
-            <h3>Transactions</h3>
+
+        {/* <div className="transactions-view-port">
+          {historyData?.length ? (
+            <TransactionHistory transactions={historyData} />
+          ) : (
+            <div className="empty-state-container">
+              <p>No activities yet</p>
+            </div>
+          )}
+        </div> */}
+
+        <section className="transaction-section">
+          <div className="transaction-header">
+            <h3>Recent Transactions</h3>
+            <div
+              className="tr-actions"
+              onClick={() => navigate("/notification")}
+            >
+              <h5>View Transactions</h5>
+              <div className="icon-holder">
+                <IoIosArrowRoundForward className="arrow-icon" />
+              </div>
+            </div>
           </div>
 
           <div className="transactions-view-port">
-            {historyData?.length ? (
-              <TransactionHistory transactions={historyData} />
-            ) : (
-              <div className="empty-state-container">
-                <p>No activities yet</p>
-              </div>
-            )}
+            <TransactionHistory
+              limit={4}
+              hideHeader
+              customClass="dashboard-variant"
+            />
           </div>
         </section>
       </div>

@@ -74,7 +74,7 @@ const Sidebar = () => {
 
         <div className="mobile-actions">
           <button className="action-btn" aria-label="Notifications">
-            <FaBell size={22} />
+            <FaBell size={22} onClick={() => navigate("/notification")} />
           </button>
 
           <div className="user-avatar" onClick={() => navigate("/profile")}>

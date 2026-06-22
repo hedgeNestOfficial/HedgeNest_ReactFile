@@ -14,8 +14,10 @@ import toast from "react-hot-toast";
 import { updateProfile } from "../../Services/authService";
 import { OrbitProgress } from "react-loading-indicators";
 import { updateUser } from "../../Store/UserSlice";
-
+import { PiSignOutBold } from "react-icons/pi";
 import KycModalManager from "../../Components/KycModals/KycModalManager";
+// 🟢 Imported the Logout Modal component
+import LogoutModal from "../../Components/KycModals/SignoutModal";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -38,6 +40,8 @@ const ProfilePage = () => {
   const [previewUrl, setPreviewUrl] = useState("");
 
   const [isKycOpen, setIsKycOpen] = useState(false);
+  // 🟢 State to manage Logout Modal visibility
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   // Synchronize state values directly against the clean state.user structure
   useEffect(() => {
@@ -121,6 +125,22 @@ const ProfilePage = () => {
     <div className="profile-page-container">
       <div className="profile-header">
         <h1>Account</h1>
+      </div>
+
+      <div className="profile-header-mobile">
+        <h2>Account</h2>
+
+        {/* 🟢 Added onClick trigger and a pointer cursor for cleaner mobile interaction */}
+        <h2
+          className="signout-mobile"
+          style={{ cursor: "pointer" }}
+          onClick={() => setIsLogoutOpen(true)}
+        >
+          Signout
+          <span>
+            <PiSignOutBold />
+          </span>
+        </h2>
       </div>
 
       <div className="profile-tabs-container">
@@ -488,6 +508,11 @@ const ProfilePage = () => {
       </div>
 
       <KycModalManager isOpen={isKycOpen} onClose={() => setIsKycOpen(false)} />
+      {/* 🟢 Rendered the Logout Modal Component */}
+      <LogoutModal
+        isOpen={isLogoutOpen}
+        onClose={() => setIsLogoutOpen(false)}
+      />
     </div>
   );
 };

@@ -10,6 +10,23 @@ import { getMyWallet } from "../../Services/Walletservice.js";
 import { updateWallet } from "../../Store/UserSlice.js";
 import { getTransactionHistory } from "../../Services/authService.js";
 
+// 🟢 Premium Currency Icons
+import { SiTether } from "react-icons/si";
+
+// 🇳🇬 Cross-platform pixel-perfect circular Nigerian Flag Icon
+const NigeriaFlagIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 32 32"
+    style={{ borderRadius: "50%", display: "inline-block", shrink: 0 }}
+  >
+    <rect width="10.67" height="32" fill="#008751" />
+    <rect x="10.67" width="10.67" height="32" fill="#ffffff" />
+    <rect x="21.34" width="10.67" height="32" fill="#008751" />
+  </svg>
+);
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,7 +56,6 @@ const Dashboard = () => {
 
       try {
         setIsLoadingWallet(true);
-        // Transaction fetch removed as it is now natively handled by <TransactionHistory />
         const walletResponse = await getMyWallet(token);
 
         const walletData = walletResponse?.data?.[0];
@@ -115,6 +131,10 @@ const Dashboard = () => {
 
             {/* BALANCES */}
             <article className="dr-balance">
+              <div className="mobile-welcom-text">
+                <p>Welcome {user?.firstName || "User"},</p>
+                <h3>Your nest, today.</h3>
+              </div>
               <div className="balance">
                 <div className="total-available">
                   <p>Available Balance</p>
@@ -126,8 +146,19 @@ const Dashboard = () => {
                 </div>
 
                 <div className="other-balances">
+                  {/* NGN BALANCE BLOCK */}
                   <div className="Ngn-balance">
-                    <p>NGN BALANCE</p>
+                    {/* 🟢 Replaced old icon with clean custom Nigerian Flag component */}
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <NigeriaFlagIcon />
+                      NGN BALANCE
+                    </p>
                     {isLoadingWallet ? (
                       <div className="dash-skel sk-dark sk-medium"></div>
                     ) : (
@@ -135,8 +166,18 @@ const Dashboard = () => {
                     )}
                   </div>
 
+                  {/* USDT BALANCE BLOCK */}
                   <div className="usdt-balance">
-                    <p>USDT BALANCE</p>
+                    <p
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <SiTether size={14} style={{ color: "#26a17b" }} />
+                      USDT BALANCE
+                    </p>
                     {isLoadingWallet ? (
                       <div className="dash-skel sk-dark sk-medium"></div>
                     ) : (
@@ -239,9 +280,6 @@ const Dashboard = () => {
               </div>
 
               <div className="transactions-view-port">
-                {/* The component now fully handles its own loading state
-                  and data fetching. We just pass the limit!
-                */}
                 <TransactionHistory
                   limit={4}
                   hideHeader
