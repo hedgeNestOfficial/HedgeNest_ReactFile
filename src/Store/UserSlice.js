@@ -166,7 +166,7 @@ const initialState = {
   tempUser: {
     email: "",
     phoneNumber: "",
-    authToken: null,
+    // authToken: null,
   },
 };
 
