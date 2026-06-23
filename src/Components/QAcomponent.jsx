@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 const QAcomponent = () => {
   const navigate = useNavigate();
-
   const [activeIndex, setActiveIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -15,18 +14,19 @@ const QAcomponent = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleToggle = (index) => {
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   return (
     <section className="faq-section-container">
       <div className="faq-content-wrapper">
         <article className="faq-header">
           <h2>Frequently Asked Questions</h2>
-
           <p className="Descript">
             Get answers to your questions about HedgeNest
           </p>
@@ -37,10 +37,13 @@ const QAcomponent = () => {
             <SelectDropdown
               key={index}
               data={item}
-              index={index}
-              activeIndex={activeIndex}
-              setActiveIndex={setActiveIndex}
+              isOpen={activeIndex === index}
               isMobile={isMobile}
+              // 🌟 Click only executes on mobile to avoid desktop hover conflicts
+              onToggle={() => isMobile && handleToggle(index)}
+              // 🌟 Desktop exclusive mouse hover actions
+              onMouseEnter={() => !isMobile && setActiveIndex(index)}
+              onMouseLeave={() => !isMobile && setActiveIndex(null)}
             />
           ))}
 

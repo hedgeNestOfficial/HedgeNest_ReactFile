@@ -1,16 +1,28 @@
-/* Core Dark Card Box Container */
+/* ==========================================================================
+   CORE CARD ARCHITECTURE (GLOBAL & DESKTOP)
+   ========================================================================== */
 .position-product-card {
   background-color: #181739; /* Exact HedgeNest deep dashboard navy */
   border-radius: 12px;
-  padding: 28px 24px;
+  padding: 24px; /* Balanced desktop padding */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
-  max-width: 460px;
+  max-width: 400px; /* Prevents card from over-stretching on large monitors */
+
   /* 🔐 FIXED AXIS BOUNDS: Ensures absolute symmetric shape matches across item lists */
-  height: 265px;
+  height: 280px;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.position-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.3);
 }
 
 /* Top Block Flex Layout */
@@ -19,16 +31,16 @@
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .position-card-title-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
-/* 🟢 Header Right Alignment Layout Wrapper */
+/* Header Right Alignment Layout Wrapper */
 .position-card-right-group {
   display: flex;
   align-items: center;
@@ -36,9 +48,9 @@
   flex-shrink: 0;
 }
 
-/* 🟢 Dark-Mode Optimized Tier Badge Tokens */
+/* Dark-Mode Optimized Tier Badge Tokens */
 .position-risk-badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   padding: 4px 10px;
@@ -47,31 +59,25 @@
 }
 
 .position-risk-badge.low {
-  background-color: rgba(34, 197, 94, 0.15);
+  background-color: rgba(34, 197, 94, 0.12);
   color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .position-risk-badge.medium {
-  background-color: rgba(230, 176, 66, 0.15);
+  background-color: rgba(230, 176, 66, 0.12);
   color: #e6b042;
-  border: 1px solid rgba(230, 176, 66, 0.25);
+  border: 1px solid rgba(230, 176, 66, 0.2);
 }
 
 /* Caps tracking header */
 .position-product-tag-name {
-  color: #ffffff;
-  font-size: 17px;
+  color: #9ca3af; /* Muted label color for architectural visual hierarchy */
+  font-size: 13px;
   font-weight: 600;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 /* Large Balance Typography */
@@ -80,6 +86,7 @@
   font-size: 26px;
   font-weight: 700;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 /* Custom Trending Emblem Circle */
@@ -87,7 +94,12 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #dcfee5; /* Soft background tint */
+  background-color: rgba(
+    34,
+    197,
+    94,
+    0.15
+  ); /* Matched to dark dashboard specs */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,47 +107,51 @@
 }
 
 .position-trend-arrow-svg {
-  font-size: 16px;
-  color: #22c55e; /* Vibrant up-trend green indicator line */
+  font-size: 14px;
+  color: #22c55e;
 }
 
 /* Center Horizontal Information Bar */
 .position-card-metadata-row {
   display: flex;
   align-items: center;
-  gap: 32px;
   width: 100%;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+  gap: 12px;
 }
 
 .position-metadata-item {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  justify-content: space-between;
+  flex-direction: column; /* Stacked layout looks cleaner and handles data spikes better */
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .meta-label-text {
-  font-size: 13px;
+  font-size: 11px;
   color: #9ca3af;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .meta-value-text {
-  font-size: 13px;
+  font-size: 14px;
   color: #ffffff;
   font-weight: 600;
 }
 
 /* Termination Alert Notification Banner style wrapper */
 .position-card-termination-banner {
-  padding: 8px;
+  padding: 6px 10px;
   border-radius: 6px;
-  background: #fff7e6;
-  color: #b7791f;
-  font-size: 12px;
-  font-weight: 600;
+  background: rgba(230, 176, 66, 0.1);
+  color: #e6b042;
+  border: 1px solid rgba(230, 176, 66, 0.2);
+  font-size: 11px;
+  font-weight: 500;
   text-align: center;
   margin-bottom: 12px;
   width: 100%;
@@ -146,17 +162,17 @@
 .position-card-action-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
-  margin-top: auto; /* Pushes the button array cleanly to the card floor */
+  margin-top: auto; /* Keeps the buttons locked to the card floor uniformly */
 }
 
 .position-btn-action {
   flex: 1;
-  height: 44px;
+  height: 40px;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -165,47 +181,43 @@
   transition: all 0.2s ease;
 }
 
-/* Filled Primary Action Button Configuration (Gold) */
 .position-btn-gold-fill {
   background-color: #e6b042;
-  color: #000000;
+  color: #0d0c22;
 }
 
 .position-btn-gold-fill:hover:not(:disabled) {
-  opacity: 0.9;
+  background-color: #f5c463;
 }
 
-/* Neutralized White/Muted Secondary Button Configuration */
 .position-btn-white-solid {
-  background: #ffffff;
-  color: #111827;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .position-btn-white-solid:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Disabled State for Standard Content */
 .position-btn-disabled {
-  background: #374151;
-  color: #9ca3af;
+  background: #2a294a;
+  color: #6b7280;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* 🌟 Incentivization State: Beautiful gold background but clearly unclickable until maturity */
 .position-btn-disabled-gold {
   background-color: #e6b042;
   color: #000000;
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
   pointer-events: none;
 }
 
 /* ==========================================================================
-   SKELETON ANIMATIONS & BASE STRUCTURAL TOKENS
+   SKELETON ANIMATIONS
    ========================================================================== */
-
 .position-product-card.skeleton-card-pulse {
   animation: investSkeletonPulse 1.5s ease-in-out infinite;
   pointer-events: none;
@@ -223,36 +235,80 @@
 }
 
 .skeleton-node {
-  background-color: #e2e8f0;
+  background-color: #2a294a;
   border-radius: 4px;
 }
 
 .skeleton-tag-placeholder {
-  width: 70px;
+  width: 60px;
   height: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 .skeleton-amount-placeholder {
-  width: 135px;
-  height: 26px;
+  width: 120px;
+  height: 24px;
 }
 .skeleton-trend-circle-placeholder {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  flex-shrink: 0;
 }
 .skeleton-meta-label-placeholder {
-  width: 50px;
-  height: 11px;
-  margin-bottom: 6px;
+  width: 45px;
+  height: 10px;
+  margin-bottom: 4px;
 }
 .skeleton-meta-value-placeholder {
-  width: 85px;
-  height: 13px;
+  width: 70px;
+  height: 14px;
 }
 .skeleton-btn-placeholder {
   flex: 1;
   height: 40px;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE SYSTEM (480px and under)
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+  .position-product-card {
+    /* 🌟 FIX: Uses clean padding to save maximum horizontal screen space */
+    padding: 20px 16px;
+
+    /* 🌟 FIX: Locks all cards to the exact same uniform size down to mobile */
+    height: 280px;
+
+    /* 🌟 FIX: Spans 100% of the available grid space natively without overflowing */
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .position-product-main-amount {
+    font-size: 22px;
+  }
+
+  .position-card-top-row {
+    margin-bottom: 10px;
+  }
+
+  .position-card-metadata-row {
+    margin-top: 12px;
+    margin-bottom: 10px;
+  }
+
+  .meta-value-text {
+    font-size: 13px;
+  }
+
+  .position-card-termination-banner {
+    font-size: 10px;
+    padding: 4px 8px;
+    margin-bottom: 8px;
+  }
+
+  .position-btn-action {
+    height: 38px;
+    font-size: 12px;
+  }
 }

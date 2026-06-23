@@ -4,6 +4,20 @@ import "../../Style/SignoutModal.css";
 const SignoutModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
+  const handleConfirmClick = () => {
+    if (typeof onConfirm === "function") {
+      onConfirm();
+    } else {
+      console.warn(
+        "⚠️ SignoutModal: The 'onConfirm' prop was not passed down as a function from the parent component.",
+      );
+    }
+
+    if (typeof onClose === "function") {
+      onClose();
+    }
+  };
+
   return (
     <div className="modal-overlay-wrapper" onClick={onClose}>
       <div className="signout-modal-card" onClick={(e) => e.stopPropagation()}>
@@ -20,10 +34,7 @@ const SignoutModal = ({ isOpen, onClose, onConfirm }) => {
           <button
             type="button"
             className="signout-btn signout-btn-confirm"
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
+            onClick={handleConfirmClick}
           >
             Yes
           </button>

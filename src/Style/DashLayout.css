@@ -1,35 +1,44 @@
 .dashboard-container {
-  /* background-color: #0b091a; */
   min-height: 100vh;
   width: 100%;
   color: #ffffff;
   font-family: sans-serif;
   display: flex;
   gap: 25px;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch; /* Changed from center to allow child items to fill height naturally */
+}
+
+.sidebar-container {
+  width: 20%;
+  flex-shrink: 0;
 }
 
 .dashboard-content {
   box-sizing: border-box;
   width: 80%;
+  flex-grow: 1;
 }
 
+/* ==========================================================================
+   📱 MOBILE LAYOUT STRUCTURE SYNCHRONIZATION (768px and under)
+   ========================================================================== */
 @media (max-width: 768px) {
   .dashboard-container {
-    height: max-content;
-    width: 100%;
+    /* 🌟 FIX: Forces sidebar and dashboard views to stack vertically instead of crashing */
+    flex-direction: column;
     gap: 0px;
-    align-items: center;
-    /* background: green; */
-    justify-content: center;
-    overflow-y: scroll;
+    align-items: stretch;
+  }
+
+  .sidebar-container {
+    width: 100%;
+    /* Note: If you have a mobile hamburger menu drawer built inside your <Sidebar /> component, 
+       you can change this container to position: fixed or hide it entirely here using display: none; */
   }
 
   .dashboard-content {
+    /* 🌟 FIX: Grants your inner view space 100% of the mobile screen canvas width */
     width: 100%;
-    justify-content: center;
-    height: 100%;
-    align-items: center;
+    height: auto;
   }
 }

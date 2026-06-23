@@ -1,43 +1,75 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
+import { toast } from "react-hot-toast";
 import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
+import {
+  getLinkedAccounts,
+  confirmTransactionPin,
+  withdrawFunds,
+} from "../../Services/paymentService";
 import "../../Style/WithdrawalModal.css";
 
 const WithdrawalModal = ({
   isOpen,
   onClose,
-  bankDetails,
+  userId,
   token,
+  amount: dashboardAmount, // ✅ Captured incoming state from dashboard input
   onWithdrawalSuccess,
-  isPending = false, // Set true when a withdrawal is already processing
-  onWithdrawalCancel, // Callback for when cancellation finishes successfully
+  isPending = false,
+  onWithdrawalCancel,
 }) => {
-  // Steps: "AML" -> "AMOUNT" -> "LOADING" -> "BREAKDOWN" -> "PIN" -> "SUCCESS"
-  // New Steps: "PENDING" -> "CANCEL_CONFIRM" -> "CANCEL_LOADING" -> "CANCEL_SUCCESS"
-  const [step, setStep] = useState(isPending ? "PENDING" : "AML");
-  const [amount, setAmount] = useState("1,000");
+  const [step, setStep] = useState(isPending ? "PENDING" : "AMOUNT");
+  const [amount, setAmount] = useState(""); // ✅ Cleared hardcoded state to receive dynamic props cleanly
   const [pin, setPin] = useState(new Array(6).fill(""));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Real-time ticking state for the 24-hour review window (23:59:50 -> 86390 seconds)
+  const [linkedAccounts, setLinkedAccounts] = useState([]);
+  const [selectedBankId, setSelectedBankId] = useState("");
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(86390);
-
   const pinInputsRef = useRef([]);
-
-  // 👈 Step 2: Initialize the wallet state refresher hook
   const refreshWallet = useWalletRefresh();
 
-  // Sync initial step & reset state whenever modal opens or closes
+  // Fetch linked accounts
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      if (!isOpen || isPending) return;
+      setIsLoadingAccounts(true);
+      try {
+        const res = await getLinkedAccounts(token);
+        if (res.success && res.linkedAccounts?.length > 0) {
+          setLinkedAccounts(res.linkedAccounts);
+          setSelectedBankId(res.linkedAccounts[0]._id);
+        } else {
+          toast.error("No linked bank accounts discovered.");
+        }
+      } catch (err) {
+        console.error("Error fetching bank accounts:", err);
+        toast.error("Failed to load linked accounts. Please reload.");
+      } finally {
+        setIsLoadingAccounts(false);
+      }
+    };
+
+    fetchAccounts();
+  }, [isOpen, token, isPending]);
+
+  // Synchronize Dashboard input into the Modal local form state dynamically
   useEffect(() => {
     if (!isOpen) {
       setPin(new Array(6).fill(""));
       setIsSubmitting(false);
     } else {
-      setStep(isPending ? "PENDING" : "AML");
+      setStep(isPending ? "PENDING" : "AMOUNT");
+      if (dashboardAmount) {
+        setAmount(dashboardAmount); // ⚡ Sync input choice automatically on wake-up
+      }
     }
-  }, [isOpen, isPending]);
+  }, [isOpen, isPending, dashboardAmount]);
 
-  // Live countdown timer hook for the pending view
+  // Live countdown runner
   useEffect(() => {
     let interval = null;
     if (isOpen && step === "PENDING") {
@@ -50,7 +82,14 @@ const WithdrawalModal = ({
 
   if (!isOpen) return null;
 
-  // Format seconds into HH : MM : SS string representation
+  const getRawNumericAmount = (val) => {
+    return Number(val.toString().replace(/[^0-9.]/g, "")) || 0;
+  };
+
+  const getSelectedBankDetails = () => {
+    return linkedAccounts.find((acc) => acc._id === selectedBankId);
+  };
+
   const formatCountdown = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -58,17 +97,18 @@ const WithdrawalModal = ({
     return `${hours.toString().padStart(2, "0")} : ${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
   };
 
-  // Handle transitions with intermediate loading screens
   const handleAmountSubmit = (e) => {
     e.preventDefault();
+    if (!selectedBankId) {
+      toast.error("Please select a bank account to proceed.");
+      return;
+    }
     setStep("LOADING");
-
     setTimeout(() => {
       setStep("BREAKDOWN");
-    }, 1000);
+    }, 800);
   };
 
-  // Handle 6-Digit PIN sequential focus shift
   const handlePinChange = (value, index) => {
     const cleanValue = value.replace(/[^0-9]/g, "");
     if (!cleanValue) return;
@@ -77,7 +117,6 @@ const WithdrawalModal = ({
     updatedPin[index] = cleanValue.substring(cleanValue.length - 1);
     setPin(updatedPin);
 
-    // Auto-focus next input field box
     if (index < 5 && pinInputsRef.current[index + 1]) {
       pinInputsRef.current[index + 1].focus();
     }
@@ -86,8 +125,6 @@ const WithdrawalModal = ({
   const handlePinKeyDown = (e, index) => {
     if (e.key === "Backspace") {
       const updatedPin = [...pin];
-
-      // If the current box has a value, clear it. If empty, clear the previous box.
       if (pin[index] !== "") {
         updatedPin[index] = "";
         setPin(updatedPin);
@@ -101,92 +138,113 @@ const WithdrawalModal = ({
     }
   };
 
-  // Process finalized payload execution
   const handleFinalSubmit = async () => {
     setStep("LOADING");
     setIsSubmitting(true);
 
-    try {
-      // Simulate backend response payload execution
-      setTimeout(async () => {
-        // 👈 Step 3: Refresh the local Redux wallet state layout on active withdrawal creation
-        await refreshWallet();
+    const pinString = pin.join("");
+    const finalNumericAmount = getRawNumericAmount(amount);
 
-        setStep("SUCCESS");
-        setIsSubmitting(false);
-        if (onWithdrawalSuccess) onWithdrawalSuccess();
-      }, 1500);
+    try {
+      // Step 1: Force backend validation of transaction protection PIN
+      await confirmTransactionPin(userId, pinString, token);
+
+      // Step 2: Dispatch the payout route payload (Only passes amount & linked bank account ID)
+      await withdrawFunds(finalNumericAmount, selectedBankId, token);
+
+      // Step 3: Trigger Redux state metrics sync
+      await refreshWallet();
+
+      toast.success("Payout initiated successfully!");
+      setStep("SUCCESS");
+      if (onWithdrawalSuccess) onWithdrawalSuccess();
     } catch (error) {
-      console.error("Withdrawal processing error:", error);
+      console.error("Security/Withdrawal transmission fault:", error);
+      const backendErrorMessage =
+        error.response?.data?.message ||
+        "Transaction verification failed. Please try again.";
+
+      toast.error(backendErrorMessage);
+      setPin(new Array(6).fill(""));
       setStep("PIN");
+    } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Process Cancellation execution
   const handleCancelWithdrawal = async () => {
     setStep("CANCEL_LOADING");
-
     try {
-      // Simulate backend API cancellation response payload
       setTimeout(async () => {
-        // 👈 Step 4: Refresh the local Redux wallet state layout on active withdrawal cancellation
         await refreshWallet();
-
+        toast.success("Withdrawal canceled successfully.");
         setStep("CANCEL_SUCCESS");
         if (onWithdrawalCancel) onWithdrawalCancel();
       }, 1500);
     } catch (error) {
-      console.error("Cancellation handling error:", error);
+      console.error("Cancellation infrastructure fault:", error);
+      toast.error("Failed to cancel withdrawal. Please try again.");
       setStep("PENDING");
     }
   };
 
+  const chosenBank = getSelectedBankDetails();
+  const numericAmountValue = getRawNumericAmount(amount);
+  const processingFee = 50;
+  const totalPayoutValue =
+    numericAmountValue > processingFee ? numericAmountValue - processingFee : 0;
+
   return (
     <div className="hn-modal-overlay">
       <div className="hn-modal-card">
-        {/* STEP 1: QUICK ONE (AML Disclaimer) */}
-        {step === "AML" && (
-          <div className="hn-step-container hn-text-center">
-            <h3 className="hn-modal-title">Quick One!</h3>
-            <p className="hn-modal-desc">
-              Withdrawals are processed after 24hours in alignment with
-              Anti-Money Laundering and fraud detection processes. This is to
-              enhance security of your funds.
-            </p>
-            <p className="hn-modal-desc hn-margin-top-md">
-              Withdrawals can be only be initiated one at a time.
-            </p>
-
-            <div className="hn-button-grid">
-              <button
-                type="button"
-                onClick={onClose}
-                className="hn-btn-secondary"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep("AMOUNT")}
-                className="hn-btn-primary"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 2: REQUEST AMOUNT INPUT */}
+        {/* STEP 1: CHOOSE TARGET & AMOUNT CONFIG */}
         {step === "AMOUNT" && (
           <form onSubmit={handleAmountSubmit} className="hn-step-container">
             <h3 className="hn-modal-title hn-text-left">
               Make Withdrawal Request
             </h3>
 
-            <div className="hn-input-group">
+            {/* Destination Selector — Passes ID purely to backend */}
+            <div className="hn-input-group hn-margin-top-md">
               <label className="hn-input-label">
-                How much do you want to Withdraw
+                Select Destination Bank Account
+              </label>
+              {isLoadingAccounts ? (
+                <div
+                  className="hn-text-input"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#888",
+                  }}
+                >
+                  Loading linked accounts...
+                </div>
+              ) : (
+                <select
+                  value={selectedBankId}
+                  onChange={(e) => setSelectedBankId(e.target.value)}
+                  className="hn-text-input"
+                  style={{ width: "100%", background: "transparent" }}
+                  required
+                >
+                  {linkedAccounts.length === 0 ? (
+                    <option value="">No verified accounts found</option>
+                  ) : (
+                    linkedAccounts.map((acc) => (
+                      <option key={acc._id} value={acc._id}>
+                        {acc.bankName} — {acc.accountNumber} ({acc.accountName})
+                      </option>
+                    ))
+                  )}
+                </select>
+              )}
+            </div>
+
+            {/* Withdrawal Amount Input */}
+            <div className="hn-input-group hn-margin-top-md">
+              <label className="hn-input-label">
+                How much do you want to Withdraw? (₦)
               </label>
               <input
                 type="text"
@@ -201,26 +259,30 @@ const WithdrawalModal = ({
             <div className="hn-button-grid hn-margin-top-lg">
               <button
                 type="button"
-                onClick={() => setStep("AML")}
+                onClick={onClose}
                 className="hn-btn-secondary"
               >
                 Cancel
               </button>
-              <button type="submit" className="hn-btn-primary">
+              <button
+                type="submit"
+                className="hn-btn-primary"
+                disabled={isLoadingAccounts || !selectedBankId}
+              >
                 Make Request
               </button>
             </div>
           </form>
         )}
 
-        {/* STEP 3 & NEW: LOADER SCREENS */}
+        {/* LOADING PROCESSING INTERMEDIATES */}
         {(step === "LOADING" || step === "CANCEL_LOADING") && (
           <div className="hn-step-container hn-align-center hn-justify-center hn-py-xl">
             <div className="hn-loading-spinner"></div>
           </div>
         )}
 
-        {/* STEP 4: WITHDRAWAL BREAKDOWN */}
+        {/* STEP 2: DETAILS BREAKDOWN REVIEW */}
         {step === "BREAKDOWN" && (
           <div className="hn-step-container">
             <h3 className="hn-modal-title hn-text-left">
@@ -232,29 +294,39 @@ const WithdrawalModal = ({
                 <span className="hn-row-label">Withdrawal To</span>
                 <div className="hn-row-value-block">
                   <p className="hn-val-main">
-                    {bankDetails?.name || "Sterling Bank"}
+                    {chosenBank ? chosenBank.bankName : "Selected Bank"}
                   </p>
                   <p className="hn-val-sub">
-                    {bankDetails?.accountNumber || "75825379802"}
+                    {chosenBank ? chosenBank.accountNumber : "0000000000"}
+                  </p>
+                  <p
+                    className="hn-val-sub"
+                    style={{ fontSize: "12px", color: "#828282" }}
+                  >
+                    {chosenBank ? chosenBank.accountName : ""}
                   </p>
                 </div>
               </div>
 
               <div className="hn-breakdown-row">
-                <span className="hn-row-label">Amount</span>
-                <span className="hn-val-main">₦{amount}</span>
+                <span className="hn-row-label">Gross Request Amount</span>
+                <span className="hn-val-main">
+                  ₦{numericAmountValue.toLocaleString()}
+                </span>
               </div>
 
               <div className="hn-breakdown-row">
                 <span className="hn-row-label">Processing Fee</span>
-                <span className="hn-val-main">₦50</span>
+                <span className="hn-val-main">₦{processingFee}</span>
               </div>
 
               <div className="hn-divider"></div>
 
               <div className="hn-breakdown-row hn-font-total">
-                <span className="hn-row-label">Total</span>
-                <span className="hn-val-total">₦950</span>
+                <span className="hn-row-label">Net Take-Home Payout</span>
+                <span className="hn-val-total">
+                  ₦{totalPayoutValue.toLocaleString()}
+                </span>
               </div>
             </div>
 
@@ -277,7 +349,7 @@ const WithdrawalModal = ({
           </div>
         )}
 
-        {/* STEP 5: SIX-DIGIT TRANSACTION PIN */}
+        {/* STEP 3: TRANSACTION AUTHORIZATION SECURITY GATEWAY */}
         {step === "PIN" && (
           <div className="hn-step-container hn-relative">
             <button
@@ -315,18 +387,19 @@ const WithdrawalModal = ({
               disabled={pin.includes("") || isSubmitting}
               className={`hn-btn-primary hn-full-width hn-margin-top-md ${pin.includes("") ? "hn-disabled" : ""}`}
             >
-              Next
+              Authorize Withdrawal
             </button>
           </div>
         )}
 
-        {/* STEP 6: SUCCESS SCREEN */}
+        {/* STEP 4: SUCCESS LAYOUT VIEW */}
         {step === "SUCCESS" && (
           <div className="hn-step-container hn-text-center">
             <div className="hn-success-celebration-icon">🎉</div>
             <h3 className="hn-modal-title hn-margin-top-sm">Request Sent!</h3>
             <p className="hn-modal-desc">
-              Your withdrawal request is now in review.
+              Your withdrawal request has been captured cleanly and is now
+              pending execution review.
             </p>
 
             <button
@@ -339,7 +412,7 @@ const WithdrawalModal = ({
           </div>
         )}
 
-        {/* NEW FLOW STEP 7: PENDING OVERVIEW ("We're Working On It...") */}
+        {/* STEP 5: ON-LOAD PENDING STRUCTURAL WATCHER STATE */}
         {step === "PENDING" && (
           <div className="hn-step-container hn-text-center">
             <div
@@ -352,8 +425,8 @@ const WithdrawalModal = ({
               We’re Working On It...
             </h3>
             <p className="hn-modal-desc">
-              Your withdrawal is being processed. You can only initiate another
-              after this is complete
+              Your withdrawal execution pipeline is active. You can initiate
+              supplementary transactions once cleared.
             </p>
 
             <div
@@ -361,25 +434,10 @@ const WithdrawalModal = ({
               style={{ textAlign: "left" }}
             >
               <div className="hn-breakdown-row">
-                <span className="hn-row-label">Withdrawal To</span>
-                <div className="hn-row-value-block">
-                  <p className="hn-val-main">
-                    {bankDetails?.name || "Sterling Bank"}
-                  </p>
-                  <p className="hn-val-sub">
-                    {bankDetails?.accountNumber || "75825379802"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="hn-breakdown-row">
                 <span className="hn-row-label">Amount</span>
-                <span className="hn-val-main">₦{amount}</span>
-              </div>
-
-              <div className="hn-breakdown-row">
-                <span className="hn-row-label">Processing Fee</span>
-                <span className="hn-val-main">₦50</span>
+                <span className="hn-val-main">
+                  ₦{numericAmountValue.toLocaleString()}
+                </span>
               </div>
 
               <div className="hn-breakdown-row">
@@ -397,7 +455,7 @@ const WithdrawalModal = ({
               className="hn-modal-desc hn-margin-top-md"
               style={{ fontSize: "14px" }}
             >
-              Not sure about this?{" "}
+              Made a mistake?{" "}
               <span
                 onClick={() => setStep("CANCEL_CONFIRM")}
                 style={{
@@ -421,7 +479,7 @@ const WithdrawalModal = ({
           </div>
         )}
 
-        {/* NEW FLOW STEP 8: CANCELLATION CONFIRMATION DIALOG */}
+        {/* STEP 6: CANCELLATION OVERLAY INTERACTION */}
         {step === "CANCEL_CONFIRM" && (
           <div className="hn-step-container hn-text-center hn-py-md">
             <h3 className="hn-modal-title hn-margin-bottom-lg">
@@ -447,7 +505,7 @@ const WithdrawalModal = ({
           </div>
         )}
 
-        {/* NEW FLOW STEP 9: CANCELLATION TERMINATION SUCCESS VIEW */}
+        {/* STEP 7: CANCELLATION CLOSURE PANEL */}
         {step === "CANCEL_SUCCESS" && (
           <div className="hn-step-container hn-text-center">
             <div

@@ -1,7 +1,9 @@
-/* Base Section */
+/* ==========================================================================
+   DESKTOP SECTION & GRID CONTAINER
+   ========================================================================== */
 .why-section {
   width: 100%;
-  background: #f7f3e8; /* Exact beige tint from your image */
+  background: #f7f3e8; /* Exact HedgeNest beige tint */
   padding: 80px 24px;
   display: flex;
   justify-content: center;
@@ -11,7 +13,7 @@
 
 .why-container {
   width: 90%;
-  /* max-width: 1200px; */
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -26,7 +28,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Desktop View Layout */
 .desktop-flex-container {
   display: flex;
   flex-direction: row;
@@ -36,7 +37,7 @@
 }
 
 .flex-card-wrapper {
-  width: 30%;
+  width: calc(33.333% - 16px);
   flex-grow: 1;
   display: flex;
   box-sizing: border-box;
@@ -44,19 +45,20 @@
 
 @media screen and (max-width: 1024px) {
   .flex-card-wrapper {
-    width: 46%;
+    width: calc(50% - 12px); /* Seamless tablet layout transition */
   }
 }
 
-/* Mobile Carousel Base Container */
+/* ==========================================================================
+   MOBILE CAROUSEL WRAPPER (MAINTAINS MAXIMUM SPACE)
+   ========================================================================== */
 .mobile-carousel-container {
-  position: relative; /* REQUIRED: Anchor point for absolute side buttons */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  /* Horizontal padding creates safe space so absolute buttons don't overflow the screen */
-  padding: 0 48px;
+  padding: 0 44px; /* Default side margin gap room for navigation arrows */
   box-sizing: border-box;
 }
 
@@ -67,112 +69,108 @@
 
 .carousel-track {
   display: flex;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.45s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .carousel-slide {
   flex: 0 0 100%;
-  width: 100%;
+  min-width: 100%;
   box-sizing: border-box;
-  padding: 4px; /* Room for card drop shadows */
+  padding: 12px 6px; /* Safe space margin for card shadow renders */
+  display: flex;
 }
 
-/* Floating Absolute Buttons — positioned inside the padding zone */
+/* 🎯 Bulletproof Perfect Circle Buttons */
 .carousel-btn {
   position: absolute;
-  top: 42%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 5;
-  background: #0f172a;
+  background: #0f0f0f;
   color: #eab308;
-  border: none;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  aspect-ratio: 1 / 1 !important;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 13px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-size: 12px;
+  box-shadow: 0 4px 14px rgba(17, 38, 87, 0.2);
+  transition: all 0.25s ease;
   flex-shrink: 0;
 }
 
 .prev-btn {
-  left: 4px; /* Sits inside the 48px padding zone — never clips the screen */
+  left: 4px;
 }
-
 .next-btn {
-  right: 4px; /* Sits inside the 48px padding zone — never clips the screen */
+  right: 4px;
 }
 
-/* Muted / Inactive Style */
 .carousel-btn.disabled {
-  background: #b9b2a2;
-  color: #ffffff;
+  background: #e2d9c2;
+  color: #a39b88;
   box-shadow: none;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-/* Dots Setup */
+/* Pagination Dots Indicator */
 .carousel-dots {
   display: flex;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 8px;
+  margin-top: 20px;
   justify-content: center;
   align-items: center;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   background: #e2d9c2;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dot.active-dot {
   background: #eab308;
-  transform: scale(1.2);
+  width: 18px; /* Elegant premium pill form indicator */
+  border-radius: 4px;
 }
 
-/* Mobile Media Breakpoint */
+/* ==========================================================================
+   RESPONSIVE LAYOUT RESPONDERS
+   ========================================================================== */
 @media screen and (max-width: 768px) {
   .why-section {
-    padding: 60px 20px; /* Balanced side padding — buttons live inside .mobile-carousel-container padding */
+    padding: 56px 16px;
   }
-
   .why-container {
     width: 100%;
   }
-
   .why-header h2 {
-    font-size: 26px;
+    font-size: 24px;
     text-align: center;
+    margin-bottom: 8px;
   }
 }
 
-.carousel-slide {
-  flex: 0 0 100%;
-  min-width: 100%; /* 👈 FIX: Strictly forces the card to take full viewport width without shrinking */
-  box-sizing: border-box;
-  padding: 12px 4px; /* Leaves room for the drop shadow */
-  display: flex; /* Ensures inner card fills height */
-}
-
-.whychoose-card {
-  width: 100%;
-  height: 100%; /* 👈 FIX: Makes all cards uniform height */
-  background-color: #ffffff;
-  border: 1px solid rgba(241, 245, 249, 0.8);
-  border-radius: 14px;
-  padding: 36px 28px;
-  box-shadow: 0 4px 20px rgba(12, 17, 29, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-sizing: border-box;
-  text-align: left;
+@media screen and (max-width: 480px) {
+  /* 🌟 MAXIMIZE SPACE: Drops container side-padding to push the card wider */
+  .mobile-carousel-container {
+    padding: 0 28px;
+  }
+  /* Shifts buttons closer to edge boundary limits seamlessly */
+  .prev-btn {
+    left: -2px;
+  }
+  .next-btn {
+    right: -2px;
+  }
 }

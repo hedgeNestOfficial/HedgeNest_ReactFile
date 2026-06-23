@@ -27,18 +27,24 @@ const ConvertPage = () => {
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
+<<<<<<< HEAD
   // 1500 minimum for Naira, 1.4 for USDT
   const MIN_NGN = 1500;
   const MIN_USDT = 1.4;
 
+=======
+  // Formatting utility for clean currency presentation
+>>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
   const formatCurrency = (value = 0) =>
     Number(value).toLocaleString("en-NG", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
 
-  const nairaBalance = wallet?.balanceInNaira ?? 0;
+  // ✅ Updated to capture the primary available money from the backend wallet object
+  const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
+<<<<<<< HEAD
 
   // 👈 Validates the specific minimum boundary as the user types
   useEffect(() => {
@@ -66,17 +72,23 @@ const ConvertPage = () => {
     }
   }, [inputValue, activeCurrency]);
 
+=======
+  console.log(availableBalance);
+  // Fetch current exchange rates
+>>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
   const fetchLiveRate = async () => {
     try {
       setIsLoadingRate(true);
       const response = await GetLiveRate();
       setLiveRate(response?.rate || response);
     } catch (err) {
+      console.error("Live rate tracking error:", err);
     } finally {
       setIsLoadingRate(false);
     }
   };
 
+  // Fetch complete conversion logs
   const fetchCoversionHistory = async () => {
     if (!token) return;
     try {
@@ -90,19 +102,37 @@ const ConvertPage = () => {
       } else {
         setConversionHistory([]);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error("History fetch error:", err);
+    }
   };
 
+  // Synchronize and parse wallet balances from the API
   const syncWalletData = async () => {
     if (!token) return;
     try {
       setIsLoadingWallet(true);
       const walletResponse = await getMyWallet(token);
-      const walletData = walletResponse?.data?.[0];
+
+      console.log("Wallet API raw response:", walletResponse);
+
+      let walletData = null;
+      if (Array.isArray(walletResponse?.data)) {
+        walletData = walletResponse.data[0];
+      } else if (
+        walletResponse?.data &&
+        typeof walletResponse.data === "object"
+      ) {
+        walletData = walletResponse.data;
+      } else if (walletResponse && typeof walletResponse === "object") {
+        walletData = walletResponse;
+      }
+
       if (walletData) {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
+      console.error("Wallet balance synchronization failed:", error);
     } finally {
       setIsLoadingWallet(false);
     }
@@ -116,6 +146,7 @@ const ConvertPage = () => {
     }
   }, [token]);
 
+  // Compute calculated live conversion preview values
   const getCalculatedPreview = () => {
     if (!inputValue || Number(inputValue) <= 0 || !liveRate) return "0";
 
@@ -137,6 +168,7 @@ const ConvertPage = () => {
     return "0";
   };
 
+  // Handle local form submission
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -150,6 +182,7 @@ const ConvertPage = () => {
       return;
     }
 
+<<<<<<< HEAD
     // Block submission if real-time minimum validation fails
     if (validationError) {
       toast.error(validationError);
@@ -171,10 +204,13 @@ const ConvertPage = () => {
       return;
     }
 
+=======
+>>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
     setConversionData(null);
     setIsModalOpen(true);
   };
 
+  // Submit transactions securely to the backend architecture
   const handleFinalConfirm = async () => {
     try {
       setLoading(true);
@@ -185,6 +221,8 @@ const ConvertPage = () => {
         amount: Number(inputValue),
       };
 
+      console.log("Sending conversion payload to API:", payload);
+
       const response = await convertCurrency(payload, token);
       setConversionData(response?.rate);
 
@@ -194,7 +232,10 @@ const ConvertPage = () => {
 
       await Promise.all([syncWalletData(), fetchCoversionHistory()]);
     } catch (error) {
-      toast.error(error?.message || "Conversion failed");
+      console.error("Conversion execution error details:", error);
+      const extractedErrorMessage =
+        error?.message || error?.error || "Conversion failed";
+      toast.error(extractedErrorMessage);
     } finally {
       setLoading(false);
     }
@@ -277,8 +318,9 @@ const ConvertPage = () => {
                 {isLoadingWallet ? (
                   <div className="convert-skel sk-dark sk-pill-balance"></div>
                 ) : (
+                  /* ✅ Label changed to display Available Balance */
                   <span className="balance-label">
-                    Bal: ₦{formatCurrency(nairaBalance)}
+                    Available: ₦{formatCurrency(availableBalance)}
                   </span>
                 )}
                 <button

@@ -5,7 +5,6 @@
   width: 100%;
   min-height: 100vh;
   padding: 40px;
-  background-color: #fafaea; /* Light cream background */
   font-family: "Inter", sans-serif;
   box-sizing: border-box;
 }
@@ -14,9 +13,10 @@
   margin-bottom: 24px;
 }
 
-.profile-header-mobile {
+.profile-header-mobile-view-mood {
   display: none;
 }
+
 .profile-header h1 {
   font-size: 1.8rem;
   color: #111827;
@@ -25,7 +25,7 @@
 }
 
 /* =========================
-   TABS NAVIGATION
+   TABS NAVIGATION (DESKTOP)
 ========================= */
 .profile-tabs-container {
   display: flex;
@@ -34,7 +34,6 @@
   border-radius: 8px;
   padding: 8px;
   margin-bottom: 24px;
-  overflow-x: auto; /* Allows scrolling on very small screens */
 }
 
 .profile-tab-btn {
@@ -53,7 +52,7 @@
   gap: 8px;
   transition: all 0.2s ease;
   white-space: nowrap;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
 .profile-tab-btn.active {
@@ -73,6 +72,35 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 40px;
+  position: relative;
+}
+
+/* Edit Profile Button Wrapper */
+.edit-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.edit-profile-trigger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f2937;
+  transition: all 0.2s ease;
+}
+
+.edit-profile-trigger-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .user-info-section {
@@ -86,15 +114,19 @@
   position: relative;
   width: 90px;
   height: 90px;
+  flex-shrink: 0;
 }
 
 .avatar-circle {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 3px solid #3b82f6; /* Blue border from design */
+  border: 3px solid #3b82f6;
   overflow: hidden;
   background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-circle img {
@@ -131,11 +163,13 @@
   color: #6b7280;
   font-size: 0.9rem;
   margin: 0 0 12px 0;
+  word-break: break-all;
 }
 
 .kyc-badge-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -157,7 +191,7 @@
 }
 
 .upgrade-link {
-  color: #10b981; /* Emerald green */
+  color: #10b981;
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
@@ -168,7 +202,7 @@
 }
 
 /* =========================
-   FORM GRID
+   FORM GRID & FOOTER ACTIONS
 ========================= */
 .form-grid {
   display: grid;
@@ -199,79 +233,62 @@
   outline: none;
   background-color: #ffffff;
   transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.input-group input:focus {
+.input-group input:focus:not(:disabled) {
   border-color: #e6b042;
 }
 
+.input-group input:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.form-actions-row {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
 .save-changes-btn {
-  width: 100%;
-  height: 52px;
+  height: 48px;
+  padding: 0 24px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s ease;
-}
-
-.save-changes-btn:hover {
-  opacity: 0.9;
-}
-
-/* =========================
-   MOBILE RESPONSIVENESS
-========================= */
-@media screen and (max-width: 768px) {
-  .profile-page-container {
-    padding: 20px;
-  }
-
-  .profile-tabs-container {
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .profile-tab-btn {
-    width: 100%;
-  }
-
-  .profile-content-card {
-    padding: 24px;
-  }
-
-  .user-info-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr; /* Changes to single column on mobile */
-    gap: 16px;
-  }
-}
-
-.profile-header-mobile {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
-
-  .signout-mobile {
-    color: #dc2626;
-    width: 150px;
-    /* background: #000; */
-    gap: 10px;
-    height: auto;
-    display: flex;
-    justify-content: flex-end;
-  }
+  align-items: center;
+  justify-content: center;
 }
+
+.cancel-profile-btn {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #11102a;
+  transition: all 0.2s ease;
+}
+
+.cancel-profile-btn:hover:not(:disabled) {
+  background-color: #f9fafb;
+}
+
 /* =========================
-   SUPPORT & LEGAL CARDS
+   INFO CARDS (SUPPORT / LEGAL)
 ========================= */
 .info-cards-grid {
   display: grid;
@@ -303,18 +320,16 @@
 }
 
 .email-icon {
-  background-color: #fef3c7; /* Light gold/yellow */
-  color: #d97706; /* Deep yellow accent */
+  background-color: #fef3c7;
+  color: #d97706;
 }
-
 .wa-icon {
-  background-color: #dcfce7; /* Light green */
-  color: #16a34a; /* WhatsApp green accent */
+  background-color: #dcfce7;
+  color: #16a34a;
 }
-
 .alert-icon {
-  background-color: #fee2e2; /* Light red */
-  color: #dc2626; /* Alert red accent */
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
 .info-card h3 {
@@ -329,7 +344,7 @@
   color: #4b5563;
   margin: 0 0 24px 0;
   line-height: 1.5;
-  flex-grow: 1; /* Pushes the links down to align at the bottom */
+  flex-grow: 1;
 }
 
 .card-links {
@@ -339,32 +354,157 @@
   width: 100%;
 }
 
-.card-links a {
+.card-links a,
+.card-links .action-link {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #2563eb; /* Active blue link color */
+  color: #2563eb;
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
 
-.card-links a.action-link {
-  color: #374151; /* Dark charcoal grey for regular "Read more" links */
+.card-links a.action-link,
+.card-links span.action-link {
+  color: #374151;
 }
 
-.card-links a:hover {
+.card-links a:hover,
+.card-links .action-link:hover {
   text-decoration: underline;
   opacity: 0.8;
 }
 
-/* Responsiveness for grids */
+/* =========================
+   MOBILE RESPONSIVENESS (BREAKPOINTS)
+========================= */
 @media screen and (max-width: 1024px) {
   .info-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+@media screen and (max-width: 768px) {
+  .profile-page-container {
+    padding: 16px;
+    margin-top: 60px; /* Adapts to your layouts next to the sidebar */
+  }
+
+  .profile-content-card {
+    padding: 20px;
+  }
+
+  .profile-header h1 {
+    display: none;
+  }
+
+  .profile-header-mobile-view-mood {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .profile-header-mobile-view-mood h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #111827;
+  }
+
+  /* 🔴 CHANGED TO COLUMN STACK: Navigation tabs list nicely in a vertical format */
+  .profile-tabs-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 6px;
+    gap: 6px;
+  }
+
+  .profile-tab-btn {
+    flex: none;
+    width: 100%;
+    justify-content: center; /* Left-aligning icons/text looks incredibly professional when stacked */
+    padding: 0 16px;
+    height: 46px;
+    font-size: 0.92rem;
+  }
+
+  .user-info-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kyc-badge-row {
+    justify-content: center;
+  }
+
+  /* Centers the edit profile trigger button or fills width neatly */
+  .edit-btn-container {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .edit-profile-trigger-btn {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-actions-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .save-changes-btn,
+  .cancel-profile-btn {
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 640px) {
   .info-cards-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ====================================
+   MOBILE HEADER ALIGNMENT CORRECTIONS
+==================================== */
+@media screen and (max-width: 768px) {
+  .profile-header-mobile-view-mood {
+    display: flex;
+    align-items: center; /* Vertically centers items along the main axis */
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 24px;
+    padding: 4px 0; /* Balancing baseline heights */
+  }
+
+  .profile-header-mobile-view-mood h2 {
+    font-size: 1.5rem;
+    margin: 0; /* Stems browser default headers from shifting alignments */
+    line-height: 1.2;
+    color: #111827;
+    font-weight: 700;
+  }
+
+  .signout-mobile {
+    cursor: pointer;
+    color: #dc2626; /* Professional crimson red color matching alerts */
+    gap: 6px;
+    display: flex;
+    align-items: center; /* Aligns text and the SVG icon side-by-side cleanly */
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2; /* Keeps structural baseline heights exact with h2 */
+    user-select: none;
+    padding: 4px 0;
   }
 }

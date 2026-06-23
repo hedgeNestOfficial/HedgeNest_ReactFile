@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import { TransactionHistory } from "../../Features/TransactionHistory";
-import { historyData } from "../../JS/Transactions";
 import { updateWallet } from "../../Store/UserSlice";
 import { getMyWallet } from "../../Services/Walletservice.js";
-
-import "../../Style/Wallet.css";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { SiTether } from "react-icons/si"; // ✅ Keeps the USDT Asset Icon
+import "../../Style/Wallet.css";
 
 const WalletPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user, token, wallet } = useSelector((state) => state.user);
 
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
-
-  // Loading indicator for API Sync
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
 
   const [isDepositOpen, setIsDepositOpen] = useState(false);
@@ -51,7 +50,7 @@ const WalletPage = () => {
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
-      // console.log("Wallet refresh failed:", error);
+      console.error("Wallet refresh failed:", error);
     } finally {
       setIsLoadingWallet(false);
     }
@@ -89,7 +88,6 @@ const WalletPage = () => {
 
   const handleWithdrawalSuccess = async () => {
     await refreshWallet();
-    toast.success("Withdrawal successful");
   };
 
   return (
@@ -108,9 +106,47 @@ const WalletPage = () => {
 
         {/* BALANCES */}
         <section className="balance-cards-grid">
+          {/* NGN CARD */}
           <div className="balance-card card-ngn">
-            <div className="card-currency-header">
+            <div
+              className="card-currency-header"
+              style={{
+                display: "flex",
+                // justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <svg
+                viewBox="0 0 100 100"
+                className="currency-badge-icon ngn-badge"
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  display: "inline-block",
+                }}
+              >
+                <rect x="0" y="0" width="33.33" height="100" fill="#008751" />
+                <rect
+                  x="33.33"
+                  y="0"
+                  width="33.34"
+                  height="100"
+                  fill="#ffffff"
+                />
+                <rect
+                  x="66.67"
+                  y="0"
+                  width="33.33"
+                  height="100"
+                  fill="#008751"
+                />
+              </svg>
               <span className="currency-label">NGN BALANCE</span>
+
+              {/* ✅ Inline Round Nigerian Flag SVG */}
             </div>
 
             <div className="balance-amount">
@@ -122,8 +158,21 @@ const WalletPage = () => {
             </div>
           </div>
 
+          {/* USDT CARD */}
           <div className="balance-card card-usdt">
-            <div className="card-currency-header">
+            <div
+              className="card-currency-header"
+              style={{
+                display: "flex",
+                // justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <SiTether
+                className="currency-badge-icon usdt-badge"
+                style={{ fontSize: "1.3rem", color: "#26a17b" }}
+              />
               <span className="currency-label">USDT BALANCE</span>
             </div>
 
@@ -196,17 +245,6 @@ const WalletPage = () => {
         </section>
 
         {/* TRANSACTIONS */}
-
-        {/* <div className="transactions-view-port">
-          {historyData?.length ? (
-            <TransactionHistory transactions={historyData} />
-          ) : (
-            <div className="empty-state-container">
-              <p>No activities yet</p>
-            </div>
-          )}
-        </div> */}
-
         <section className="transaction-section">
           <div className="transaction-header">
             <h3>Recent Transactions</h3>
@@ -236,17 +274,17 @@ const WalletPage = () => {
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
         amount={confirmedDepositAmount}
-        token={token} // ⚙️ FIXED: Token is now correctly passed here
+        token={token}
         onSuccess={refreshWallet}
       />
 
-      {/* WITHDRAW */}
+      {/* WITHDRAWAL */}
       <WithdrawalModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         amount={confirmedWithdrawAmount}
+        userId={user?._id || user?.id}
         token={token}
-        bankDetails={linkedBank}
         onWithdrawalSuccess={handleWithdrawalSuccess}
       />
 

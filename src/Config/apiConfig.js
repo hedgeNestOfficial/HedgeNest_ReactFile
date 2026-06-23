@@ -24,6 +24,7 @@ export const ENDPOINTS = {
     RESET_PASSWORD: `${BASE_URL}/api/v1/reset-password`,
     CHANGE_PIN: `${BASE_URL}/api/v1/changePin`,
     TRANSACTION: `${BASE_URL}/api/v1/transaction`,
+    FORGOT_PIN: `${BASE_URL}/api/v1/forgotPin`,
   },
   KYC: {
     UPLOAD_UTILITY_BILL: `${BASE_URL}/api/v1/uploadUtilityBill`,
