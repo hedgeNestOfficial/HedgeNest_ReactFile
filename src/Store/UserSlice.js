@@ -74,7 +74,7 @@ const userSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(REHYDRATE, (state, action) => {
-      console.log("🔄 [UserSlice] REHYDRATE action received");
+      // console.log("🔄 [UserSlice] REHYDRATE action received");
       if (action.payload && action.payload.user) {
         state.user = action.payload.user.user;
         state.wallet = action.payload.user.wallet;
