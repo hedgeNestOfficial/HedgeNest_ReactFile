@@ -4,14 +4,14 @@ import "../../Style/SettingView.css";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
 import ChangePinModal from "../../Components/KycModals/ChangePinModal";
-import ResetPinModal from "../../Components/KycModals/ResetPinModal"; // ✅ Imported with lowercase filename pattern
+import ResetPinModal from "../../Components/KycModals/ResetPinModal";
 import { getLinkedAccounts } from "../../Services/Walletservice";
 
 const SettingView = ({ onAddAccount }) => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
-  const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false); // ✅ State for Reset PIN flow
+  const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false);
 
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,15 +67,8 @@ const SettingView = ({ onAddAccount }) => {
         <h3>Change Transaction PIN</h3>
         <p>Manage your account authorization code safely.</p>
 
-        {/* ✅ Grouped layout to present choices contextually */}
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-            marginTop: "10px",
-            flexWrap: "wrap",
-          }}
-        >
+        {/* ✅ Cleaned up inline styles into a responsive CSS class */}
+        <div className="pin-buttons-group">
           <button
             type="button"
             className="settings-action-btn"
@@ -86,12 +79,7 @@ const SettingView = ({ onAddAccount }) => {
 
           <button
             type="button"
-            className="settings-action-btn"
-            style={{
-              background: "transparent",
-              border: "1px solid #c9922a",
-              color: "#c9922a",
-            }}
+            className="settings-action-btn forgot-pin-btn"
             onClick={() => setIsResetPinModalOpen(true)}
           >
             Forgot PIN?
@@ -124,15 +112,7 @@ const SettingView = ({ onAddAccount }) => {
                   <p>
                     <strong>{acc.bankName}</strong> - {acc.accountNumber}
                   </p>
-                  <small
-                    style={{
-                      color: "#9ca3af",
-                      display: "block",
-                      marginTop: "2px",
-                    }}
-                  >
-                    {acc.accountName}
-                  </small>
+                  <small className="account-item-name">{acc.accountName}</small>
                 </div>
               ))}
             </div>
@@ -157,7 +137,6 @@ const SettingView = ({ onAddAccount }) => {
         onClose={() => setIsPinModalOpen(false)}
       />
 
-      {/* ✅ Mounted ResetPinModal directly within the layout stack */}
       <ResetPinModal
         isOpen={isResetPinModalOpen}
         onClose={() => setIsResetPinModalOpen(false)}
