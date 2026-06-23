@@ -49,6 +49,8 @@ export const ENDPOINTS = {
     GET_ONE_PLAN: `${BASE_URL}/api/v1/get-one-plan`,
     GET_ALL_PLAN: `${BASE_URL}/api/v1/get-all-plan`,
     TOP_UP: `${BASE_URL}/api/v1/top-up`,
+    GET_PREVIEW_PLAN: `${BASE_URL}/api/v1/get-preview-plan`,
+    CONFIRM_PIN: `${BASE_URL}/api/v1/entered-pin`,
   },
 
   INVESTMENT: {

@@ -12,10 +12,12 @@ import TopUpModal from "../Components/TopUpModal";
 import WithdrawModal from "../Components/WithdrawModal";
 
 import {
-  createPlan,
   breakPlan,
   topUp,
   getAllPlan,
+  createPlan,
+  getPreviewPlan,
+  previewPlan,
 } from "../Services/Smartsafeservice";
 
 import "../Css/SmartSafe.css";
@@ -23,15 +25,31 @@ import "../Css/SmartSafe.css";
 const SmartSafe = () => {
   const token = useSelector((state) => state.user.token);
 
+  // Core Data States
   const [vaults, setVaults] = useState([]);
   const [isLoadingVaults, setIsLoadingVaults] = useState(true);
 
+  // Modal Screen Flow State
   const [modalScreen, setModalScreen] = useState("NONE");
+
+  // Presentation UI Toggle States
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFlexibleMode, setIsFlexibleMode] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+
+  // Active Selections for Sub-Modals
+  const [activeTopUpVault, setActiveTopUpVault] = useState(null);
+  const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
+
+  // Local Security Pin Sequence Array
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
 
+  // Summary state vs Form preview state
+  const [previewSummaryData, setPreviewSummaryData] = useState(null);
+  const [formLivePreviewData, setFormLivePreviewData] = useState(null);
+
+  // Core Schema Blueprint Form State
   const [formData, setFormData] = useState({
     title: "",
     targetAmount: "",
@@ -41,10 +59,7 @@ const SmartSafe = () => {
     planType: "LOCKED",
   });
 
-  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
-  const [activeTopUpVault, setActiveTopUpVault] = useState(null);
-  const [activeWithdrawVault, setActiveWithdrawVault] = useState(null);
-
+  // Structural normalization logic to safely parse backend responses
   const normalizePlans = (plans = []) => {
     return plans
       .filter((plan) => Number(plan.currentBalance || 0) > 0)
@@ -62,6 +77,7 @@ const SmartSafe = () => {
       }));
   };
 
+  // 1. API CALL: Fetch Active Plan Vaults
   const fetchUserVaults = async () => {
     if (!token) return;
 
@@ -84,6 +100,7 @@ const SmartSafe = () => {
     fetchUserVaults();
   }, [token]);
 
+  // Clean-up hook to scrub temporary fields when modal unmounts
   useEffect(() => {
     if (modalScreen === "NONE") {
       setFormData({
@@ -95,9 +112,12 @@ const SmartSafe = () => {
         planType: "LOCKED",
       });
       setPin(["", "", "", "", "", ""]);
+      setPreviewSummaryData(null);
+      setFormLivePreviewData(null);
     }
   }, [modalScreen]);
 
+  // Event & Pin Field Sequence Key listeners
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -131,35 +151,107 @@ const SmartSafe = () => {
     }
   };
 
-  const handleCreateVault = async () => {
+  // 2. API CALL: Preview configuration request
+  const handleFormPreviewFetch = async (payload) => {
     try {
-      if (!token) {
-        toast.error("Session expired. Please login again.");
+      setModalScreen("LOADING");
+      const response = await previewPlan(payload, token);
+
+      const previewData = response?.data || response;
+      setFormLivePreviewData(previewData);
+
+      // Attempt to extract ID
+      const generatedPlanId =
+        previewData?._id ||
+        previewData?.id ||
+        previewData?.planId ||
+        response?._id ||
+        response?.id;
+
+      if (!generatedPlanId) {
+        console.warn(
+          "No preview plan ID returned. Using response data directly for summary UI.",
+        );
+        // FALLBACK: Set summary data directly from this response instead of making another API request
+        setPreviewSummaryData(previewData);
+        setModalScreen("SUMMARY");
         return;
       }
 
+      // If an ID exists, proceed with the automatic GET chain
+      await handleSummaryPreviewFetch(generatedPlanId);
+    } catch (error) {
+      console.error("Live form preview failed:", error);
+      toast.error(
+        error?.message || "Failed to calculate live preview conditions.",
+      );
+      setModalScreen("CREATE");
+    }
+  };
+
+  // 3. API CALL: Get specific summary breakdown details via structural id parameter
+  const handleSummaryPreviewFetch = async (targetData) => {
+    try {
+      if (modalScreen !== "LOADING") {
+        setModalScreen("LOADING");
+      }
+
+      // If targetData is already an object containing the preview configs, use it directly
+      if (
+        typeof targetData === "object" &&
+        targetData !== null &&
+        !targetData.planId
+      ) {
+        setPreviewSummaryData(targetData);
+        setModalScreen("SUMMARY");
+        return;
+      }
+
+      const apiPayload =
+        typeof targetData === "string" ? { planId: targetData } : targetData;
+
+      const response = await getPreviewPlan(apiPayload, token);
+      setPreviewSummaryData(response?.data || response);
+      setModalScreen("SUMMARY");
+    } catch (error) {
+      toast.error(
+        error?.message || "Failed to load final summary verification.",
+      );
+      setModalScreen("CREATE");
+    }
+  };
+
+  // 4. API CALL: Create and Save a New Vault
+  const handleCreatePlanSubmit = async (pinString) => {
+    try {
       setModalScreen("LOADING");
 
       const payload = {
         title: formData.title,
         targetAmount: Number(formData.targetAmount),
         planType: formData.planType,
-        duration: formData.planType === "FLEXIBLE" ? null : formData.duration,
-        savingFrequency: formData.savingFrequency,
-        amountPerFrequency: Number(formData.initialAmount),
-        transactionPin: pin.join(""),
+        duration:
+          formData.planType === "FLEXIBLE" ? null : Number(formData.duration),
+        savingFrequency:
+          formData.planType === "FLEXIBLE" ? formData.savingFrequency : "DAILY",
+        amountPerFrequency:
+          formData.planType === "FLEXIBLE"
+            ? Number(formData.initialAmount)
+            : Number(formData.targetAmount),
+        transactionPin: pinString,
       };
 
       await createPlan(payload, token);
-      toast.success("Vault created successfully");
+
       setModalScreen("SUCCESS");
       fetchUserVaults();
-    } catch (error) {
-      toast.error(error?.message || "Failed to create vault");
+    } catch (err) {
+      toast.error(err?.message || "Plan creation failed");
       setModalScreen("SUMMARY");
     }
   };
 
+  // 5. API CALL: Top Up an Existing Plan Vault
   const handleTopUp = async (vault, amount, pinValue) => {
     const targetCeiling = Number(vault?.targetAmount || 0);
     const existingTopUpBalance = Number(vault?.currentBalance || 0);
@@ -221,6 +313,7 @@ const SmartSafe = () => {
     }
   };
 
+  // 6. API CALL: Early Break or Normal Withdrawal Sequence
   const handleWithdraw = async (vault, payload) => {
     return await breakPlan(vault.id, payload, token);
   };
@@ -238,6 +331,7 @@ const SmartSafe = () => {
     );
   };
 
+  // Complete cleanup callback invoked when workflow finishes successfully
   const handleCloseSuccess = () => {
     setPin(["", "", "", "", "", ""]);
     setFormData({
@@ -248,6 +342,8 @@ const SmartSafe = () => {
       initialAmount: "",
       planType: "LOCKED",
     });
+    setPreviewSummaryData(null);
+    setFormLivePreviewData(null);
     setModalScreen("NONE");
     fetchUserVaults();
   };
@@ -335,22 +431,16 @@ const SmartSafe = () => {
       {/* SKELETON LOADER CONTAINER */}
       {isLoadingVaults ? (
         <div className="vault-wrap">
-          <div className="vault-card skeleton-card">
-            <div className="skeleton-element skeleton-badge"></div>
-            <div className="skeleton-element skeleton-title"></div>
-            <div className="skeleton-element skeleton-balance-block"></div>
-            <div className="skeleton-element skeleton-progress"></div>
-            <div className="skeleton-element skeleton-metrics"></div>
-            <div className="skeleton-element skeleton-actions"></div>
-          </div>
-          <div className="vault-card skeleton-card">
-            <div className="skeleton-element skeleton-badge"></div>
-            <div className="skeleton-element skeleton-title"></div>
-            <div className="skeleton-element skeleton-balance-block"></div>
-            <div className="skeleton-element skeleton-progress"></div>
-            <div className="skeleton-element skeleton-metrics"></div>
-            <div className="skeleton-element skeleton-actions"></div>
-          </div>
+          {[1, 2].map((i) => (
+            <div key={i} className="vault-card skeleton-card">
+              <div className="skeleton-element skeleton-badge"></div>
+              <div className="skeleton-element skeleton-title"></div>
+              <div className="skeleton-element skeleton-balance-block"></div>
+              <div className="skeleton-element skeleton-progress"></div>
+              <div className="skeleton-element skeleton-metrics"></div>
+              <div className="skeleton-element skeleton-actions"></div>
+            </div>
+          ))}
         </div>
       ) : vaults.length === 0 ? (
         <section className="empty-card">
@@ -377,6 +467,7 @@ const SmartSafe = () => {
         />
       )}
 
+      {/* TOP UP MODAL SUB-ROUTE */}
       <TopUpModal
         isOpen={isTopUpOpen}
         onClose={() => {
@@ -387,6 +478,7 @@ const SmartSafe = () => {
         onTopUpSuccess={handleTopUp}
       />
 
+      {/* WITHDRAWAL MODAL SUB-ROUTE */}
       <WithdrawModal
         isOpen={isWithdrawModalOpen}
         vault={activeWithdrawVault}
@@ -400,6 +492,7 @@ const SmartSafe = () => {
         }}
       />
 
+      {/* CENTRAL SAVINGS ACTION MODAL INTERNALS */}
       <SavingsModal
         modalScreen={modalScreen}
         setModalScreen={setModalScreen}
@@ -407,16 +500,12 @@ const SmartSafe = () => {
         setIsFlexibleMode={setIsFlexibleMode}
         formData={formData}
         handleInputChange={handleInputChange}
-        handleFormSubmit={(e) => {
-          e.preventDefault();
-          setModalScreen("SUMMARY");
-        }}
-        handleConfirmClick={() => setModalScreen("PIN")}
-        pin={pin}
-        handlePinChange={handlePinChange}
-        handlePinKeyDown={handlePinKeyDown}
-        handlePinSubmit={handleCreateVault}
         handleCloseSuccess={handleCloseSuccess}
+        fetchUserVaults={fetchUserVaults}
+        previewSummaryData={previewSummaryData}
+        onPreviewReceived={handleSummaryPreviewFetch}
+        formLivePreviewData={formLivePreviewData}
+        onFormPreviewRequested={handleFormPreviewFetch}
       />
     </main>
   );
