@@ -112,14 +112,11 @@ const WalletPage = () => {
               className="card-currency-header"
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
               }}
             >
-              <span className="currency-label">NGN BALANCE</span>
-
-              {/* ✅ Inline Round Nigerian Flag SVG */}
               <svg
                 viewBox="0 0 100 100"
                 className="currency-badge-icon ngn-badge"
@@ -147,6 +144,9 @@ const WalletPage = () => {
                   fill="#008751"
                 />
               </svg>
+              <span className="currency-label">NGN BALANCE</span>
+
+              {/* ✅ Inline Round Nigerian Flag SVG */}
             </div>
 
             <div className="balance-amount">
@@ -164,16 +164,16 @@ const WalletPage = () => {
               className="card-currency-header"
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
               }}
             >
-              <span className="currency-label">USDT BALANCE</span>
               <SiTether
                 className="currency-badge-icon usdt-badge"
                 style={{ fontSize: "1.3rem", color: "#26a17b" }}
               />
+              <span className="currency-label">USDT BALANCE</span>
             </div>
 
             <div className="balance-amount">
