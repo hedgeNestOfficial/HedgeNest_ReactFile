@@ -256,3 +256,45 @@
   height: 40px;
   border-radius: 4px;
 }
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE LAYER (480px and under)
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+  .position-product-card {
+    padding: 20px 16px;
+    /* Safely maps fixed height down into an elastic layout structure to stop component overflow */
+    height: auto;
+    min-height: 200px;
+    width: 150px;
+  }
+
+  .position-product-tag-name {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .position-product-main-amount {
+    font-size: 22px;
+  }
+
+  .position-card-metadata-row {
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allows fallback layering on extremely narrow viewports (e.g., 320px) */
+  }
+
+  .meta-label-text,
+  .meta-value-text {
+    font-size: 12px;
+  }
+
+  .position-card-action-row {
+    gap: 10px;
+  }
+
+  .position-btn-action {
+    height: 40px;
+    font-size: 13px;
+  }
+}
