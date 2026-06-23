@@ -34,6 +34,19 @@ const WithdrawModal = ({
     return () => clearTimeout(timer);
   }, [screen]);
 
+  // 🎯 AUTO-SUBMIT TRIGGER: Fires the withdrawal when all fields are completed
+  useEffect(() => {
+    const pinString = pin.join("");
+    if (
+      pinString.length === 6 &&
+      !pin.includes("") &&
+      !isSubmitting &&
+      screen === "PIN"
+    ) {
+      handlePinSubmit(pinString);
+    }
+  }, [pin, isSubmitting, screen]);
+
   if (!isOpen || !vault) return null;
 
   const handleProceedToLoading = () => {
@@ -48,33 +61,47 @@ const WithdrawModal = ({
   };
 
   const handlePinKeyDown = (e, idx) => {
-    if (e.key === "Backspace" && !pin[idx] && idx > 0) {
+    if (e.key === "Backspace") {
       const updated = [...pin];
-      updated[idx - 1] = "";
-      setPin(updated);
+      if (!pin[idx] && idx > 0) {
+        updated[idx - 1] = "";
+        setPin(updated);
+        // Force focus move to previous input field if handled by DOM layout
+        setTimeout(() => {
+          const inputs = document.querySelectorAll(
+            '.pin-input, input[type="text"], input[type="password"]',
+          );
+          if (inputs[idx - 1]) inputs[idx - 1].focus();
+        }, 10);
+      } else {
+        updated[idx] = "";
+        setPin(updated);
+      }
     }
   };
 
-  const handlePinSubmit = async () => {
-    try {
-      if (pin.some((p) => p === "")) return;
-      if (!vault) return;
+  const handlePinSubmit = async (overridePinString = null) => {
+    const targetPin = overridePinString || pin.join("");
+    if (targetPin.length < 6) return;
 
+    try {
       setIsSubmitting(true);
 
-      // The live balance pool is the actual money real asset
-      const realAmountToWithdraw = Number(vault.balance || 0);
+      const isFlexible =
+        (vault.type || vault.planType)?.toUpperCase() === "FLEXIBLE";
+      const realAmountToWithdraw = isFlexible
+        ? Number(vault.targetAmount || 0) + Number(vault.currentBalance || 0)
+        : Number(vault.amount || vault.currentBalance || 0);
 
       const payload = {
         amount: realAmountToWithdraw,
-        transactionPin: pin.join(""),
+        transactionPin: targetPin,
       };
 
       const res = await onWithdraw?.(vault, payload);
       const apiData = res?.data?.data || res?.data;
       const creditedAmount = apiData?.amountCredited ?? realAmountToWithdraw;
 
-      // SUCCESS PATH: Teardown React modal layout completely
       setScreen(null);
       onClose();
 
@@ -90,11 +117,9 @@ const WithdrawModal = ({
 
       onWithdrawSuccess?.();
     } catch (error) {
-      // FAILURE PATH: Close local component layers instantly to clear the backdrop layout
       setScreen(null);
       onClose();
 
-      // Pause briefly for DOM unmounting before mounting SweetAlert frame
       await new Promise((r) => setTimeout(r, 250));
 
       await Swal.fire({
@@ -119,7 +144,7 @@ const WithdrawModal = ({
           handlePinChange={handlePinChange}
           handlePinKeyDown={handlePinKeyDown}
           onBack={() => setScreen("WARNING")}
-          onSubmit={isSubmitting ? null : handlePinSubmit}
+          onSubmit={() => handlePinSubmit()} // Explicit proxy function trigger wrap
         />
       ) : (
         <div className="hn-modal-card">

@@ -62,12 +62,19 @@ const SmartSafe = () => {
   // Structural normalization logic to safely parse backend responses
   const normalizePlans = (plans = []) => {
     return plans
-      .filter((plan) => Number(plan.currentBalance || 0) > 0)
+      .filter((plan) => {
+        const hasBalance = Number(plan.currentBalance || 0) > 0;
+        const hasLockedAmount = Number(plan.amount || 0) > 0;
+        // 🎯 FIX: Keep plans that have either a balance or an initial locked amount
+        return hasBalance || hasLockedAmount;
+      })
       .map((plan) => ({
         id: plan._id,
+        _id: plan._id, // 🎯 FIX: Preserve raw Mongo key for the sub-modal action handlers
         title: plan.title,
         type: plan.planType,
         planType: plan.planType,
+        amount: Number(plan.amount || 0), // 🎯 FIX: Explicitly pass amount down to Vaults
         targetAmount: Number(plan.targetAmount || 0),
         currentBalance: Number(plan.currentBalance || 0),
         interestRate: plan.interestRate || 0,
@@ -100,9 +107,9 @@ const SmartSafe = () => {
     fetchUserVaults();
   }, [token]);
 
-  // Clean-up hook to scrub temporary fields when modal unmounts
+  // Clean-up hook to scrub temporary fields when modal unmounts OR user returns to create form stage
   useEffect(() => {
-    if (modalScreen === "NONE") {
+    if (modalScreen === "NONE" || modalScreen === "CREATE") {
       setFormData({
         title: "",
         targetAmount: "",
@@ -126,29 +133,13 @@ const SmartSafe = () => {
     }));
   };
 
+  // Implemented deterministic copying strategy for shallow state references
   const handlePinChange = (value, index) => {
-    const newPin = [...pin];
-    newPin[index] = value.slice(-1);
-    setPin(newPin);
-  };
-
-  const handlePinKeyDown = (e, index) => {
-    if (e.key === "Backspace") {
-      if (!pin[index] && index > 0) {
-        const newPin = [...pin];
-        newPin[index - 1] = "";
-        setPin(newPin);
-
-        const prevInput = document.querySelector(
-          `input[name="pin-${index - 1}"]`,
-        );
-        if (prevInput) prevInput.focus();
-      } else if (pin[index]) {
-        const newPin = [...pin];
-        newPin[index] = "";
-        setPin(newPin);
-      }
-    }
+    setPin((prevPin) => {
+      const newPin = [...prevPin];
+      newPin[index] = value;
+      return newPin;
+    });
   };
 
   // 2. API CALL: Preview configuration request
@@ -160,26 +151,8 @@ const SmartSafe = () => {
       const previewData = response?.data || response;
       setFormLivePreviewData(previewData);
 
-      // Attempt to extract ID
-      const generatedPlanId =
-        previewData?._id ||
-        previewData?.id ||
-        previewData?.planId ||
-        response?._id ||
-        response?.id;
-
-      if (!generatedPlanId) {
-        console.warn(
-          "No preview plan ID returned. Using response data directly for summary UI.",
-        );
-        // FALLBACK: Set summary data directly from this response instead of making another API request
-        setPreviewSummaryData(previewData);
-        setModalScreen("SUMMARY");
-        return;
-      }
-
-      // If an ID exists, proceed with the automatic GET chain
-      await handleSummaryPreviewFetch(generatedPlanId);
+      // Immediately step forward into summary component step
+      setModalScreen("SUMMARY");
     } catch (error) {
       console.error("Live form preview failed:", error);
       toast.error(
@@ -192,28 +165,27 @@ const SmartSafe = () => {
   // 3. API CALL: Get specific summary breakdown details via structural id parameter
   const handleSummaryPreviewFetch = async (targetData) => {
     try {
-      if (modalScreen !== "LOADING") {
-        setModalScreen("LOADING");
+      const planId =
+        typeof targetData === "string"
+          ? targetData
+          : targetData?.id ||
+            targetData?._id ||
+            targetData?.planId ||
+            formLivePreviewData?.id ||
+            formLivePreviewData?._id ||
+            formLivePreviewData?.planId;
+
+      if (!planId) {
+        throw new Error(
+          "Invalid preview plan ID. Please try recreating the setup structure.",
+        );
       }
 
-      // If targetData is already an object containing the preview configs, use it directly
-      if (
-        typeof targetData === "object" &&
-        targetData !== null &&
-        !targetData.planId
-      ) {
-        setPreviewSummaryData(targetData);
-        setModalScreen("SUMMARY");
-        return;
-      }
-
-      const apiPayload =
-        typeof targetData === "string" ? { planId: targetData } : targetData;
-
-      const response = await getPreviewPlan(apiPayload, token);
+      const response = await getPreviewPlan(planId, token);
       setPreviewSummaryData(response?.data || response);
       setModalScreen("SUMMARY");
     } catch (error) {
+      console.error("Summary preview error:", error);
       toast.error(
         error?.message || "Failed to load final summary verification.",
       );
@@ -226,20 +198,25 @@ const SmartSafe = () => {
     try {
       setModalScreen("LOADING");
 
+      const isFlexible = formData.planType === "FLEXIBLE";
+
+      // Build a base payload with fields required by ALL plan types
       const payload = {
         title: formData.title,
-        targetAmount: Number(formData.targetAmount),
         planType: formData.planType,
-        duration:
-          formData.planType === "FLEXIBLE" ? null : Number(formData.duration),
-        savingFrequency:
-          formData.planType === "FLEXIBLE" ? formData.savingFrequency : "DAILY",
-        amountPerFrequency:
-          formData.planType === "FLEXIBLE"
-            ? Number(formData.initialAmount)
-            : Number(formData.targetAmount),
         transactionPin: pinString,
+        ...(isFlexible
+          ? { targetAmount: Number(formData.targetAmount) }
+          : { amount: Number(formData.targetAmount) }),
       };
+
+      // Only inject frequency, configuration parameters, and duration if it's a FLEXIBLE plan
+      if (isFlexible) {
+        payload.savingFrequency = formData.savingFrequency;
+        payload.amountPerFrequency = Number(formData.initialAmount);
+      } else {
+        payload.duration = Number(formData.duration);
+      }
 
       await createPlan(payload, token);
 
@@ -295,7 +272,7 @@ const SmartSafe = () => {
       if (serverNewBalance !== undefined && serverNewBalance !== null) {
         setVaults((prevVaults) =>
           prevVaults.map((v) =>
-            v.id === vaultId
+            v.id === vaultId || v._id === vaultId
               ? { ...v, currentBalance: Number(serverNewBalance) }
               : v,
           ),
@@ -315,7 +292,9 @@ const SmartSafe = () => {
 
   // 6. API CALL: Early Break or Normal Withdrawal Sequence
   const handleWithdraw = async (vault, payload) => {
-    return await breakPlan(vault.id, payload, token);
+    // 🎯 FIX: Use either id mapping variant for complete callback safety
+    const vaultId = vault?.id || vault?._id;
+    return await breakPlan(vaultId, payload, token);
   };
 
   const handleWithdrawClick = (vault) => {
@@ -326,7 +305,9 @@ const SmartSafe = () => {
   const handleToggleAutoSave = (vaultId) => {
     setVaults((prev) =>
       prev.map((vault) =>
-        vault.id === vaultId ? { ...vault, autoSave: !vault.autoSave } : vault,
+        vault.id === vaultId || vault._id === vaultId
+          ? { ...vault, autoSave: !vault.autoSave }
+          : vault,
       ),
     );
   };
@@ -479,6 +460,7 @@ const SmartSafe = () => {
       />
 
       {/* WITHDRAWAL MODAL SUB-ROUTE */}
+      {/* WITHDRAWAL MODAL SUB-ROUTE */}
       <WithdrawModal
         isOpen={isWithdrawModalOpen}
         vault={activeWithdrawVault}
@@ -486,12 +468,17 @@ const SmartSafe = () => {
         onWithdraw={handleWithdraw}
         onWithdrawSuccess={() => {
           setVaults((prev) =>
-            prev.filter((v) => v.id !== activeWithdrawVault?.id),
+            prev.filter(
+              (v) =>
+                v.id !== activeWithdrawVault?.id &&
+                v._id !== activeWithdrawVault?._id &&
+                v.id !== activeWithdrawVault?._id,
+            ),
           );
+
           fetchUserVaults();
         }}
       />
-
       {/* CENTRAL SAVINGS ACTION MODAL INTERNALS */}
       <SavingsModal
         modalScreen={modalScreen}
@@ -502,10 +489,13 @@ const SmartSafe = () => {
         handleInputChange={handleInputChange}
         handleCloseSuccess={handleCloseSuccess}
         fetchUserVaults={fetchUserVaults}
+        pin={pin}
+        handlePinChange={handlePinChange}
         previewSummaryData={previewSummaryData}
         onPreviewReceived={handleSummaryPreviewFetch}
         formLivePreviewData={formLivePreviewData}
         onFormPreviewRequested={handleFormPreviewFetch}
+        handlePinSubmit={handleCreatePlanSubmit}
       />
     </main>
   );

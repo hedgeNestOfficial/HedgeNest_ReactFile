@@ -1,54 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "../Style/PlanSummary.css";
 
-const PlanSummary = ({ summaryData, onBack, onCancel, onConfirm }) => {
-  // If the parent hasn't populated the summary yet, show a clean, native boundary fallback
-  if (!summaryData) {
+const PlanSummary = ({
+  previewSummaryData,
+  onRefreshSummary,
+  onBack,
+  onCancel,
+  onConfirm,
+}) => {
+  const [isLocalLoading, setIsLocalLoading] = useState(false);
+
+  // Trigger data fetch exactly once when the component establishes mount
+  useEffect(() => {
+    const fetchSummary = async () => {
+      // Only fetch if we don't have summary data yet
+      if (!previewSummaryData) {
+        setIsLocalLoading(true);
+        try {
+          await onRefreshSummary?.();
+        } catch (err) {
+          console.error("Error executing summary pull:", err);
+        } finally {
+          setIsLocalLoading(false);
+        }
+      }
+    };
+
+    fetchSummary();
+  }, [onRefreshSummary, previewSummaryData]);
+
+  // Keep the summary container mounted, but present the spinner internally
+  if (isLocalLoading || !previewSummaryData) {
     return (
-      <div className="modal-container text-center">
-        <p>No preview data available. Please go back and try again.</p>
-        <button type="button" onClick={onBack} className="btn-secondary mt-4">
-          Go Back
-        </button>
+      <div
+        className="modal-container layout-centered"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
-  // --- STRICT MAP TO BACKEND VALUES ONLY ---
-  const title = summaryData.title || "Savings Plan";
-  const planType = summaryData.planType || "LOCKED";
-  const targetAmount = Number(summaryData.targetAmount || 0);
-  const duration = summaryData.duration || 0;
-  const savingFrequency = summaryData.savingFrequency
-    ? summaryData.savingFrequency.toLowerCase()
-    : "";
-  const interestRate = summaryData.interestRate || 0;
-  const breakingFeePercentage = summaryData.breakingFeePercentage ?? 0;
+  const title = previewSummaryData.title || "";
+  const planType = previewSummaryData.planType || "";
+  const amount = Number(previewSummaryData.amount || 0);
+  const duration = previewSummaryData.duration || 0;
+  const savingFrequency = previewSummaryData.savingFrequency || "";
+  const breakingFeePercentage = previewSummaryData.breakingFeePercentage ?? 0;
 
-  // Financial metrics calculated strictly on the server side
-  const interestBeforeTax = Number(
-    summaryData.estimatedInterestRateBeforeTax || 0,
-  );
-  const withholdingTax = Number(summaryData.estimatedWithholdingTax || 0);
-  const interestAfterTax = Number(
-    summaryData.estimatedInterestRateAfterTax || 0,
-  );
-  const totalPayback = Number(summaryData.estimatedTotalPayback || 0);
+  const interestBeforeTax = Number(previewSummaryData.interestBeforeTax || 0);
+  const withholdingTax = Number(previewSummaryData.withholdingTax || 0);
+  const totalPayback = Number(previewSummaryData.totalPayback || 0);
+  const interestAfterTax = Math.max(0, interestBeforeTax - withholdingTax);
 
   const getFormattedMaturityDate = () => {
     if (planType.toUpperCase() === "FLEXIBLE") {
       return "No lock-in (Withdraw anytime)";
     }
-    if (summaryData.maturityDate) {
-      return new Date(summaryData.maturityDate).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      });
+    if (previewSummaryData.maturityDate) {
+      return new Date(previewSummaryData.maturityDate).toLocaleDateString(
+        "en-GB",
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        },
+      );
     }
     return "N/A";
   };
+
+  const isFlexible = planType.toUpperCase() === "FLEXIBLE";
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
@@ -66,11 +90,11 @@ const PlanSummary = ({ summaryData, onBack, onCancel, onConfirm }) => {
 
         <div className="summary-row">
           <span className="summary-label">
-            {planType.toUpperCase() === "FLEXIBLE" ? "Target Amount" : "Amount"}
+            {isFlexible ? "Target Amount" : "Amount"}
           </span>
           <span className="summary-value text-dark">
             ₦{" "}
-            {targetAmount.toLocaleString(undefined, {
+            {amount.toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -87,17 +111,24 @@ const PlanSummary = ({ summaryData, onBack, onCancel, onConfirm }) => {
           </span>
         </div>
 
-        <div className="summary-row">
-          <span className="summary-label">
-            {planType.toUpperCase() === "FLEXIBLE"
-              ? "Calculated Duration"
-              : "Duration (Days)"}
-          </span>
-          <span className="summary-value text-dark">
-            {duration}{" "}
-            {planType.toUpperCase() === "FLEXIBLE" ? savingFrequency : ""}
-          </span>
-        </div>
+        {/* ⏱️ CONDITIONAL LAYOUT ASSIGNMENTS FOR SAVINGS SETUP RULES */}
+        {isFlexible ? (
+          <div className="summary-row">
+            <span className="summary-label">Saving Frequency</span>
+            <span
+              className="summary-value text-dark"
+              style={{ textTransform: "capitalize" }}
+            >
+              {savingFrequency.toLowerCase()}
+            </span>
+          </div>
+        ) : (
+          /* Runs strictly for LOCKED and STEALTH plans */
+          <div className="summary-row">
+            <span className="summary-label">Duration (Days)</span>
+            <span className="summary-value text-dark">{duration} days</span>
+          </div>
+        )}
 
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>
@@ -117,31 +148,24 @@ const PlanSummary = ({ summaryData, onBack, onCancel, onConfirm }) => {
 
         <div className="summary-row items-start">
           <span className="summary-label">Interest (before tax)</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold">
-              ₦{" "}
-              {interestBeforeTax.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
-          <span className="calculation-subtext">
-            ({interestRate}% p.a. base interest rate)
+          <span className="summary-value text-gold">
+            ₦{" "}
+            {interestBeforeTax.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </span>
         </div>
 
         <div className="summary-row items-start">
           <span className="summary-label">Withholding Tax (10%)</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold">
-              ₦{" "}
-              {withholdingTax.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
+          <span className="summary-value text-gold">
+            ₦{" "}
+            {withholdingTax.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </div>
 
         <div className="summary-row items-start">
@@ -157,15 +181,13 @@ const PlanSummary = ({ summaryData, onBack, onCancel, onConfirm }) => {
 
         <div className="summary-row items-start">
           <span className="summary-label">Total Payback</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold font-bold">
-              ₦{" "}
-              {totalPayback.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
+          <span className="summary-value text-gold font-bold">
+            ₦{" "}
+            {totalPayback.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </div>
       </div>
 

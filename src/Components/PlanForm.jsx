@@ -55,7 +55,6 @@ const PlanForm = ({
   };
 
   const handleLocalSubmit = async (e) => {
-    // Prevent default form behavior safely if an event object exists
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -63,7 +62,6 @@ const PlanForm = ({
 
     if (isSubmitting) return;
 
-    // Direct Javascript validation fallback check
     if (!formData.title) {
       setValidationError("Please enter a savings title.");
       return;
@@ -105,8 +103,7 @@ const PlanForm = ({
       setValidationError(
         err?.message || "An unexpected processing error occurred.",
       );
-    }
-    {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -274,8 +271,7 @@ const PlanForm = ({
           </button>
 
           <button
-            type="button"
-            onClick={handleLocalSubmit}
+            type="submit"
             className="btn-primary"
             disabled={!hasSelectedType || isSubmitting}
           >

@@ -3,31 +3,50 @@ import { FaArrowLeft } from "react-icons/fa";
 import "../Style/PlanPin.css";
 
 const PlanPinScreen = ({
-  pin,
+  pin: rawPin, // Rename it locally so we can safely normalize it below
   handlePinChange,
   onBack,
-  onPinSubmitted, // Triggers parent handler containing confirmPin + createPlan orchestration
+  onPinSubmitted,
 }) => {
   const inputRefs = useRef([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Auto-focus management based on current input filling state
+  // 🛡️ BULLETPROOF NORMALIZATION:
+  // If parent passes null, undefined, a string, or an empty array, always force a 6-slot array.
+  const pin =
+    Array.isArray(rawPin) && rawPin.length === 6
+      ? rawPin
+      : ["", "", "", "", "", ""];
+
+  // Focus the first empty box exactly once when the component mounts
   useEffect(() => {
     const firstEmpty = pin.findIndex((val) => val === "");
-    const targetIdx = firstEmpty !== -1 ? firstEmpty : 5;
-    if (inputRefs.current[targetIdx]) inputRefs.current[targetIdx].focus();
-  }, [pin]);
+    const targetIdx = firstEmpty !== -1 ? firstEmpty : 0;
+    if (inputRefs.current[targetIdx]) {
+      inputRefs.current[targetIdx].focus();
+    }
+    // Empty dependency array stops the focus-stealing re-render bug
+  }, []);
 
   const onInputChange = (value, idx) => {
-    // Only accept numeric inputs
+    if (value === "") {
+      handlePinChange?.("", idx);
+      return;
+    }
+
+    // Only allow numbers
     const sanitized = value.replace(/[^0-9]/g, "");
     if (!sanitized) return;
 
-    handlePinChange(sanitized, idx);
+    // Grab the last character typed
+    const lastChar = sanitized.slice(-1);
+    handlePinChange?.(lastChar, idx);
 
-    // Shift focus to the next field forward if valid character input detected
+    // Explicitly move focus to next box manually
     if (idx < 5 && inputRefs.current[idx + 1]) {
-      inputRefs.current[idx + 1].focus();
+      setTimeout(() => {
+        inputRefs.current[idx + 1].focus();
+      }, 10);
     }
   };
 
@@ -35,13 +54,12 @@ const PlanPinScreen = ({
     if (e.key === "Backspace") {
       e.preventDefault();
 
-      // Case A: Current box holds a digit value -> clear it out
       if (pin[idx]) {
-        handlePinChange("", idx);
-      }
-      // Case B: Current box is empty -> shift focus backward and clear predecessor value
-      else if (idx > 0) {
-        handlePinChange("", idx - 1);
+        // Clear current box content
+        handlePinChange?.("", idx);
+      } else if (idx > 0) {
+        // Clear previous box content and shift focus back
+        handlePinChange?.("", idx - 1);
         if (inputRefs.current[idx - 1]) {
           inputRefs.current[idx - 1].focus();
         }
@@ -50,19 +68,16 @@ const PlanPinScreen = ({
   };
 
   const handleSequenceSubmit = async () => {
-    if (pin.includes("")) {
-      return;
-    }
+    if (pin.includes("")) return;
 
     setIsProcessing(true);
     const pinString = pin.join("");
 
     try {
-      // Handoff full verification execution sequence directly to parent container
-      await onPinSubmitted(pinString);
+      await onPinSubmitted?.(pinString);
     } catch (err) {
       console.error(
-        "PIN transaction pipeline failed natively inside presentation wrapper.",
+        "PIN transaction pipeline failed inside presentation wrapper.",
       );
     } finally {
       setIsProcessing(false);

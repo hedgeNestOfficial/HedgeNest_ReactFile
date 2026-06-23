@@ -15,7 +15,10 @@ const SavingsModal = ({
   handleInputChange,
   handleCloseSuccess,
 
-  // Destructured missing preview and pipeline properties from SmartSafe
+  // PIN states forwarded from parent state context
+  pin,
+  handlePinChange,
+
   previewSummaryData,
   onPreviewReceived,
   formLivePreviewData,
@@ -26,14 +29,13 @@ const SavingsModal = ({
   const user = useSelector((state) => state.user.profile || state.user.data);
   const userId = user?.id || user?._id || user?.userId;
 
-  // Handle SweetAlert via side-effect instead of inside JSX
   useEffect(() => {
     if (modalScreen === "SUCCESS") {
       Swal.fire({
         title: "Savings Plan Created!",
         text: `Your plan "${formData?.title || "Nest"}" has been set up successfully.`,
         icon: "success",
-        confirmButtonText: "Close",
+        confirmButtonText: "Continue",
         confirmButtonColor: "#EDC344",
         buttonsStyling: true,
         allowOutsideClick: false,
@@ -43,13 +45,14 @@ const SavingsModal = ({
           confirmButton: "swal-vault-button",
         },
       }).then(() => {
+        // Parent cleanly triggers cache invalidation and resets variables
         handleCloseSuccess?.();
       });
     }
   }, [modalScreen, formData?.title, handleCloseSuccess]);
 
-  // Force the component to return absolutely nothing on NONE or SUCCESS states
-  if (modalScreen === "NONE" || modalScreen === "SUCCESS") return null;
+  // Prevent background elements leaking into layout when unmounted
+  if (modalScreen === "NONE") return null;
 
   return (
     <div className="modal-overlay">
@@ -61,7 +64,6 @@ const SavingsModal = ({
           isFlexibleMode={isFlexibleMode}
           setIsFlexibleMode={setIsFlexibleMode}
           onCancel={() => setModalScreen("NONE")}
-          // Bind the functional preview calculations prop here safely
           onFormPreviewRequested={onFormPreviewRequested}
         />
       )}
@@ -72,7 +74,8 @@ const SavingsModal = ({
           token={token}
           formData={formData}
           previewSummaryData={previewSummaryData}
-          onRefreshSummary={() => onPreviewReceived?.(formData)}
+          // Pass formLivePreviewData so handleSummaryPreviewFetch can extract the plan setup ID cleanly
+          onRefreshSummary={() => onPreviewReceived?.(formLivePreviewData)}
           onBack={() => setModalScreen("CREATE")}
           onCancel={() => setModalScreen("NONE")}
           onConfirm={() => setModalScreen("PIN")}
@@ -82,17 +85,14 @@ const SavingsModal = ({
       {/* 3. TRANSACTION PIN AUTHORIZATION STAGE */}
       {modalScreen === "PIN" && (
         <PlanPinScreen
-          token={token}
-          userId={userId}
-          formData={formData}
+          pin={pin}
+          handlePinChange={handlePinChange}
           onBack={() => setModalScreen("SUMMARY")}
-          // Delegate submission up to SmartSafe's verified unified pipeline
-          onSuccess={(pinString) => handlePinSubmit?.(pinString)}
-          onFailure={() => setModalScreen("SUMMARY")}
+          onPinSubmitted={(pinString) => handlePinSubmit?.(pinString)}
         />
       )}
 
-      {/* 4. API PROCESSING INDICATOR */}
+      {/* 4. LOADING STATE */}
       {modalScreen === "LOADING" && (
         <div
           className="modal-container layout-centered"
@@ -102,6 +102,9 @@ const SavingsModal = ({
           <div className="loading-spinner"></div>
         </div>
       )}
+
+      {/* 5. SUCCESS STATE (INTERNALS CONTROLLED BY SWAL WINDOW EFFECT) */}
+      {modalScreen === "SUCCESS" && null}
     </div>
   );
 };

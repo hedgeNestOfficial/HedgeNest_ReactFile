@@ -17,7 +17,6 @@ const ConvertPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [validationError, setValidationError] = useState(""); // 👈 Tracks real-time validation text
 
   const [coversionHistory, setConversionHistory] = useState([]);
   const [liveRate, setLiveRate] = useState(null);
@@ -27,14 +26,7 @@ const ConvertPage = () => {
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
-<<<<<<< HEAD
-  // 1500 minimum for Naira, 1.4 for USDT
-  const MIN_NGN = 1500;
-  const MIN_USDT = 1.4;
-
-=======
   // Formatting utility for clean currency presentation
->>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
   const formatCurrency = (value = 0) =>
     Number(value).toLocaleString("en-NG", {
       minimumFractionDigits: 2,
@@ -44,38 +36,8 @@ const ConvertPage = () => {
   // ✅ Updated to capture the primary available money from the backend wallet object
   const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
-<<<<<<< HEAD
-
-  // 👈 Validates the specific minimum boundary as the user types
-  useEffect(() => {
-    if (!inputValue || Number(inputValue) <= 0) {
-      setValidationError("");
-      return;
-    }
-
-    const numericAmount = Number(inputValue);
-
-    if (activeCurrency === "NGN") {
-      if (numericAmount < MIN_NGN) {
-        setValidationError(
-          `Minimum conversion is ₦${MIN_NGN.toLocaleString()}`,
-        );
-      } else {
-        setValidationError("");
-      }
-    } else if (activeCurrency === "USDT") {
-      if (numericAmount < MIN_USDT) {
-        setValidationError(`Minimum conversion is ${MIN_USDT} USDT`);
-      } else {
-        setValidationError("");
-      }
-    }
-  }, [inputValue, activeCurrency]);
-
-=======
   console.log(availableBalance);
   // Fetch current exchange rates
->>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
   const fetchLiveRate = async () => {
     try {
       setIsLoadingRate(true);
@@ -151,21 +113,11 @@ const ConvertPage = () => {
     if (!inputValue || Number(inputValue) <= 0 || !liveRate) return "0";
 
     const numericAmount = Number(inputValue);
-
     if (activeCurrency === "NGN") {
-      if (numericAmount < MIN_NGN) return "0.00";
-      const result = numericAmount / liveRate;
-      return result.toFixed(2);
+      return (numericAmount / liveRate).toFixed(2);
+    } else {
+      return (numericAmount * liveRate).toFixed(2);
     }
-
-    // USDT → NGN
-    if (activeCurrency === "USDT") {
-      if (numericAmount < MIN_USDT) return "0.00";
-      const result = numericAmount * liveRate;
-      return result.toFixed(2);
-    }
-
-    return "0";
   };
 
   // Handle local form submission
@@ -182,30 +134,6 @@ const ConvertPage = () => {
       return;
     }
 
-<<<<<<< HEAD
-    // Block submission if real-time minimum validation fails
-    if (validationError) {
-      toast.error(validationError);
-      return;
-    }
-
-    const amount = Number(inputValue);
-
-    // Balance check
-    const currentLimit =
-      activeCurrency === "NGN"
-        ? nairaBalance
-        : Number(wallet?.balanceInUSDT ?? 0);
-
-    if (amount > Number(currentLimit)) {
-      toast.error(
-        `Insufficient ${activeCurrency} balance to complete this operation.`,
-      );
-      return;
-    }
-
-=======
->>>>>>> 21ac648c1aefc468e64faa4175332e59c90f9ae9
     setConversionData(null);
     setIsModalOpen(true);
   };
@@ -292,25 +220,11 @@ const ConvertPage = () => {
             <div className="grid-left-input-pane">
               <input
                 type="number"
-                step="any"
-                placeholder={activeCurrency === "NGN" ? "1500" : "1.40"}
+                placeholder={activeCurrency === "NGN" ? "1500" : "1.00"}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="currency-field-input"
               />
-              {/* Inline feedback element */}
-              {validationError && (
-                <p
-                  style={{
-                    color: "#fc8181",
-                    fontSize: "0.85rem",
-                    marginTop: "0.25rem",
-                    textAlign: "left",
-                  }}
-                >
-                  {validationError}
-                </p>
-              )}
             </div>
 
             <div className="grid-right-selectors-pane">
@@ -370,11 +284,7 @@ const ConvertPage = () => {
             </span>
           </div>
 
-          <button
-            type="submit"
-            className="submit-conversion-btn"
-            style={{ opacity: validationError ? 0.6 : 1 }}
-          >
+          <button type="submit" className="submit-conversion-btn">
             {activeCurrency === "NGN"
               ? "Convert NGN to USDT "
               : "Convert USDT to NGN "}
