@@ -5,9 +5,10 @@
   width: 100%;
   min-height: 100vh;
   padding: 40px;
-  background-color: #fafaea; /* Light cream background */
+  /* background-color: #fafaea; Light cream background */
   font-family: "Inter", sans-serif;
   box-sizing: border-box;
+  /* background: #000; */
   /* justify-content: center; */
   align-items: center;
 }
@@ -227,14 +228,22 @@
 /* =========================
    MOBILE RESPONSIVENESS
 ========================= */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 770px) {
   .profile-page-container {
-    padding: 20px;
+    margin-top: 50px;
+    /* background: #000; */
+    width: 100%;
   }
 
   .profile-tabs-container {
     flex-wrap: wrap;
     gap: 4px;
+  }
+
+  .profile-header {
+    h1 {
+      display: none;
+    }
   }
 
   .profile-tab-btn {
@@ -255,10 +264,9 @@
     grid-template-columns: 1fr; /* Changes to single column on mobile */
     gap: 16px;
   }
-}
-
-.profile-header-mobile-view-mood {
-  display: none;
+  .profile-header-mobile-view-mood {
+    display: flex;
+  }
 }
 
 .info-cards-grid {
