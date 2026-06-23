@@ -1,118 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "../Style/PlanSummary.css";
 
 const PlanSummary = ({
-  formData,
-  isFlexibleMode,
+  previewSummaryData,
+  onRefreshSummary,
   onBack,
   onCancel,
   onConfirm,
 }) => {
-  if (!formData) {
-    return <div className="modal-container">Loading summary data...</div>;
+  const [isLocalLoading, setIsLocalLoading] = useState(false);
+
+  // Trigger data fetch exactly once when the component establishes mount
+  useEffect(() => {
+    const fetchSummary = async () => {
+      // Only fetch if we don't have summary data yet
+      if (!previewSummaryData) {
+        setIsLocalLoading(true);
+        try {
+          await onRefreshSummary?.();
+        } catch (err) {
+          console.error("Error executing summary pull:", err);
+        } finally {
+          setIsLocalLoading(false);
+        }
+      }
+    };
+
+    fetchSummary();
+  }, [onRefreshSummary, previewSummaryData]);
+
+  // Keep the summary container mounted, but present the spinner internally
+  if (isLocalLoading || !previewSummaryData) {
+    return (
+      <div
+        className="modal-container layout-centered"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="loading-spinner"></div>
+      </div>
+    );
   }
 
-  const target = parseFloat(formData.targetAmount) || 0;
-  const initialAmt = parseFloat(formData.initialAmount) || 0;
-  const isPlanFlexible = isFlexibleMode || formData.planType === "FLEXIBLE";
-  const isPlanStealth = formData.planType === "STEALTH";
+  const title = previewSummaryData.title || "";
+  const planType = previewSummaryData.planType || "";
+  const amount = Number(previewSummaryData.amount || 0);
+  const duration = previewSummaryData.duration || 0;
+  const savingFrequency = previewSummaryData.savingFrequency || "";
+  const breakingFeePercentage = previewSummaryData.breakingFeePercentage ?? 0;
 
-  // 1. Determine Interest Rate p.a. Based on Selected Type & Duration
-  const getInterestRate = () => {
-    if (isPlanFlexible) return 0.1; // 10% p.a.
+  const interestBeforeTax = Number(previewSummaryData.interestBeforeTax || 0);
+  const withholdingTax = Number(previewSummaryData.withholdingTax || 0);
+  const totalPayback = Number(previewSummaryData.totalPayback || 0);
+  const interestAfterTax = Math.max(0, interestBeforeTax - withholdingTax);
 
-    const daysInput = parseInt(formData.duration, 10) || 0;
-    if (daysInput >= 7 && daysInput <= 90) return 0.14;
-    if (daysInput >= 91 && daysInput <= 180) return 0.15;
-    if (daysInput >= 181 && daysInput <= 364) return 0.16;
-    if (daysInput >= 365) return 0.17;
-    return 0.14; // Base fallback
-  };
-
-  const rateValue = getInterestRate();
-
-  const getPlanTypeLabel = () => {
-    if (isPlanStealth) return "Stealth";
-    if (isPlanFlexible) return "Flexible";
-    return "Locked";
-  };
-
-  // --- FREQUENCY CONFIGURATION ---
-  const frequency = (formData.savingFrequency || "DAILY").toUpperCase();
-
-  // --- DURATION EXTRACTOR ---
-  let derivedDuration = 0;
-
-  if (isPlanFlexible) {
-    if (target > 0 && initialAmt > 0) {
-      derivedDuration = Math.ceil(target / initialAmt);
-    } else {
-      derivedDuration =
-        frequency === "MONTHLY" ? 12 : frequency === "WEEKLY" ? 52 : 365;
-    }
-  } else {
-    derivedDuration = parseInt(formData.duration, 10) || 0;
-  }
-
-  // 2. Dynamic Maturity Date Calculation
-  const getCalculatedMaturityDate = () => {
-    if (isPlanFlexible) {
+  const getFormattedMaturityDate = () => {
+    if (planType.toUpperCase() === "FLEXIBLE") {
       return "No lock-in (Withdraw anytime)";
     }
-
-    if (!derivedDuration || isNaN(derivedDuration))
-      return "Invalid duration entered";
-
-    const date = new Date();
-    date.setDate(date.getDate() + derivedDuration);
-
-    return date.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
+    if (previewSummaryData.maturityDate) {
+      return new Date(previewSummaryData.maturityDate).toLocaleDateString(
+        "en-GB",
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        },
+      );
+    }
+    return "N/A";
   };
 
-  // --- INTEREST MATHEMATICS WITH THE CLEAR STEP DIVISION ---
-  let estimatedInterest = 0;
-  let mathSubtext = "";
-
-  if (isPlanFlexible) {
-    let timeInYears = 0;
-    let baseDivider = 365;
-
-    if (frequency === "DAILY") {
-      timeInYears = derivedDuration / 365;
-      baseDivider = 365;
-    } else if (frequency === "WEEKLY") {
-      timeInYears = derivedDuration / 52;
-      baseDivider = 52;
-    } else if (frequency === "MONTHLY") {
-      timeInYears = derivedDuration / 12;
-      baseDivider = 12;
-    } else {
-      timeInYears = derivedDuration / 365;
-      baseDivider = 365;
-    }
-
-    // Step 2: Average Balance = Target / 2
-    const averageBalance = target / 2;
-
-    // Step 3: Simple Interest
-    estimatedInterest = averageBalance * rateValue * timeInYears;
-    const displayPercentage = rateValue * 100;
-
-    mathSubtext = `(Average Bal: ₦${Number(averageBalance).toLocaleString(undefined, { maximumFractionDigits: 2 })} * ${displayPercentage}% * ${derivedDuration} / ${baseDivider})`;
-  } else {
-    estimatedInterest = target * rateValue * (derivedDuration / 365);
-    mathSubtext = `(${Number(target).toLocaleString()} * ${rateValue * 100}% * ${derivedDuration} / 365)`;
-  }
-
-  const tax = parseFloat((estimatedInterest * 0.1).toFixed(2));
-  const finalInterest = parseFloat((estimatedInterest - tax).toFixed(2));
-  const totalPayback = parseFloat((target + finalInterest).toFixed(2));
-  const formattedEstimatedInterest = parseFloat(estimatedInterest).toFixed(2);
+  const isFlexible = planType.toUpperCase() === "FLEXIBLE";
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
@@ -125,14 +85,16 @@ const PlanSummary = ({
       <div className="summary-details-list">
         <div className="summary-row">
           <span className="summary-label">Savings Name</span>
-          <span className="summary-value text-dark">{formData.title}</span>
+          <span className="summary-value text-dark">{title}</span>
         </div>
 
         <div className="summary-row">
-          <span className="summary-label">Target Amount</span>
+          <span className="summary-label">
+            {isFlexible ? "Target Amount" : "Amount"}
+          </span>
           <span className="summary-value text-dark">
             ₦{" "}
-            {Number(target).toLocaleString(undefined, {
+            {amount.toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -141,25 +103,37 @@ const PlanSummary = ({
 
         <div className="summary-row">
           <span className="summary-label">Savings Type</span>
-          <span className="summary-value text-dark">{getPlanTypeLabel()}</span>
+          <span
+            className="summary-value text-dark"
+            style={{ textTransform: "capitalize" }}
+          >
+            {planType.toLowerCase()}
+          </span>
         </div>
 
-        <div className="summary-row">
-          <span className="summary-label">
-            {isPlanFlexible ? "Calculated Duration" : "Duration (Days)"}
-          </span>
-          <span className="summary-value text-dark">
-            {derivedDuration}{" "}
-            {isPlanFlexible
-              ? frequency.toLowerCase() + (derivedDuration === 1 ? "" : "s")
-              : ""}
-          </span>
-        </div>
+        {/* ⏱️ CONDITIONAL LAYOUT ASSIGNMENTS FOR SAVINGS SETUP RULES */}
+        {isFlexible ? (
+          <div className="summary-row">
+            <span className="summary-label">Saving Frequency</span>
+            <span
+              className="summary-value text-dark"
+              style={{ textTransform: "capitalize" }}
+            >
+              {savingFrequency.toLowerCase()}
+            </span>
+          </div>
+        ) : (
+          /* Runs strictly for LOCKED and STEALTH plans */
+          <div className="summary-row">
+            <span className="summary-label">Duration (Days)</span>
+            <span className="summary-value text-dark">{duration} days</span>
+          </div>
+        )}
 
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>
           <span className="summary-value text-dark">
-            {getCalculatedMaturityDate()}
+            {getFormattedMaturityDate()}
           </span>
         </div>
 
@@ -168,42 +142,37 @@ const PlanSummary = ({
             Breaking Fee For Early Withdrawal
           </span>
           <span className="summary-value text-dark">
-            {isPlanFlexible ? "0%" : "1.5%"}
+            {breakingFeePercentage}%
           </span>
         </div>
 
         <div className="summary-row items-start">
           <span className="summary-label">Interest (before tax)</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold">
-              ₦{" "}
-              {Number(formattedEstimatedInterest).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
-          <span className="calculation-subtext">{mathSubtext}</span>
+          <span className="summary-value text-gold">
+            ₦{" "}
+            {interestBeforeTax.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </div>
 
         <div className="summary-row items-start">
           <span className="summary-label">Withholding Tax (10%)</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold">
-              ₦{" "}
-              {Number(tax).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-          </div>
+          <span className="summary-value text-gold">
+            ₦{" "}
+            {withholdingTax.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </div>
 
         <div className="summary-row items-start">
           <span className="summary-label">Interest (after tax)</span>
           <span className="summary-value text-gold">
             ₦{" "}
-            {Number(finalInterest).toLocaleString(undefined, {
+            {interestAfterTax.toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -212,26 +181,13 @@ const PlanSummary = ({
 
         <div className="summary-row items-start">
           <span className="summary-label">Total Payback</span>
-          <div className="summary-value-stack">
-            <span className="summary-value text-gold font-bold">
-              ₦{" "}
-              {Number(totalPayback).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-            <span className="calculation-subtext">
-              (
-              {Number(target).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })}{" "}
-              +{" "}
-              {Number(finalInterest).toLocaleString(undefined, {
-                maximumFractionDigits: 2,
-              })}
-              )
-            </span>
-          </div>
+          <span className="summary-value text-gold font-bold">
+            ₦{" "}
+            {totalPayback.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </div>
       </div>
 

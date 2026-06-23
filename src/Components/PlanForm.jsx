@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import Button from "../Components/Button";
 import "../Style/Planform.css";
 
 const PlanForm = ({
@@ -9,12 +8,13 @@ const PlanForm = ({
   isFlexibleMode,
   setIsFlexibleMode,
   onCancel,
-  onSubmit,
+  onFormPreviewRequested,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasSelectedType, setHasSelectedType] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
   const [validationError, setValidationError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectPlanType = (type, label) => {
     setIsFlexibleMode(type === "FLEXIBLE");
@@ -29,33 +29,91 @@ const PlanForm = ({
     setSelectedLabel(label);
     setIsDropdownOpen(false);
     setHasSelectedType(true);
-    setValidationError(""); // Reset errors on swap
+    setValidationError("");
   };
 
-  // Intercept submit to run validation
-  const handleLocalSubmit = (e) => {
-    e.preventDefault();
+  const buildPayload = () => {
+    const isFlexible = formData.planType === "FLEXIBLE";
 
-    const targetAmt = parseFloat(formData.targetAmount) || 0;
-    const initialAmt = parseFloat(formData.initialAmount) || 0;
+    const duration =
+      formData.duration && Number(formData.duration) > 0
+        ? Number(formData.duration)
+        : isFlexible
+          ? 30
+          : 1;
 
-    if (initialAmt > targetAmt) {
-      setValidationError(
-        "Input amount to get started cannot be greater than the target amount.",
-      );
-      return; // Stops submission
+    return {
+      title: formData.title,
+      targetAmount: Number(formData.targetAmount),
+      planType: formData.planType,
+      duration,
+      savingFrequency: isFlexible ? formData.savingFrequency : "DAILY",
+      amountPerFrequency: isFlexible
+        ? Number(formData.initialAmount || 0)
+        : Number(formData.targetAmount || 0),
+    };
+  };
+
+  const handleLocalSubmit = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
 
-    setValidationError(""); // Clear error if all looks good
-    onSubmit(e);
+    if (isSubmitting) return;
+
+    if (!formData.title) {
+      setValidationError("Please enter a savings title.");
+      return;
+    }
+    if (!formData.targetAmount || Number(formData.targetAmount) <= 0) {
+      setValidationError("Please enter a valid target amount.");
+      return;
+    }
+    if (
+      formData.planType !== "FLEXIBLE" &&
+      (!formData.duration || Number(formData.duration) <= 0)
+    ) {
+      setValidationError("Please enter a valid duration in days.");
+      return;
+    }
+
+    const targetAmt = Number(formData.targetAmount || 0);
+    const initialAmt = Number(formData.initialAmount || 0);
+
+    if (formData.planType === "FLEXIBLE") {
+      if (initialAmt <= 0) {
+        setValidationError("Please enter an initial starting amount.");
+        return;
+      }
+      if (initialAmt > targetAmt) {
+        setValidationError("Input amount cannot exceed target amount.");
+        return;
+      }
+    }
+
+    setValidationError("");
+    setIsSubmitting(true);
+
+    try {
+      const payload = buildPayload();
+      await onFormPreviewRequested(payload);
+    } catch (err) {
+      console.error("Form live calculations error:", err.message);
+      setValidationError(
+        err?.message || "An unexpected processing error occurred.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
       <h2 className="modal-title">Create a Savings Plan</h2>
 
-      <form onSubmit={handleLocalSubmit} className="modal-form">
-        {/* DROPDOWN */}
+      <form onSubmit={handleLocalSubmit} className="modal-form" noValidate>
+        {/* SAVINGS TYPE */}
         <div className="form-group relative-group">
           <label className="form-label">Savings Type</label>
 
@@ -75,7 +133,6 @@ const PlanForm = ({
               />
             </div>
 
-            {/* OPTIONS */}
             {isDropdownOpen && (
               <div className="custom-dropdown-options animate-fade">
                 <div
@@ -95,6 +152,7 @@ const PlanForm = ({
                 >
                   Locked (14 - 17% p.a.)
                 </div>
+
                 <div
                   className="dropdown-option-item"
                   onClick={() =>
@@ -117,14 +175,18 @@ const PlanForm = ({
                 type="text"
                 name="title"
                 value={formData.title || ""}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  setValidationError("");
+                  handleInputChange(e);
+                }}
                 className="form-input"
-                required
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Target Amount</label>
+              <label className="form-label">
+                {formData.planType === "FLEXIBLE" ? "Target Amount" : "Amount"}
+              </label>
               <input
                 type="number"
                 name="targetAmount"
@@ -134,27 +196,27 @@ const PlanForm = ({
                   handleInputChange(e);
                 }}
                 className="form-input"
-                required
               />
             </div>
 
-            <div className="form-group relative-group">
-              {!isFlexibleMode ? (
-                <>
-                  <label className="form-label">Duration (Days)</label>
-                  <input
-                    type="text"
-                    name="duration"
-                    value={formData.duration || ""}
-                    onChange={handleInputChange}
-                    className="form-input"
-                    required
-                  />
-                </>
-              ) : (
-                <>
+            {formData.planType !== "FLEXIBLE" ? (
+              <div className="form-group">
+                <label className="form-label">Duration (Days)</label>
+                <input
+                  type="number"
+                  name="duration"
+                  value={formData.duration || ""}
+                  onChange={(e) => {
+                    setValidationError("");
+                    handleInputChange(e);
+                  }}
+                  className="form-input"
+                />
+              </div>
+            ) : (
+              <>
+                <div className="form-group relative-group">
                   <label className="form-label">Saving Frequency</label>
-
                   <select
                     name="savingFrequency"
                     value={formData.savingFrequency || "DAILY"}
@@ -165,32 +227,29 @@ const PlanForm = ({
                     <option value="WEEKLY">Weekly</option>
                     <option value="MONTHLY">Monthly</option>
                   </select>
-                </>
-              )}
-            </div>
+                </div>
 
-            {/* IMPORTANT FIELD (API: amountPerFrequency) */}
-            <div className="form-group">
-              <label className="form-label">
-                Input Amount (To get started)
-              </label>
-
-              <input
-                type="number"
-                name="initialAmount"
-                value={formData.initialAmount || ""}
-                onChange={(e) => {
-                  setValidationError("");
-                  handleInputChange(e);
-                }}
-                className="form-input"
-                required
-              />
-            </div>
+                <div className="form-group">
+                  <label className="form-label">
+                    Input Amount (To get started)
+                  </label>
+                  <input
+                    type="number"
+                    name="initialAmount"
+                    value={formData.initialAmount || ""}
+                    onChange={(e) => {
+                      setValidationError("");
+                      handleInputChange(e);
+                    }}
+                    className="form-input"
+                  />
+                </div>
+              </>
+            )}
           </div>
         )}
 
-        {/* Error Feedback Display */}
+        {/* ERROR */}
         {validationError && (
           <div
             className="error-message-text"
@@ -202,19 +261,22 @@ const PlanForm = ({
 
         {/* ACTIONS */}
         <div className="modal-actions-footer">
-          <Button
+          <button
             type="button"
             onClick={onCancel}
             className="btn-secondary"
-            text="Cancel"
-          />
+            disabled={isSubmitting}
+          >
+            Cancel
+          </button>
 
-          <Button
+          <button
             type="submit"
             className="btn-primary"
-            text="Create Plan"
-            disabled={!hasSelectedType}
-          />
+            disabled={!hasSelectedType || isSubmitting}
+          >
+            {isSubmitting ? "Processing..." : "Create Plan"}
+          </button>
         </div>
       </form>
     </div>
