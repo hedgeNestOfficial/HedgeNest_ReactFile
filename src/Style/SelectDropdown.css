@@ -1,109 +1,88 @@
 .select-dropdown-wrapper {
   width: 100%;
   max-width: 850px;
-
   border: 1px solid #1e293b;
   border-radius: 6px;
-
   margin-bottom: 16px;
-
   overflow: hidden;
-
   background: #ffffff;
-
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 /* =========================
    HEADER
 ========================= */
-
 .select-dropdown-header {
   width: 100%;
-
   min-height: 60px;
-
   padding: 16px 20px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   cursor: pointer;
+  user-select: none;
 }
 
 .select-dropdown-header h3 {
   font-size: 1rem;
   font-weight: 600;
-
   color: #0f172a;
-
   margin: 0;
-
   flex: 1;
   padding-right: 10px;
+  cursor: pointer;
 }
 
 /* =========================
    ARROW
 ========================= */
-
 .select-dropdown-arrow {
   font-size: 22px;
-
   color: #0f172a;
-
-  transition: transform 0.3s ease;
-
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .rotate-arrow {
   transform: rotate(180deg);
+  color: #eab308; /* Optional: Highlights arrow with HedgeNest gold when open */
 }
 
 /* =========================
-   BODY
+   🌟 SMOOTH ACCORDION ENGINE BODY
 ========================= */
-
 .select-dropdown-body {
   width: 100%;
+  max-height: 0; /* Completely collapsed by default */
+  overflow: hidden;
+  opacity: 0;
+  padding: 0 20px; /* Keeps horizontal padding, zeroes vertical padding to prevent pop-snapping */
+  transition:
+    max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    padding 0.35s ease;
+  box-sizing: border-box;
+}
 
-  padding: 0 20px 20px;
+/* Activated smoothly when parent gets the .is-open class tag */
+.select-dropdown-wrapper.is-open .select-dropdown-body {
+  max-height: 300px; /* Safe head-room allowance for text to roll out safely */
+  opacity: 1;
+  padding: 0 20px 20px; /* Restores bottom padding fluidly */
 }
 
 .select-dropdown-body p {
   font-size: 0.95rem;
   line-height: 1.7;
-
   color: #475569;
-
   margin: 0;
 }
 
 /* =========================
-   MOBILE
+   RESPONSIVE DESIGN SYSTEM
 ========================= */
-
-.select-dropdown-wrapper {
-  transition: all 0.3s ease;
-}
-
-.select-dropdown-body {
-  animation: fadeIn 0.25s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 @media screen and (max-width: 480px) {
   .select-dropdown-header {
     padding: 14px 16px;
@@ -113,7 +92,21 @@
     font-size: 0.92rem;
   }
 
+  .select-dropdown-wrapper.is-open .select-dropdown-body {
+    padding: 0 16px 16px;
+  }
+
   .select-dropdown-body p {
     font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+/* Decorative Hover State Transitions for Desktop Viewports */
+@media screen and (min-width: 769px) {
+  .select-dropdown-wrapper:hover {
+    border-color: #eab308; /* Subtle HedgeNest gold border emphasis on hover */
+    background-color: #fafbfc;
+    box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.04);
   }
 }

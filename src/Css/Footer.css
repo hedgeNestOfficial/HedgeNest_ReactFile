@@ -133,7 +133,7 @@
 
 @media (max-width: 500px) {
   .footer-container {
-    padding: 40px;
+    padding: 25px 10px;
   }
 
   .footer-up {

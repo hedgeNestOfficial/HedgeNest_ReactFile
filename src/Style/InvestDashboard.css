@@ -1,16 +1,17 @@
 .dashboard-wrapper {
   padding: 50px;
   max-width: 1200px;
-  margin: 0 auto; /* Centers the dashboard globally */
+  margin: 0 auto; /* Centers the dashboard viewport globally */
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 40px;
   background-color: #fcfcf7;
   min-height: 100vh;
   box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
+
+  /* 🌟 FIX: Keeps your structural content anchored to the top-left rather than squishing items center */
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 header {
@@ -21,9 +22,7 @@ header h1 {
   font-size: 28px;
   margin-bottom: 8px;
   color: #1a1a1a;
-  align-self: flex-start;
-  display: flex;
-  width: 100%;
+  font-weight: 700;
 }
 
 header p {
@@ -31,10 +30,18 @@ header p {
   font-size: 16px;
 }
 
+/* 🌟 FIX: Forces your sections to confidently map 100% width space of the parent container grid */
+.positions-section,
+.available-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 h2 {
   font-size: 20px;
   margin-bottom: 20px;
   color: #333;
+  font-weight: 600;
 }
 
 /* ==========================================================================
@@ -43,15 +50,16 @@ h2 {
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px; /* Uniform clean gutters across all cards and loading configurations */
+  gap: 20px; /* Clean spacing gutters */
   width: 100%;
-  align-items: stretch; /* Ensures matching card heights per row */
+  align-items: stretch; /* Ensures matching card heights per row layout */
 }
 
 /* Force both standard component wrapper divs and skeletons to match dimensions */
 .flex-container > div,
 .invest-skeleton-card {
-  flex: 0 1 49%; /* Allocates clean dual-column layout paths without processing overhead */
+  /* 🌟 FIX: Uses calc to precisely map clean dual columns subtracting row gaps */
+  flex: 0 1 calc(50% - 10px);
   box-sizing: border-box;
 }
 
@@ -95,7 +103,6 @@ h2 {
   gap: 14px;
 }
 
-/* Darker tone configurations to pop cleanly off pure light backgrounds */
 .skel-row {
   background: linear-gradient(90deg, #e5e7eb 25%, #d1d5db 50%, #e5e7eb 75%);
   background-size: 200% 100%;
@@ -108,17 +115,14 @@ h2 {
   width: 45%;
   margin-bottom: 6px;
 }
-
 .body-skel-line {
   height: 16px;
   width: 85%;
 }
-
 .body-skel-line.short-skel {
   width: 60%;
   margin-bottom: 10px;
 }
-
 .btn-skel {
   height: 44px;
   width: 100%;
@@ -136,18 +140,17 @@ h2 {
 }
 
 /* ==========================================================================
-   MOBILE & RESPONSIVE VIEWPORTS
+   📱 MOBILE & RESPONSIVE VIEWPORTS
    ========================================================================== */
 @media screen and (max-width: 768px) {
   .dashboard-wrapper {
-    padding-top: 80px;
+    /* 🌟 FIX: Drops the crushing 50px side-padding down so components can fill mobile screens */
+    padding: 80px 20px 40px 20px;
+    gap: 32px;
+    margin-bottom: 20px;
   }
 
-  .flex-container {
-    gap: 16px; /* Switch to crisp pixel gaps on compact tracking viewports */
-  }
-
-  /* Safely drop layout layers down to a single clean focus card column */
+  /* Safely drops layout layers down to a single clean focus card column */
   .flex-container > div,
   .invest-skeleton-card {
     flex: 0 1 100%;
@@ -157,6 +160,7 @@ h2 {
 
 @media (max-width: 480px) {
   .dashboard-wrapper {
-    padding-top: 80px;
+    /* 🌟 FIX: Maximum screen optimization layout for small compact phones */
+    padding: 64px 16px 32px 16px;
   }
 }
