@@ -5,6 +5,7 @@ import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
 import ChangePinModal from "../../Components/KycModals/ChangePinModal";
 import ResetPinModal from "../../Components/KycModals/ResetPinModal";
+import KycpopModal from "../../Components/KycModals/KycpopModal";
 import { getLinkedAccounts } from "../../Services/Walletservice";
 
 const SettingView = ({ onAddAccount }) => {
@@ -12,6 +13,7 @@ const SettingView = ({ onAddAccount }) => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isResetPinModalOpen, setIsResetPinModalOpen] = useState(false);
+  const [isKycModalOpen, setIsKycModalOpen] = useState(false);
 
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +51,23 @@ const SettingView = ({ onAddAccount }) => {
 
   return (
     <div className="settings-view-wrapper">
-      {/* CARD 1: CHANGE PASSWORD */}
+      {/* CARD 1: IDENTITY VERIFICATION (KYC) */}
+      <div className="settings-card">
+        <h3>Identity Verification (KYC)</h3>
+        <p>
+          Verify your profile using your NIN to manage restrictions and security
+          thresholds.
+        </p>
+        <button
+          type="button"
+          className="settings-action-btn"
+          onClick={() => setIsKycModalOpen(true)}
+        >
+          Verify Identity
+        </button>
+      </div>
+
+      {/* CARD 2: CHANGE PASSWORD */}
       <div className="settings-card">
         <h3>Change Password</h3>
         <p>Don’t like password, or have forgotten it?</p>
@@ -62,13 +80,20 @@ const SettingView = ({ onAddAccount }) => {
         </button>
       </div>
 
-      {/* CARD 2: CHANGE TRANSACTION PIN */}
+      {/* CARD 3: CHANGE TRANSACTION PIN */}
       <div className="settings-card">
         <h3>Change Transaction PIN</h3>
         <p>Manage your account authorization code safely.</p>
 
-        {/* ✅ Cleaned up inline styles into a responsive CSS class */}
-        <div className="pin-buttons-group">
+        {/* ✅ Kept together in the flex layout; buttons take full width naturally now */}
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            marginTop: "10px",
+            flexWrap: "wrap",
+          }}
+        >
           <button
             type="button"
             className="settings-action-btn"
@@ -79,7 +104,12 @@ const SettingView = ({ onAddAccount }) => {
 
           <button
             type="button"
-            className="settings-action-btn forgot-pin-btn"
+            className="settings-action-btn"
+            style={{
+              background: "transparent",
+              border: "1px solid #c9922a",
+              color: "#c9922a",
+            }}
             onClick={() => setIsResetPinModalOpen(true)}
           >
             Forgot PIN?
@@ -87,7 +117,7 @@ const SettingView = ({ onAddAccount }) => {
         </div>
       </div>
 
-      {/* CARD 3: LINKED WITHDRAWAL ACCOUNTS */}
+      {/* CARD 4: LINKED WITHDRAWAL ACCOUNTS */}
       <div className="settings-card">
         <div className="card-header-row">
           <h3>Linked Withdrawal Accounts</h3>
@@ -112,7 +142,15 @@ const SettingView = ({ onAddAccount }) => {
                   <p>
                     <strong>{acc.bankName}</strong> - {acc.accountNumber}
                   </p>
-                  <small className="account-item-name">{acc.accountName}</small>
+                  <small
+                    style={{
+                      color: "#9ca3af",
+                      display: "block",
+                      marginTop: "2px",
+                    }}
+                  >
+                    {acc.accountName}
+                  </small>
                 </div>
               ))}
             </div>
@@ -140,6 +178,12 @@ const SettingView = ({ onAddAccount }) => {
       <ResetPinModal
         isOpen={isResetPinModalOpen}
         onClose={() => setIsResetPinModalOpen(false)}
+      />
+
+      <KycpopModal
+        isOpen={isKycModalOpen}
+        onClose={() => setIsKycModalOpen(false)}
+        onSuccessRefresh={fetchUserAccounts}
       />
     </div>
   );

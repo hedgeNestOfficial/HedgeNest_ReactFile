@@ -5,12 +5,14 @@
   width: 100%;
   min-height: 100dvh;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
+  /* 🟢 FIXED: Softened tint to prevent chocking out toasts */
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow-y: auto;
-  z-index: 2500;
+  /* 🟢 FIXED: Dropped safely below react-hot-toast layer (9999) */
+  z-index: 990;
 }
 
 .kyc-modal-content {
@@ -212,7 +214,8 @@
 
 @media (max-width: 520px) {
   .kyc-modal-overlay {
-    align-items: flex-end;
+    /* 🟢 FIXED: Changed from flex-end to center workspace alignment */
+    align-items: center;
     padding: 12px;
   }
 
@@ -227,8 +230,12 @@
     flex-direction: column-reverse;
   }
 
+  /* 🟢 FIXED: Killed flex allocation and enforced layout container dimensions */
   .kyc-btn {
-    width: 100%;
+    flex: none !important;
+    width: 100% !important;
+    height: 48px !important;
+    box-sizing: border-box;
   }
 
   .kyc-pin-container {

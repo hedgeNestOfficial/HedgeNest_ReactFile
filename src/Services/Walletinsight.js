@@ -1,8 +1,6 @@
 export const getFinancialInsight = async (token) => {
-  // Defensive check for authentication token consistency
   if (!token) throw new Error("Authentication token required");
 
-  // Premium, emoji-enriched financial wisdom tailored specifically for hedgeNest
   const curatedInsights = [
     "💸 Inflation is a quiet tax on stagnant cash. Strategic diversification into stable assets preserves your real purchasing power. 🛡️",
     "🔄 Automating your currency conversions blocks local devaluation cycles and maintains cross-border capital stability. 🌐",
@@ -14,11 +12,13 @@ export const getFinancialInsight = async (token) => {
   ];
 
   try {
-    // Generate an index linked to the current day of the month (1-31)
-    const currentDay = new Date().getDate();
-    const dynamicIndex = currentDay % curatedInsights.length;
+    // 🔀 TESTING MODE: Changes based on the current second so you can see it rotate live
+    const currentSecond = new Date().getSeconds();
+    const dynamicIndex = currentSecond % curatedInsights.length;
 
-    // Simulate minor network propagation delay for an authentic API feel
+    // Alternative: If you want a brand new insight on EVERY single click/refresh:
+    // const dynamicIndex = Math.floor(Math.random() * curatedInsights.length);
+
     await new Promise((resolve) => setTimeout(resolve, 1150));
 
     return {

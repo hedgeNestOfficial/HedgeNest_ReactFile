@@ -71,11 +71,14 @@ export const TransactionHistory = ({
       case "savings":
         title = "Smart Vault Funding";
         break;
+      case "withdraw": // 🟢 FIXED: Matches backend payload structure ("withdraw")
       case "withdrawal":
         title = "Wallet Withdrawal";
         break;
+      case "conversion": // 🟢 FIXED: Added case assignment for conversions
+        title = "Currency Conversion";
+        break;
       default:
-        // Fallback capitalizing the first letter
         title = tx.transactionType
           ? tx.transactionType.charAt(0).toUpperCase() +
             tx.transactionType.slice(1)
@@ -95,12 +98,20 @@ export const TransactionHistory = ({
       minute: "2-digit",
     });
 
+    // 🟢 FIXED: Safe normalization fallback for missing/null currencies
+    const currencyCode = tx.currency ? tx.currency.toUpperCase() : "NGN";
+
+    // Assign proper symbols based on currency context
+    const currencySymbol = currencyCode === "USDT" ? "$" : "₦";
+
     return {
       id: tx._id,
       type,
       title,
       description: `${formattedDate} • ${formattedTime}`,
       amount: tx.amount,
+      currencySymbol,
+      currencyCode,
     };
   };
 
@@ -153,12 +164,16 @@ export const TransactionHistory = ({
                   <p className="subtitle">{t.description}</p>
                 </div>
 
+                {/* 🟢 FIXED: Dynamically renders the normalized currency configuration */}
                 <div className={`amount ${t.type}`}>
-                  {t.type === "in" ? "+" : "-"} ₦
+                  {t.type === "in" ? "+" : "-"} {t.currencySymbol}
                   {Number(t.amount).toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
+                  {t.currencyCode === "USDT" && (
+                    <span className="currency-label"> USDT</span>
+                  )}
                 </div>
               </div>
             );

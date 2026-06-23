@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { useWalletRefresh } from "../../Hooks/useWalletRefresh";
 import {
   getLinkedAccounts,
@@ -14,13 +15,23 @@ const WithdrawalModal = ({
   onClose,
   userId,
   token,
-  amount: dashboardAmount, // ✅ Captured incoming state from dashboard input
+  amount: dashboardAmount,
   onWithdrawalSuccess,
   isPending = false,
   onWithdrawalCancel,
 }) => {
+  // Pull wallet slice from Redux
+  const { wallet } = useSelector((state) => state.user);
+
+  // Live Console Logger
+  useEffect(() => {
+    if (isOpen) {
+      console.log("🗂️ [WithdrawalModal] Live Redux Wallet Slice:", wallet);
+    }
+  }, [isOpen, wallet]);
+
   const [step, setStep] = useState(isPending ? "PENDING" : "AMOUNT");
-  const [amount, setAmount] = useState(""); // ✅ Cleared hardcoded state to receive dynamic props cleanly
+  const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(new Array(6).fill(""));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,6 +42,12 @@ const WithdrawalModal = ({
   const [timeLeft, setTimeLeft] = useState(86390);
   const pinInputsRef = useRef([]);
   const refreshWallet = useWalletRefresh();
+
+  const toastConfig = {
+    style: {
+      zIndex: 999999,
+    },
+  };
 
   // Fetch linked accounts
   useEffect(() => {
@@ -43,11 +60,14 @@ const WithdrawalModal = ({
           setLinkedAccounts(res.linkedAccounts);
           setSelectedBankId(res.linkedAccounts[0]._id);
         } else {
-          toast.error("No linked bank accounts discovered.");
+          toast.error("No linked bank accounts discovered.", toastConfig);
         }
       } catch (err) {
         console.error("Error fetching bank accounts:", err);
-        toast.error("Failed to load linked accounts. Please reload.");
+        toast.error(
+          "Failed to load linked accounts. Please reload.",
+          toastConfig,
+        );
       } finally {
         setIsLoadingAccounts(false);
       }
@@ -56,7 +76,7 @@ const WithdrawalModal = ({
     fetchAccounts();
   }, [isOpen, token, isPending]);
 
-  // Synchronize Dashboard input into the Modal local form state dynamically
+  // Sync inputs
   useEffect(() => {
     if (!isOpen) {
       setPin(new Array(6).fill(""));
@@ -64,12 +84,12 @@ const WithdrawalModal = ({
     } else {
       setStep(isPending ? "PENDING" : "AMOUNT");
       if (dashboardAmount) {
-        setAmount(dashboardAmount); // ⚡ Sync input choice automatically on wake-up
+        setAmount(dashboardAmount);
       }
     }
   }, [isOpen, isPending, dashboardAmount]);
 
-  // Live countdown runner
+  // Countdown runner
   useEffect(() => {
     let interval = null;
     if (isOpen && step === "PENDING") {
@@ -100,9 +120,42 @@ const WithdrawalModal = ({
   const handleAmountSubmit = (e) => {
     e.preventDefault();
     if (!selectedBankId) {
-      toast.error("Please select a bank account to proceed.");
+      toast.error("Please select a bank account to proceed.", toastConfig);
       return;
     }
+
+    const numericAmount = getRawNumericAmount(amount);
+
+    // 🟢 FIXED: Using availableBalance directly from Redux payload
+    const numericAvailableBalance = Number(wallet?.availableBalance) || 0;
+
+    // 🛑 1. Entire Account Balance Check
+    if (numericAvailableBalance < 1500) {
+      toast.error(
+        `Your available balance (₦${numericAvailableBalance.toLocaleString()}) must be at least ₦1,500 to withdraw.`,
+        toastConfig,
+      );
+      return;
+    }
+
+    // 🛑 2. Minimum Request Limit Check
+    if (numericAmount < 1500) {
+      toast.error(
+        "The minimum amount you can withdraw is ₦1,500.",
+        toastConfig,
+      );
+      return;
+    }
+
+    // 🛑 3. Insufficient Funds Check
+    if (numericAmount > numericAvailableBalance) {
+      toast.error(
+        `Insufficient funds. You cannot withdraw more than your available balance of ₦${numericAvailableBalance.toLocaleString()}.`,
+        toastConfig,
+      );
+      return;
+    }
+
     setStep("LOADING");
     setTimeout(() => {
       setStep("BREAKDOWN");
@@ -146,16 +199,11 @@ const WithdrawalModal = ({
     const finalNumericAmount = getRawNumericAmount(amount);
 
     try {
-      // Step 1: Force backend validation of transaction protection PIN
       await confirmTransactionPin(userId, pinString, token);
-
-      // Step 2: Dispatch the payout route payload (Only passes amount & linked bank account ID)
       await withdrawFunds(finalNumericAmount, selectedBankId, token);
-
-      // Step 3: Trigger Redux state metrics sync
       await refreshWallet();
 
-      toast.success("Payout initiated successfully!");
+      toast.success("Payout initiated successfully!", toastConfig);
       setStep("SUCCESS");
       if (onWithdrawalSuccess) onWithdrawalSuccess();
     } catch (error) {
@@ -164,7 +212,7 @@ const WithdrawalModal = ({
         error.response?.data?.message ||
         "Transaction verification failed. Please try again.";
 
-      toast.error(backendErrorMessage);
+      toast.error(backendErrorMessage, toastConfig);
       setPin(new Array(6).fill(""));
       setStep("PIN");
     } finally {
@@ -177,13 +225,16 @@ const WithdrawalModal = ({
     try {
       setTimeout(async () => {
         await refreshWallet();
-        toast.success("Withdrawal canceled successfully.");
+        toast.success("Withdrawal canceled successfully.", toastConfig);
         setStep("CANCEL_SUCCESS");
         if (onWithdrawalCancel) onWithdrawalCancel();
       }, 1500);
     } catch (error) {
       console.error("Cancellation infrastructure fault:", error);
-      toast.error("Failed to cancel withdrawal. Please try again.");
+      toast.error(
+        "Failed to cancel withdrawal. Please try again.",
+        toastConfig,
+      );
       setStep("PENDING");
     }
   };
@@ -197,14 +248,13 @@ const WithdrawalModal = ({
   return (
     <div className="hn-modal-overlay">
       <div className="hn-modal-card">
-        {/* STEP 1: CHOOSE TARGET & AMOUNT CONFIG */}
+        {/* STEP 1: AMOUNT CONFIG */}
         {step === "AMOUNT" && (
           <form onSubmit={handleAmountSubmit} className="hn-step-container">
             <h3 className="hn-modal-title hn-text-left">
               Make Withdrawal Request
             </h3>
 
-            {/* Destination Selector — Passes ID purely to backend */}
             <div className="hn-input-group hn-margin-top-md">
               <label className="hn-input-label">
                 Select Destination Bank Account
@@ -241,7 +291,6 @@ const WithdrawalModal = ({
               )}
             </div>
 
-            {/* Withdrawal Amount Input */}
             <div className="hn-input-group hn-margin-top-md">
               <label className="hn-input-label">
                 How much do you want to Withdraw? (₦)
@@ -412,7 +461,7 @@ const WithdrawalModal = ({
           </div>
         )}
 
-        {/* STEP 5: ON-LOAD PENDING STRUCTURAL WATCHER STATE */}
+        {/* STEP 5: ON-LOAD PENDING WATCHER STATE */}
         {step === "PENDING" && (
           <div className="hn-step-container hn-text-center">
             <div

@@ -209,7 +209,7 @@
 }
 
 /* ==========================================================================
-   UPDATED CONVERSION HISTORY LOG PANEL & RESPONSIVE DATA TABLE
+    CONVERSION HISTORY LOG PANEL & RESPONSIVE DATA TABLE
    ========================================================================== */
 
 .history-log-panel {
@@ -218,7 +218,7 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Ensures table corners clip perfectly to the panel radius */
+  overflow: hidden;
 }
 
 .history-panel-header {
@@ -244,7 +244,6 @@
   margin: 0;
 }
 
-/* Responsive container wrapper handling mobile overflow */
 .history-table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -257,7 +256,7 @@
   border-collapse: collapse;
   text-align: left;
   font-size: 14px;
-  min-width: 600px; /* Guarantees layout balance when sliding horizontally on mobile views */
+  min-width: 600px;
 }
 
 .history-data-table th {
@@ -286,7 +285,6 @@
   background-color: #fbf9f4;
 }
 
-/* Premium Typography Elements for Table Rows */
 .table-txt-timestamp {
   color: #555462;
   font-size: 13px;
@@ -309,10 +307,9 @@
 
 .table-txt-received {
   font-weight: 700;
-  color: #10b981; /* High conversion green accent */
+  color: #10b981;
 }
 
-/* Status Pill Microbadges */
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -340,21 +337,21 @@
 }
 
 /* ==========================================================================
-   MODAL DIALOG STRUCTURE
+    MODAL DIALOG STRUCTURE
    ========================================================================== */
 
 .modal-backdrop-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(10, 9, 23, 0.4);
+  inset: 0; /* 🟢 FIXED: Safe inset binding instead of explicit sizes */
+  width: 100%;
+  height: 100dvh; /* 🟢 FIXED: Anchors layout cleanly inside responsive mobile limits */
+  /* 🟢 FIXED: Lightened up mask density so dynamic react-hot-toasts punch through clearly */
+  background-color: rgba(10, 9, 23, 0.25);
   backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 990; /* 🟢 FIXED: Slid beneath notifications layer (9999) */
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -362,6 +359,9 @@
   background-color: #ffffff;
   width: 100%;
   max-width: 490px;
+  /* 🟢 FIXED: Viewport safety check constraints */
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
   border-radius: 8px;
   padding: 36px 32px;
   box-shadow: 0px 12px 32px rgba(10, 9, 23, 0.15);
@@ -447,7 +447,7 @@
 }
 
 /* ==========================================================================
-   CONVERSION BACKDROP SKELETON LOADERS (THEME-ALIGNED PREMIUM SHIMMER)
+    CONVERSION BACKDROP SKELETON LOADERS
    ========================================================================== */
 
 .convert-skel {
@@ -463,14 +463,12 @@
   display: inline-block;
 }
 
-/* Rate Banner Display Size Contexts */
 .sk-rate-headline {
   height: 32px;
   width: 220px;
   margin-top: 4px;
 }
 
-/* Selector Pill Display Contexts */
 .sk-pill-balance {
   height: 14px;
   width: 80px;
@@ -485,7 +483,7 @@
     background-position: -200% 0;
   }
 }
-/* Animations */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -507,7 +505,7 @@
 }
 
 /* ==========================================================================
-   RESPONSIVE MEDIA QUERIES 
+    RESPONSIVE MEDIA QUERIES 
    ========================================================================== */
 
 @media (max-width: 768px) {
@@ -547,7 +545,6 @@
     align-items: flex-start;
   }
 
-  /* Optimize spaces inside data table rows for smaller viewports */
   .history-data-table th,
   .history-data-table td {
     padding: 14px 16px;
@@ -555,10 +552,19 @@
 }
 
 @media (max-width: 540px) {
+  /* 🟢 FIXED: Forces overlay layout structure to maintain exact viewport center boundaries */
+  .modal-backdrop-overlay {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   .modal-summary-card {
     width: 92%;
+    max-height: calc(100dvh - 24px);
     padding: 24px 20px;
-    margin: 0 auto;
+    /* 🟢 FIXED: Overrides system drift to secure viewport alignment */
+    margin: auto !important;
   }
 
   .modal-summary-card h2 {
@@ -570,8 +576,12 @@
     gap: 12px;
   }
 
+  /* 🟢 FIXED: Disables auto-flex compression; guarantees strict component sizing targets */
   .btn-modal-cancel,
   .btn-modal-confirm {
-    width: 100%;
+    flex: none !important;
+    width: 100% !important;
+    height: 48px !important;
+    box-sizing: border-box;
   }
 }

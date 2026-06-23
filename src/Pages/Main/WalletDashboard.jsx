@@ -10,7 +10,7 @@ import { TransactionHistory } from "../../Features/TransactionHistory";
 import { updateWallet } from "../../Store/UserSlice";
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { SiTether } from "react-icons/si"; // ✅ Keeps the USDT Asset Icon
+import { SiTether } from "react-icons/si";
 import "../../Style/Wallet.css";
 
 const WalletPage = () => {
@@ -19,8 +19,14 @@ const WalletPage = () => {
 
   const { user, token, wallet } = useSelector((state) => state.user);
 
+  // Live Redux State Console Logger
+  useEffect(() => {
+    console.log("🗂️ [WalletPage] Current Redux Wallet Slice Data:", wallet);
+  }, [wallet]);
+
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
+  const [inputError, setInputError] = useState("");
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
 
   const [isDepositOpen, setIsDepositOpen] = useState(false);
@@ -60,11 +66,60 @@ const WalletPage = () => {
     refreshWallet();
   }, [token]);
 
+  // ✅ Operational inline validation validation engine
+  const validateAmountInput = (value, currentTab) => {
+    if (!value) {
+      setInputError("");
+      return false;
+    }
+
+    const numericAmount = Number(value);
+    if (numericAmount <= 0) {
+      setInputError("Enter a valid positive amount");
+      return false;
+    }
+
+    if (currentTab === "withdraw") {
+      // 🟢 FIXED: Target availableBalance from Redux slice structure
+      const availableBalance = Number(wallet?.availableBalance || 0);
+
+      if (availableBalance < 1500) {
+        setInputError(
+          "Your available balance must be at least ₦1,500.00 to make a withdrawal.",
+        );
+        return false;
+      }
+      if (numericAmount < 1500) {
+        setInputError("Minimum withdrawal amount is ₦1,500.00");
+        return false;
+      }
+      if (numericAmount > availableBalance) {
+        setInputError("Insufficient funds for this withdrawal amount");
+        return false;
+      }
+    }
+
+    setInputError("");
+    return true;
+  };
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(value);
+    validateAmountInput(value, activeTab);
+  };
+
+  const handleTabSwitch = (tabName) => {
+    setActiveTab(tabName);
+    validateAmountInput(amount, tabName);
+  };
+
   const handleTransactionSubmit = (e) => {
     e.preventDefault();
 
-    if (!amount || Number(amount) <= 0) {
-      toast.error("Enter a valid amount");
+    const isValid = validateAmountInput(amount, activeTab);
+    if (!isValid) {
+      if (!amount) setInputError("Amount field cannot be empty");
       return;
     }
 
@@ -79,6 +134,7 @@ const WalletPage = () => {
     }
 
     setAmount("");
+    setInputError("");
   };
 
   const handleLinkAccountSuccess = (bankData) => {
@@ -110,12 +166,7 @@ const WalletPage = () => {
           <div className="balance-card card-ngn">
             <div
               className="card-currency-header"
-              style={{
-                display: "flex",
-                // justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
+              style={{ display: "flex", alignItems: "center", width: "100%" }}
             >
               <svg
                 viewBox="0 0 100 100"
@@ -145,8 +196,6 @@ const WalletPage = () => {
                 />
               </svg>
               <span className="currency-label">NGN BALANCE</span>
-
-              {/* ✅ Inline Round Nigerian Flag SVG */}
             </div>
 
             <div className="balance-amount">
@@ -162,12 +211,7 @@ const WalletPage = () => {
           <div className="balance-card card-usdt">
             <div
               className="card-currency-header"
-              style={{
-                display: "flex",
-                // justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
+              style={{ display: "flex", alignItems: "center", width: "100%" }}
             >
               <SiTether
                 className="currency-badge-icon usdt-badge"
@@ -192,7 +236,7 @@ const WalletPage = () => {
             <button
               type="button"
               className={`tab-btn ${activeTab === "deposit" ? "active" : ""}`}
-              onClick={() => setActiveTab("deposit")}
+              onClick={() => handleTabSwitch("deposit")}
             >
               <FiArrowDownLeft className="tab-icon" />
               Deposit
@@ -201,7 +245,7 @@ const WalletPage = () => {
             <button
               type="button"
               className={`tab-btn ${activeTab === "withdraw" ? "active" : ""}`}
-              onClick={() => setActiveTab("withdraw")}
+              onClick={() => handleTabSwitch("withdraw")}
             >
               <FiArrowUpRight className="tab-icon" />
               Withdraw
@@ -228,17 +272,41 @@ const WalletPage = () => {
               />
             </div>
 
-            <div className="input-group">
+            <div
+              className="input-group"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               <label>Amount</label>
               <input
                 type="number"
-                placeholder="Enter amount"
+                placeholder={
+                  activeTab === "withdraw" ? "Min 1,500" : "Enter amount"
+                }
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={handleAmountChange}
+                style={{ border: inputError ? "1px solid #ef4444" : "" }}
               />
+              {inputError && (
+                <span
+                  style={{
+                    color: "#ef4444",
+                    fontSize: "0.82rem",
+                    marginTop: "6px",
+                    fontWeight: "500",
+                    display: "block",
+                    textAlign: "left",
+                  }}
+                >
+                  {inputError}
+                </span>
+              )}
             </div>
 
-            <button type="submit" className="form-submit-action-btn">
+            <button
+              type="submit"
+              className="form-submit-action-btn"
+              disabled={!!inputError}
+            >
               {activeTab === "deposit" ? "Fund Wallet" : "Withdraw Funds"}
             </button>
           </form>

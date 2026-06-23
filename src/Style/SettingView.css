@@ -26,12 +26,10 @@
   margin: 0 0 24px 0;
 }
 
-/* Golden Action Buttons - Fixed excessive desktop stretching */
+/* Golden Action Buttons */
 .settings-action-btn {
   height: 50px;
-  width: max-content;
-  min-width: 200px;
-  padding: 0 24px;
+  width: 100%;
   border: none;
   border-radius: 6px;
   background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
@@ -44,22 +42,6 @@
 
 .settings-action-btn:hover {
   opacity: 0.9;
-}
-
-/* Pin Buttons Container layout */
-.pin-buttons-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-
-/* Outlined Forgot Pin Variant */
-.settings-action-btn.forgot-pin-btn {
-  background: transparent;
-  border: 1px solid #c9922a;
-  color: #c9922a;
 }
 
 /* Card Header Layout for Linked Accounts */
@@ -84,7 +66,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
 }
 
 .add-account-link-btn:hover {
@@ -93,35 +74,6 @@
 
 .accounts-list-zone {
   min-height: 40px;
-  width: 100%;
-}
-
-/* Responsive Grid System for Bank Cards */
-.linked-accounts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-.account-item {
-  background: #f9fafb;
-  border: 1px solid #f3f4f6;
-  border-radius: 6px;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.account-item p {
-  margin: 0 0 4px 0 !important;
-  color: #111827;
-  font-size: 0.95rem;
-}
-
-.account-item-name {
-  color: #9ca3af;
-  display: block;
-  font-size: 0.85rem;
 }
 
 .empty-accounts-text {
@@ -130,38 +82,14 @@
   margin: 0 !important;
 }
 
-/* Mobile Media Queries */
 @media screen and (max-width: 768px) {
   .settings-card {
     padding: 20px;
   }
 
   .card-header-row {
-    flex-direction: row; /* Keep alignment inline for clean modern header look */
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .card-header-row h3 {
-    font-size: 1.05rem;
-  }
-
-  /* Force buttons to fill mobile container screen edge-to-edge for easy touching */
-  .settings-action-btn {
-    width: 100%;
-    min-width: 100%;
-  }
-
-  .pin-buttons-group {
     flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .linked-accounts-grid {
-    grid-template-columns: 1fr; /* Stack linked accounts vertically on narrow screens */
-    gap: 12px;
+    align-items: flex-start;
+    gap: 10px;
   }
 }

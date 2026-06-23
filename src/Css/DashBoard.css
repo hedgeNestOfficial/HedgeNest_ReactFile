@@ -519,19 +519,20 @@
     font-size: 20px;
   }
 
+  /* 🌟 TOUCH INTERFACE CONFIGURATION: Stacks action buttons cleanly */
   .dr-actions {
-    display: flex;
-    flex-direction: row; /* 🌟 FIX: Preserves dynamic 3-button column split cleanly on tablets */
-    gap: 12px;
+    flex-direction: column; /* Changed from row to column */
+    gap: 12px; /* Breathing room between vertical buttons */
     height: auto;
   }
 
   .convert,
   .save,
   .invest {
-    font-size: 13px;
-    height: 46px;
-    width: 100%;
+    flex: none; /* ✅ STOP desktop shrinkage behavior */
+    width: 100%; /* Explicit full-width distribution */
+    height: 50px; /* ✅ Optimized height target for clean ergonomics */
+    font-size: 14px;
   }
 
   .vault-section {
@@ -568,19 +569,19 @@
     padding: 20px;
   }
 
-  /* 🌟 STICKY LOCK FIX: Changes buttons to a tight, swipeable, clean fluid row matrix */
+  /* 🌟 STICKY LOCK FIX: Confirms vertical column tracking on micro displays */
   .dr-actions {
-    flex-direction: row;
-    gap: 8px;
-    height: auto; /* 🌟 FIX: Removed the broken "height: 20;" which smashed text fields together */
+    flex-direction: column; /* Forces vertical orientation on extra-tiny displays */
+    gap: 10px;
     width: 100%;
   }
 
   .convert,
   .save,
   .invest {
-    flex: 1;
-    height: 44px; /* Scaled down perfectly to match tiny hardware grids */
-    font-size: 13px;
+    flex: none; /* Maintains structural layout size */
+    width: 100%;
+    height: 48px; /* Slightly compact but easily accessible on tiny screens */
+    font-size: 13.5px;
   }
 }
