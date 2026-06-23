@@ -60,9 +60,8 @@ const WithdrawModal = ({
       if (pin.some((p) => p === "")) return;
       if (!vault) return;
 
-      setIsSubmitting(true);
+      setIsSubmitting(true); // The live balance pool is the actual money real asset
 
-      // The live balance pool is the actual money real asset
       const realAmountToWithdraw = Number(vault.balance || 0);
 
       const payload = {
@@ -72,9 +71,8 @@ const WithdrawModal = ({
 
       const res = await onWithdraw?.(vault, payload);
       const apiData = res?.data?.data || res?.data;
-      const creditedAmount = apiData?.amountCredited ?? realAmountToWithdraw;
+      const creditedAmount = apiData?.amountCredited ?? realAmountToWithdraw; // SUCCESS PATH: Teardown React modal layout completely
 
-      // SUCCESS PATH: Teardown React modal layout completely
       setScreen(null);
       onClose();
 
@@ -92,9 +90,8 @@ const WithdrawModal = ({
     } catch (error) {
       // FAILURE PATH: Close local component layers instantly to clear the backdrop layout
       setScreen(null);
-      onClose();
+      onClose(); // Pause briefly for DOM unmounting before mounting SweetAlert frame
 
-      // Pause briefly for DOM unmounting before mounting SweetAlert frame
       await new Promise((r) => setTimeout(r, 250));
 
       await Swal.fire({
@@ -113,6 +110,7 @@ const WithdrawModal = ({
 
   return (
     <div className="hn-modal-overlay">
+           {" "}
       {screen === "PIN" ? (
         <PlanPinScreen
           pin={pin}
@@ -123,56 +121,71 @@ const WithdrawModal = ({
         />
       ) : (
         <div className="hn-modal-card">
+                   {" "}
           {screen === "WARNING" && (
             <div className="hn-step-container animate-fade">
+                           {" "}
               <h2 className="hn-modal-title hn-text-center">
-                Are you sure you want to withdraw?
+                                Are you sure you want to withdraw?            
+                 {" "}
               </h2>
-
+                           {" "}
               {isLocked ? (
                 <p className="hn-modal-desc hn-text-center">
-                  Early withdrawal will attract a{" "}
+                                    Early withdrawal will attract a            
+                       {" "}
                   <span style={{ color: "#EF4444", fontWeight: "600" }}>
-                    {vault.breakingFeePercentage || 1.5}% breaking fee
+                                        {vault.breakingFeePercentage || 1.5}%
+                    breaking fee                  {" "}
                   </span>{" "}
-                  and loss of interest.
+                                    and loss of interest.                {" "}
                 </p>
               ) : (
                 <p className="hn-modal-desc hn-text-center">
-                  You can wait to earn more interest before withdrawing.
+                                    You can wait to earn more interest before
+                  withdrawing.                {" "}
                 </p>
               )}
-
+                           {" "}
               <div className="hn-button-grid">
+                               {" "}
                 <button
                   type="button"
                   className="hn-btn-secondary"
                   onClick={onClose}
                 >
-                  {isLocked ? "Go Back" : "Wait"}
+                                    {isLocked ? "Go Back" : "Wait"}             
+                   {" "}
                 </button>
-
+                               {" "}
                 <button
                   type="button"
                   className="hn-btn-primary"
                   onClick={handleProceedToLoading}
                 >
-                  Continue
+                                    Continue                {" "}
                 </button>
+                             {" "}
               </div>
+                         {" "}
             </div>
           )}
-
+                   {" "}
           {screen === "LOADING" && (
             <div className="hn-step-container hn-align-center hn-justify-center hn-py-xl animate-fade">
-              <div className="hn-loading-spinner"></div>
+                            <div className="hn-loading-spinner"></div>         
+                 {" "}
               <p className="hn-modal-desc hn-margin-top-md hn-text-center">
-                Securing transaction channel...
+                                Securing transaction channel...            
+                 {" "}
               </p>
+                         {" "}
             </div>
           )}
+                 {" "}
         </div>
       )}
+         {" "}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
-// 🧼 Centralized token formatter to protect against double headers or null instances
 const getAuthHeader = (token) => {
   if (!token) return "";
   const cleanToken = token.toString().trim();
@@ -13,7 +12,7 @@ export const convertCurrency = async (payload, token) => {
     const response = await axios.post(ENDPOINTS.CONVERSION.CONVERT, payload, {
       headers: {
         ...API_CONFIG.headers,
-        Authorization: getAuthHeader(token), // ✅ Fixed Bearer duplication trap
+        Authorization: getAuthHeader(token),
       },
       timeout: API_CONFIG.timeout,
     });
@@ -22,6 +21,17 @@ export const convertCurrency = async (payload, token) => {
   } catch (error) {
     throw error.response?.data || { message: "Conversion failed" };
   }
+};
+
+export const confirmTransactionPin = async (userId, enteredPin, token) => {
+  const response = await axios.post(
+    `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
+    { enteredPin },
+    {
+      headers: { ...API_CONFIG.headers, Authorization: `Bearer ${token}` },
+    },
+  );
+  return response.data;
 };
 
 export const GetLiveRate = async () => {
@@ -42,7 +52,7 @@ export const GetHistory = async (token) => {
     const response = await axios.get(ENDPOINTS.CONVERSION.HISTORY, {
       headers: {
         ...API_CONFIG.headers,
-        Authorization: getAuthHeader(token), // ✅ Fixed Bearer duplication trap
+        Authorization: getAuthHeader(token),
       },
       timeout: API_CONFIG.timeout,
     });
@@ -52,6 +62,6 @@ export const GetHistory = async (token) => {
       error.response?.data || {
         message: "Failed to load conversion history records",
       }
-    ); // ✅ Fixed typo
+    );
   }
 };

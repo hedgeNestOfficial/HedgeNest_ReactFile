@@ -7,6 +7,7 @@ import {
   convertCurrency,
   GetHistory,
   GetLiveRate,
+  confirmTransactionPin,
 } from "../../Services/Conversionservice";
 import { getMyWallet } from "../../Services/Walletservice";
 import { updateWallet } from "../../Store/UserSlice";
@@ -18,11 +19,14 @@ const ConvertPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [inputError, setInputError] = useState("");
+  const [transactionPin, setTransactionPin] = useState("");
+
   const [coversionHistory, setConversionHistory] = useState([]);
   const [liveRate, setLiveRate] = useState(null);
   const [conversionData, setConversionData] = useState(null);
 
-  const { token, wallet } = useSelector((state) => state.user);
+  const { token, wallet, user } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
@@ -33,10 +37,9 @@ const ConvertPage = () => {
       maximumFractionDigits: 2,
     });
 
-  // ✅ Updated to capture the primary available money from the backend wallet object
   const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
-  console.log(availableBalance);
+
   // Fetch current exchange rates
   const fetchLiveRate = async () => {
     try {
@@ -76,8 +79,6 @@ const ConvertPage = () => {
       setIsLoadingWallet(true);
       const walletResponse = await getMyWallet(token);
 
-      console.log("Wallet API raw response:", walletResponse);
-
       let walletData = null;
       if (Array.isArray(walletResponse?.data)) {
         walletData = walletResponse.data[0];
@@ -108,55 +109,110 @@ const ConvertPage = () => {
     }
   }, [token]);
 
-  // Compute calculated live conversion preview values
+  // Calculated live preview value logic using context exchange rates
   const getCalculatedPreview = () => {
-    if (!inputValue || Number(inputValue) <= 0 || !liveRate) return "0";
+    if (!inputValue || Number(inputValue) <= 0) return "0";
 
     const numericAmount = Number(inputValue);
     if (activeCurrency === "NGN") {
+      if (!liveRate) return "0";
       return (numericAmount / liveRate).toFixed(2);
     } else {
-      return (numericAmount * liveRate).toFixed(2);
+      // Fixed rate execution threshold for USDT to NGN conversions (no fees applied)
+      return (numericAmount * 1393).toFixed(2);
     }
   };
 
-  // Handle local form submission
+  // Handle live amount verification alerts under input pane
+  const validateInputAmount = (value, currency) => {
+    if (!value) {
+      setInputError("");
+      return false;
+    }
+    const numericAmount = Number(value);
+    if (numericAmount <= 0) {
+      setInputError("Enter a valid positive amount");
+      return false;
+    }
+    if (currency === "NGN" && numericAmount < 1500) {
+      setInputError("Minimum conversion amount is ₦1,500.00");
+      return false;
+    }
+    if (currency === "USDT" && numericAmount < 1.4) {
+      setInputError("Minimum conversion amount is 1.40 USDT");
+      return false;
+    }
+    setInputError("");
+    return true;
+  };
+
+  // ✅ Fixed: Changed 'currency' to 'activeCurrency' to resolve the Uncaught ReferenceError
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    validateInputAmount(value, activeCurrency);
+  };
+
+  // Handle local form submission with safeguards
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
-    if (!inputValue || Number(inputValue) <= 0) {
-      toast.error("Enter a valid amount");
-      return;
-    }
 
     if (!token) {
       toast.error("Session expired. Please login again.");
       return;
     }
 
+    const isValid = validateInputAmount(inputValue, activeCurrency);
+    if (!isValid) {
+      toast.error("Please correct the amount before proceeding");
+      return;
+    }
+
     setConversionData(null);
+    setTransactionPin(""); // Reset PIN field parameters cleanly
     setIsModalOpen(true);
   };
 
-  // Submit transactions securely to the backend architecture
+  // Submit transactions securely to backend architecture after confirming PIN
   const handleFinalConfirm = async () => {
+    // Check constraints for 6-digit PIN validation
+    if (!transactionPin || transactionPin.length < 6) {
+      toast.error("Please enter your complete 6-digit Transaction PIN");
+      return;
+    }
+
     try {
       setLoading(true);
 
+      const cleanToken = token.replace(/^"|"$/g, "");
+      const targetUserId = user?.id || user?._id;
+
+      // Verify user transaction PIN authorization signature
+      try {
+        await confirmTransactionPin(targetUserId, transactionPin, cleanToken);
+      } catch (pinError) {
+        console.error("PIN authentication checkpoint breakdown:", pinError);
+        toast.error(
+          pinError?.message || pinError?.error || "Incorrect Transaction PIN",
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Proceed with execution engine architecture call
       const payload = {
         from: activeCurrency,
         to: activeCurrency === "NGN" ? "USDT" : "NGN",
         amount: Number(inputValue),
       };
 
-      console.log("Sending conversion payload to API:", payload);
-
-      const response = await convertCurrency(payload, token);
+      const response = await convertCurrency(payload, cleanToken);
       setConversionData(response?.rate);
 
       toast.success("Conversion successful!");
       setIsModalOpen(false);
       setInputValue("");
+      setTransactionPin("");
 
       await Promise.all([syncWalletData(), fetchCoversionHistory()]);
     } catch (error) {
@@ -196,7 +252,7 @@ const ConvertPage = () => {
 
         <section className="rate-banner-container">
           <div className="rate-info">
-            <span className="rate-label">CURRENT RATE</span>
+            <span className="rate-label">CURRENT MARKET TRACKER RATE</span>
             {isLoadingRate ? (
               <div className="convert-skel sk-dark sk-rate-headline"></div>
             ) : (
@@ -217,14 +273,31 @@ const ConvertPage = () => {
 
         <form className="conversion-card-panel" onSubmit={handleFormSubmit}>
           <div className="conversion-split-grid">
-            <div className="grid-left-input-pane">
+            <div
+              className="grid-left-input-pane"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               <input
                 type="number"
                 placeholder={activeCurrency === "NGN" ? "1500" : "1.00"}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={handleInputChange}
                 className="currency-field-input"
+                style={{ border: inputError ? "1px solid #ef4444" : "" }}
               />
+              {inputError && (
+                <span
+                  style={{
+                    color: "#ef4444",
+                    fontSize: "0.82rem",
+                    marginTop: "6px",
+                    fontWeight: "500",
+                    display: "block",
+                  }}
+                >
+                  {inputError}
+                </span>
+              )}
             </div>
 
             <div className="grid-right-selectors-pane">
@@ -232,7 +305,6 @@ const ConvertPage = () => {
                 {isLoadingWallet ? (
                   <div className="convert-skel sk-dark sk-pill-balance"></div>
                 ) : (
-                  /* ✅ Label changed to display Available Balance */
                   <span className="balance-label">
                     Available: ₦{formatCurrency(availableBalance)}
                   </span>
@@ -247,6 +319,8 @@ const ConvertPage = () => {
                   onClick={() => {
                     setActiveCurrency("NGN");
                     setConversionData(null);
+                    setInputValue("");
+                    setInputError("");
                   }}
                 >
                   NGN
@@ -269,6 +343,8 @@ const ConvertPage = () => {
                   onClick={() => {
                     setActiveCurrency("USDT");
                     setConversionData(null);
+                    setInputValue("");
+                    setInputError("");
                   }}
                 >
                   USDT
@@ -284,10 +360,14 @@ const ConvertPage = () => {
             </span>
           </div>
 
-          <button type="submit" className="submit-conversion-btn">
+          <button
+            type="submit"
+            className="submit-conversion-btn"
+            disabled={!!inputError}
+          >
             {activeCurrency === "NGN"
-              ? "Convert NGN to USDT "
-              : "Convert USDT to NGN "}
+              ? "Convert NGN to USDT"
+              : "Convert USDT to NGN"}
           </button>
         </form>
 
@@ -420,15 +500,67 @@ const ConvertPage = () => {
 
               <div className="summary-row">
                 <span className="summary-label">Conversion Fee</span>
-                <span className="summary-value">50.00</span>
+                <span className="summary-value">
+                  {activeCurrency === "NGN"
+                    ? "50.00 NGN (Gas Fee)"
+                    : "0.00 (No Fee)"}
+                </span>
               </div>
 
               <div className="summary-row">
-                <span className="summary-label">USDT - Naira Rate</span>
+                <span className="summary-label">Execution Settlement Rate</span>
                 <span className="summary-value">
-                  {activeCurrency === "NGN" ? "₦" : "$"}
-                  {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
+                  {activeCurrency === "NGN"
+                    ? liveRate
+                      ? `₦${liveRate.toLocaleString()}`
+                      : "0"
+                    : "₦1,393"}{" "}
+                  / 1 USDT
                 </span>
+              </div>
+
+              <div
+                className="summary-row pin-verification-wrapper"
+                style={{
+                  flexDirection: "column",
+                  alignItems: "stretch",
+                  marginTop: "18px",
+                  paddingTop: "14px",
+                  borderTop: "1px dashed #e5e7eb",
+                  gap: "8px",
+                }}
+              >
+                <span
+                  className="summary-label"
+                  style={{
+                    fontWeight: "600",
+                    color: "#1f2937",
+                    textAlign: "left",
+                  }}
+                >
+                  Enter 6-Digit Transaction PIN
+                </span>
+                <input
+                  type="password"
+                  maxLength={6}
+                  placeholder="••••••"
+                  value={transactionPin}
+                  disabled={loading}
+                  onChange={(e) =>
+                    setTransactionPin(e.target.value.replace(/\D/g, ""))
+                  }
+                  style={{
+                    height: "46px",
+                    width: "100%",
+                    borderRadius: "6px",
+                    border: "1px solid #d1d5db",
+                    textAlign: "center",
+                    fontSize: "1.25rem",
+                    letterSpacing: "8px",
+                    boxSizing: "border-box",
+                    background: "#f9fafb",
+                  }}
+                />
               </div>
             </div>
 
@@ -446,7 +578,7 @@ const ConvertPage = () => {
                 type="button"
                 className="btn-modal-confirm"
                 onClick={handleFinalConfirm}
-                disabled={loading}
+                disabled={loading || transactionPin.length < 6}
               >
                 {loading ? "Processing..." : "Confirm"}
               </button>

@@ -362,30 +362,31 @@
   }
 
   .balance-amount {
-    font-size: 1.8rem; /* Fluid layout stepdown ensures balance fits cleanly */
+    font-size: 1.8rem;
   }
 
-  /* 🌟 TOUCH INTERFACE CONFIGURATION: Clean horizontal rows preserve app consistency */
+  /* 🌟 Fixed Mobile Stacking Rules */
   .operations-tabs-row {
-    flex-direction: row;
-    gap: 8px;
+    flex-direction: column;
+    gap: 12px; /* Clean breathing room between stacked items */
   }
 
   .tab-btn {
-    height: 44px; /* Scaled targets down perfectly for natural ergonomics */
-    font-size: 0.8rem;
-    padding: 0 4px;
-    gap: 4px;
-    flex: 1;
+    flex: none; /* ✅ STOP layout compression behaviors */
+    width: 100%; /* Spans across the full width perfectly */
+    height: 50px; /* ✅ Increased height for an easier finger-tap target */
+    font-size: 0.95rem;
+    padding: 0 16px;
+    gap: 8px;
   }
 
   .tab-icon {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
   }
 
   .wallet-operations-card,
   .transaction-section {
-    padding: 16px;
+    padding: 20px 16px;
     border-radius: 10px;
   }
 }
@@ -402,19 +403,18 @@
     font-size: 1.6rem;
   }
 
-  /* Compact spacing optimizations for elements on tiny screens */
   .operations-tabs-row {
-    gap: 6px;
+    gap: 10px; /* Strong vertical spacing structure on tiny views */
   }
 
   .tab-btn {
-    font-size: 0.75rem;
-    height: 42px;
+    font-size: 0.9rem;
+    height: 48px; /* Maintains clean height integrity even on micro displays */
   }
 
   .input-group input,
   .form-submit-action-btn {
-    height: 44px;
+    height: 46px;
     font-size: 0.9rem;
   }
 }
