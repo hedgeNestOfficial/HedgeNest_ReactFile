@@ -76,6 +76,7 @@ const App = () => {
         <Route path="/otp" element={<OtpPage />} />
         <Route path="/pin" element={<Pin />} />
         <Route path="/popup" element={<PopupCard />} />
+        <Route path="/confirm-mail" element={<ResetPass />} />
 
         <Route path="/kycauth" element={<BvnAuth />} />
         <Route path="/ready" element={<ReadyComp />} />

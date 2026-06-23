@@ -19,6 +19,14 @@ export const loginUser = async (payload) => {
   return response.data;
 };
 
+export const forgotPin = async (payload) => {
+  const response = await axios.post(ENDPOINTS.AUTH.FORGOT_PIN, payload, {
+    headers: API_CONFIG.headers,
+    timeout: API_CONFIG.timeout,
+  });
+  return response.data;
+};
+
 export const verifyOtp = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.VERIFY_OTP, payload, {
     headers: API_CONFIG.headers,

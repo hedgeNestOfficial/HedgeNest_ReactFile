@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // ✅ Fixed: Added router navigation
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
@@ -10,11 +10,12 @@ import { TransactionHistory } from "../../Features/TransactionHistory";
 import { updateWallet } from "../../Store/UserSlice";
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { SiTether } from "react-icons/si"; // ✅ Keeps the USDT Asset Icon
 import "../../Style/Wallet.css";
 
 const WalletPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ✅ Initialized navigation
+  const navigate = useNavigate();
 
   const { user, token, wallet } = useSelector((state) => state.user);
 
@@ -105,9 +106,47 @@ const WalletPage = () => {
 
         {/* BALANCES */}
         <section className="balance-cards-grid">
+          {/* NGN CARD */}
           <div className="balance-card card-ngn">
-            <div className="card-currency-header">
+            <div
+              className="card-currency-header"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
               <span className="currency-label">NGN BALANCE</span>
+
+              {/* ✅ Inline Round Nigerian Flag SVG */}
+              <svg
+                viewBox="0 0 100 100"
+                className="currency-badge-icon ngn-badge"
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  display: "inline-block",
+                }}
+              >
+                <rect x="0" y="0" width="33.33" height="100" fill="#008751" />
+                <rect
+                  x="33.33"
+                  y="0"
+                  width="33.34"
+                  height="100"
+                  fill="#ffffff"
+                />
+                <rect
+                  x="66.67"
+                  y="0"
+                  width="33.33"
+                  height="100"
+                  fill="#008751"
+                />
+              </svg>
             </div>
 
             <div className="balance-amount">
@@ -119,9 +158,22 @@ const WalletPage = () => {
             </div>
           </div>
 
+          {/* USDT CARD */}
           <div className="balance-card card-usdt">
-            <div className="card-currency-header">
+            <div
+              className="card-currency-header"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
               <span className="currency-label">USDT BALANCE</span>
+              <SiTether
+                className="currency-badge-icon usdt-badge"
+                style={{ fontSize: "1.3rem", color: "#26a17b" }}
+              />
             </div>
 
             <div className="balance-amount">
@@ -230,8 +282,8 @@ const WalletPage = () => {
       <WithdrawalModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
-        amount={confirmedWithdrawAmount} // ✅ Receives the numeric value from dashboard input
-        userId={user?._id || user?.id} // ✅ Passes down the critical verification ID
+        amount={confirmedWithdrawAmount}
+        userId={user?._id || user?.id}
         token={token}
         onWithdrawalSuccess={handleWithdrawalSuccess}
       />

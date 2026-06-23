@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-
-// Presentation UI Blocks
 import { InvestmentCard } from "../../Features/InvestmentCard";
 import PositionCard from "../../Features/PositionCard";
-
-// Modal System Infrastructure
 import InvestModal from "../../Components/KycModals/InvestModal";
 import KycModalManager from "../../Components/KycModals/KycModalManager";
 import BreakInvestmentModalManager from "../../Components/KycModals/BreakInvestmentModalManager";

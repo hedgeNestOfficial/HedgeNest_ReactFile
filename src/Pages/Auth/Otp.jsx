@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux"; // Added missing useDispatch
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import "../../Style/Otp.css";
@@ -7,17 +7,18 @@ import Signupimg from "../../assets/Signupimg.jpg";
 import Button from "../../Components/Button";
 import { LuArrowLeft } from "react-icons/lu";
 import { verifyOtp, resendOtp } from "../../Services/authService";
-import { updateTempUserToken } from "../../Store/UserSlice"; // Import your new slice action
+import { updateTempUserToken } from "../../Store/UserSlice";
 import whiteLogo from "../../assets/white logo.png";
 import toast from "react-hot-toast";
 
 const Otp = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch(); // Initialize dispatch hook instance
+  const dispatch = useDispatch();
   const inputRefs = useRef([]);
 
-  const tempUser = useSelector((state) => state.user.tempUser);
+  // Pull both authenticated 'user' and onboarding 'tempUser' from store
+  const { user, tempUser } = useSelector((state) => state.user);
   const userEmail = tempUser?.email || "";
   const purpose = location.state?.purpose || "signup";
 
@@ -26,6 +27,20 @@ const Otp = () => {
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
 
+  /**
+   * 🛡️ ON-MOUNT ROUTE GUARD
+   * Prevents fully logged-in and authenticated users from viewing the OTP screen.
+   */
+  useEffect(() => {
+    if (user) {
+      console.log(
+        "🛡️ User already authenticated. Redirecting away from OTP verification...",
+      );
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
+  // Countdown timer for Resend functionality
   useEffect(() => {
     let timerId;
     if (countdown > 0) {
@@ -55,6 +70,32 @@ const Otp = () => {
     }
   };
 
+  /**
+   * 📋 CLIPBOARD PASTE HANDLER
+   * Intercepts the clipboard text, sanitizes it, and maps it across the inputs.
+   */
+  const handlePaste = (e) => {
+    e.preventDefault();
+
+    // Extract clipboard content and strip out any non-digit values
+    const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
+    if (!pastedText) return;
+
+    // Convert string data into a structured array slice maxed at 6 units
+    const pastedDigits = pastedText.slice(0, 6).split("");
+
+    const updatedOtp = [...otp];
+    pastedDigits.forEach((digit, idx) => {
+      updatedOtp[idx] = digit;
+    });
+
+    setOtp(updatedOtp);
+
+    // Contextually calculate where to move the cursor focus next
+    const targetFocusIndex = Math.min(pastedDigits.length, 5);
+    inputRefs.current[targetFocusIndex]?.focus();
+  };
+
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     const otpCode = otp.join("");
@@ -74,7 +115,7 @@ const Otp = () => {
       const response = await verifyOtp(payload);
       toast.success(response?.message || "OTP verified successfully");
 
-      // Extract token out of payload response and assign it to tempUser
+      // Extract temporary onboarding token out of payload and update slice
       if (response?.token) {
         dispatch(updateTempUserToken(response.token));
       }
@@ -175,6 +216,7 @@ const Otp = () => {
                   className="otp-box"
                   onChange={(e) => handleChange(e.target.value, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
+                  onPaste={handlePaste} // ✅ Added clipboard pasting support
                 />
               ))}
             </div>
