@@ -313,6 +313,7 @@
 @media (max-width: 768px) {
   .smart-container {
     padding: 32px 20px;
+    margin-top: 50px;
   }
 
   .dash-header {
