@@ -76,27 +76,47 @@
   box-sizing: border-box;
   padding: 4px; /* Room for card drop shadows */
 }
-
 /* Floating Absolute Buttons — positioned inside the padding zone */
 .carousel-btn {
   position: absolute;
   top: 42%;
   transform: translateY(-50%);
   z-index: 5;
-  background: #0f172a;
+  background: #121213;
   color: #eab308;
-  border: none;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  border: none !important; /* Overrides any native button outlines */
+
+  /* 🌟 THE ULTIMATE CIRCLE FIX PACK */
+  border-radius: 50% !important; /* Forces absolute roundness over any conflicting styles */
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important; /* CRITICAL: Strips away native browser/framework padding */
+  box-sizing: border-box !important;
+  aspect-ratio: 1 / 1 !important; /* Mathematically locks the 1:1 shape proportions */
+
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 13px;
+  display: flex !important; /* Uses flex layout to perfectly anchor the icon */
+  justify-content: center !important;
+  align-items: center !important;
+  font-size: 14px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
   flex-shrink: 0;
+}
+
+/* Ensure the react-icon SVG itself doesn't cause any layout skewing */
+.carousel-btn svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+/* Muted / Inactive Style */
+.carousel-btn.disabled {
+  background: #b9b2a2;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .prev-btn {
@@ -108,12 +128,12 @@
 }
 
 /* Muted / Inactive Style */
-.carousel-btn.disabled {
+/* .carousel-btn.disabled {
   background: #b9b2a2;
   color: #ffffff;
   box-shadow: none;
   cursor: not-allowed;
-}
+} */
 
 /* Dots Setup */
 .carousel-dots {
@@ -141,11 +161,13 @@
 /* Mobile Media Breakpoint */
 @media screen and (max-width: 768px) {
   .why-section {
-    padding: 60px 20px; /* Balanced side padding — buttons live inside .mobile-carousel-container padding */
+    padding: 60px 20px;
   }
 
   .why-container {
     width: 100%;
+    justify-content: flex-start;
+    /* background: #000; */
   }
 
   .why-header h2 {
