@@ -8,7 +8,7 @@ import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { GiInjustice } from "react-icons/gi";
 import { MdPhotoCamera } from "react-icons/md";
 import { FiEdit2, FiMail, FiAlertTriangle } from "react-icons/fi";
-// import { FaWorkspace } from "react-icons/fa";
+import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { updateProfile } from "../../Services/authService";
@@ -351,7 +351,7 @@ const ProfilePage = () => {
 
                 <div className="info-card">
                   <div className="icon-wrapper wa-icon">
-                    <FaWorkspace />
+                    <MdOutlineWorkspacePremium />
                   </div>
                   <h3>WhatsApp Support</h3>
                   <p>Chat with our team</p>

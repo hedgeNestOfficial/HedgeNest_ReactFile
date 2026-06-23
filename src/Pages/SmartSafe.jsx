@@ -93,6 +93,7 @@ const SmartSafe = () => {
       const response = await getAllPlan(token);
       const plansData =
         response?.plans || response?.plan || response?.data?.plan || [];
+      console.log(response);
 
       setVaults(normalizePlans(plansData));
     } catch (error) {

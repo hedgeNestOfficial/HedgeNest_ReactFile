@@ -5,12 +5,12 @@
   width: 100%;
   min-height: 100dvh;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow-y: auto;
-  z-index: 99999;
+  z-index: 990; /* Kept safely below toast systems */
 }
 
 /* Modal Card Blueprint Container */
@@ -134,7 +134,7 @@
   cursor: not-allowed;
 }
 
-/* Embedded Verified Green Banner Layout (image_d9e12e.png) */
+/* Embedded Verified Green Banner Layout */
 .link-account-verified-banner {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
@@ -173,7 +173,7 @@
   font-weight: 500;
 }
 
-/* Micro-transaction Data Metric Layouts (image_d9de26.png) */
+/* Micro-transaction Data Metric Layouts */
 .link-account-data-table {
   display: flex;
   flex-direction: column;
@@ -290,7 +290,7 @@
   cursor: not-allowed;
 }
 
-/* Spinner Loading Component Animations (image_d9e0f1.png / image_d9dde8.png) */
+/* Spinner Loading Component Animations */
 .link-account-loader-container {
   display: flex;
   justify-content: center;
@@ -317,7 +317,7 @@
   }
 }
 
-/* Success Components (image_d9ddc7.png) */
+/* Success Components */
 .link-account-celebration-container {
   display: flex;
   justify-content: center;
@@ -355,7 +355,7 @@
 
 @media (max-width: 520px) {
   .link-account-modal-overlay {
-    align-items: flex-end;
+    align-items: center; /* Explicitly forced center alignment */
     padding: 12px;
   }
 
@@ -370,8 +370,12 @@
     gap: 12px;
   }
 
+  /* 🟢 FIXED: Killed 'flex: 1' from desktop so it honors fixed height metrics in a column context */
   .link-account-btn-outline,
   .link-account-btn-solid {
-    width: 100%;
+    flex: none !important;
+    width: 100% !important;
+    height: 46px !important;
+    box-sizing: border-box;
   }
 }
