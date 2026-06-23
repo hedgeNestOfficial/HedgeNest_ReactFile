@@ -4,7 +4,7 @@ import "../../Style/SettingView.css";
 import LinkAccountModal from "../../Components/KycModals/LinkAccountModal";
 import ChangePasswordModal from "../../Components/KycModals/ChangePasswordModal";
 import ChangePinModal from "../../Components/KycModals/ChangePinModal";
-import ResetPinModal from "../../Components/KycModals/resetPinModal"; // ✅ Imported with lowercase filename pattern
+import ResetPinModal from "../../Components/KycModals/ResetPinModal"; // ✅ Imported with lowercase filename pattern
 import { getLinkedAccounts } from "../../Services/Walletservice";
 
 const SettingView = ({ onAddAccount }) => {
