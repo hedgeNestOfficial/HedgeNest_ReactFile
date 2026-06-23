@@ -195,7 +195,7 @@ const Header = () => {
       <SignoutModal
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}
-        onConfirm={handleConfirmLogout}
+        onConfirm={handleLogoutConfirm}
       />
     </>
   );
