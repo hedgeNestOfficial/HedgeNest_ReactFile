@@ -8,12 +8,22 @@
   background-color: #fcfcf7;
   min-height: 100vh;
   box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+header {
+  width: 100%;
 }
 
 header h1 {
   font-size: 28px;
   margin-bottom: 8px;
   color: #1a1a1a;
+  align-self: flex-start;
+  display: flex;
+  width: 100%;
 }
 
 header p {

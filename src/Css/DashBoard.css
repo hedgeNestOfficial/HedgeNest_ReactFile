@@ -4,6 +4,8 @@
   background-color: #fbf7e9;
   display: flex;
   border: 0;
+  justify-content: center;
+  padding: 10px;
   /* box-sizing: border-box; */
 }
 

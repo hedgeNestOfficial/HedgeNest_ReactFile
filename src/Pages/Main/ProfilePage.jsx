@@ -127,20 +127,31 @@ const ProfilePage = () => {
         <h1>Account</h1>
       </div>
 
-      <div className="profile-header-mobile">
+      <div
+        className="profile-header-mobile-view-mood"
+        style={{ justifyContent: "space-between", width: "100%" }}
+      >
         <h2>Account</h2>
 
         {/* 🟢 Added onClick trigger and a pointer cursor for cleaner mobile interaction */}
-        <h2
+        <nav
           className="signout-mobile"
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            color: "red",
+            width: "150px",
+            gap: "10px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
           onClick={() => setIsLogoutOpen(true)}
         >
           Signout
           <span>
             <PiSignOutBold />
           </span>
-        </h2>
+        </nav>
       </div>
 
       <div className="profile-tabs-container">
