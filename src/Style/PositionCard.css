@@ -7,7 +7,7 @@
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
-  max-width: 460px;
+  /* max-width: 460px; */
   /* 🔐 FIXED AXIS BOUNDS: Ensures absolute symmetric shape matches across item lists */
   height: 265px;
   position: relative;
@@ -262,11 +262,12 @@
    ========================================================================== */
 @media screen and (max-width: 480px) {
   .position-product-card {
-    padding: 20px 16px;
+    padding: 50px;
     /* Safely maps fixed height down into an elastic layout structure to stop component overflow */
     height: auto;
-    min-height: 200px;
-    width: 150px;
+    min-height: 250px;
+    background: #000;
+    width: 100px;
   }
 
   .position-product-tag-name {
