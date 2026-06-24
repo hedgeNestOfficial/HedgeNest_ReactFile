@@ -149,23 +149,52 @@ const SmartSafe = () => {
     });
   };
 
+<<<<<<< HEAD
+  // 2. API CALL: Preview configuration request
+=======
   // 🎯 ONE-STEP PREVIEW PIPELINE: Directly map backend calculation schemas directly to our summary screens
+>>>>>>> b848ba81c308a10f588cfd1462c04ccc5980168f
   const handleFormPreviewFetch = async (payload) => {
     try {
       setModalScreen("LOADING");
       const response = await previewPlan(payload, token);
+<<<<<<< HEAD
+=======
 
       // Extract raw plan data configurations from custom payload definitions
+>>>>>>> b848ba81c308a10f588cfd1462c04ccc5980168f
       const previewData = response?.data || response;
 
       // Seed both state profiles simultaneously from a single API context run
       setFormLivePreviewData(previewData);
       setPreviewSummaryData(previewData);
+<<<<<<< HEAD
+=======
 
       // Advance directly to the summary breakdown UI screen
+>>>>>>> b848ba81c308a10f588cfd1462c04ccc5980168f
       setModalScreen("SUMMARY");
     } catch (error) {
       console.error("Live form preview failed:", error);
+<<<<<<< HEAD
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to calculate preview. Please try again.";
+
+      toast.error(errorMessage, {
+        duration: 1500,
+        position: "top-center",
+      });
+
+      setModalScreen("CREATE");
+    }
+  };
+
+  // 3. API CALL: Create and Save a New Vault
+  const handleCreatePlanSubmit = async (pinString) => {
+    setModalScreen("LOADING");
+=======
       toast.error(
         error?.response?.data?.message ||
           error?.message ||
@@ -174,6 +203,7 @@ const SmartSafe = () => {
       setModalScreen("CREATE");
     }
   };
+>>>>>>> b848ba81c308a10f588cfd1462c04ccc5980168f
 
   const handleCreatePlanSubmit = async (pinString) => {
     try {
@@ -185,8 +215,12 @@ const SmartSafe = () => {
         title: formData.title,
         planType: formData.planType,
         transactionPin: pinString,
+        // 🟢 FIXED LOGIC HERE: Only pass targetAmount and set initial startup deposit to initialAmount
         ...(isFlexible
-          ? { targetAmount: Number(formData.targetAmount) }
+          ? { 
+              targetAmount: Number(formData.targetAmount),
+              amount: Number(formData.initialAmount) // Deduct only what they start up with
+            }
           : { amount: Number(formData.targetAmount) }),
       };
 
@@ -202,10 +236,16 @@ const SmartSafe = () => {
       setModalScreen("SUCCESS");
       fetchUserVaults();
     } catch (err) {
+<<<<<<< HEAD
+      toast.error(err?.message || "Plan creation failed");
+      setModalScreen("PIN");
+      setPin(["", "", "", "", "", ""]);
+=======
       toast.error(
         err?.response?.data?.message || err?.message || "Plan creation failed",
       );
       setModalScreen("SUMMARY");
+>>>>>>> b848ba81c308a10f588cfd1462c04ccc5980168f
     }
   };
 
@@ -449,6 +489,7 @@ const SmartSafe = () => {
         onClose={() => setIsWithdrawModalOpen(false)}
         onWithdraw={handleWithdraw}
         onWithdrawSuccess={() => {
+          // 🟢 FIXED LOGIC HERE: Immediately filter out card from local view upon successful breaking
           setVaults((prev) =>
             prev.filter(
               (v) =>

@@ -119,7 +119,7 @@ const SettingView = ({ onAddAccount }) => {
 
       {/* CARD 4: LINKED WITHDRAWAL ACCOUNTS */}
       <div className="settings-card">
-        <div className="card-header-row">
+         {onAddAccount?<div className="card-header-row">
           <h3>Linked Withdrawal Accounts</h3>
           <button
             type="button"
@@ -128,7 +128,7 @@ const SettingView = ({ onAddAccount }) => {
           >
             <span>+</span> Add account
           </button>
-        </div>
+        </div>:""}
 
         <div className="accounts-list-zone">
           {rehydrating || isLoading ? (

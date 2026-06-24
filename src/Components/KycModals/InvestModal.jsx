@@ -76,6 +76,10 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   // Derived Values
   const investmentAmount = Number(amount) || 0;
 
+  // 🟢 Evaluation Flag: Validate amount inputs are structurally sound before letting users progress
+  const isAmountInvalid =
+    !amount || investmentAmount < (normalizedPlan?.minAmount || 0);
+
   const expectedReturn = useMemo(() => {
     if (!normalizedPlan || investmentAmount <= 0) return "0.00";
     const { roi, term } = normalizedPlan;
@@ -237,7 +241,16 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               >
                 Cancel
               </button>
-              <button type="submit" className="invest-btn-primary-solid">
+              <button
+                type="submit"
+                className="invest-btn-primary-solid"
+                // 🟢 Lock button state if empty or below standard minAmount thresholds
+                disabled={isAmountInvalid}
+                style={{
+                  opacity: isAmountInvalid ? 0.6 : 1,
+                  cursor: isAmountInvalid ? "not-allowed" : "pointer",
+                }}
+              >
                 Continue
               </button>
             </div>
@@ -283,6 +296,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               disabled={!isPinComplete || isLoading}
               onClick={handlePinSubmit}
               className={`invest-btn-block-action margin-top-xl ${!isPinComplete || isLoading ? "disabled-btn" : ""}`}
+              // 🟢 Set structural styling fallbacks context directly for maximum UI stability
+              style={{
+                opacity: !isPinComplete || isLoading ? 0.6 : 1,
+                cursor: !isPinComplete || isLoading ? "not-allowed" : "pointer",
+              }}
             >
               {isLoading ? "Processing..." : "Next"}
             </button>

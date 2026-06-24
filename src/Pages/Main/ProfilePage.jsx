@@ -205,7 +205,9 @@ const ProfilePage = () => {
                     {previewUrl ? (
                       <img src={previewUrl} alt="User Avatar" />
                     ) : (
-                      <CgProfile size={50} color="#ccc" />
+                      <div className="loader-wrapper">
+                        <OrbitProgress color="#fff" size="small" />
+                      </div>
                     )}
                   </div>
 
@@ -304,7 +306,9 @@ const ProfilePage = () => {
                       style={{ opacity: isLoading ? 0.5 : 1 }}
                     >
                       {isLoading ? (
-                        <OrbitProgress color="#ffffff" size="small" />
+                        <div className="loader-wrapper">
+                          <OrbitProgress color="#fff" size="small" />
+                        </div>
                       ) : (
                         "Save Changes"
                       )}

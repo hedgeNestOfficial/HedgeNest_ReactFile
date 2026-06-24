@@ -4,12 +4,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* 🟢 FIXED: Kept safely below react-hot-toast's 9999 wrapper layer */
   z-index: 990;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 🟢 FIXED: Lightened background color so the view isn't overly choked out */
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
   padding: 20px;
@@ -31,6 +29,7 @@
 .hn-step-container {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   width: 100%;
 }
 
@@ -80,6 +79,18 @@
   border-color: #e8b943;
 }
 
+/* 🟢 PIN SCREEN CONTROLS */
+.hn-pin-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* 🟢 FIXED: Safe padding context alignment */
+.hn-pin-title-spacing {
+  padding-left: 0 !important;
+  margin-top: 16px !important;
+}
+
 .hn-pin-box-row {
   display: flex;
   justify-content: space-between;
@@ -108,6 +119,33 @@
   box-shadow: 0 0 0 2px rgba(232, 185, 67, 0.15);
 }
 
+/* 🟢 BACK ARROW LAYOUT POSITIONING */
+/* 🟢 FIXED: Anchored strictly on top-left of the absolute main surface card */
+.hn-back-arrow {
+  position: absolute !important;
+  top: 28px;
+  left: 28px;
+  background: transparent !important;
+  border: none;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 8px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  z-index: 50;
+  width: auto;
+  height: auto;
+}
+
+.hn-back-arrow:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
+/* 🟢 BREAKDOWN DISPLAY PANELS */
 .hn-breakdown-list {
   display: flex;
   flex-direction: column;
@@ -163,6 +201,7 @@
   color: #111827;
 }
 
+/* 🟢 BUTTON ACTIONS */
 .hn-button-grid {
   display: flex;
   gap: 12px;
@@ -212,24 +251,7 @@
   border-color: #9ca3af;
 }
 
-.hn-back-arrow {
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  background: transparent;
-  border: none;
-  color: #4b5563;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hn-back-arrow:hover {
-  color: #111827;
-}
-
+/* 🟢 LOADERS */
 .hn-loading-spinner {
   width: 44px;
   height: 44px;
@@ -254,6 +276,7 @@
   line-height: 1;
 }
 
+/* 🟢 UTILITY CLASSES */
 .hn-text-center {
   text-align: center;
 }
@@ -285,10 +308,17 @@
 .hn-margin-top-lg {
   margin-top: 24px;
 }
-.hn-pin-title-spacing {
-  padding-left: 28px;
+.hn-margin-bottom-sm {
+  margin-bottom: 8px;
+}
+.hn-margin-bottom-md {
+  margin-bottom: 14px;
+}
+.hn-margin-bottom-lg {
+  margin-bottom: 24px;
 }
 
+/* 🟢 TRANSITIONS */
 .animate-fade {
   animation: fadeIn 0.25s ease-out forwards;
 }
@@ -303,6 +333,7 @@
   }
 }
 
+/* 🟢 RESPONSIVE VIEWPORTS */
 @media screen and (max-width: 480px) {
   .hn-modal-overlay {
     padding: 16px;
@@ -311,6 +342,17 @@
   .hn-modal-card {
     padding: 24px 20px;
     border-radius: 12px;
+  }
+
+  /* 🟢 FIXED: Mobile adjustment */
+  .hn-back-arrow {
+    top: 20px;
+    left: 20px;
+    padding: 6px;
+  }
+
+  .hn-pin-title-spacing {
+    margin-top: 24px !important;
   }
 
   .hn-modal-title {

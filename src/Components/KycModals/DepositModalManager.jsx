@@ -199,7 +199,9 @@ const DepositModalManager = ({ isOpen, onClose, amount, token, onSuccess }) => {
                   transform: "scale(0.5)",
                 }}
               >
-                <OrbitProgress color="#ffffff" size="small" />
+                <div className="loader-wrapper">
+                  <OrbitProgress color="#fff" size="small" />
+                </div>{" "}
               </div>
             ) : (
               "Proceed To Payment"
