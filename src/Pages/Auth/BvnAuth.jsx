@@ -179,7 +179,7 @@ const BvnAuth = () => {
 
             <p
               style={{
-                color: "black",
+                color: "#eed06c",
                 alignSelf: "flex-start",
                 cursor: "pointer",
               }}

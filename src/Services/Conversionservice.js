@@ -23,15 +23,45 @@ export const convertCurrency = async (payload, token) => {
   }
 };
 
+// ✅ COMPLETE ERROR HANDLING
 export const confirmTransactionPin = async (userId, enteredPin, token) => {
-  const response = await axios.post(
-    `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
-    { enteredPin },
-    {
-      headers: { ...API_CONFIG.headers, Authorization: `Bearer ${token}` },
-    },
-  );
-  return response.data;
+  try {
+    console.log("🔐 Verifying PIN...");
+
+    // ✅ Validation
+    if (!userId) throw new Error("User ID required");
+    if (!enteredPin || enteredPin.length !== 6)
+      throw new Error("PIN must be 6 digits");
+    if (!token) throw new Error("Token missing");
+
+    // ✅ API call with proper headers & timeout
+    const response = await axios.post(
+      `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
+      { enteredPin },
+      {
+        headers: {
+          ...API_CONFIG.headers,
+          Authorization: getAuthHeader(token),
+        },
+        timeout: API_CONFIG.timeout,
+      },
+    );
+
+    console.log("✅ PIN verified!");
+    return response.data;
+  } catch (error) {
+    console.error("❌ PIN Error:", error);
+
+    // ✅ Extract backend error message
+    throw {
+      message:
+        error?.response?.data?.message ||
+        error?.message ||
+        "PIN verification failed",
+      status: error?.response?.status,
+      data: error?.response?.data,
+    };
+  }
 };
 
 export const GetLiveRate = async () => {

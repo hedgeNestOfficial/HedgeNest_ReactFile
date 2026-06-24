@@ -585,3 +585,55 @@
     font-size: 13.5px;
   }
 }
+
+/* ==========================================================================
+   DASHBOARD DATA SKELETON ANIMATIONS - FIXED
+   ========================================================================== */
+.dash-skel {
+  display: block; /* Ensures it acts as a layout element */
+  border-radius: 4px; /* Standardize corners */
+  animation: dashPulse 1.5s infinite ease-in-out;
+  background-size: 200% 100%;
+}
+
+.sk-light {
+  background-image: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+}
+
+.sk-dark {
+  /* FIXED: Added the missing '%' to the 75 color stop */
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+}
+
+/* Sizing Helpers: Matches your font sizes and line heights */
+.sk-large {
+  height: 32px;
+  width: 60%;
+}
+.sk-medium {
+  height: 24px;
+  width: 40%;
+}
+.sk-small {
+  height: 16px;
+  width: 30%;
+}
+
+@keyframes dashPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

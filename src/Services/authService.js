@@ -51,14 +51,17 @@ export const resendOtp = async (payload) => {
 };
 
 export const submitKyc = async (payload, token) => {
-  const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, payload, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  return response.data;
+  try {
+    const response = await axios.post(ENDPOINTS.AUTH.VERIFY_KYC, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error?.response?.data || error.message;
+  }
 };
 
 export const createPin = async (payload, token) => {
@@ -88,10 +91,6 @@ export const updateProfile = async (formData, token) => {
 
   return response.data;
 };
-
-// =====================================
-// FORGOT PASSWORD FLOW
-// =====================================
 
 export const forgotPassword = async (payload) => {
   const response = await axios.post(ENDPOINTS.AUTH.FORGOT_PASSWORD, payload, {

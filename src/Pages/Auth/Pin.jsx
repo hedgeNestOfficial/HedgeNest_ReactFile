@@ -115,12 +115,14 @@ const Pin = () => {
 
       // 🛑 INTERCEPT: Check if user account has already been created/onboarded
       if (userDataFromResponse?.createdAlready === true) {
-        toast.error("This account is already fully configured. Please log in.");
+        toast.success(
+          "This account is already fully configured. Please log in.",
+        );
         dispatch(clearTempUser());
         navigate("/login");
         return;
       }
-
+      toast.s;
       if (!userDataFromResponse) {
         throw new Error("Invalid response: missing user data");
       }
