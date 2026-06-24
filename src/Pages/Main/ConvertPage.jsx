@@ -23,14 +23,13 @@ const ConvertPage = () => {
   const [transactionPin, setTransactionPin] = useState("");
 
   const [coversionHistory, setConversionHistory] = useState([]);
-  const [liveRate, setLiveRate] = useState(null);
+  const [liveRateData, setLiveRateData] = useState(null);
   const [conversionData, setConversionData] = useState(null);
 
   const { token, wallet, user } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
-  // Formatting utility for clean currency presentation
   const formatCurrency = (value = 0) =>
     Number(value).toLocaleString("en-NG", {
       minimumFractionDigits: 2,
@@ -40,12 +39,11 @@ const ConvertPage = () => {
   const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
 
-  // Fetch current exchange rates
   const fetchLiveRate = async () => {
     try {
       setIsLoadingRate(true);
       const response = await GetLiveRate();
-      setLiveRate(response?.rate || response);
+      setLiveRateData(response);
     } catch (err) {
       console.error("Live rate tracking error:", err);
     } finally {
@@ -53,7 +51,6 @@ const ConvertPage = () => {
     }
   };
 
-  // Fetch complete conversion logs
   const fetchCoversionHistory = async () => {
     if (!token) return;
     try {
@@ -72,7 +69,6 @@ const ConvertPage = () => {
     }
   };
 
-  // Synchronize and parse wallet balances from the API
   const syncWalletData = async () => {
     if (!token) return;
     try {
@@ -109,21 +105,24 @@ const ConvertPage = () => {
     }
   }, [token]);
 
-  // Calculated live preview value logic using context exchange rates
+  const getCurrentDisplayRate = () => {
+    if (!liveRateData) return 0;
+    return activeCurrency === "NGN" ? liveRateData.rate : liveRateData.usdtRate;
+  };
+
   const getCalculatedPreview = () => {
-    if (!inputValue || Number(inputValue) <= 0) return "0";
+    if (!inputValue || Number(inputValue) <= 0 || !liveRateData) return "0";
 
     const numericAmount = Number(inputValue);
     if (activeCurrency === "NGN") {
-      if (!liveRate) return "0";
-      return (numericAmount / liveRate).toFixed(2);
+      const rate = liveRateData.rate || 1;
+      return (numericAmount / rate).toFixed(2);
     } else {
-      // Fixed rate execution threshold for USDT to NGN conversions (no fees applied)
-      return (numericAmount * 1393).toFixed(2);
+      const usdtRate = liveRateData.usdtRate || 1;
+      return (numericAmount * usdtRate).toFixed(2);
     }
   };
 
-  // Handle live amount verification alerts under input pane
   const validateInputAmount = (value, currency) => {
     if (!value) {
       setInputError("");
@@ -146,13 +145,13 @@ const ConvertPage = () => {
     return true;
   };
 
+  // 🟢 FIXED INPUT HANDLER
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
     validateInputAmount(value, activeCurrency);
   };
 
-  // Handle local form submission with safeguards
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -168,11 +167,10 @@ const ConvertPage = () => {
     }
 
     setConversionData(null);
-    setTransactionPin(""); // Reset PIN field parameters cleanly
+    setTransactionPin(""); 
     setIsModalOpen(true);
   };
 
-  // Submit transactions securely to backend architecture after confirming PIN
   const handleFinalConfirm = async () => {
     if (!transactionPin || transactionPin.length < 6) {
       toast.error("Please enter your complete 6-digit Transaction PIN");
@@ -181,11 +179,9 @@ const ConvertPage = () => {
 
     try {
       setLoading(true);
-
       const cleanToken = token.replace(/^"|"$/g, "");
       const targetUserId = user?.id || user?._id;
 
-      // Verify user transaction PIN authorization signature
       try {
         await confirmTransactionPin(targetUserId, transactionPin, cleanToken);
       } catch (pinError) {
@@ -197,7 +193,6 @@ const ConvertPage = () => {
         return;
       }
 
-      // Proceed with execution engine architecture call
       const payload = {
         from: activeCurrency,
         to: activeCurrency === "NGN" ? "USDT" : "NGN",
@@ -212,7 +207,7 @@ const ConvertPage = () => {
       setInputValue("");
       setTransactionPin("");
 
-      await Promise.all([syncWalletData(), fetchCoversionHistory()]);
+      await Promise.all([syncWalletData(), fetchCoversionHistory(), fetchLiveRate()]);
     } catch (error) {
       console.error("Conversion execution error details:", error);
       const extractedErrorMessage =
@@ -250,13 +245,15 @@ const ConvertPage = () => {
 
         <section className="rate-banner-container">
           <div className="rate-info">
-            <span className="rate-label">CURRENT MARKET TRACKER RATE</span>
+            <span className="rate-label">
+              CURRENT {activeCurrency === "NGN" ? "NAIRA" : "USDT"} MARKET TRACKER RATE
+            </span>
             {isLoadingRate ? (
               <div className="convert-skel sk-dark sk-rate-headline"></div>
             ) : (
               <h2 className="summary-value">
                 {"₦"}
-                {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
+                {getCurrentDisplayRate().toLocaleString()} / 1 USDT
               </h2>
             )}
           </div>
@@ -361,7 +358,7 @@ const ConvertPage = () => {
           <button
             type="submit"
             className="submit-conversion-btn"
-            disabled={!!inputError}
+            disabled={!!inputError || !inputValue}
           >
             {activeCurrency === "NGN"
               ? "Convert NGN to USDT"
@@ -399,8 +396,6 @@ const ConvertPage = () => {
 
                     const exchangeRate = Number(item.rate || 0);
                     const baseAmount = Number(item.amount || 0);
-
-                    // 🟢 MAPPED DIRECTLY FROM API RESPONSE OBJECT (No hardcoded calculations)
                     const receivedAmount = Number(item.amountNow || 0);
 
                     return (
@@ -500,12 +495,7 @@ const ConvertPage = () => {
               <div className="summary-row">
                 <span className="summary-label">Execution Settlement Rate</span>
                 <span className="summary-value">
-                  {activeCurrency === "NGN"
-                    ? liveRate
-                      ? `₦${liveRate.toLocaleString()}`
-                      : "0"
-                    : "₦1,393"}{" "}
-                  / 1 USDT
+                  ₦{getCurrentDisplayRate().toLocaleString()} / 1 USDT
                 </span>
               </div>
 

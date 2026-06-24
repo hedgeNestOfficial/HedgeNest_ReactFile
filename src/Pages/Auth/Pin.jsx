@@ -116,7 +116,7 @@ const Pin = () => {
       // 🛑 INTERCEPT: Check if user account has already been created/onboarded
       if (userDataFromResponse?.createdAlready === true) {
         toast.success(
-          "This account is already fully configured. Please log in.",
+          "PIN created successfully!",
         );
         dispatch(clearTempUser());
         navigate("/login");
