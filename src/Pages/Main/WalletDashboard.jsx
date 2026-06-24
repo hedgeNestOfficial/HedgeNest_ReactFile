@@ -20,9 +20,9 @@ const WalletPage = () => {
   const { user, token, wallet } = useSelector((state) => state.user);
 
   // Live Redux State Console Logger
-  useEffect(() => {
-    console.log("🗂️ [WalletPage] Current Redux Wallet Slice Data:", wallet);
-  }, [wallet]);
+  // useEffect(() => {
+  //   console.log("[WalletPage] Current Redux Wallet Slice Data:", wallet);
+  // }, [wallet]);
 
   const [activeTab, setActiveTab] = useState("deposit");
   const [amount, setAmount] = useState("");
