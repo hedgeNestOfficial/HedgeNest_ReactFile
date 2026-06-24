@@ -21,6 +21,11 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
   const [pinBoxes, setPinBoxes] = useState(Array(6).fill(""));
   const pinRefs = useRef([]);
 
+  // 🟢 Helper to check if the form fields and PIN are fully filled
+  const finalPin = pinBoxes.join("");
+  const isFormInvalid =
+    !bankName.trim() || accountNumber.length !== 10 || finalPin.length !== 6;
+
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -93,7 +98,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       return toast.error("Account number must be 10 digits");
     }
 
-    const finalPin = pinBoxes.join("");
     if (finalPin.length !== 6) {
       return toast.error("Please enter your complete 6-digit transaction PIN");
     }
@@ -108,11 +112,10 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     try {
       setLoading(true);
 
-      // Gracefully catch new accounts lacking dynamic sub-records
       try {
         const accountsResponse = await getLinkedAccounts(activeToken);
         const accountsArray = accountsResponse?.linkedAccounts || [];
-        
+
         if (accountsArray.length >= 1) {
           setLoading(false);
           return toast.error("You already have a linked account.");
@@ -120,14 +123,12 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       } catch (checkError) {
         const status = checkError?.response?.status;
         if (status && status !== 404) {
-          throw checkError; 
+          throw checkError;
         }
       }
 
-      // 1. Verify Security PIN via explicit body payload mapping
       await confirmTransactionPin(userId, finalPin, activeToken);
 
-      // 2. Link Bank Account (excluding structural metadata profiles)
       const response = await linkBankAccount(
         {
           bankName,
@@ -140,14 +141,18 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       setStep(2);
     } catch (error) {
       console.error("Workflow tracking error context:", error);
-      
-      const rawServerMessage = error?.response?.data?.message || error?.response?.data?.error || "";
-      
-      // 🟢 Catch explicit bcrypt configuration omissions from the database collections
+
+      const rawServerMessage =
+        error?.response?.data?.message || error?.response?.data?.error || "";
+
       if (rawServerMessage.includes("data and hash arguments required")) {
-        toast.error("This test user account has no transaction PIN configured. Create a PIN in settings first.");
+        toast.error(
+          "This test user account has no transaction PIN configured. Create a PIN in settings first.",
+        );
       } else {
-        toast.error(rawServerMessage || error?.message || "Internal Server Error");
+        toast.error(
+          rawServerMessage || error?.message || "Internal Server Error",
+        );
       }
     } finally {
       setLoading(false);
@@ -214,7 +219,7 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
                 style={{
                   display: "flex",
                   gap: "8px",
-                  justifyContent: "space-between",
+                  justify: "space-between",
                   marginTop: "4px",
                 }}
               >
@@ -255,7 +260,12 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               <button
                 type="submit"
                 className="link-account-btn-solid"
-                disabled={loading}
+                // 🟢 Button remains disabled until loading finishes AND all inputs are complete
+                disabled={loading || isFormInvalid}
+                style={{
+                  opacity: loading || isFormInvalid ? 0.6 : 1,
+                  cursor: loading || isFormInvalid ? "not-allowed" : "pointer",
+                }}
               >
                 {loading ? "Checking..." : "Link Account"}
               </button>

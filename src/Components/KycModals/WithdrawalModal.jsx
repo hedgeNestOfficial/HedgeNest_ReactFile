@@ -20,10 +20,8 @@ const WithdrawalModal = ({
   isPending = false,
   onWithdrawalCancel,
 }) => {
-  // Pull wallet slice from Redux
   const { wallet } = useSelector((state) => state.user);
 
-  // Live Console Logger
   useEffect(() => {
     if (isOpen) {
       console.log("🗂️ [WithdrawalModal] Live Redux Wallet Slice:", wallet);
@@ -38,6 +36,9 @@ const WithdrawalModal = ({
   const [linkedAccounts, setLinkedAccounts] = useState([]);
   const [selectedBankId, setSelectedBankId] = useState("");
   const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
+
+  const [isBreakdownConfirmed, setIsBreakdownConfirmed] = useState(false);
+  const [isCancelActionConfirmed, setIsCancelActionConfirmed] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(86390);
   const pinInputsRef = useRef([]);
@@ -76,11 +77,13 @@ const WithdrawalModal = ({
     fetchAccounts();
   }, [isOpen, token, isPending]);
 
-  // Sync inputs
+  // Sync inputs & flags reset
   useEffect(() => {
     if (!isOpen) {
       setPin(new Array(6).fill(""));
       setIsSubmitting(false);
+      setIsBreakdownConfirmed(false);
+      setIsCancelActionConfirmed(false);
     } else {
       setStep(isPending ? "PENDING" : "AMOUNT");
       if (dashboardAmount) {
@@ -117,19 +120,20 @@ const WithdrawalModal = ({
     return `${hours.toString().padStart(2, "0")} : ${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
   };
 
+  const numericAmountValue = getRawNumericAmount(amount);
+  const isAmountFormInvalid =
+    isLoadingAccounts || !selectedBankId || numericAmountValue <= 0;
+
+  const processingFee = 50;
+  const totalDeductionAmount = numericAmountValue + processingFee;
+  const totalPayoutValue = numericAmountValue;
+
   const handleAmountSubmit = (e) => {
     e.preventDefault();
-    if (!selectedBankId) {
-      toast.error("Please select a bank account to proceed.", toastConfig);
-      return;
-    }
+    if (isAmountFormInvalid) return;
 
-    const numericAmount = getRawNumericAmount(amount);
-
-    // 🟢 FIXED: Using availableBalance directly from Redux payload
     const numericAvailableBalance = Number(wallet?.availableBalance) || 0;
 
-    // 🛑 1. Entire Account Balance Check
     if (numericAvailableBalance < 1500) {
       toast.error(
         `Your available balance (₦${numericAvailableBalance.toLocaleString()}) must be at least ₦1,500 to withdraw.`,
@@ -138,8 +142,7 @@ const WithdrawalModal = ({
       return;
     }
 
-    // 🛑 2. Minimum Request Limit Check
-    if (numericAmount < 1500) {
+    if (numericAmountValue < 1500) {
       toast.error(
         "The minimum amount you can withdraw is ₦1,500.",
         toastConfig,
@@ -147,10 +150,9 @@ const WithdrawalModal = ({
       return;
     }
 
-    // 🛑 3. Insufficient Funds Check
-    if (numericAmount > numericAvailableBalance) {
+    if (totalDeductionAmount > numericAvailableBalance) {
       toast.error(
-        `Insufficient funds. You cannot withdraw more than your available balance of ₦${numericAvailableBalance.toLocaleString()}.`,
+        `Insufficient funds. To receive ₦${numericAmountValue.toLocaleString()}, you need a total of ₦${totalDeductionAmount.toLocaleString()} to cover the ₦50 processing fee.`,
         toastConfig,
       );
       return;
@@ -192,15 +194,15 @@ const WithdrawalModal = ({
   };
 
   const handleFinalSubmit = async () => {
+    if (pin.includes("") || isSubmitting) return;
     setStep("LOADING");
     setIsSubmitting(true);
 
     const pinString = pin.join("");
-    const finalNumericAmount = getRawNumericAmount(amount);
 
     try {
       await confirmTransactionPin(userId, pinString, token);
-      await withdrawFunds(finalNumericAmount, selectedBankId, token);
+      await withdrawFunds(numericAmountValue, selectedBankId, token);
       await refreshWallet();
 
       toast.success("Payout initiated successfully!", toastConfig);
@@ -221,6 +223,7 @@ const WithdrawalModal = ({
   };
 
   const handleCancelWithdrawal = async () => {
+    if (!isCancelActionConfirmed) return;
     setStep("CANCEL_LOADING");
     try {
       setTimeout(async () => {
@@ -240,10 +243,6 @@ const WithdrawalModal = ({
   };
 
   const chosenBank = getSelectedBankDetails();
-  const numericAmountValue = getRawNumericAmount(amount);
-  const processingFee = 50;
-  const totalPayoutValue =
-    numericAmountValue > processingFee ? numericAmountValue - processingFee : 0;
 
   return (
     <div className="hn-modal-overlay">
@@ -283,7 +282,7 @@ const WithdrawalModal = ({
                   ) : (
                     linkedAccounts.map((acc) => (
                       <option key={acc._id} value={acc._id}>
-                        {acc.bankName} — {acc.accountNumber} ({acc.accountName})
+                        {`|${acc.bankName} — ${acc.accountNumber}${acc.accountName ? ` (${acc.accountName})|` : ""}`}
                       </option>
                     ))
                   )}
@@ -316,7 +315,11 @@ const WithdrawalModal = ({
               <button
                 type="submit"
                 className="hn-btn-primary"
-                disabled={isLoadingAccounts || !selectedBankId}
+                disabled={isAmountFormInvalid}
+                style={{
+                  opacity: isAmountFormInvalid ? 0.6 : 1,
+                  cursor: isAmountFormInvalid ? "not-allowed" : "pointer",
+                }}
               >
                 Make Request
               </button>
@@ -348,19 +351,21 @@ const WithdrawalModal = ({
                   <p className="hn-val-sub">
                     {chosenBank ? chosenBank.accountNumber : "0000000000"}
                   </p>
-                  <p
-                    className="hn-val-sub"
-                    style={{ fontSize: "12px", color: "#828282" }}
-                  >
-                    {chosenBank ? chosenBank.accountName : ""}
-                  </p>
+                  {chosenBank?.accountName && (
+                    <p
+                      className="hn-val-sub"
+                      style={{ fontSize: "12px", color: "#828282" }}
+                    >
+                      {chosenBank.accountName}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="hn-breakdown-row">
-                <span className="hn-row-label">Gross Request Amount</span>
+                <span className="hn-row-label">Requested Payout Amount</span>
                 <span className="hn-val-main">
-                  ₦{numericAmountValue.toLocaleString()}
+                  ₦{totalPayoutValue.toLocaleString()}
                 </span>
               </div>
 
@@ -372,11 +377,40 @@ const WithdrawalModal = ({
               <div className="hn-divider"></div>
 
               <div className="hn-breakdown-row hn-font-total">
-                <span className="hn-row-label">Net Take-Home Payout</span>
+                <span className="hn-row-label">Total Account Deduction</span>
                 <span className="hn-val-total">
-                  ₦{totalPayoutValue.toLocaleString()}
+                  ₦{totalDeductionAmount.toLocaleString()}
                 </span>
               </div>
+            </div>
+
+            <div
+              className="hn-margin-top-md"
+              style={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "flex-start",
+                textAlign: "left",
+              }}
+            >
+              <input
+                type="checkbox"
+                id="confirmBreakdown"
+                checked={isBreakdownConfirmed}
+                onChange={(e) => setIsBreakdownConfirmed(e.target.checked)}
+                style={{ marginTop: "4px", cursor: "pointer" }}
+              />
+              <label
+                htmlFor="confirmBreakdown"
+                style={{
+                  fontSize: "13px",
+                  color: "#4F4F4F",
+                  cursor: "pointer",
+                }}
+              >
+                I confirm that the bank details are accurate and I agree to the
+                total account deduction.
+              </label>
             </div>
 
             <div className="hn-button-grid hn-margin-top-lg">
@@ -391,6 +425,11 @@ const WithdrawalModal = ({
                 type="button"
                 onClick={() => setStep("PIN")}
                 className="hn-btn-primary"
+                disabled={!isBreakdownConfirmed}
+                style={{
+                  opacity: !isBreakdownConfirmed ? 0.6 : 1,
+                  cursor: !isBreakdownConfirmed ? "not-allowed" : "pointer",
+                }}
               >
                 Confirm
               </button>
@@ -400,45 +439,56 @@ const WithdrawalModal = ({
 
         {/* STEP 3: TRANSACTION AUTHORIZATION SECURITY GATEWAY */}
         {step === "PIN" && (
-          <div className="hn-step-container hn-relative">
+          <>
+            {/* 🟢 FIXED: Extracted completely outside layout containers so absolute context tracks .hn-modal-card */}
             <button
               type="button"
               onClick={() => setStep("BREAKDOWN")}
               className="hn-back-arrow"
+              aria-label="Go back"
             >
               <FiArrowLeft size={20} />
             </button>
 
-            <div className="hn-pin-wrapper">
-              <h3 className="hn-modal-title hn-text-left hn-pin-title-spacing">
-                Enter Your Transaction Pin
-              </h3>
+            <div className="hn-step-container">
+              <div className="hn-pin-wrapper">
+                <h3 className="hn-modal-title hn-text-left hn-pin-title-spacing">
+                  Enter Your Transaction Pin
+                </h3>
 
-              <div className="hn-pin-box-row">
-                {pin.map((digit, index) => (
-                  <input
-                    key={index}
-                    type="password"
-                    maxLength={1}
-                    ref={(el) => (pinInputsRef.current[index] = el)}
-                    value={digit}
-                    onChange={(e) => handlePinChange(e.target.value, index)}
-                    onKeyDown={(e) => handlePinKeyDown(e, index)}
-                    className="hn-pin-input-box"
-                  />
-                ))}
+                <div className="hn-pin-box-row">
+                  {pin.map((digit, index) => (
+                    <input
+                      key={index}
+                      type="password"
+                      maxLength={1}
+                      ref={(el) => (pinInputsRef.current[index] = el)}
+                      value={digit}
+                      onChange={(e) => handlePinChange(e.target.value, index)}
+                      onKeyDown={(e) => handlePinKeyDown(e, index)}
+                      className="hn-pin-input-box"
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <button
-              type="button"
-              onClick={handleFinalSubmit}
-              disabled={pin.includes("") || isSubmitting}
-              className={`hn-btn-primary hn-full-width hn-margin-top-md ${pin.includes("") ? "hn-disabled" : ""}`}
-            >
-              Authorize Withdrawal
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={handleFinalSubmit}
+                disabled={pin.includes("") || isSubmitting}
+                className={`hn-btn-primary hn-full-width hn-margin-top-md ${pin.includes("") || isSubmitting ? "hn-disabled" : ""}`}
+                style={{
+                  opacity: pin.includes("") || isSubmitting ? 0.6 : 1,
+                  cursor:
+                    pin.includes("") || isSubmitting
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+              >
+                Authorize Withdrawal
+              </button>
+            </div>
+          </>
         )}
 
         {/* STEP 4: SUCCESS LAYOUT VIEW */}
@@ -531,17 +581,59 @@ const WithdrawalModal = ({
         {/* STEP 6: CANCELLATION OVERLAY INTERACTION */}
         {step === "CANCEL_CONFIRM" && (
           <div className="hn-step-container hn-text-center hn-py-md">
-            <h3 className="hn-modal-title hn-margin-bottom-lg">
+            <h3 className="hn-modal-title hn-margin-bottom-sm">
               Are you sure you want to cancel withdrawal?
             </h3>
+            <p
+              className="hn-modal-desc hn-margin-bottom-md"
+              style={{ color: "#828282" }}
+            >
+              This operation cannot be reversed once confirmed.
+            </p>
+
+            <div
+              className="hn-margin-bottom-lg"
+              style={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <input
+                type="checkbox"
+                id="confirmCancelAction"
+                checked={isCancelActionConfirmed}
+                onChange={(e) => setIsCancelActionConfirmed(e.target.checked)}
+                style={{ cursor: "pointer" }}
+              />
+              <label
+                htmlFor="confirmCancelAction"
+                style={{
+                  fontSize: "14px",
+                  color: "#4F4F4F",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                }}
+              >
+                Yes, I want to cancel this request.
+              </label>
+            </div>
 
             <div className="hn-button-grid">
               <button
                 type="button"
                 onClick={handleCancelWithdrawal}
                 className="hn-btn-secondary"
+                disabled={!isCancelActionConfirmed}
+                style={{
+                  opacity: !isCancelActionConfirmed ? 0.6 : 1,
+                  cursor: !isCancelActionConfirmed ? "not-allowed" : "pointer",
+                  borderColor: !isCancelActionConfirmed ? "#e0e0e0" : "#EB5757",
+                  color: !isCancelActionConfirmed ? "#828282" : "#EB5757",
+                }}
               >
-                Confirm
+                Confirm Cancel
               </button>
               <button
                 type="button"
@@ -562,7 +654,7 @@ const WithdrawalModal = ({
               style={{
                 width: "60px",
                 height: "60px",
-                backgroundColor: "#EB5757",
+                backgroundColor: "#d32d2d",
                 color: "#FFFFFF",
                 borderRadius: "50%",
                 display: "flex",

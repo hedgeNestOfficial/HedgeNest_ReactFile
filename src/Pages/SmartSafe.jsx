@@ -137,13 +137,9 @@ const SmartSafe = () => {
   };
 
   // 2. API CALL: Preview configuration request
-  // 2. API CALL: Preview configuration request
-  // 2. API CALL: Preview configuration request
   const handleFormPreviewFetch = async (payload) => {
     try {
       const response = await previewPlan(payload, token);
-
-      // Check if we actually got data back
       const previewData = response?.data || response;
 
       if (!previewData) {
@@ -152,35 +148,27 @@ const SmartSafe = () => {
 
       setFormLivePreviewData(previewData);
       setPreviewSummaryData(previewData);
-
-      // Only proceed to the summary screen if the fetch was successful
       setModalScreen("SUMMARY");
 
       return response;
     } catch (error) {
       console.error("Live form preview failed:", error);
-
-      // Extract the backend message if it exists
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
         "Failed to calculate preview. Please try again.";
 
-      // Toast the error so the user knows why it failed
-      // Duration: 4000ms ensures it disappears automatically
       toast.error(errorMessage, {
         duration: 1500,
         position: "top-center",
       });
 
-      // CRITICAL: We explicitly do NOT set modalScreen to "SUMMARY".
-      // This keeps the user on the creation form so they can fix their inputs.
-      // If you need to force a reset, you can set it to "CREATE"
       setModalScreen("CREATE");
     }
-  }; // 3. API CALL: Create and Save a New Vault
+  };
+
+  // 3. API CALL: Create and Save a New Vault
   const handleCreatePlanSubmit = async (pinString) => {
-    // Lock the UI immediately to prevent double submissions
     setModalScreen("LOADING");
 
     try {
@@ -190,8 +178,12 @@ const SmartSafe = () => {
         title: formData.title,
         planType: formData.planType,
         transactionPin: pinString,
+        // 🟢 FIXED LOGIC HERE: Only pass targetAmount and set initial startup deposit to initialAmount
         ...(isFlexible
-          ? { targetAmount: Number(formData.targetAmount) }
+          ? { 
+              targetAmount: Number(formData.targetAmount),
+              amount: Number(formData.initialAmount) // Deduct only what they start up with
+            }
           : { amount: Number(formData.targetAmount) }),
       };
 
@@ -208,7 +200,6 @@ const SmartSafe = () => {
       fetchUserVaults();
     } catch (err) {
       toast.error(err?.message || "Plan creation failed");
-      // Revert to PIN screen on failure and clear the inputs
       setModalScreen("PIN");
       setPin(["", "", "", "", "", ""]);
     }
@@ -446,6 +437,7 @@ const SmartSafe = () => {
         onClose={() => setIsWithdrawModalOpen(false)}
         onWithdraw={handleWithdraw}
         onWithdrawSuccess={() => {
+          // 🟢 FIXED LOGIC HERE: Immediately filter out card from local view upon successful breaking
           setVaults((prev) =>
             prev.filter(
               (v) =>

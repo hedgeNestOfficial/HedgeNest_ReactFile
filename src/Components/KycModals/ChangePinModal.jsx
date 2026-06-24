@@ -3,6 +3,8 @@ import "../../Style/ChangePinModal.css";
 import { OrbitProgress } from "react-loading-indicators";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+// 🟢 IMPORTED: High-quality success verification shield icon
+import { HiOutlineShieldCheck } from "react-icons/hi";
 
 import { changeTransactionPin } from "../../Services/authService";
 
@@ -18,20 +20,12 @@ const ChangePinModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  // Evaluation Flag: Button remains disabled until all 3 fields hit exactly 6 digits
+  const isFormInvalid =
+    oldPin.length !== 6 || newPin.length !== 6 || confirmPin.length !== 6;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (oldPin.length !== 6) {
-      return toast.error("Old PIN must be 6 digits");
-    }
-
-    if (newPin.length !== 6) {
-      return toast.error("New PIN must be 6 digits");
-    }
-
-    if (confirmPin.length !== 6) {
-      return toast.error("Confirm PIN must be 6 digits");
-    }
 
     if (newPin !== confirmPin) {
       return toast.error("PINs do not match");
@@ -55,9 +49,7 @@ const ChangePinModal = ({ isOpen, onClose }) => {
 
       setIsSuccess(true);
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Unable to change transaction PIN",
-      );
+      toast.error(error?.message || "Unable to change transaction PIN");
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +63,12 @@ const ChangePinModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  // Shared inline styling for centered password pin alignment
+  const centerPinStyle = {
+    textAlign: "center",
+    letterSpacing: "0.25em",
+  };
+
   return (
     <div className="pin-modal-overlay" onClick={resetModal}>
       <div className="pin-modal-card" onClick={(e) => e.stopPropagation()}>
@@ -80,46 +78,58 @@ const ChangePinModal = ({ isOpen, onClose }) => {
 
             <div className="pin-input-group">
               <label className="pin-input-label">Old PIN</label>
-
               <input
                 type="password"
                 maxLength={6}
+                inputMode="numeric"
                 value={oldPin}
                 onChange={(e) => setOldPin(e.target.value.replace(/\D/g, ""))}
                 className="pin-text-input"
-                placeholder="Enter old PIN"
+                placeholder="••••••"
+                style={centerPinStyle}
               />
             </div>
 
             <div className="pin-input-group">
               <label className="pin-input-label">New PIN</label>
-
               <input
                 type="password"
                 maxLength={6}
+                inputMode="numeric"
                 value={newPin}
                 onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
                 className="pin-text-input"
-                placeholder="Enter new PIN"
+                placeholder="••••••"
+                style={centerPinStyle}
               />
             </div>
 
             <div className="pin-input-group">
               <label className="pin-input-label">Confirm PIN</label>
-
               <input
                 type="password"
                 maxLength={6}
+                inputMode="numeric"
                 value={confirmPin}
                 onChange={(e) =>
                   setConfirmPin(e.target.value.replace(/\D/g, ""))
                 }
                 className="pin-text-input"
-                placeholder="Confirm new PIN"
+                placeholder="••••••"
+                style={centerPinStyle}
               />
             </div>
 
-            <div className="pin-actions-container">
+            <div
+              className="pin-actions-container"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "12px",
+                width: "100%",
+              }}
+            >
               <button
                 type="button"
                 className="pin-btn-cancel"
@@ -131,10 +141,17 @@ const ChangePinModal = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 className="pin-btn-continue"
-                disabled={isLoading}
+                disabled={isFormInvalid || isLoading}
+                style={{
+                  opacity: isFormInvalid || isLoading ? 0.6 : 1,
+                  cursor:
+                    isFormInvalid || isLoading ? "not-allowed" : "pointer",
+                }}
               >
                 {isLoading ? (
-                  <OrbitProgress color="#ffffff" size="small" />
+                  <div className="loader-wrapper">
+                    <OrbitProgress color="#fff" size="small" />
+                  </div>
                 ) : (
                   "Change PIN"
                 )}
@@ -143,11 +160,23 @@ const ChangePinModal = ({ isOpen, onClose }) => {
           </form>
         ) : (
           <div className="pin-modal-step-container text-center align-center">
-            <div className="pin-confetti-badge-circle">
-              <div className="pin-mini-confetti-particle cp1"></div>
-              <div className="pin-mini-confetti-particle cp2"></div>
-              <div className="pin-mini-confetti-particle cp3"></div>
-              <div className="pin-mini-confetti-particle cp4"></div>
+            {/* 🟢 FIXED: Swapped out old confetti divs for a unified green shield checkmark layout */}
+            <div
+              className="pin-success-icon-wrapper"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "80px",
+                height: "80px",
+                backgroundColor: "#e8f5e9",
+                borderRadius: "50%",
+                margin: "0 auto 20px auto",
+              }}
+            >
+              <HiOutlineShieldCheck
+                style={{ fontSize: "44px", color: "#2e7d32" }}
+              />
             </div>
 
             <h2 className="pin-modal-title margin-top-lg font-size-xl">
