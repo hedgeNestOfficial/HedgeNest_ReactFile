@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { FaChevronDown } from "react-icons/fa6";
+import toast from "react-hot-toast";
 import "../Style/Planform.css";
 
 const PlanForm = ({
@@ -10,31 +12,26 @@ const PlanForm = ({
   onCancel,
   onFormPreviewRequested,
 }) => {
+  // CORRECTED: Fetching 'availableBalance' matching your Redux console log
+  const walletBalance = useSelector(
+    (state) => state.user?.wallet?.availableBalance || 0,
+  );
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hasSelectedType, setHasSelectedType] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
-  const [validationError, setValidationError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectPlanType = (type, label) => {
     setIsFlexibleMode(type === "FLEXIBLE");
-
-    handleInputChange({
-      target: {
-        name: "planType",
-        value: type,
-      },
-    });
-
+    handleInputChange({ target: { name: "planType", value: type } });
     setSelectedLabel(label);
     setIsDropdownOpen(false);
     setHasSelectedType(true);
-    setValidationError("");
   };
 
   const buildPayload = () => {
     const isFlexible = formData.planType === "FLEXIBLE";
-
     const duration =
       formData.duration && Number(formData.duration) > 0
         ? Number(formData.duration)
@@ -62,49 +59,48 @@ const PlanForm = ({
 
     if (isSubmitting) return;
 
-    if (!formData.title) {
-      setValidationError("Please enter a savings title.");
-      return;
-    }
+    // 1. Basic Validation
+    if (!formData.title) return toast.error("Please enter a savings title.");
     if (!formData.targetAmount || Number(formData.targetAmount) <= 0) {
-      setValidationError("Please enter a valid target amount.");
-      return;
-    }
-    if (
-      formData.planType !== "FLEXIBLE" &&
-      (!formData.duration || Number(formData.duration) <= 0)
-    ) {
-      setValidationError("Please enter a valid duration in days.");
-      return;
+      return toast.error("Please enter a valid target amount.");
     }
 
     const targetAmt = Number(formData.targetAmount || 0);
     const initialAmt = Number(formData.initialAmount || 0);
+    const amountRequired =
+      formData.planType === "FLEXIBLE" ? initialAmt : targetAmt;
 
-    if (formData.planType === "FLEXIBLE") {
-      if (initialAmt <= 0) {
-        setValidationError("Please enter an initial starting amount.");
-        return;
-      }
-      if (initialAmt > targetAmt) {
-        setValidationError("Input amount cannot exceed target amount.");
-        return;
-      }
+    // 2. Strict Wallet Balance Validation
+    if (amountRequired > walletBalance) {
+      return toast.error(
+        `Insufficient funds. Your wallet balance is ₦${walletBalance.toLocaleString()}`,
+      );
     }
 
-    setValidationError("");
+    if (formData.planType === "FLEXIBLE") {
+      if (initialAmt <= 0)
+        return toast.error("Please enter an initial starting amount.");
+      if (initialAmt > targetAmt)
+        return toast.error("Input amount cannot exceed target amount.");
+    } else if (!formData.duration || Number(formData.duration) <= 0) {
+      return toast.error("Please enter a valid duration in days.");
+    }
+
+    // 3. Lock button and proceed
     setIsSubmitting(true);
 
+    // We use toast.promise for a beautiful UI state while fetching the preview
     try {
       const payload = buildPayload();
-      await onFormPreviewRequested(payload);
+      await toast.promise(onFormPreviewRequested(payload), {
+        loading: "Generating your plan preview...",
+        success: "Preview generated!",
+        error: (err) => err?.message || "Failed to generate preview.",
+      });
     } catch (err) {
       console.error("Form live calculations error:", err.message);
-      setValidationError(
-        err?.message || "An unexpected processing error occurred.",
-      );
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Unlock button
     }
   };
 
@@ -113,10 +109,9 @@ const PlanForm = ({
       <h2 className="modal-title">Create a Savings Plan</h2>
 
       <form onSubmit={handleLocalSubmit} className="modal-form" noValidate>
-        {/* SAVINGS TYPE */}
+        {/* SAVINGS TYPE DROPDOWN */}
         <div className="form-group relative-group">
           <label className="form-label">Savings Type</label>
-
           <div className="select-wrapper cursor-pointer">
             <div
               className="form-input custom-dropdown-trigger"
@@ -124,12 +119,9 @@ const PlanForm = ({
             >
               {!hasSelectedType ? "Select a Savings Type..." : selectedLabel}
             </div>
-
             <div className="select-arrow-icon">
               <FaChevronDown
-                className={`select-arrow-icon-style ${
-                  isDropdownOpen ? "rotate-icon" : ""
-                }`}
+                className={`select-arrow-icon-style ${isDropdownOpen ? "rotate-icon" : ""}`}
               />
             </div>
 
@@ -143,7 +135,6 @@ const PlanForm = ({
                 >
                   Flexible (10% p.a.)
                 </div>
-
                 <div
                   className="dropdown-option-item"
                   onClick={() =>
@@ -152,7 +143,6 @@ const PlanForm = ({
                 >
                   Locked (14 - 17% p.a.)
                 </div>
-
                 <div
                   className="dropdown-option-item"
                   onClick={() =>
@@ -166,7 +156,7 @@ const PlanForm = ({
           </div>
         </div>
 
-        {/* FIELDS */}
+        {/* DYNAMIC INPUT FIELDS */}
         {hasSelectedType && (
           <div className="reveal-fields-wrapper animate-fade">
             <div className="form-group">
@@ -175,10 +165,7 @@ const PlanForm = ({
                 type="text"
                 name="title"
                 value={formData.title || ""}
-                onChange={(e) => {
-                  setValidationError("");
-                  handleInputChange(e);
-                }}
+                onChange={handleInputChange}
                 className="form-input"
               />
             </div>
@@ -191,10 +178,7 @@ const PlanForm = ({
                 type="number"
                 name="targetAmount"
                 value={formData.targetAmount || ""}
-                onChange={(e) => {
-                  setValidationError("");
-                  handleInputChange(e);
-                }}
+                onChange={handleInputChange}
                 className="form-input"
               />
             </div>
@@ -206,10 +190,7 @@ const PlanForm = ({
                   type="number"
                   name="duration"
                   value={formData.duration || ""}
-                  onChange={(e) => {
-                    setValidationError("");
-                    handleInputChange(e);
-                  }}
+                  onChange={handleInputChange}
                   className="form-input"
                 />
               </div>
@@ -228,7 +209,6 @@ const PlanForm = ({
                     <option value="MONTHLY">Monthly</option>
                   </select>
                 </div>
-
                 <div className="form-group">
                   <label className="form-label">
                     Input Amount (To get started)
@@ -237,25 +217,12 @@ const PlanForm = ({
                     type="number"
                     name="initialAmount"
                     value={formData.initialAmount || ""}
-                    onChange={(e) => {
-                      setValidationError("");
-                      handleInputChange(e);
-                    }}
+                    onChange={handleInputChange}
                     className="form-input"
                   />
                 </div>
               </>
             )}
-          </div>
-        )}
-
-        {/* ERROR */}
-        {validationError && (
-          <div
-            className="error-message-text"
-            style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
-          >
-            {validationError}
           </div>
         )}
 
@@ -269,7 +236,6 @@ const PlanForm = ({
           >
             Cancel
           </button>
-
           <button
             type="submit"
             className="btn-primary"

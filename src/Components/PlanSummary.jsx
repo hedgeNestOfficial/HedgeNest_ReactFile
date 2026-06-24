@@ -1,37 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "../Style/PlanSummary.css";
 
-const PlanSummary = ({
-  previewSummaryData,
-  onRefreshSummary,
-  onBack,
-  onCancel,
-  onConfirm,
-}) => {
-  const [isLocalLoading, setIsLocalLoading] = useState(false);
-
-  // Trigger data fetch exactly once when the component establishes mount
-  useEffect(() => {
-    const fetchSummary = async () => {
-      // Only fetch if we don't have summary data yet
-      if (!previewSummaryData) {
-        setIsLocalLoading(true);
-        try {
-          await onRefreshSummary?.();
-        } catch (err) {
-          console.error("Error executing summary pull:", err);
-        } finally {
-          setIsLocalLoading(false);
-        }
-      }
-    };
-
-    fetchSummary();
-  }, [onRefreshSummary, previewSummaryData]);
-
-  // Keep the summary container mounted, but present the spinner internally
-  if (isLocalLoading || !previewSummaryData) {
+const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
+  // Wait for the data to arrive from the parent component
+  if (!previewSummaryData) {
     return (
       <div
         className="modal-container layout-centered"
@@ -111,7 +84,6 @@ const PlanSummary = ({
           </span>
         </div>
 
-        {/* ⏱️ CONDITIONAL LAYOUT ASSIGNMENTS FOR SAVINGS SETUP RULES */}
         {isFlexible ? (
           <div className="summary-row">
             <span className="summary-label">Saving Frequency</span>
@@ -123,7 +95,6 @@ const PlanSummary = ({
             </span>
           </div>
         ) : (
-          /* Runs strictly for LOCKED and STEALTH plans */
           <div className="summary-row">
             <span className="summary-label">Duration (Days)</span>
             <span className="summary-value text-dark">{duration} days</span>
