@@ -17,7 +17,8 @@ export const previewPlan = async (payload, token) => {
     return response.data;
   } catch (error) {
     console.log("Preview Plan API Error:", error);
-    throw error.response?.data;
+    // 🛠️ FIX: Fallback to the original error if response.data is undefined
+    throw error.response?.data || error;
   }
 };
 
