@@ -1,68 +1,151 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../../Style/LinkAccountModal.css";
 import { BiParty } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-import { linkBankAccount } from "../../Services/AccountService";
+import {
+  linkBankAccount,
+  confirmTransactionPin,
+  getLinkedAccounts,
+} from "../../Services/AccountService";
 
 const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
-  const { token } = useSelector((state) => state.user);
+  const { token, user } = useSelector((state) => state.user);
 
   const [step, setStep] = useState(1);
-
   const [loading, setLoading] = useState(false);
-
   const [bankName, setBankName] = useState("");
-
-  const [accountName, setAccountName] = useState("");
-
   const [accountNumber, setAccountNumber] = useState("");
+
+  const [pinBoxes, setPinBoxes] = useState(Array(6).fill(""));
+  const pinRefs = useRef([]);
 
   useEffect(() => {
     if (isOpen) {
       setStep(1);
       setBankName("");
-      setAccountName("");
       setAccountNumber("");
+      setPinBoxes(Array(6).fill(""));
       setLoading(false);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const handlePinChange = (value, index) => {
+    const cleanValue = value.replace(/\D/g, "");
+    if (!cleanValue) {
+      const newPinBoxes = [...pinBoxes];
+      newPinBoxes[index] = "";
+      setPinBoxes(newPinBoxes);
+      return;
+    }
+
+    const lastChar = cleanValue.slice(-1);
+    const newPinBoxes = [...pinBoxes];
+    newPinBoxes[index] = lastChar;
+    setPinBoxes(newPinBoxes);
+
+    if (index < 5) {
+      pinRefs.current[index + 1].focus();
+    }
+  };
+
+  const handlePinKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      if (!pinBoxes[index] && index > 0) {
+        const newPinBoxes = [...pinBoxes];
+        newPinBoxes[index - 1] = "";
+        setPinBoxes(newPinBoxes);
+        pinRefs.current[index - 1].focus();
+      }
+    }
+  };
+
+  const handlePinPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+
+    if (pastedData) {
+      const newPinBoxes = Array(6).fill("");
+      pastedData.split("").forEach((char, idx) => {
+        if (idx < 6) newPinBoxes[idx] = char;
+      });
+      setPinBoxes(newPinBoxes);
+
+      const focusTarget = pastedData.length === 6 ? 5 : pastedData.length;
+      pinRefs.current[focusTarget]?.focus();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Front-end Input Validations
     if (!bankName.trim()) {
       return toast.error("Please select a bank");
-    }
-
-    if (!accountName.trim()) {
-      return toast.error("Enter account name");
     }
 
     if (accountNumber.length !== 10) {
       return toast.error("Account number must be 10 digits");
     }
 
+    const finalPin = pinBoxes.join("");
+    if (finalPin.length !== 6) {
+      return toast.error("Please enter your complete 6-digit transaction PIN");
+    }
+
+    // Dynamic payload fallback matching your login payload slice
+    const firstName = user?.firstName || user?.data?.firstName || "";
+    const lastName = user?.lastName || user?.data?.lastName || "";
+    const computedAccountName = `${firstName} ${lastName}`.trim();
+
+    const userId = user?._id || user?.id || user?.data?._id || user?.data?.id;
+    const activeToken = token || localStorage.getItem("authToken");
+
+    if (!userId) {
+      return toast.error("User identity profile missing. Please log in again.");
+    }
+
     try {
       setLoading(true);
 
+      // 🟢 STEP 1: Fetch existing linked accounts
+      const accountsResponse = await getLinkedAccounts(activeToken);
+
+      // 🟢 CRITICAL FIX: Explicitly extract the array using your exact key: "linkedAccounts"
+      const accountsArray = accountsResponse?.linkedAccounts || [];
+
+      // 🟢 STEP 2: Strict Gatekeeper block
+      if (accountsArray.length >= 1) {
+        setLoading(false);
+        return toast.error("You cannot link more than one account.");
+      }
+
+      // 🟢 STEP 3: Verify security PIN only if account check passes
+      await confirmTransactionPin(userId, finalPin, activeToken);
+
+      // 🟢 STEP 4: Fire the creation payload
       const response = await linkBankAccount(
         {
           bankName,
-          accountName,
+          accountName: computedAccountName || "Verified User",
           accountNumber,
         },
-        token || localStorage.getItem("authToken"),
+        activeToken,
       );
 
       toast.success(response?.message || "Account linked successfully");
-
       setStep(2);
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Unable to link account");
+      console.error("Link account submission workflow failed:", error);
+      toast.error(
+        error?.response?.data?.message || error?.message || "Processing failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -72,7 +155,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     if (onSuccessRefresh) {
       onSuccessRefresh();
     }
-
     onClose();
   };
 
@@ -88,41 +170,25 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               Link Withdrawal Account
             </h2>
 
+            {/* Bank Selection */}
             <div className="link-account-input-group">
               <label className="link-account-input-label">Bank</label>
-
               <select
                 className="link-account-custom-input"
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
               >
                 <option value="">Select Bank</option>
-
                 <option value="sterling">Sterling Bank</option>
-
                 <option value="access">Access Bank</option>
-
                 <option value="gtbank">GTBank</option>
-
                 <option value="zenith">Zenith Bank</option>
               </select>
             </div>
 
-            <div className="link-account-input-group">
-              <label className="link-account-input-label">Account Name</label>
-
-              <input
-                type="text"
-                className="link-account-custom-input"
-                placeholder="Enter account name"
-                value={accountName}
-                onChange={(e) => setAccountName(e.target.value)}
-              />
-            </div>
-
+            {/* Account Number Input */}
             <div className="link-account-input-group">
               <label className="link-account-input-label">Account Number</label>
-
               <input
                 type="text"
                 maxLength={10}
@@ -135,6 +201,46 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               />
             </div>
 
+            {/* PIN Row */}
+            <div className="link-account-input-group">
+              <label className="link-account-input-label">
+                Transaction PIN
+              </label>
+              <div
+                className="link-account-pin-row"
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  justifyContent: "space-between",
+                  marginTop: "4px",
+                }}
+              >
+                {pinBoxes.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="password"
+                    maxLength={2}
+                    value={digit}
+                    ref={(el) => (pinRefs.current[index] = el)}
+                    onChange={(e) => handlePinChange(e.target.value, index)}
+                    onKeyDown={(e) => handlePinKeyDown(e, index)}
+                    onPaste={handlePinPaste}
+                    style={{
+                      width: "44px",
+                      height: "44px",
+                      textAlign: "center",
+                      fontSize: "18px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      background: "#f9fafb",
+                    }}
+                    className="link-account-pin-box"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Interface CTAs */}
             <div className="link-account-actions-row">
               <button
                 type="button"
@@ -143,13 +249,12 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               >
                 Cancel
               </button>
-
               <button
                 type="submit"
                 className="link-account-btn-solid"
                 disabled={loading}
               >
-                {loading ? "Linking..." : "Link Account"}
+                {loading ? "Checking..." : "Link Account"}
               </button>
             </div>
           </form>
@@ -160,13 +265,10 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
             <div className="link-account-celebration-container">
               <BiParty className="link-account-party-icon" />
             </div>
-
             <h2 className="link-account-modal-title">Success!</h2>
-
             <p className="link-account-modal-subtitle">
               Your withdrawal account has been linked successfully.
             </p>
-
             <button
               className="link-account-btn-solid width-full"
               onClick={handleClose}
