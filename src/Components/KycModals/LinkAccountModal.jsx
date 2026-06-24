@@ -85,7 +85,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Front-end Input Validations
     if (!bankName.trim()) {
       return toast.error("Please select a bank");
     }
@@ -99,11 +98,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       return toast.error("Please enter your complete 6-digit transaction PIN");
     }
 
-    // Dynamic payload fallback matching your login payload slice
-    const firstName = user?.firstName || user?.data?.firstName || "";
-    const lastName = user?.lastName || user?.data?.lastName || "";
-    const computedAccountName = `${firstName} ${lastName}`.trim();
-
     const userId = user?._id || user?.id || user?.data?._id || user?.data?.id;
     const activeToken = token || localStorage.getItem("authToken");
 
@@ -114,26 +108,29 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     try {
       setLoading(true);
 
-      // 🟢 STEP 1: Fetch existing linked accounts
-      const accountsResponse = await getLinkedAccounts(activeToken);
-
-      // 🟢 CRITICAL FIX: Explicitly extract the array using your exact key: "linkedAccounts"
-      const accountsArray = accountsResponse?.linkedAccounts || [];
-
-      // 🟢 STEP 2: Strict Gatekeeper block
-      if (accountsArray.length >= 1) {
-        setLoading(false);
-        return toast.error("You cannot link more than one account.");
+      // Gracefully catch new accounts lacking dynamic sub-records
+      try {
+        const accountsResponse = await getLinkedAccounts(activeToken);
+        const accountsArray = accountsResponse?.linkedAccounts || [];
+        
+        if (accountsArray.length >= 1) {
+          setLoading(false);
+          return toast.error("You already have a linked account.");
+        }
+      } catch (checkError) {
+        const status = checkError?.response?.status;
+        if (status && status !== 404) {
+          throw checkError; 
+        }
       }
 
-      // 🟢 STEP 3: Verify security PIN only if account check passes
+      // 1. Verify Security PIN via explicit body payload mapping
       await confirmTransactionPin(userId, finalPin, activeToken);
 
-      // 🟢 STEP 4: Fire the creation payload
+      // 2. Link Bank Account (excluding structural metadata profiles)
       const response = await linkBankAccount(
         {
           bankName,
-          accountName: computedAccountName || "Verified User",
           accountNumber,
         },
         activeToken,
@@ -142,10 +139,16 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       toast.success(response?.message || "Account linked successfully");
       setStep(2);
     } catch (error) {
-      console.error("Link account submission workflow failed:", error);
-      toast.error(
-        error?.response?.data?.message || error?.message || "Processing failed",
-      );
+      console.error("Workflow tracking error context:", error);
+      
+      const rawServerMessage = error?.response?.data?.message || error?.response?.data?.error || "";
+      
+      // 🟢 Catch explicit bcrypt configuration omissions from the database collections
+      if (rawServerMessage.includes("data and hash arguments required")) {
+        toast.error("This test user account has no transaction PIN configured. Create a PIN in settings first.");
+      } else {
+        toast.error(rawServerMessage || error?.message || "Internal Server Error");
+      }
     } finally {
       setLoading(false);
     }

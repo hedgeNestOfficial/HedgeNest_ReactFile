@@ -23,7 +23,7 @@ const ConvertPage = () => {
   const [transactionPin, setTransactionPin] = useState("");
 
   const [coversionHistory, setConversionHistory] = useState([]);
-  const [liveRate, setLiveRate] = useState(null);
+  const [liveRateData, setLiveRateData] = useState(null);
   const [conversionData, setConversionData] = useState(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const { token, wallet, user } = useSelector((state) => state.user);
@@ -43,7 +43,7 @@ const ConvertPage = () => {
     try {
       setIsLoadingRate(true);
       const response = await GetLiveRate();
-      setLiveRate(response?.rate || response);
+      setLiveRateData(response);
     } catch (err) {
       console.error("Live rate tracking error:", err);
     } finally {
@@ -122,17 +122,22 @@ const ConvertPage = () => {
   const toggleHelpDropdown = (e) => {
     e.stopPropagation();
     setIsHelpOpen((prev) => !prev);
+  const getCurrentDisplayRate = () => {
+    if (!liveRateData) return 0;
+    return activeCurrency === "NGN" ? liveRateData.rate : liveRateData.usdtRate;
   };
 
   const getCalculatedPreview = () => {
-    if (!inputValue || Number(inputValue) <= 0) return "0";
+    if (!inputValue || Number(inputValue) <= 0 || !liveRateData) return "0";
 
     const numericAmount = Number(inputValue);
     if (activeCurrency === "NGN") {
-      if (!liveRate) return "0";
-      return (numericAmount / liveRate).toFixed(2);
+      const rate = liveRateData.rate || 1;
+      return (numericAmount / rate).toFixed(2);
     } else {
       return (numericAmount * 1393).toFixed(2);
+      const usdtRate = liveRateData.usdtRate || 1;
+      return (numericAmount * usdtRate).toFixed(2);
     }
   };
 
@@ -158,6 +163,7 @@ const ConvertPage = () => {
     return true;
   };
 
+  // 🟢 FIXED INPUT HANDLER
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -180,6 +186,7 @@ const ConvertPage = () => {
 
     setConversionData(null);
     setTransactionPin("");
+    setTransactionPin(""); 
     setIsModalOpen(true);
   };
 
@@ -191,7 +198,6 @@ const ConvertPage = () => {
 
     try {
       setLoading(true);
-
       const cleanToken = token.replace(/^"|"$/g, "");
       const targetUserId = user?.id || user?._id;
 
@@ -220,7 +226,7 @@ const ConvertPage = () => {
       setInputValue("");
       setTransactionPin("");
 
-      await Promise.all([syncWalletData(), fetchCoversionHistory()]);
+      await Promise.all([syncWalletData(), fetchCoversionHistory(), fetchLiveRate()]);
     } catch (error) {
       console.error("Conversion execution error details:", error);
       const extractedErrorMessage =
@@ -289,12 +295,16 @@ const ConvertPage = () => {
 
         <section className="rate-banner-container">
           <div className="rate-info">
-            <span className="rate-label">CURRENT MARKET TRACKER RATE</span>
+            <span className="rate-label">
+              CURRENT {activeCurrency === "NGN" ? "NAIRA" : "USDT"} MARKET TRACKER RATE
+            </span>
             {isLoadingRate ? (
               <div className="convert-skel sk-dark sk-rate-headline"></div>
             ) : (
               <h2 className="summary-value">
                 ₦{liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
+                {"₦"}
+                {getCurrentDisplayRate().toLocaleString()} / 1 USDT
               </h2>
             )}
           </div>
@@ -399,7 +409,7 @@ const ConvertPage = () => {
           <button
             type="submit"
             className="submit-conversion-btn"
-            disabled={!!inputError}
+            disabled={!!inputError || !inputValue}
           >
             {activeCurrency === "NGN"
               ? "Convert NGN to USDT"
@@ -535,12 +545,7 @@ const ConvertPage = () => {
               <div className="summary-row">
                 <span className="summary-label">Execution Settlement Rate</span>
                 <span className="summary-value">
-                  {activeCurrency === "NGN"
-                    ? liveRate
-                      ? `₦${liveRate.toLocaleString()}`
-                      : "0"
-                    : "₦1,393"}{" "}
-                  / 1 USDT
+                  ₦{getCurrentDisplayRate().toLocaleString()} / 1 USDT
                 </span>
               </div>
 

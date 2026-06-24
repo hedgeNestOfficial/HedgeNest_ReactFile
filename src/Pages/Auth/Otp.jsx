@@ -255,7 +255,7 @@ const Otp = () => {
               </p>
 
               <p className="edit-email" onClick={() => navigate("/signup")}>
-                Edit email
+                email
               </p>
             </div>
           </form>
