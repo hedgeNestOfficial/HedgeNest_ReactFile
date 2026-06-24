@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "../Style/PlanSummary.css";
 
-const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
-  // Wait for the data to arrive from the parent component
+const PlanSummary = ({
+  previewSummaryData,
+  onRefreshSummary,
+  onBack,
+  onCancel,
+  onConfirm,
+}) => {
+  // Trigger the preview breakdown automatically on component mount
+  useEffect(() => {
+    onRefreshSummary?.();
+  }, [onRefreshSummary]);
+
+  // Show a neutral container during mounting while waiting for parent data population
   if (!previewSummaryData) {
     return (
       <div
@@ -16,22 +27,38 @@ const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
     );
   }
 
-  const title = previewSummaryData.title || "";
-  const planType = previewSummaryData.planType || "";
-  const amount = Number(previewSummaryData.amount || 0);
+  // --- SAFE NORMALIZATION (MATCHED TO RECENT CONTRACT BUILD) ---
+  const title = previewSummaryData.title || "Savings Plan";
+  const planType = previewSummaryData.planType || "LOCKED";
+
+  const targetAmount = Number(
+    previewSummaryData.targetAmount || previewSummaryData.amount || 0,
+  );
+
   const duration = previewSummaryData.duration || 0;
-  const savingFrequency = previewSummaryData.savingFrequency || "";
+
+  const savingFrequency = previewSummaryData.savingFrequency
+    ? previewSummaryData.savingFrequency.toLowerCase()
+    : "";
+
+  const interestRate = previewSummaryData.interestRate || 0;
   const breakingFeePercentage = previewSummaryData.breakingFeePercentage ?? 0;
 
+  // Extract numerical attributes directly matching schema layout variables
   const interestBeforeTax = Number(previewSummaryData.interestBeforeTax || 0);
-  const withholdingTax = Number(previewSummaryData.withholdingTax || 0);
-  const totalPayback = Number(previewSummaryData.totalPayback || 0);
+  const withholdingTax = Number(
+    previewSummaryData.withholdingTax || previewSummaryData.taxAmount || 0,
+  );
+
+  // Calculate directly via provided data elements to insulate against floating-point precision drops
   const interestAfterTax = Math.max(0, interestBeforeTax - withholdingTax);
+  const totalPayback = Number(previewSummaryData.totalPayback || 0);
 
   const getFormattedMaturityDate = () => {
     if (planType.toUpperCase() === "FLEXIBLE") {
       return "No lock-in (Withdraw anytime)";
     }
+
     if (previewSummaryData.maturityDate) {
       return new Date(previewSummaryData.maturityDate).toLocaleDateString(
         "en-GB",
@@ -42,10 +69,9 @@ const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
         },
       );
     }
+
     return "N/A";
   };
-
-  const isFlexible = planType.toUpperCase() === "FLEXIBLE";
 
   return (
     <div className="modal-container" role="dialog" aria-modal="true">
@@ -63,11 +89,11 @@ const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
 
         <div className="summary-row">
           <span className="summary-label">
-            {isFlexible ? "Target Amount" : "Amount"}
+            {planType.toUpperCase() === "FLEXIBLE" ? "Target Amount" : "Amount"}
           </span>
           <span className="summary-value text-dark">
             ₦{" "}
-            {amount.toLocaleString(undefined, {
+            {targetAmount.toLocaleString(undefined, {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -84,22 +110,17 @@ const PlanSummary = ({ previewSummaryData, onBack, onCancel, onConfirm }) => {
           </span>
         </div>
 
-        {isFlexible ? (
-          <div className="summary-row">
-            <span className="summary-label">Saving Frequency</span>
-            <span
-              className="summary-value text-dark"
-              style={{ textTransform: "capitalize" }}
-            >
-              {savingFrequency.toLowerCase()}
-            </span>
-          </div>
-        ) : (
-          <div className="summary-row">
-            <span className="summary-label">Duration (Days)</span>
-            <span className="summary-value text-dark">{duration} days</span>
-          </div>
-        )}
+        <div className="summary-row">
+          <span className="summary-label">
+            {planType.toUpperCase() === "FLEXIBLE"
+              ? "Calculated Duration"
+              : "Duration (Days)"}
+          </span>
+          <span className="summary-value text-dark">
+            {duration}{" "}
+            {planType.toUpperCase() === "FLEXIBLE" ? savingFrequency : ""}
+          </span>
+        </div>
 
         <div className="summary-row">
           <span className="summary-label">Maturity Date</span>

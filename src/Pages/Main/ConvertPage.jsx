@@ -25,12 +25,11 @@ const ConvertPage = () => {
   const [coversionHistory, setConversionHistory] = useState([]);
   const [liveRate, setLiveRate] = useState(null);
   const [conversionData, setConversionData] = useState(null);
-
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const { token, wallet, user } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
 
-  // Formatting utility for clean currency presentation
   const formatCurrency = (value = 0) =>
     Number(value).toLocaleString("en-NG", {
       minimumFractionDigits: 2,
@@ -40,7 +39,6 @@ const ConvertPage = () => {
   const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
 
-  // Fetch current exchange rates
   const fetchLiveRate = async () => {
     try {
       setIsLoadingRate(true);
@@ -53,7 +51,6 @@ const ConvertPage = () => {
     }
   };
 
-  // Fetch complete conversion logs
   const fetchCoversionHistory = async () => {
     if (!token) return;
     try {
@@ -72,7 +69,6 @@ const ConvertPage = () => {
     }
   };
 
-  // Synchronize and parse wallet balances from the API
   const syncWalletData = async () => {
     if (!token) return;
     try {
@@ -109,7 +105,25 @@ const ConvertPage = () => {
     }
   }, [token]);
 
-  // Calculated live preview value logic using context exchange rates
+  // Clean native DOM tracking dismissal logic running without a useRef dependency hook
+  useEffect(() => {
+    if (!isHelpOpen) return;
+
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".help-dropdown-wrapper")) {
+        setIsHelpOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isHelpOpen]);
+
+  const toggleHelpDropdown = (e) => {
+    e.stopPropagation();
+    setIsHelpOpen((prev) => !prev);
+  };
+
   const getCalculatedPreview = () => {
     if (!inputValue || Number(inputValue) <= 0) return "0";
 
@@ -118,12 +132,10 @@ const ConvertPage = () => {
       if (!liveRate) return "0";
       return (numericAmount / liveRate).toFixed(2);
     } else {
-      // Fixed rate execution threshold for USDT to NGN conversions (no fees applied)
       return (numericAmount * 1393).toFixed(2);
     }
   };
 
-  // Handle live amount verification alerts under input pane
   const validateInputAmount = (value, currency) => {
     if (!value) {
       setInputError("");
@@ -152,7 +164,6 @@ const ConvertPage = () => {
     validateInputAmount(value, activeCurrency);
   };
 
-  // Handle local form submission with safeguards
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -168,11 +179,10 @@ const ConvertPage = () => {
     }
 
     setConversionData(null);
-    setTransactionPin(""); // Reset PIN field parameters cleanly
+    setTransactionPin("");
     setIsModalOpen(true);
   };
 
-  // Submit transactions securely to backend architecture after confirming PIN
   const handleFinalConfirm = async () => {
     if (!transactionPin || transactionPin.length < 6) {
       toast.error("Please enter your complete 6-digit Transaction PIN");
@@ -185,7 +195,6 @@ const ConvertPage = () => {
       const cleanToken = token.replace(/^"|"$/g, "");
       const targetUserId = user?.id || user?._id;
 
-      // Verify user transaction PIN authorization signature
       try {
         await confirmTransactionPin(targetUserId, transactionPin, cleanToken);
       } catch (pinError) {
@@ -197,7 +206,6 @@ const ConvertPage = () => {
         return;
       }
 
-      // Proceed with execution engine architecture call
       const payload = {
         from: activeCurrency,
         to: activeCurrency === "NGN" ? "USDT" : "NGN",
@@ -243,7 +251,38 @@ const ConvertPage = () => {
             <h1>Hedge Your Naira</h1>
             <p>
               Convert NGN to USDT at live market rates.
-              <FiHelpCircle className="tooltip-icon" />
+              <span className="help-dropdown-wrapper">
+                <button
+                  type="button"
+                  className={`help-btn ${isHelpOpen ? "active" : ""}`}
+                  onClick={toggleHelpDropdown}
+                  aria-label="Toggle currency information dropdown panel"
+                >
+                  <FiHelpCircle className="tooltip-icon" />
+                </button>
+                {isHelpOpen && (
+                  <div className="dropdown-panel">
+                    <div className="arrow-top"></div>
+                    <div className="panel-content">
+                      <p className="info-text">
+                        <strong>USDT</strong> is a digital currency tied to the
+                        US Dollar. It helps protect your money from Naira
+                        depreciation and keeps its value more stable over time.
+                      </p>
+                      <p className="info-text">
+                        Your money is converted to USDT at current live rates
+                        and vice versa, giving you an edge over local currency
+                        devaluation.
+                      </p>
+                      <p className="info-text">
+                        With HedgeNest, your money is 100% safe and secure in
+                        USDT. Kindly note that a 1.5% conversion fee is
+                        calculated per transaction.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </span>
             </p>
           </div>
         </header>
@@ -255,8 +294,7 @@ const ConvertPage = () => {
               <div className="convert-skel sk-dark sk-rate-headline"></div>
             ) : (
               <h2 className="summary-value">
-                {"₦"}
-                {liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
+                ₦{liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
               </h2>
             )}
           </div>
@@ -396,11 +434,8 @@ const ConvertPage = () => {
                     const fromCur = item.from || "NGN";
                     const toCur = item.to || "USDT";
                     const itemStatus = item.status || "Success";
-
                     const exchangeRate = Number(item.rate || 0);
                     const baseAmount = Number(item.amount || 0);
-
-                    // 🟢 MAPPED DIRECTLY FROM API RESPONSE OBJECT (No hardcoded calculations)
                     const receivedAmount = Number(item.amountNow || 0);
 
                     return (
@@ -516,7 +551,7 @@ const ConvertPage = () => {
                   alignItems: "stretch",
                   marginTop: "18px",
                   paddingTop: "14px",
-                  borderTop: "1px dashed #e5e7eb",
+                  borderTop: "1px dashed #060a11",
                   gap: "8px",
                 }}
               >

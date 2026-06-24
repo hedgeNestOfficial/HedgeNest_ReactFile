@@ -4,6 +4,7 @@ import { CiCircleQuestion } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { LuPiggyBank } from "react-icons/lu";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 import SavingsModal from "../Components/SavingsModal";
 import Vaults from "../Components/Vaults";
@@ -43,7 +44,7 @@ const SmartSafe = () => {
   // Local Security Pin Sequence Array
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
 
-  // Summary state vs Form preview state
+  // Consolidated Data Context States
   const [previewSummaryData, setPreviewSummaryData] = useState(null);
   const [formLivePreviewData, setFormLivePreviewData] = useState(null);
 
@@ -57,7 +58,6 @@ const SmartSafe = () => {
     planType: "LOCKED",
   });
 
-  // Structural normalization logic to safely parse backend responses
   const normalizePlans = (plans = []) => {
     return plans
       .filter((plan) => {
@@ -68,20 +68,32 @@ const SmartSafe = () => {
       .map((plan) => ({
         id: plan._id,
         _id: plan._id,
+
         title: plan.title,
+
         type: plan.planType,
         planType: plan.planType,
+
         amount: Number(plan.amount || 0),
         targetAmount: Number(plan.targetAmount || 0),
         currentBalance: Number(plan.currentBalance || 0),
-        interestRate: plan.interestRate || 0,
+
+        interestRate: Number(plan.interestRate || 0),
         frequency: plan.savingFrequency,
-        autoSave: plan.autoSave ?? false,
-        breakingFeePercentage: plan.breakingFeePercentage || 0,
+        savingFrequency: plan.savingFrequency,
+
+        maturityDate: plan.maturityDate,
+        startDate: plan.startDate,
+        createdAt: plan.createdAt,
+
+        status: plan.status,
+        autoSave: plan.autoSave,
+
+        breakingFeePercentage: Number(plan.breakingFeePercentage || 0),
       }));
   };
 
-  // 1. API CALL: Fetch Active Plan Vaults
+  // API CALL: Fetch Active Plan Vaults
   const fetchUserVaults = async () => {
     if (!token) return;
 
@@ -90,6 +102,7 @@ const SmartSafe = () => {
       const response = await getAllPlan(token);
       const plansData =
         response?.plans || response?.plan || response?.data?.plan || [];
+
       setVaults(normalizePlans(plansData));
     } catch (error) {
       toast.error("Could not load your savings vaults.");
@@ -103,7 +116,7 @@ const SmartSafe = () => {
     fetchUserVaults();
   }, [token]);
 
-  // Clean-up hook to scrub temporary fields
+  // Clean-up hook to scrub fields when modal unmounts
   useEffect(() => {
     if (modalScreen === "NONE" || modalScreen === "CREATE") {
       setFormData({
@@ -136,54 +149,36 @@ const SmartSafe = () => {
     });
   };
 
-  // 2. API CALL: Preview configuration request
-  // 2. API CALL: Preview configuration request
-  // 2. API CALL: Preview configuration request
+  // 🎯 ONE-STEP PREVIEW PIPELINE: Directly map backend calculation schemas directly to our summary screens
   const handleFormPreviewFetch = async (payload) => {
     try {
+      setModalScreen("LOADING");
       const response = await previewPlan(payload, token);
 
-      // Check if we actually got data back
+      // Extract raw plan data configurations from custom payload definitions
       const previewData = response?.data || response;
 
-      if (!previewData) {
-        throw new Error("No preview data received from server.");
-      }
-
+      // Seed both state profiles simultaneously from a single API context run
       setFormLivePreviewData(previewData);
       setPreviewSummaryData(previewData);
 
-      // Only proceed to the summary screen if the fetch was successful
+      // Advance directly to the summary breakdown UI screen
       setModalScreen("SUMMARY");
-
-      return response;
     } catch (error) {
       console.error("Live form preview failed:", error);
-
-      // Extract the backend message if it exists
-      const errorMessage =
+      toast.error(
         error?.response?.data?.message ||
-        error?.message ||
-        "Failed to calculate preview. Please try again.";
-
-      // Toast the error so the user knows why it failed
-      // Duration: 4000ms ensures it disappears automatically
-      toast.error(errorMessage, {
-        duration: 1500,
-        position: "top-center",
-      });
-
-      // CRITICAL: We explicitly do NOT set modalScreen to "SUMMARY".
-      // This keeps the user on the creation form so they can fix their inputs.
-      // If you need to force a reset, you can set it to "CREATE"
+          error?.message ||
+          "Failed to calculate live preview conditions.",
+      );
       setModalScreen("CREATE");
     }
-  }; // 3. API CALL: Create and Save a New Vault
-  const handleCreatePlanSubmit = async (pinString) => {
-    // Lock the UI immediately to prevent double submissions
-    setModalScreen("LOADING");
+  };
 
+  const handleCreatePlanSubmit = async (pinString) => {
     try {
+      setModalScreen("LOADING");
+
       const isFlexible = formData.planType === "FLEXIBLE";
 
       const payload = {
@@ -201,20 +196,20 @@ const SmartSafe = () => {
       } else {
         payload.duration = Number(formData.duration);
       }
-
+      console.log("FINAL PAYLOAD:", JSON.stringify(payload, null, 2));
       await createPlan(payload, token);
 
       setModalScreen("SUCCESS");
       fetchUserVaults();
     } catch (err) {
-      toast.error(err?.message || "Plan creation failed");
-      // Revert to PIN screen on failure and clear the inputs
-      setModalScreen("PIN");
-      setPin(["", "", "", "", "", ""]);
+      toast.error(
+        err?.response?.data?.message || err?.message || "Plan creation failed",
+      );
+      setModalScreen("SUMMARY");
     }
   };
 
-  // 4. API CALL: Top Up an Existing Plan Vault
+  // API CALL: Top Up an Existing Plan Vault
   const handleTopUp = async (vault, amount, pinValue) => {
     const targetCeiling = Number(vault?.targetAmount || 0);
     const existingTopUpBalance = Number(vault?.currentBalance || 0);
@@ -223,10 +218,12 @@ const SmartSafe = () => {
     if (existingTopUpBalance + incomingAmount > targetCeiling) {
       const remainderSpace = Math.max(0, targetCeiling - existingTopUpBalance);
 
-      toast.error(
-        `Limit Exceeded. Maximum additional top-up allowed is ₦${remainderSpace.toLocaleString()}.`,
-        { duration: 5000, position: "top-center" },
-      );
+      Swal.fire({
+        title: "Top Up Limit Exceeded",
+        text: `You cannot exceed your target limit of ₦${targetCeiling.toLocaleString()}. Maximum additional amount allowed is ₦${remainderSpace.toLocaleString()}.`,
+        icon: "error",
+        confirmButtonColor: "#EF4444",
+      });
 
       throw new Error("Validation Limit Exceeded");
     }
@@ -242,7 +239,10 @@ const SmartSafe = () => {
         return;
       }
 
-      const payload = { amount: incomingAmount, transactionPin: pinValue };
+      const payload = {
+        amount: incomingAmount,
+        transactionPin: pinValue,
+      };
 
       const response = await topUp(payload, vaultId, token);
       toast.success("Top up successful");
@@ -265,13 +265,15 @@ const SmartSafe = () => {
       }, 500);
     } catch (error) {
       if (error.message !== "Validation Limit Exceeded") {
-        toast.error(error?.message || "Top up failed");
+        toast.error(
+          error?.response?.data?.message || error?.message || "Top up failed",
+        );
       }
       throw error;
     }
   };
 
-  // 5. API CALL: Early Break or Normal Withdrawal Sequence
+  // API CALL: Early Break or Normal Withdrawal Sequence
   const handleWithdraw = async (vault, payload) => {
     const vaultId = vault?.id || vault?._id;
     return await breakPlan(vaultId, payload, token);
@@ -292,7 +294,6 @@ const SmartSafe = () => {
     );
   };
 
-  // Complete cleanup callback invoked when workflow finishes successfully
   const handleCloseSuccess = () => {
     setPin(["", "", "", "", "", ""]);
     setFormData({
@@ -343,8 +344,10 @@ const SmartSafe = () => {
                   </p>
                   <p className="info-text">
                     Breaking Fees of 1.5% will be attracted for early Withdrawal
-                    for locked Saving Plans while with Flexible plans, users can
-                    break savings without additional charges.
+                    for locked Saving Plans, with Flexible plans, users can
+                    break savings without additional charges, while for Stealth
+                    plans, users can't break or withdraw until the maturity
+                    date.
                   </p>
 
                   <div className="rate-banner">Interest Rate Details</div>

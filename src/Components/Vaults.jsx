@@ -40,15 +40,29 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
         const topUpAdditions = vault.currentBalance;
 
         // Gauge progress cleanly using top-up accumulations divided by target limit
-        const currentProgressAmount = Number(vault.currentBalance || 0);
-        const targetGoalCeiling = isFlexible
-          ? Number(vault.targetAmount || 0)
-          : Number(vault.amount || 0);
+        let progressPercentage = 0;
 
-        const progressPercentage =
-          targetGoalCeiling > 0
-            ? Math.min(100, (currentProgressAmount / targetGoalCeiling) * 100)
-            : 0;
+        if (isFlexible) {
+          const current = Number(vault.currentBalance || 0);
+          const target = Number(vault.targetAmount || 0);
+
+          progressPercentage =
+            target > 0 ? Math.min(100, (current / target) * 100) : 0;
+        } else {
+          const start = new Date(vault.startDate || vault.createdAt).getTime();
+
+          const end = new Date(vault.maturityDate).getTime();
+
+          const now = Date.now();
+
+          const totalDuration = end - start;
+          const elapsed = now - start;
+
+          progressPercentage =
+            totalDuration > 0
+              ? Math.min(100, Math.max(0, (elapsed / totalDuration) * 100))
+              : 0;
+        }
 
         return (
           <article key={vaultId} className="vault-card">
@@ -88,6 +102,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
 
               {isFlexible && (
                 <div className="top-up">
+                  {/* 🎯 Changed text label from "Top Up" to "Current Amount" */}
                   <h3>Current Amount</h3>
                   <div>
                     <span className="top-currency">₦</span>
@@ -108,11 +123,38 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
 
             <div className="metrics-row">
               <span className="rate-lbl">{vault.interestRate || 0}% p.a.</span>
+
               <span
                 className="freq-lbl"
-                style={{ textTransform: isFlexible ? "uppercase" : "none" }}
+                style={{
+                  textTransform: isFlexible ? "uppercase" : "none",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                }}
               >
-                {vault.frequency || "DAILY"}
+                {!isFlexible && (
+                  <small
+                    style={{
+                      fontSize: "0.7rem",
+                      color: "#888",
+                      marginBottom: "2px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Maturity
+                  </small>
+                )}
+
+                {isFlexible
+                  ? vault.savingFrequency || vault.frequency || "N/A"
+                  : vault.maturityDate
+                    ? new Date(vault.maturityDate).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "N/A"}
               </span>
             </div>
 
@@ -148,25 +190,6 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                 {isStealth ? "Locked till maturity date" : "Withdraw"}
               </button>
             </div>
-
-            {isFlexible && (
-              <footer className="card-footer">
-                <span
-                  className={`footer-lbl ${vault.autoSave ? "lbl-active" : ""}`}
-                >
-                  {vault.autoSave ? "Auto-Save Enabled" : "Enable Auto-Save"}
-                </span>
-
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={!!vault.autoSave}
-                    onChange={() => onToggleAutoSave?.(vaultId)}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </footer>
-            )}
           </article>
         );
       })}

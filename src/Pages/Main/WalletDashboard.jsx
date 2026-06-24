@@ -163,69 +163,85 @@ const WalletPage = () => {
         {/* BALANCES */}
         <section className="balance-cards-grid">
           {/* NGN CARD */}
-          <div className="balance-card card-ngn">
+          <div className="avail-card card-ngn">
             <div
               className="card-currency-header"
               style={{ display: "flex", alignItems: "center", width: "100%" }}
             >
-              <svg
-                viewBox="0 0 100 100"
-                className="currency-badge-icon ngn-badge"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  display: "inline-block",
-                }}
-              >
-                <rect x="0" y="0" width="33.33" height="100" fill="#008751" />
-                <rect
-                  x="33.33"
-                  y="0"
-                  width="33.34"
-                  height="100"
-                  fill="#ffffff"
-                />
-                <rect
-                  x="66.67"
-                  y="0"
-                  width="33.33"
-                  height="100"
-                  fill="#008751"
-                />
-              </svg>
-              <span className="currency-label">NGN BALANCE</span>
+              <span className="available-label">Available Balance</span>
             </div>
 
-            <div className="balance-amount">
+            <div className="avail-amount">
               {isLoadingWallet ? (
                 <div className="wallet-skel skel-dark skel-large"></div>
               ) : (
-                <>₦{formatAmount(wallet?.balanceInNaira)}</>
+                <>₦{formatAmount(wallet?.availableBalance)}</>
               )}
             </div>
           </div>
 
           {/* USDT CARD */}
           <div className="balance-card card-usdt">
-            <div
-              className="card-currency-header"
-              style={{ display: "flex", alignItems: "center", width: "100%" }}
-            >
-              <SiTether
-                className="currency-badge-icon usdt-badge"
-                style={{ fontSize: "1.3rem", color: "#26a17b" }}
-              />
-              <span className="currency-label">USDT BALANCE</span>
-            </div>
-
-            <div className="balance-amount">
-              {isLoadingWallet ? (
-                <div className="wallet-skel skel-gold skel-large"></div>
-              ) : (
-                <>{formatAmount(wallet?.balanceInUSDT)} USDT</>
-              )}
+            <section className="usdt-holder">
+              <div
+                className="card-currency-header"
+                style={{ display: "flex", alignItems: "center", width: "100%" }}
+              >
+                <SiTether
+                  className="currency-badge-icon usdt-badge"
+                  style={{ fontSize: "1.3rem", color: "#26a17b" }}
+                />
+                <span className="currency-label">USDT </span>
+              </div>
+              <div className="balance-amount">
+                {isLoadingWallet ? (
+                  <div className="wallet-skel skel-gold skel-large"></div>
+                ) : (
+                  <p>{formatAmount(wallet?.balanceInUSDT)}USDT </p>
+                )}
+              </div>
+            </section>
+            <div className="ngn-holder">
+              <div
+                className="card-currency-header"
+                style={{ display: "flex", alignItems: "center", width: "100%" }}
+              >
+                <svg
+                  viewBox="0 0 100 100"
+                  className="currency-badge-icon ngn-badge"
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    display: "inline-block",
+                  }}
+                >
+                  <rect x="0" y="0" width="33.33" height="100" fill="#008751" />
+                  <rect
+                    x="33.33"
+                    y="0"
+                    width="33.34"
+                    height="100"
+                    fill="#ffffff"
+                  />
+                  <rect
+                    x="66.67"
+                    y="0"
+                    width="33.33"
+                    height="100"
+                    fill="#008751"
+                  />
+                </svg>
+                <span className="currency-label">NGN </span>
+              </div>
+              <div className="balance-amount">
+                {isLoadingWallet ? (
+                  <div className="wallet-skel skel-dark skel-large"></div>
+                ) : (
+                  <p>₦{formatAmount(wallet?.balanceInNaira)}</p>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -241,16 +257,6 @@ const WalletPage = () => {
               <FiArrowDownLeft className="tab-icon" />
               Deposit
             </button>
-
-            <button
-              type="button"
-              className={`tab-btn ${activeTab === "withdraw" ? "active" : ""}`}
-              onClick={() => handleTabSwitch("withdraw")}
-            >
-              <FiArrowUpRight className="tab-icon" />
-              Withdraw
-            </button>
-
             <button
               type="button"
               className="tab-btn link-account-btn"
@@ -258,6 +264,14 @@ const WalletPage = () => {
             >
               <FiPlus className="tab-icon" />
               Link Account
+            </button>
+            <button
+              type="button"
+              className={`tab-btn ${activeTab === "withdraw" ? "active" : ""}`}
+              onClick={() => handleTabSwitch("withdraw")}
+            >
+              <FiArrowUpRight className="tab-icon" />
+              Withdraw
             </button>
           </div>
 

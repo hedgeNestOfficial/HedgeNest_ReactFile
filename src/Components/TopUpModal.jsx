@@ -68,11 +68,16 @@ const TopUpModal = ({ isOpen, onClose, vault, onTopUpSuccess }) => {
   };
 
   const handlePinKeyDown = (e, idx) => {
-    if (e.key === "Backspace" && !pin[idx] && idx > 0) {
+    if (e.key === "Backspace") {
       const updated = [...pin];
-      updated[idx - 1] = "";
-      setPin(updated);
-      pinRefs.current[idx - 1]?.focus();
+      if (pin[idx]) {
+        updated[idx] = "";
+        setPin(updated);
+      } else if (idx > 0) {
+        updated[idx - 1] = "";
+        setPin(updated);
+        pinRefs.current[idx - 1]?.focus();
+      }
     }
   };
 
