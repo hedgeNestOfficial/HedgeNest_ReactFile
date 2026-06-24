@@ -146,7 +146,6 @@ const ConvertPage = () => {
     return true;
   };
 
-  // ✅ Fixed: Changed 'currency' to 'activeCurrency' to resolve the Uncaught ReferenceError
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -175,7 +174,6 @@ const ConvertPage = () => {
 
   // Submit transactions securely to backend architecture after confirming PIN
   const handleFinalConfirm = async () => {
-    // Check constraints for 6-digit PIN validation
     if (!transactionPin || transactionPin.length < 6) {
       toast.error("Please enter your complete 6-digit Transaction PIN");
       return;
@@ -401,23 +399,15 @@ const ConvertPage = () => {
 
                     const exchangeRate = Number(item.rate || 0);
                     const baseAmount = Number(item.amount || 0);
-                    const feeCost = Number(item.fee || 0);
 
-                    let calculatedReceived = 0;
-                    if (fromCur === "NGN" && exchangeRate > 0) {
-                      calculatedReceived =
-                        (baseAmount - feeCost) / exchangeRate;
-                    } else if (fromCur === "USDT") {
-                      calculatedReceived = baseAmount * exchangeRate - feeCost;
-                    }
+                    // 🟢 MAPPED DIRECTLY FROM API RESPONSE OBJECT (No hardcoded calculations)
+                    const receivedAmount = Number(item.amountNow || 0);
 
                     return (
                       <tr key={item._id || item.id || index}>
                         <td>
                           <span className="table-txt-timestamp">
-                            {formatDate(
-                              item.createdAt || item.updatedAt || item.date,
-                            )}
+                            {formatDate(item.createdAt || item.updatedAt)}
                           </span>
                         </td>
                         <td>
@@ -447,7 +437,7 @@ const ConvertPage = () => {
                         <td>
                           <span className="table-txt-received">
                             +
-                            {calculatedReceived.toLocaleString(undefined, {
+                            {receivedAmount.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })}{" "}

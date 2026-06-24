@@ -82,6 +82,16 @@ export const withdrawFunds = async (payload, token) => {
   }
 };
 
+export const confirmTransactionPin = async (userId, enteredPin, token) => {
+  const response = await axios.post(
+    `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
+    { enteredPin },
+    {
+      headers: { ...API_CONFIG.headers, Authorization: `Bearer ${token}` },
+    },
+  );
+  return response.data;
+};
 // import axios from "axios"; // or your default axios import
 // import { ENDPOINTS, API_CONFIG } from "../Config/apiConfig";
 
