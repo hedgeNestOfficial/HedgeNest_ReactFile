@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { CiCircleQuestion } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
@@ -68,41 +68,32 @@ const SmartSafe = () => {
       .map((plan) => ({
         id: plan._id,
         _id: plan._id,
-
         title: plan.title,
-
         type: plan.planType,
         planType: plan.planType,
-
         amount: Number(plan.amount || 0),
         targetAmount: Number(plan.targetAmount || 0),
         currentBalance: Number(plan.currentBalance || 0),
-
         interestRate: Number(plan.interestRate || 0),
         frequency: plan.savingFrequency,
         savingFrequency: plan.savingFrequency,
-
         maturityDate: plan.maturityDate,
         startDate: plan.startDate,
         createdAt: plan.createdAt,
-
         status: plan.status,
         autoSave: plan.autoSave,
-
         breakingFeePercentage: Number(plan.breakingFeePercentage || 0),
       }));
   };
 
   // API CALL: Fetch Active Plan Vaults
-  const fetchUserVaults = async () => {
+  const fetchUserVaults = useCallback(async () => {
     if (!token) return;
-
     try {
       setIsLoadingVaults(true);
       const response = await getAllPlan(token);
       const plansData =
         response?.plans || response?.plan || response?.data?.plan || [];
-
       setVaults(normalizePlans(plansData));
     } catch (error) {
       toast.error("Could not load your savings vaults.");
@@ -110,11 +101,11 @@ const SmartSafe = () => {
     } finally {
       setIsLoadingVaults(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchUserVaults();
-  }, [token]);
+  }, [fetchUserVaults]);
 
   // Clean-up hook to scrub fields when modal unmounts
   useEffect(() => {
@@ -149,21 +140,15 @@ const SmartSafe = () => {
     });
   };
 
-  // 2. API CALL: Preview configuration request
-  // 🎯 ONE-STEP PREVIEW PIPELINE: Directly map backend calculation schemas directly to our summary screens
+  // API CALL: Preview configuration request
   const handleFormPreviewFetch = async (payload) => {
     try {
       setModalScreen("LOADING");
       const response = await previewPlan(payload, token);
-
-      // Extract raw plan data configurations from custom payload definitions
       const previewData = response?.data || response;
 
-      // Seed both state profiles simultaneously from a single API context run
       setFormLivePreviewData(previewData);
       setPreviewSummaryData(previewData);
-
-      // Advance directly to the summary breakdown UI screen
       setModalScreen("SUMMARY");
     } catch (error) {
       console.error("Live form preview failed:", error);
@@ -172,331 +157,312 @@ const SmartSafe = () => {
         error?.message ||
         "Failed to calculate preview. Please try again.";
 
-      toast.error(errorMessage, {
-        duration: 1500,
-        position: "top-center",
-      });
-
+      toast.error(errorMessage, { duration: 1500, position: "top-center" });
       setModalScreen("CREATE");
     }
   };
 
-  // 3. API CALL: Create and Save a New Vault
+  // API CALL: Create and Save a New Vault
   const handleCreatePlanSubmit = async (pinString) => {
-    setModalScreen("LOADING");
-    toast.error(
-      error?.response?.data?.message ||
-        error?.message ||
-        "Failed to calculate live preview conditions.",
-    );
-    setModalScreen("CREATE");
-  };
-};
+    try {
+      setModalScreen("LOADING");
+      const isFlexible = formData.planType === "FLEXIBLE";
 
-const handleCreatePlanSubmit = async (pinString) => {
-  try {
-    setModalScreen("LOADING");
+      const payload = {
+        title: formData.title,
+        planType: formData.planType,
+        transactionPin: pinString,
+        ...(isFlexible
+          ? {
+              targetAmount: Number(formData.targetAmount),
+              amount: Number(formData.initialAmount),
+            }
+          : { amount: Number(formData.targetAmount) }),
+      };
 
-    const isFlexible = formData.planType === "FLEXIBLE";
+      if (isFlexible) {
+        payload.savingFrequency = formData.savingFrequency;
+        payload.amountPerFrequency = Number(formData.initialAmount);
+      } else {
+        payload.duration = Number(formData.duration);
+      }
 
-    const payload = {
-      title: formData.title,
-      planType: formData.planType,
-      transactionPin: pinString,
-      // 🟢 FIXED LOGIC HERE: Only pass targetAmount and set initial startup deposit to initialAmount
-      ...(isFlexible
-        ? {
-            targetAmount: Number(formData.targetAmount),
-            amount: Number(formData.initialAmount), // Deduct only what they start up with
-          }
-        : { amount: Number(formData.targetAmount) }),
-    };
-
-    if (isFlexible) {
-      payload.savingFrequency = formData.savingFrequency;
-      payload.amountPerFrequency = Number(formData.initialAmount);
-    } else {
-      payload.duration = Number(formData.duration);
-    }
-    console.log("FINAL PAYLOAD:", JSON.stringify(payload, null, 2));
-    await createPlan(payload, token);
-
-    setModalScreen("SUCCESS");
-    fetchUserVaults();
-  } catch (err) {
-    toast.error(err?.message || "Plan creation failed");
-    setModalScreen("PIN");
-    setPin(["", "", "", "", "", ""]);
-    toast.error(
-      err?.response?.data?.message || err?.message || "Plan creation failed",
-    );
-    setModalScreen("SUMMARY");
-  }
-};
-
-// API CALL: Top Up an Existing Plan Vault
-const handleTopUp = async (vault, amount, pinValue) => {
-  const targetCeiling = Number(vault?.targetAmount || 0);
-  const existingTopUpBalance = Number(vault?.currentBalance || 0);
-  const incomingAmount = Number(amount || 0);
-
-  if (existingTopUpBalance + incomingAmount > targetCeiling) {
-    const remainderSpace = Math.max(0, targetCeiling - existingTopUpBalance);
-
-    Swal.fire({
-      title: "Top Up Limit Exceeded",
-      text: `You cannot exceed your target limit of ₦${targetCeiling.toLocaleString()}. Maximum additional amount allowed is ₦${remainderSpace.toLocaleString()}.`,
-      icon: "error",
-      confirmButtonColor: "#EF4444",
-    });
-
-    throw new Error("Validation Limit Exceeded");
-  }
-
-  try {
-    const vaultId =
-      vault?.id || vault?._id || activeTopUpVault?.id || activeTopUpVault?._id;
-    if (!vaultId) {
-      toast.error("Invalid vault profile data selection.");
-      return;
-    }
-
-    const payload = {
-      amount: incomingAmount,
-      transactionPin: pinValue,
-    };
-
-    const response = await topUp(payload, vaultId, token);
-    toast.success("Top up successful");
-
-    const serverNewBalance =
-      response?.data?.newSavingsBalance ?? response?.newSavingsBalance;
-
-    if (serverNewBalance !== undefined && serverNewBalance !== null) {
-      setVaults((prevVaults) =>
-        prevVaults.map((v) =>
-          v.id === vaultId || v._id === vaultId
-            ? { ...v, currentBalance: Number(serverNewBalance) }
-            : v,
-        ),
-      );
-    }
-
-    setTimeout(async () => {
-      await fetchUserVaults();
-    }, 500);
-  } catch (error) {
-    if (error.message !== "Validation Limit Exceeded") {
+      await createPlan(payload, token);
+      setModalScreen("SUCCESS");
+      fetchUserVaults();
+    } catch (err) {
       toast.error(
-        error?.response?.data?.message || error?.message || "Top up failed",
+        err?.response?.data?.message || err?.message || "Plan creation failed",
       );
+      setModalScreen("SUMMARY");
     }
-    throw error;
-  }
-};
+  };
 
-// API CALL: Early Break or Normal Withdrawal Sequence
-const handleWithdraw = async (vault, payload) => {
-  const vaultId = vault?.id || vault?._id;
-  return await breakPlan(vaultId, payload, token);
-};
+  // API CALL: Top Up an Existing Plan Vault
+  const handleTopUp = async (vault, amount, pinValue) => {
+    const targetCeiling = Number(vault?.targetAmount || 0);
+    const existingTopUpBalance = Number(vault?.currentBalance || 0);
+    const incomingAmount = Number(amount || 0);
 
-const handleWithdrawClick = (vault) => {
-  setActiveWithdrawVault(vault);
-  setIsWithdrawModalOpen(true);
-};
+    if (existingTopUpBalance + incomingAmount > targetCeiling) {
+      const remainderSpace = Math.max(0, targetCeiling - existingTopUpBalance);
 
-const handleToggleAutoSave = (vaultId) => {
-  setVaults((prev) =>
-    prev.map((vault) =>
-      vault.id === vaultId || vault._id === vaultId
-        ? { ...vault, autoSave: !vault.autoSave }
-        : vault,
-    ),
-  );
-};
+      Swal.fire({
+        title: "Top Up Limit Exceeded",
+        text: `You cannot exceed your target limit of ₦${targetCeiling.toLocaleString()}. Maximum additional amount allowed is ₦${remainderSpace.toLocaleString()}.`,
+        icon: "error",
+        confirmButtonColor: "#EF4444",
+      });
+      throw new Error("Validation Limit Exceeded");
+    }
 
-const handleCloseSuccess = () => {
-  setPin(["", "", "", "", "", ""]);
-  setFormData({
-    title: "",
-    targetAmount: "",
-    duration: "",
-    savingFrequency: "DAILY",
-    initialAmount: "",
-    planType: "LOCKED",
-  });
-  setPreviewSummaryData(null);
-  setFormLivePreviewData(null);
-  setModalScreen("NONE");
-  fetchUserVaults();
-};
+    try {
+      const vaultId =
+        vault?.id ||
+        vault?._id ||
+        activeTopUpVault?.id ||
+        activeTopUpVault?._id;
+      if (!vaultId) {
+        toast.error("Invalid vault profile data selection.");
+        return;
+      }
 
-return (
-  <main className="smart-container" onClick={() => setIsHelpOpen(false)}>
-    <header className="dash-header">
-      <div className="header-titles">
-        <h1 className="main-title">Smart Safe</h1>
-        <p className="sub-title">Save with intent. Earn up to 17% p.a.</p>
-      </div>
+      const payload = { amount: incomingAmount, transactionPin: pinValue };
+      const response = await topUp(payload, vaultId, token);
+      toast.success("Top up successful");
 
-      <div className="header-actions">
-        <div className="dropdown-wrapper" onClick={(e) => e.stopPropagation()}>
-          <button
-            className={`help-btn ${isHelpOpen ? "active" : ""}`}
-            onClick={() => setIsHelpOpen(!isHelpOpen)}
+      const serverNewBalance =
+        response?.data?.newSavingsBalance ?? response?.newSavingsBalance;
+
+      if (serverNewBalance !== undefined && serverNewBalance !== null) {
+        setVaults((prevVaults) =>
+          prevVaults.map((v) =>
+            v.id === vaultId || v._id === vaultId
+              ? { ...v, currentBalance: Number(serverNewBalance) }
+              : v,
+          ),
+        );
+      }
+
+      setTimeout(async () => {
+        await fetchUserVaults();
+      }, 500);
+    } catch (error) {
+      if (error.message !== "Validation Limit Exceeded") {
+        toast.error(
+          error?.response?.data?.message || error?.message || "Top up failed",
+        );
+      }
+      throw error;
+    }
+  };
+
+  // API CALL: Early Break or Normal Withdrawal Sequence
+  const handleWithdraw = async (vault, payload) => {
+    const vaultId = vault?.id || vault?._id;
+    return await breakPlan(vaultId, payload, token);
+  };
+
+  const handleWithdrawClick = (vault) => {
+    setActiveWithdrawVault(vault);
+    setIsWithdrawModalOpen(true);
+  };
+
+  const handleToggleAutoSave = (vaultId) => {
+    setVaults((prev) =>
+      prev.map((vault) =>
+        vault.id === vaultId || vault._id === vaultId
+          ? { ...vault, autoSave: !vault.autoSave }
+          : vault,
+      ),
+    );
+  };
+
+  const handleCloseSuccess = () => {
+    setPin(["", "", "", "", "", ""]);
+    setFormData({
+      title: "",
+      targetAmount: "",
+      duration: "",
+      savingFrequency: "DAILY",
+      initialAmount: "",
+      planType: "LOCKED",
+    });
+    setPreviewSummaryData(null);
+    setFormLivePreviewData(null);
+    setModalScreen("NONE");
+    fetchUserVaults();
+  };
+
+  return (
+    <main className="smart-container" onClick={() => setIsHelpOpen(false)}>
+      <header className="dash-header">
+        <div className="header-titles">
+          <h1 className="main-title">Smart Safe</h1>
+          <p className="sub-title">Save with intent. Earn up to 17% p.a.</p>
+        </div>
+
+        <div className="header-actions">
+          <div
+            className="dropdown-wrapper"
+            onClick={(e) => e.stopPropagation()}
           >
-            <CiCircleQuestion className="icon-help" />
-          </button>
+            <button
+              className={`help-btn ${isHelpOpen ? "active" : ""}`}
+              onClick={() => setIsHelpOpen(!isHelpOpen)}
+            >
+              <CiCircleQuestion className="icon-help" />
+            </button>
 
-          {isHelpOpen && (
-            <div className="dropdown-panel">
-              <div className="arrow-top"></div>
-              <div className="panel-content">
-                <p className="info-text">
-                  Interest on Smart Safe is calculated per annum and paid on the
-                  matured date of the savings plan.
-                </p>
-                <p className="info-text">
-                  In compliance with Nigerian tax regulations, a Withholding Tax
-                  of 10% applies to the interest earned on your savings.
-                </p>
-                <p className="info-text">
-                  Breaking Fees of 1.5% will be attracted for early Withdrawal
-                  for locked Saving Plans, with Flexible plans, users can break
-                  savings without additional charges, while for Stealth plans,
-                  users can't break or withdraw until the maturity date.
-                </p>
+            {isHelpOpen && (
+              <div className="dropdown-panel">
+                <div className="arrow-top"></div>
+                <div className="panel-content">
+                  <p className="info-text">
+                    Interest on Smart Safe is calculated per annum and paid on
+                    the matured date of the savings plan.
+                  </p>
+                  <p className="info-text">
+                    In compliance with Nigerian tax regulations, a Withholding
+                    Tax of 10% applies to the interest earned on your savings.
+                  </p>
+                  <p className="info-text">
+                    Breaking Fees of 1.5% will be attracted for early Withdrawal
+                    for locked Saving Plans, with Flexible plans, users can
+                    break savings without additional charges, while for Stealth
+                    plans, users can't break or withdraw until the maturity
+                    date.
+                  </p>
 
-                <div className="rate-banner">Interest Rate Details</div>
+                  <div className="rate-banner">Interest Rate Details</div>
 
-                <div className="rate-list">
-                  <div className="rate-row rate-header">
-                    <span className="cell text-left">Duration</span>
-                    <span className="cell text-right">Rate</span>
-                  </div>
-                  <div className="rate-row bg-highlight">
-                    <span className="cell text-left">7 - 90 days</span>
-                    <span className="cell text-right">14% p.a.</span>
-                  </div>
-                  <div className="rate-row">
-                    <span className="cell text-left">91 - 180 days</span>
-                    <span className="cell text-right">15% p.a.</span>
-                  </div>
-                  <div className="rate-row bg-highlight">
-                    <span className="cell text-left">181 - 364 days</span>
-                    <span className="cell text-right">16% p.a.</span>
-                  </div>
-                  <div className="rate-row">
-                    <span className="cell text-left">365 - 1000 days</span>
-                    <span className="cell text-right">17% p.a.</span>
+                  <div className="rate-list">
+                    <div className="rate-row rate-header">
+                      <span className="cell text-left">Duration</span>
+                      <span className="cell text-right">Rate</span>
+                    </div>
+                    <div className="rate-row bg-highlight">
+                      <span className="cell text-left">7 - 90 days</span>
+                      <span className="cell text-right">14% p.a.</span>
+                    </div>
+                    <div className="rate-row">
+                      <span className="cell text-left">91 - 180 days</span>
+                      <span className="cell text-right">15% p.a.</span>
+                    </div>
+                    <div className="rate-row bg-highlight">
+                      <span className="cell text-left">181 - 364 days</span>
+                      <span className="cell text-right">16% p.a.</span>
+                    </div>
+                    <div className="rate-row">
+                      <span className="cell text-left">365 - 1000 days</span>
+                      <span className="cell text-right">17% p.a.</span>
+                    </div>
                   </div>
                 </div>
               </div>
+            )}
+          </div>
+
+          <button
+            className="create-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setModalScreen("CREATE");
+            }}
+          >
+            <FaPlus />
+            New Vault
+          </button>
+        </div>
+      </header>
+
+      {/* SKELETON LOADER CONTAINER */}
+      {isLoadingVaults ? (
+        <div className="vault-wrap">
+          {[1, 2].map((i) => (
+            <div key={i} className="vault-card skeleton-card">
+              <div className="skeleton-element skeleton-badge"></div>
+              <div className="skeleton-element skeleton-title"></div>
+              <div className="skeleton-element skeleton-balance-block"></div>
+              <div className="skeleton-element skeleton-progress"></div>
+              <div className="skeleton-element skeleton-metrics"></div>
+              <div className="skeleton-element skeleton-actions"></div>
             </div>
-          )}
+          ))}
         </div>
-
-        <button
-          className="create-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            setModalScreen("CREATE");
+      ) : vaults.length === 0 ? (
+        <section className="empty-card">
+          <div className="empty-content">
+            <div className="icon-box">
+              <LuPiggyBank className="icon-piggy" />
+            </div>
+            <h2 className="card-title">Build Your First Nest</h2>
+            <p className="card-desc">
+              Pick a goal, set how often you'll save, and let HedgeNest do the
+              rest.
+            </p>
+          </div>
+        </section>
+      ) : (
+        <Vaults
+          vaultsData={vaults}
+          onTopUp={(vault) => {
+            setActiveTopUpVault(vault);
+            setIsTopUpOpen(true);
           }}
-        >
-          <FaPlus />
-          New Vault
-        </button>
-      </div>
-    </header>
+          onWithdraw={handleWithdrawClick}
+          onToggleAutoSave={handleToggleAutoSave}
+        />
+      )}
 
-    {/* SKELETON LOADER CONTAINER */}
-    {isLoadingVaults ? (
-      <div className="vault-wrap">
-        {[1, 2].map((i) => (
-          <div key={i} className="vault-card skeleton-card">
-            <div className="skeleton-element skeleton-badge"></div>
-            <div className="skeleton-element skeleton-title"></div>
-            <div className="skeleton-element skeleton-balance-block"></div>
-            <div className="skeleton-element skeleton-progress"></div>
-            <div className="skeleton-element skeleton-metrics"></div>
-            <div className="skeleton-element skeleton-actions"></div>
-          </div>
-        ))}
-      </div>
-    ) : vaults.length === 0 ? (
-      <section className="empty-card">
-        <div className="empty-content">
-          <div className="icon-box">
-            <LuPiggyBank className="icon-piggy" />
-          </div>
-          <h2 className="card-title">Build Your First Nest</h2>
-          <p className="card-desc">
-            Pick a goal, set how often you'll save, and let HedgeNest do the
-            rest.
-          </p>
-        </div>
-      </section>
-    ) : (
-      <Vaults
-        vaultsData={vaults}
-        onTopUp={(vault) => {
-          setActiveTopUpVault(vault);
-          setIsTopUpOpen(true);
+      {/* TOP UP MODAL SUB-ROUTE */}
+      <TopUpModal
+        isOpen={isTopUpOpen}
+        onClose={() => {
+          setIsTopUpOpen(false);
+          setActiveTopUpVault(null);
         }}
-        onWithdraw={handleWithdrawClick}
-        onToggleAutoSave={handleToggleAutoSave}
+        vault={activeTopUpVault}
+        onTopUpSuccess={handleTopUp}
       />
-    )}
 
-    {/* TOP UP MODAL SUB-ROUTE */}
-    <TopUpModal
-      isOpen={isTopUpOpen}
-      onClose={() => {
-        setIsTopUpOpen(false);
-        setActiveTopUpVault(null);
-      }}
-      vault={activeTopUpVault}
-      onTopUpSuccess={handleTopUp}
-    />
+      {/* WITHDRAWAL MODAL SUB-ROUTE */}
+      <WithdrawModal
+        isOpen={isWithdrawModalOpen}
+        vault={activeWithdrawVault}
+        onClose={() => setIsWithdrawModalOpen(false)}
+        onWithdraw={handleWithdraw}
+        onWithdrawSuccess={() => {
+          setVaults((prev) =>
+            prev.filter(
+              (v) =>
+                v.id !== activeWithdrawVault?.id &&
+                v._id !== activeWithdrawVault?._id,
+            ),
+          );
+          fetchUserVaults();
+        }}
+      />
 
-    {/* WITHDRAWAL MODAL SUB-ROUTE */}
-    <WithdrawModal
-      isOpen={isWithdrawModalOpen}
-      vault={activeWithdrawVault}
-      onClose={() => setIsWithdrawModalOpen(false)}
-      onWithdraw={handleWithdraw}
-      onWithdrawSuccess={() => {
-        // 🟢 FIXED LOGIC HERE: Immediately filter out card from local view upon successful breaking
-        setVaults((prev) =>
-          prev.filter(
-            (v) =>
-              v.id !== activeWithdrawVault?.id &&
-              v._id !== activeWithdrawVault?._id,
-          ),
-        );
-        fetchUserVaults();
-      }}
-    />
-
-    {/* CENTRAL SAVINGS ACTION MODAL INTERNALS */}
-    <SavingsModal
-      modalScreen={modalScreen}
-      setModalScreen={setModalScreen}
-      isFlexibleMode={isFlexibleMode}
-      setIsFlexibleMode={setIsFlexibleMode}
-      formData={formData}
-      handleInputChange={handleInputChange}
-      handleCloseSuccess={handleCloseSuccess}
-      fetchUserVaults={fetchUserVaults}
-      pin={pin}
-      handlePinChange={handlePinChange}
-      previewSummaryData={previewSummaryData}
-      formLivePreviewData={formLivePreviewData}
-      onFormPreviewRequested={handleFormPreviewFetch}
-      handlePinSubmit={handleCreatePlanSubmit}
-    />
-  </main>
-);
+      {/* CENTRAL SAVINGS ACTION MODAL INTERNALS */}
+      <SavingsModal
+        modalScreen={modalScreen}
+        setModalScreen={setModalScreen}
+        isFlexibleMode={isFlexibleMode}
+        setIsFlexibleMode={setIsFlexibleMode}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleCloseSuccess={handleCloseSuccess}
+        fetchUserVaults={fetchUserVaults}
+        pin={pin}
+        handlePinChange={handlePinChange}
+        previewSummaryData={previewSummaryData}
+        formLivePreviewData={formLivePreviewData}
+        onFormPreviewRequested={handleFormPreviewFetch}
+        handlePinSubmit={handleCreatePlanSubmit}
+      />
+    </main>
+  );
+};
 
 export default SmartSafe;

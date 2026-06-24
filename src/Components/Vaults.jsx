@@ -10,8 +10,11 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
       vault.type?.toUpperCase() || vault.planType?.toUpperCase();
     const isFlexible = vaultTypeUpper === "FLEXIBLE";
 
-    const baseTargetAmount = isFlexible ? vault.targetAmount : vault.amount;
-    const currentBalance = vault.currentBalance;
+    // Fallback safely to .amount if targetAmount is 0 (like in LOCKED accounts)
+    const baseTargetAmount = isFlexible
+      ? vault.targetAmount || vault.amount
+      : vault.amount;
+    const currentBalance = isFlexible ? vault.currentBalance : vault.amount;
 
     if (currentBalance >= baseTargetAmount && baseTargetAmount > 0) {
       alert(
@@ -33,26 +36,26 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
         const isFlexible = vaultTypeUpper === "FLEXIBLE";
         const isStealth = vaultTypeUpper === "STEALTH";
 
-        // Financial metrics from normalized parent context
+        // 🎯 FIX: Backend returns targetAmount: 0 and currentBalance: 0 for LOCKED types.
+        // We render vault.amount as the main figure for locked savings.
         const displayBalanceValue = isFlexible
-          ? vault.targetAmount
+          ? vault.targetAmount || vault.amount
           : vault.amount;
-        const topUpAdditions = vault.currentBalance;
 
-        // Gauge progress cleanly using top-up accumulations divided by target limit
+        const topUpAdditions = isFlexible ? vault.currentBalance : vault.amount;
+
+        // Gauge progress cleanly
         let progressPercentage = 0;
 
         if (isFlexible) {
           const current = Number(vault.currentBalance || 0);
-          const target = Number(vault.targetAmount || 0);
-
+          const target = Number(vault.targetAmount || vault.amount || 0);
           progressPercentage =
             target > 0 ? Math.min(100, (current / target) * 100) : 0;
         } else {
+          // Time-based duration track fallback for LOCKED/STEALTH setups
           const start = new Date(vault.startDate || vault.createdAt).getTime();
-
           const end = new Date(vault.maturityDate).getTime();
-
           const now = Date.now();
 
           const totalDuration = end - start;
@@ -79,7 +82,6 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
 
             <h2 className="vault-name">{vault.title || "Unnamed Plan"}</h2>
 
-            {/* 🎯 Added "Target" text label beneath the title */}
             <p
               className="vault-target-label"
               style={{
@@ -89,7 +91,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                 fontWeight: "500",
               }}
             >
-              Target
+              {isFlexible ? "Target" : "Amount Locked"}
             </p>
 
             <div className="amount-group">
@@ -102,7 +104,6 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
 
               {isFlexible && (
                 <div className="top-up">
-                  {/* 🎯 Changed text label from "Top Up" to "Current Amount" */}
                   <h3>Current Amount</h3>
                   <div>
                     <span className="top-currency">₦</span>
