@@ -48,8 +48,19 @@ const LoginPage = () => {
       const response = await loginUser(payload);
 
       // Extract properties according to the updated backend JSON scheme:
-      // response = { message, data: { ...userProps }, wallet, token }
       const { message, data: userData, wallet, token } = response;
+
+      // 1. VALIDATION CHECK: Check if user is verified (adjust key name if backend uses 'status')
+      if (userData?.isVerified === false || userData?.status === false) {
+        toast.error(
+          "Account not verified. Redirecting to verification page...",
+        );
+
+        setTimeout(() => {
+          navigate("/otp", { state: { email: payload.email } });
+        }, 1500);
+        return; // Halt execution so they don't get logged into global state
+      }
 
       // Dispatch payload using the key names expected by your global state slice
       dispatch(
@@ -62,19 +73,7 @@ const LoginPage = () => {
           token,
         }),
       );
-      // Persistent synchronous cache mirroring
-      // localStorage.setItem("authToken", token);
-      // localStorage.setItem(
-      //   "user",
-      //   JSON.stringify({
-      //     ...userData,
-      //     _id: wallet?.userId,
-      //   }),
-      // );
-      // console.log("USER AFTER LOGIN:", {
-      //   ...userData,
-      //   _id: wallet?.userId,
-      // });
+
       localStorage.setItem("wallet", JSON.stringify(wallet));
 
       toast.success(message || "Login Successful");
