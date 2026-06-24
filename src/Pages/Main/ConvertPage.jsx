@@ -25,7 +25,7 @@ const ConvertPage = () => {
   const [coversionHistory, setConversionHistory] = useState([]);
   const [liveRateData, setLiveRateData] = useState(null);
   const [conversionData, setConversionData] = useState(null);
-
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const { token, wallet, user } = useSelector((state) => state.user);
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
   const [isLoadingRate, setIsLoadingRate] = useState(true);
@@ -105,6 +105,23 @@ const ConvertPage = () => {
     }
   }, [token]);
 
+  // Clean native DOM tracking dismissal logic running without a useRef dependency hook
+  useEffect(() => {
+    if (!isHelpOpen) return;
+
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".help-dropdown-wrapper")) {
+        setIsHelpOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isHelpOpen]);
+
+  const toggleHelpDropdown = (e) => {
+    e.stopPropagation();
+    setIsHelpOpen((prev) => !prev);
   const getCurrentDisplayRate = () => {
     if (!liveRateData) return 0;
     return activeCurrency === "NGN" ? liveRateData.rate : liveRateData.usdtRate;
@@ -118,6 +135,7 @@ const ConvertPage = () => {
       const rate = liveRateData.rate || 1;
       return (numericAmount / rate).toFixed(2);
     } else {
+      return (numericAmount * 1393).toFixed(2);
       const usdtRate = liveRateData.usdtRate || 1;
       return (numericAmount * usdtRate).toFixed(2);
     }
@@ -167,6 +185,7 @@ const ConvertPage = () => {
     }
 
     setConversionData(null);
+    setTransactionPin("");
     setTransactionPin(""); 
     setIsModalOpen(true);
   };
@@ -238,7 +257,38 @@ const ConvertPage = () => {
             <h1>Hedge Your Naira</h1>
             <p>
               Convert NGN to USDT at live market rates.
-              <FiHelpCircle className="tooltip-icon" />
+              <span className="help-dropdown-wrapper">
+                <button
+                  type="button"
+                  className={`help-btn ${isHelpOpen ? "active" : ""}`}
+                  onClick={toggleHelpDropdown}
+                  aria-label="Toggle currency information dropdown panel"
+                >
+                  <FiHelpCircle className="tooltip-icon" />
+                </button>
+                {isHelpOpen && (
+                  <div className="dropdown-panel">
+                    <div className="arrow-top"></div>
+                    <div className="panel-content">
+                      <p className="info-text">
+                        <strong>USDT</strong> is a digital currency tied to the
+                        US Dollar. It helps protect your money from Naira
+                        depreciation and keeps its value more stable over time.
+                      </p>
+                      <p className="info-text">
+                        Your money is converted to USDT at current live rates
+                        and vice versa, giving you an edge over local currency
+                        devaluation.
+                      </p>
+                      <p className="info-text">
+                        With HedgeNest, your money is 100% safe and secure in
+                        USDT. Kindly note that a 1.5% conversion fee is
+                        calculated per transaction.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </span>
             </p>
           </div>
         </header>
@@ -252,6 +302,7 @@ const ConvertPage = () => {
               <div className="convert-skel sk-dark sk-rate-headline"></div>
             ) : (
               <h2 className="summary-value">
+                ₦{liveRate ? liveRate.toLocaleString() : "0"} / 1 USDT
                 {"₦"}
                 {getCurrentDisplayRate().toLocaleString()} / 1 USDT
               </h2>
@@ -393,7 +444,6 @@ const ConvertPage = () => {
                     const fromCur = item.from || "NGN";
                     const toCur = item.to || "USDT";
                     const itemStatus = item.status || "Success";
-
                     const exchangeRate = Number(item.rate || 0);
                     const baseAmount = Number(item.amount || 0);
                     const receivedAmount = Number(item.amountNow || 0);
@@ -506,7 +556,7 @@ const ConvertPage = () => {
                   alignItems: "stretch",
                   marginTop: "18px",
                   paddingTop: "14px",
-                  borderTop: "1px dashed #e5e7eb",
+                  borderTop: "1px dashed #060a11",
                   gap: "8px",
                 }}
               >
