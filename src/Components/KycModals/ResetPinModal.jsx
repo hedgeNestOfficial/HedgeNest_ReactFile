@@ -312,13 +312,13 @@ const ResetPinModal = ({ isOpen, onClose }) => {
                   </span>
                 )}
               </span>
-              <button
+              {/* <button
                 type="button"
                 className="pwd-edit-email-btn"
                 onClick={() => setStep(1)}
               >
                 Edit email address
-              </button>
+              </button> */}
             </div>
           </form>
         )}
