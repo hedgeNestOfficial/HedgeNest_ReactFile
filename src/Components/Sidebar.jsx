@@ -71,7 +71,11 @@ const Sidebar = () => {
             <FaBell size={22} onClick={() => navigate("/notification")} />
           </button>
 
-          <div className="user-avatar" onClick={() => navigate("/profile")}>
+          <div
+            style={{ cursor: "pointer" }}
+            className="user-avatar"
+            onClick={() => navigate("/profile")}
+          >
             {profileImage ? (
               <img
                 src={profileImage}

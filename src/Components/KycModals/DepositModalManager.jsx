@@ -190,9 +190,7 @@ const DepositModalManager = ({ isOpen, onClose, amount, token, onSuccess }) => {
             disabled={loading}
           >
             {loading ? (
-              <div className="loader-wrapper">
-                <OrbitProgress color="#fff" size="small" />
-              </div>
+              <h4 style={{ color: "white" }}>Processing...</h4>
             ) : (
               "Proceed To Payment"
             )}
