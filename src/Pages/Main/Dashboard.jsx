@@ -172,7 +172,9 @@ const Dashboard = () => {
                   {isLoadingWallet ? (
                     <div className="dash-skel sk-dark sk-large"></div>
                   ) : (
-                    <h2>₦ {formatCurrency(availableBalance)}</h2>
+                    <h2 style={{ fontWeight: "700" }} className="availableB">
+                      ₦ {formatCurrency(availableBalance)}
+                    </h2>
                   )}
                 </div>
 

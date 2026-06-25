@@ -94,7 +94,13 @@ const KycPinModal = ({ utilityBill, onBack, onNext }) => {
         disabled={loading}
         onClick={handleSubmit}
       >
-        {loading ? <OrbitProgress color="#ffffff" size="small" /> : "Verify"}
+        {loading ? (
+          <div className="loader-wrapper">
+            <OrbitProgress color="#fff" size="small" />
+          </div>
+        ) : (
+          "Verify"
+        )}
       </button>
     </>
   );
