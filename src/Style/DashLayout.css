@@ -40,5 +40,6 @@
     /* 🌟 FIX: Grants your inner view space 100% of the mobile screen canvas width */
     width: 100%;
     height: auto;
+    padding-bottom: 20px;
   }
 }
