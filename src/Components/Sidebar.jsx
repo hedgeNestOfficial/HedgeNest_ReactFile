@@ -59,7 +59,11 @@ const Sidebar = () => {
 
       {/* MOBILE TOP NAVBAR */}
       <header className="mobile-top-navbar">
-        <div className="brand-group" onClick={() => navigate("/")}>
+        <div
+          className="brand-group"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="brand-logo">
             <img src={whiteLogo} alt="HedgeNest Logo" />
           </div>
@@ -71,7 +75,11 @@ const Sidebar = () => {
             <FaBell size={22} onClick={() => navigate("/notification")} />
           </button>
 
-          <div className="user-avatar" onClick={() => navigate("/profile")}>
+          <div
+            style={{ cursor: "pointer" }}
+            className="user-avatar"
+            onClick={() => navigate("/profile")}
+          >
             {profileImage ? (
               <img
                 src={profileImage}

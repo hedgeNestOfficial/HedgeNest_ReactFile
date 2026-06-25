@@ -162,7 +162,8 @@ const BreakInvestmentModalManager = ({
               Withdraw From {investmentName}
             </h2>
             <p className="break-input-label text-center">
-              How much do you want to withdraw
+              Are you sure you want to{" "}
+              <span style={{ color: "red" }}>Terminate</span> your investment
             </p>
             <div className="break-input-wrapper">
               <span className="break-currency-prefix"></span>
@@ -186,7 +187,7 @@ const BreakInvestmentModalManager = ({
                 className="break-btn-gold half-width"
                 onClick={nextStep}
               >
-                Withdraw
+                Break
               </button>
             </div>
           </div>
