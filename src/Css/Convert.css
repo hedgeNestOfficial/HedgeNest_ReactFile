@@ -606,11 +606,15 @@
   .grid-right-selectors-pane {
     width: 100%;
     flex-direction: row;
-    gap: 16px;
+    gap: 25px;
+    align-items: center !important;
+    justify-content: center !important;
+    /* background: #000; */
   }
 
   .token-pill-group {
     align-items: flex-start;
+    width: auto;
   }
 
   .history-data-table th,
