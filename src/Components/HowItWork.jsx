@@ -3,8 +3,10 @@ import StepCard from "../static/StepCard.jsx";
 import Button from "./Button.jsx";
 import "../Style/HowItWorks.css";
 import { HowItWorksData } from "../JS/HeroCrad.js";
-
+import { useNavigate } from "react-router-dom";
 const HowItWorks = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="how-section">
       <div className="how-container">
