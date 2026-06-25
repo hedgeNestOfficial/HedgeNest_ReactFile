@@ -276,6 +276,22 @@
   gap: 16px;
 }
 
+.invest-numeric-text-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0f172a;
+  background: transparent;
+
+  /* 🟢 ADD THESE TO PREVENT TEXT OVERFLOW */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* CSS Live Circular Loader Asset Matching Figma Screenshots */
 .invest-circular-spinner {
   width: 42px;

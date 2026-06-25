@@ -3,8 +3,15 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const PublicRoute = () => {
-  const { token } = useSelector((state) => state?.user);
-  return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
+  const { user } = useSelector((state) => state.user);
+
+  // If user session token or details exist, intercept and bounce them to dashboard
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Otherwise, let them view the login/signup/otp screens safely
+  return <Outlet />;
 };
 
 export default PublicRoute;

@@ -217,7 +217,13 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
                   className="invest-numeric-text-input"
                   value={amount}
                   placeholder={normalizedPlan.minAmount.toString()}
-                  onChange={(e) => setAmount(e.target.value)}
+                  // 🟢 Programmatically clips input string to a max of 10 digits
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val.length <= 10) {
+                      setAmount(val);
+                    }
+                  }}
                 />
               </div>
             </div>

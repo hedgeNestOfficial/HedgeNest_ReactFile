@@ -22,7 +22,6 @@ import Loading from "./Components/Loading";
 import Policy from "./Pages/Policy";
 import Contact from "./Pages/Contact";
 import About from "./Pages/AboutUs";
-// import {  } from ";
 import RegulatoryInfo from "./Pages/RegulatoryInfo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import DashboardLayout from "./Layout/DashboardLayout";
@@ -33,6 +32,7 @@ import ScrollToTop from "./Components/ScrollToTop";
 import InvestDashboard from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
 import PrivateRoute from "./Routes/PrivateRoute";
+import PublicRoute from "./Routes/PublicRoute"; // 🟢 Imported PublicRoute Guard
 import { TransactionHistory } from "./Features/TransactionHistory";
 import PaymentSuccess from "./Components/PaymentSuccess";
 import SplashScreen from "./Components/SplashScreen";
@@ -42,6 +42,7 @@ const App = () => {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        {/* PUBLIC MARKETING & LANDING PATHS */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
 
+        {/* 🛡️ AUTHED USER PROTECTED DASHBOARD FLOWS */}
         <Route element={<PrivateRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -62,31 +64,31 @@ const App = () => {
             <Route path="/convert" element={<ConvertPage />} />
             <Route path="/wallet" element={<WalletDashboard />} />
             <Route path="/notification" element={<TransactionHistory />} />
-            {/* <Route path="/SmartSafe" element={<SmartSafe />} /> */}
-            {/* <Route path="/payment-success" element={<PaymentSuccess />}/> */}
             <Route path="/SmartSafe" element={<SmartSafe />} />
             <Route path="/invest" element={<InvestDashboard />} />
           </Route>
         </Route>
 
+        {/* 🛡️ GUEST-ONLY PROTECTED PATHS (Bounces logged-in users to /dashboard) */}
+        <Route element={<PublicRoute />}>
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/otp" element={<OtpPage />} />
+          <Route path="/pin" element={<Pin />} />
+          <Route path="/kycauth" element={<BvnAuth />} />
+          <Route path="/ready" element={<ReadyComp />} />
+          <Route path="/reset" element={<ResetPass />} />
+          <Route path="/confirm-mail" element={<ResetPass />} />
+          <Route path="/newpass" element={<NewPass />} />
+          <Route path="/reset-successful" element={<ResetSuccessful />} />
+        </Route>
+
+        {/* MISCELLANEOUS APP UTILITIES */}
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/splashscreen" element={<SplashScreen />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/otp" element={<OtpPage />} />
-        <Route path="/pin" element={<Pin />} />
         <Route path="/popup" element={<PopupCard />} />
-        <Route path="/confirm-mail" element={<ResetPass />} />
-
-        <Route path="/kycauth" element={<BvnAuth />} />
-        <Route path="/ready" element={<ReadyComp />} />
-        <Route path="/reset" element={<ResetPass />} />
-        <Route path="/newpass" element={<NewPass />} />
-        <Route path="/reset-successful" element={<ResetSuccessful />} />
         <Route path="/loading" element={<Loading />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
-
-        {/* <Route path="LoginPage" element={<LoginPage />} /> */}
       </Routes>
     </BrowserRouter>
   );
