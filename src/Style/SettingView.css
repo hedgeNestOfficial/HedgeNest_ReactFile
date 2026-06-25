@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
+  padding-bottom: 20px;
 }
 
 .settings-card {
@@ -56,6 +57,9 @@
   margin: 0;
 }
 
+.linked-accounts-grid {
+}
+
 .add-account-link-btn {
   background: transparent;
   border: none;
@@ -85,6 +89,7 @@
 @media screen and (max-width: 768px) {
   .settings-card {
     padding: 20px;
+    margin-bottom: 50px;
   }
 
   .card-header-row {

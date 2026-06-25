@@ -118,7 +118,7 @@ const SettingView = ({ onAddAccount }) => {
       </div>
 
       {/* CARD 4: LINKED WITHDRAWAL ACCOUNTS */}
-      <div className="settings-card">
+      {/* <div className="settings-card">
          {onAddAccount?<div className="card-header-row">
           <h3>Linked Withdrawal Accounts</h3>
           <button
@@ -129,6 +129,59 @@ const SettingView = ({ onAddAccount }) => {
             <span>+</span> Add account
           </button>
         </div>:""}
+
+        <div className="accounts-list-zone">
+          {rehydrating || isLoading ? (
+            <p className="empty-accounts-text">Loading accounts...</p>
+          ) : accounts.length === 0 ? (
+            <p className="empty-accounts-text">No Account linked yet</p>
+          ) : (
+            <div className="linked-accounts-grid">
+              {accounts.map((acc, index) => (
+                <div key={acc._id || index} className="account-item">
+                  <p>
+                    <strong>{acc.bankName}</strong> - {acc.accountNumber}
+                  </p>
+                  <small
+                    style={{
+                      color: "#9ca3af",
+                      display: "block",
+                      marginTop: "2px",
+                    }}
+                  >
+                    {acc.accountName}
+                  </small>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div> */}
+
+      <div className="settings-card">
+        {/* 🎯 Hides the "Add account" button completely if an account is already linked */}
+        {!rehydrating &&
+          !isLoading &&
+          accounts.length === 0 &&
+          onAddAccount && (
+            <div className="card-header-row">
+              <h3>Linked Withdrawal Accounts</h3>
+              <button
+                type="button"
+                className="add-account-link-btn"
+                onClick={handleAddAccountClick}
+              >
+                <span>+</span> Add account
+              </button>
+            </div>
+          )}
+
+        {/* Optional: Add a permanent header variant if they have accounts, so they know what this section is */}
+        {!rehydrating && !isLoading && accounts.length > 0 && (
+          <div className="card-header-row">
+            <h3>Linked Withdrawal Accounts</h3>
+          </div>
+        )}
 
         <div className="accounts-list-zone">
           {rehydrating || isLoading ? (
