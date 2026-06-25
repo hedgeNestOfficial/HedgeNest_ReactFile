@@ -1,5 +1,6 @@
 import React from "react";
 import { RiLockLine, RiLockUnlockLine, RiEyeOffLine } from "react-icons/ri";
+import toast from "react-hot-toast";
 import "../Style/Vaults.css";
 
 const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
@@ -10,15 +11,17 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
       vault.type?.toUpperCase() || vault.planType?.toUpperCase();
     const isFlexible = vaultTypeUpper === "FLEXIBLE";
 
-    // Fallback safely to .amount if targetAmount is 0 (like in LOCKED accounts)
+    // Flexible relies on targetAmount; Locked/Stealth relies on the principal amount
     const baseTargetAmount = isFlexible
-      ? vault.targetAmount || vault.amount
-      : vault.amount;
-    const currentBalance = isFlexible ? vault.currentBalance : vault.amount;
+      ? Number(vault.targetAmount || 0)
+      : Number(vault.amount || 0);
+    const currentBalance = isFlexible
+      ? Number(vault.currentBalance || 0)
+      : Number(vault.amount || 0);
 
     if (currentBalance >= baseTargetAmount && baseTargetAmount > 0) {
-      alert(
-        `Cannot top up. Your current balance (₦${currentBalance.toLocaleString()}) has reached or exceeded the target amount (₦${baseTargetAmount.toLocaleString()}).`,
+      toast.error(
+        `Target reached! Balance (₦${currentBalance.toLocaleString()}) matches or exceeds target (₦${baseTargetAmount.toLocaleString()}).`,
       );
       return;
     }
@@ -36,24 +39,25 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
         const isFlexible = vaultTypeUpper === "FLEXIBLE";
         const isStealth = vaultTypeUpper === "STEALTH";
 
-        // 🎯 FIX: Backend returns targetAmount: 0 and currentBalance: 0 for LOCKED types.
-        // We render vault.amount as the main figure for locked savings.
+        // Accurate mapping based on your backend response structure
         const displayBalanceValue = isFlexible
-          ? vault.targetAmount || vault.amount
-          : vault.amount;
+          ? Number(vault.targetAmount || 0)
+          : Number(vault.amount || 0);
 
-        const topUpAdditions = isFlexible ? vault.currentBalance : vault.amount;
+        const currentSavedBalance = isFlexible
+          ? Number(vault.currentBalance || 0)
+          : Number(vault.amount || 0);
 
-        // Gauge progress cleanly
+        // Calculate progress percentage accurately
         let progressPercentage = 0;
-
         if (isFlexible) {
-          const current = Number(vault.currentBalance || 0);
-          const target = Number(vault.targetAmount || vault.amount || 0);
+          const target = Number(vault.targetAmount || 0);
           progressPercentage =
-            target > 0 ? Math.min(100, (current / target) * 100) : 0;
+            target > 0
+              ? Math.min(100, (currentSavedBalance / target) * 100)
+              : 0;
         } else {
-          // Time-based duration track fallback for LOCKED/STEALTH setups
+          // Time-based progress for locked plans
           const start = new Date(vault.startDate || vault.createdAt).getTime();
           const end = new Date(vault.maturityDate).getTime();
           const now = Date.now();
@@ -91,7 +95,7 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                 fontWeight: "500",
               }}
             >
-              {isFlexible ? "Target" : "Amount Locked"}
+              {isFlexible ? "Target Amount" : "Amount Locked"}
             </p>
 
             <div className="amount-group">
@@ -102,17 +106,15 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                 </span>
               </div>
 
-              {isFlexible && (
-                <div className="top-up">
-                  <h3>Current Amount</h3>
-                  <div>
-                    <span className="top-currency">₦</span>
-                    <span className="top-balance">
-                      {topUpAdditions.toLocaleString()}
-                    </span>
-                  </div>
+              <div className="top-up">
+                <h3>Current Savings</h3>
+                <div>
+                  <span className="top-currency">₦</span>
+                  <span className="top-balance">
+                    {currentSavedBalance.toLocaleString()}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
 
             <div className="progress-container">
