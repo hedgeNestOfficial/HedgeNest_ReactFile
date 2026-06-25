@@ -261,3 +261,58 @@ input:checked + .toggle-slider:before {
     min-height: 400px;
   }
 }
+
+/* ==========================================
+   🎯 Mobile Layout Fix for 450px and down
+   ========================================== */
+@media screen and (max-width: 480px) {
+  .vault-card {
+    min-width: 100%; /* Prevent fixed min-width overflow */
+    height: auto; /* Let content expand cleanly vertically */
+    padding: 24px 16px; /* Drop padding so inner content has breathing room */
+  }
+
+  .vault-name {
+    font-size: 20px; /* Scale down long custom titles slightly */
+    margin-bottom: 12px;
+  }
+
+  /* Stack the main balance and current savings vertically to prevent overlap */
+  .amount-group {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .balance-main {
+    width: 100%;
+  }
+
+  /* Align savings text to the left since it is now stacked underneath */
+  .top-up {
+    align-items: flex-start !important;
+    text-align: left !important;
+    width: 100%;
+  }
+
+  .top-up div {
+    justify-content: flex-start !important;
+  }
+
+  .vault-balance {
+    font-size: 28px; /* Prevent big numbers from clip breaking */
+  }
+
+  /* Make sure buttons scale evenly on small screens */
+  .action-row {
+    gap: 8px;
+  }
+
+  .btn-gold-action,
+  .btn-white-action {
+    width: 50%; /* Ensure full utilization of space */
+    font-size: 14px; /* Slightly smaller text for padding safety */
+    padding: 0 4px;
+  }
+}
