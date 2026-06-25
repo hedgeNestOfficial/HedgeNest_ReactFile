@@ -3,16 +3,17 @@ import Signupimg from "../../assets/Signupimg.jpg";
 import { LuArrowLeft } from "react-icons/lu";
 import Button from "../../Components/Button";
 import "../../Style/Otp.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // 🟢 Added useLocation
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { clearTempUser } from "../../Store/UserSlice"; // Removed login import since we aren't auto-logging in
+import { clearTempUser } from "../../Store/UserSlice";
 import { createPin } from "../../Services/authService";
 import whiteLogo from "../../assets/white logo.png";
 import { OrbitProgress } from "react-loading-indicators";
 
 const Pin = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // 🟢 Instantiated location state tracking
   const dispatch = useDispatch();
   const inputRefs = useRef([]);
 
@@ -20,17 +21,21 @@ const Pin = () => {
   const {
     user,
     tempUser,
-    token: onboardingToken,
+    token: reduxOnboardingToken,
   } = useSelector((state) => state.user);
-  const userEmail = tempUser?.email;
+
+  // 🟢 FALLBACK STRATEGY: Read state from Redux store, or extract it from Router location history state
+  const userEmail = tempUser?.email || location.state?.email;
+  const onboardingToken = reduxOnboardingToken || location.state?.token;
 
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [confirmPin, setConfirmPin] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
 
   /**
-   * 🛡️ ON-MOUNT ROUTE GUARD
-   * Prevents authenticated users from accessing the onboarding PIN screen.
+   * 🛡️ ON-MOUNT ROUTE GUARDS
+   * 1. Dynamic check: If user is actively authenticated, bounce them to the main workspace.
+   * 2. URL protection: If an unauthenticated guest tries to visit without valid context data, kick them to login.
    */
   useEffect(() => {
     if (user) {
@@ -38,8 +43,16 @@ const Pin = () => {
         "🛡️ User already authenticated. Redirecting away from onboarding...",
       );
       navigate("/dashboard");
+      return;
     }
-  }, [user, navigate]);
+
+    if (!onboardingToken || !userEmail) {
+      console.log(
+        "🛡️ No active onboarding session context detected. Redirecting to login...",
+      );
+      navigate("/login");
+    }
+  }, [user, onboardingToken, userEmail, navigate]);
 
   const handleChange = (value, index, type) => {
     if (!/^\d?$/.test(value)) return;
@@ -93,9 +106,12 @@ const Pin = () => {
       return;
     }
 
+    // Safety check fallback redundancy execution guard
     if (!onboardingToken || !userEmail) {
-      toast.error("Session expired. Please restart registration.");
-      navigate("/signup");
+      toast.error(
+        "Session context data missing. Please log in to request a fresh token.",
+      );
+      navigate("/login");
       return;
     }
 
@@ -113,22 +129,19 @@ const Pin = () => {
 
       const userDataFromResponse = response?.data;
 
-      // 🛑 INTERCEPT: Check if user account has already been created/onboarded
-      if (userDataFromResponse?.createdAlready === true) {
-        toast.success("PIN created successfully!");
+      // 🛑 INTERCEPT: Check if user account has already been initialized on previous cycles
+      if (
+        userDataFromResponse?.createdAlready === true ||
+        response?.message?.toLowerCase().includes("already")
+      ) {
+        toast.success("PIN verified successfully!");
         dispatch(clearTempUser());
         navigate("/login");
         return;
       }
-      toast.s;
-      if (!userDataFromResponse) {
-        throw new Error("Invalid response: missing user data");
-      }
 
       // 🧹 CLEAN ONBOARDING CACHE
-      // Clear out tempUser and temporary onboarding tokens completely
       dispatch(clearTempUser());
-
       toast.success("PIN created successfully! Redirecting to login...");
 
       // 🚀 REDIRECT TO LOGIN PAGE
