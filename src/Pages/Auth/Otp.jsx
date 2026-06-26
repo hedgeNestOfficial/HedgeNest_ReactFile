@@ -266,6 +266,8 @@
 // };
 
 // export default Otp;import React, { useState, useRef, useEffect } from "react";
+
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
