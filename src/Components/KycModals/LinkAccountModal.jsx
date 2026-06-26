@@ -112,6 +112,7 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     try {
       setLoading(true);
 
+      // 🟢 FIXED: Check executes silently in background without modifying workflow states
       try {
         const accountsResponse = await getLinkedAccounts(activeToken);
         const accountsArray = accountsResponse?.linkedAccounts || [];
@@ -260,7 +261,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               <button
                 type="submit"
                 className="link-account-btn-solid"
-                // 🟢 Button remains disabled until loading finishes AND all inputs are complete
                 disabled={loading || isFormInvalid}
                 style={{
                   opacity: loading || isFormInvalid ? 0.6 : 1,

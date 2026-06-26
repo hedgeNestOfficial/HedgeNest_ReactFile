@@ -333,7 +333,37 @@
   font-size: 42px;
   color: #eab308;
 }
+/* ... [Keep all your existing CSS exactly the same] ... */
 
+/* Alignment and Helper Modifiers */
+.text-center {
+  text-align: center;
+}
+.margin-top-sm {
+  margin-top: 16px;
+}
+.margin-top-md {
+  margin-top: 24px;
+}
+
+/* 🟢 FIXED: Forced strict width boundaries to prevent element layout shrinking inside step wrappers */
+.width-full {
+  width: 100% !important;
+  display: block !important;
+  flex: none !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box;
+}
+
+.width-narrow {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 520px) {
+  /* ... Keep existing media queries ... */
+}
 /* Alignment and Helper Modifiers */
 .text-center {
   text-align: center;
