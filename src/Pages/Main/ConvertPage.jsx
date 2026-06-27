@@ -21,7 +21,7 @@ const ConvertPage = () => {
 
   const [inputError, setInputError] = useState("");
   const [transactionPin, setTransactionPin] = useState("");
-
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [coversionHistory, setConversionHistory] = useState([]);
   const [liveRateData, setLiveRateData] = useState(null);
   const [conversionData, setConversionData] = useState(null);
@@ -111,6 +111,25 @@ const ConvertPage = () => {
   const getCurrentDisplayRate = () => {
     if (!liveRateData) return 0;
     return activeCurrency === "NGN" ? liveRateData.rate : liveRateData.usdtRate;
+  };
+
+  // Clean native DOM tracking dismissal logic running without a useRef dependency hook
+  useEffect(() => {
+    if (!isHelpOpen) return;
+
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".help-dropdown-wrapper")) {
+        setIsHelpOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isHelpOpen]);
+
+  const toggleHelpDropdown = (e) => {
+    e.stopPropagation();
+    setIsHelpOpen((prev) => !prev);
   };
 
   const getCalculatedPreview = () => {
@@ -243,10 +262,43 @@ const ConvertPage = () => {
         <header className="convert-page-header">
           <div className="header-title-group">
             <h1>Hedge Your Naira</h1>
-            <p>
-              Convert NGN to USDT at live market rates.
-              <FiHelpCircle className="tooltip-icon" />
-            </p>
+            <div className="text-icon">
+              <p className="convert-text">
+                Convert NGN to USDT at live market rates.
+              </p>
+              <span className="help-dropdown-wrappers">
+                <button
+                  type="button"
+                  className={`help-btns ${isHelpOpen ? "active" : ""}`}
+                  onClick={toggleHelpDropdown}
+                  aria-label="Toggle currency information dropdown panel"
+                >
+                  <FiHelpCircle className="tooltip-icons" />
+                </button>
+                {isHelpOpen && (
+                  <div className="dropdown-panels">
+                    <div className="arrow-tops"></div>
+                    <div className="panel-contents">
+                      <p className="info-texts">
+                        USDT is a digital currency tied to the US Dollar. It
+                        helps protect your money from Naira depreciation and
+                        keeps its value more stable over time.
+                      </p>
+                      <p className="info-texts">
+                        Your money is converted to USDT at current live rates
+                        and vice versa, giving you an edge over local currency
+                        devaluation.
+                      </p>
+                      <p className="info-texts">
+                        With HedgeNest, your money is 100% safe and secure in
+                        USDT. Kindly note that a 1.5% conversion fee is
+                        calculated per transaction.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </span>
+            </div>
           </div>
         </header>
 

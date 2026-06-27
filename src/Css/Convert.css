@@ -41,35 +41,41 @@
   align-items: center;
   gap: 6px;
 }
-
-.help-dropdown-wrapper {
+.text-icon {
+  display: flex;
+  gap: 5px;
+}
+.convert-text {
+  color: #1a1936;
+}
+.help-dropdown-wrappers {
   position: relative;
   display: inline-block;
   align-self: flex-start;
 }
 
-.help-btn {
+.help-btns {
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 4px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   color: #0b0914;
   transition: color 0.2s ease-in-out;
 }
 
-.help-btn:hover,
-.help-btn.active {
+.help-btns:hover,
+.help-btns.active {
   color: #e5b842;
 }
 
-.tooltip-icon {
-  font-size: 18px;
+.tooltip-icons {
+  font-size: 20px;
 }
 
-.dropdown-panel {
+.dropdown-panels {
   position: absolute;
   top: calc(100% + 10px);
   left: -8px;
@@ -82,11 +88,10 @@
   box-sizing: border-box;
   animation: dropdownFadeIn 0.18s ease-out;
 }
-
-.arrow-top {
+.arrow-tops {
   position: absolute;
   top: -6px;
-  left: 14px;
+  left: 12px;
   width: 10px;
   height: 10px;
   background: #ffffff;
@@ -95,19 +100,19 @@
   transform: rotate(45deg);
 }
 
-.panel-content {
+.panel-contents {
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.info-text {
-  font-size: 13px !important;
-  color: #555462 !important;
-  line-height: 1.5 !important;
-  margin: 0 !important;
-  display: block !important;
+.info-texts {
+  font-size: 13px;
+  color: #555462;
+  line-height: 1.5;
+  margin: 0;
+  display: flex;
 }
 
 .rate-banner-container {
@@ -621,6 +626,21 @@
   .history-data-table td {
     padding: 14px 16px;
   }
+
+  .help-dropdown-wrapper {
+    position: static;
+  }
+
+  .dropdown-panels {
+    left: 16px;
+    right: 16px;
+    width: 250px;
+    /* max-width: calc(100vw - 40px); */
+  }
+
+  .arrow-tops {
+    left: 24px;
+  }
 }
 
 @media (max-width: 540px) {
@@ -658,14 +678,14 @@
     position: static;
   }
 
-  .dropdown-panel {
+  .dropdown-panels {
     left: 16px;
     right: 16px;
     width: auto;
     max-width: calc(100vw - 32px);
   }
 
-  .arrow-top {
+  .arrow-tops {
     left: 24px;
   }
 }
