@@ -110,15 +110,22 @@ const PlanSummary = ({
           </span>
         </div>
 
+        {/* FIXED ROW: Displays either clean capitalized frequency OR numerical duration days */}
         <div className="summary-row">
           <span className="summary-label">
             {planType.toUpperCase() === "FLEXIBLE"
-              ? "Calculated Duration"
+              ? "Savings Frequency"
               : "Duration (Days)"}
           </span>
-          <span className="summary-value text-dark">
-            {duration}{" "}
-            {planType.toUpperCase() === "FLEXIBLE" ? savingFrequency : ""}
+          <span
+            className="summary-value text-dark"
+            style={
+              planType.toUpperCase() === "FLEXIBLE"
+                ? { textTransform: "capitalize" }
+                : {}
+            }
+          >
+            {planType.toUpperCase() === "FLEXIBLE" ? savingFrequency : duration}
           </span>
         </div>
 
