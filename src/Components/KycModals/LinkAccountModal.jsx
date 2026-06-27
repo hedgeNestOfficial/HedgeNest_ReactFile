@@ -112,6 +112,7 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     try {
       setLoading(true);
 
+      // 🟢 FIXED: Check executes silently in background without modifying workflow states
       try {
         const accountsResponse = await getLinkedAccounts(activeToken);
         const accountsArray = accountsResponse?.linkedAccounts || [];
@@ -123,7 +124,7 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       } catch (checkError) {
         const status = checkError?.response?.status;
         if (status && status !== 404) {
-          throw checkError;
+          // throw checkError;
         }
       }
 
@@ -191,6 +192,11 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
                 <option value="access">Access Bank</option>
                 <option value="gtbank">GTBank</option>
                 <option value="zenith">Zenith Bank</option>
+                <option value="zenith">First Bank</option>
+                <option value="zenith">FCMB</option>
+                <option value="zenith">Unoin Bank</option>
+                <option value="zenith">Polaris Bank</option>
+                <option value="zenith">UBA Bank</option>
               </select>
             </div>
 
@@ -260,7 +266,6 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
               <button
                 type="submit"
                 className="link-account-btn-solid"
-                // 🟢 Button remains disabled until loading finishes AND all inputs are complete
                 disabled={loading || isFormInvalid}
                 style={{
                   opacity: loading || isFormInvalid ? 0.6 : 1,

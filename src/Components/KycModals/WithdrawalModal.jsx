@@ -282,7 +282,7 @@ const WithdrawalModal = ({
                   ) : (
                     linkedAccounts.map((acc) => (
                       <option key={acc._id} value={acc._id}>
-                        {`|${acc.bankName} — ${acc.accountNumber}${acc.accountName ? ` (${acc.accountName})|` : ""}`}
+                        {`${acc.bankName} — ${acc.accountNumber}${acc.accountName ? ` (${acc.accountName})|` : ""}`}
                       </option>
                     ))
                   )}
@@ -446,6 +446,7 @@ const WithdrawalModal = ({
               onClick={() => setStep("BREAKDOWN")}
               className="hn-back-arrow"
               aria-label="Go back"
+              style={{ marginBottom: "10px" }}
             >
               <FiArrowLeft size={20} />
             </button>

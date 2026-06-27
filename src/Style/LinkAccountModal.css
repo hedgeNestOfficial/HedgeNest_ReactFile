@@ -19,7 +19,7 @@
   width: min(100%, 480px);
   max-width: 480px;
   max-height: calc(100dvh - 40px);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 32px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -65,7 +65,10 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  /* text-align: left; */
 }
 
 .link-account-input-label {
@@ -88,7 +91,7 @@
   height: 46px;
   padding: 0 40px 0 16px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
   color: #111827;
   background-color: #ffffff;
@@ -116,7 +119,7 @@
   height: 46px;
   padding: 0 16px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
   color: #111827;
   background: #ffffff;
@@ -138,7 +141,7 @@
 .link-account-verified-banner {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 16px;
   display: flex;
   align-items: flex-start;
@@ -178,7 +181,7 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-bottom: 28px;
   width: 100%;
 }
@@ -253,7 +256,7 @@
   height: 46px;
   background: transparent;
   border: 1px solid #9ca3af;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   color: #374151;
@@ -273,7 +276,7 @@
   height: 46px;
   background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
@@ -333,7 +336,37 @@
   font-size: 42px;
   color: #eab308;
 }
+/* ... [Keep all your existing CSS exactly the same] ... */
 
+/* Alignment and Helper Modifiers */
+.text-center {
+  text-align: center;
+}
+.margin-top-sm {
+  margin-top: 16px;
+}
+.margin-top-md {
+  margin-top: 24px;
+}
+
+/* 🟢 FIXED: Forced strict width boundaries to prevent element layout shrinking inside step wrappers */
+.width-full {
+  width: 100% !important;
+  display: block !important;
+  flex: none !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box;
+}
+
+.width-narrow {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 520px) {
+  /* ... Keep existing media queries ... */
+}
 /* Alignment and Helper Modifiers */
 .text-center {
   text-align: center;
