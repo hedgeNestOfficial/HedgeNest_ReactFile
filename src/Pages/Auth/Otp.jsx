@@ -288,7 +288,6 @@ const Otp = () => {
 
   const { user, tempUser } = useSelector((state) => state.user);
 
-  // Fallback to reading location.state.email if they arrived via unverified Login redirect
   const userEmail = location.state?.email || tempUser?.email || "";
   const purpose = location.state?.purpose || "signup";
 
@@ -296,6 +295,9 @@ const Otp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
+
+  // Derived state to track if the input sequence is filled
+  const isOtpComplete = otp.join("").length === 6;
 
   useEffect(() => {
     if (user) {
@@ -320,11 +322,33 @@ const Otp = () => {
   }, [countdown]);
 
   const handleChange = (value, index) => {
-    if (!/^\d?$/.test(value)) return;
+    // Extract only digits (helps catch native mobile keyboard auto-fills gracefully)
+    const sanitizedValue = value.replace(/\D/g, "");
+    if (!sanitizedValue) {
+      const updatedOtp = [...otp];
+      updatedOtp[index] = "";
+      setOtp(updatedOtp);
+      return;
+    }
+
+    // Handle case where a platform auto-fills the entire string into a single input box
+    if (sanitizedValue.length > 1) {
+      const splitDigits = sanitizedValue.slice(0, 6).split("");
+      const updatedOtp = [...otp];
+      splitDigits.forEach((digit, idx) => {
+        updatedOtp[idx] = digit;
+      });
+      setOtp(updatedOtp);
+      const targetIndex = Math.min(splitDigits.length, 5);
+      inputRefs.current[targetIndex]?.focus();
+      return;
+    }
+
     const updatedOtp = [...otp];
-    updatedOtp[index] = value;
+    updatedOtp[index] = sanitizedValue;
     setOtp(updatedOtp);
-    if (value && index < 5) {
+
+    if (index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -376,22 +400,16 @@ const Otp = () => {
       toast.success(response?.message || "OTP verified successfully");
 
       const activeToken = response?.token;
-
       if (activeToken) {
         dispatch(updateTempUserToken(activeToken));
       }
 
-      // 🟢 FIXED: Cleaned up and enclosed the syntax seamlessly inside the try block
       setTimeout(() => {
         switch (purpose) {
           case "signup":
           case "login-verify":
-            // Pass token and email down to the KYC and PIN screens safely
             navigate("/kycauth", {
-              state: {
-                email: userEmail,
-                token: activeToken,
-              },
+              state: { email: userEmail, token: activeToken },
             });
             break;
           case "reset-password":
@@ -412,6 +430,10 @@ const Otp = () => {
         error?.message ||
         "Invalid OTP. Please try again.";
       toast.error(errorMsg);
+
+      // 🧼 CLEANUP UX: Reset fields on failure to prevent stale data frustrations
+      setOtp(["", "", "", "", "", ""]);
+      inputRefs.current[0]?.focus();
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -488,7 +510,8 @@ const Otp = () => {
                   ref={(el) => (inputRefs.current[index] = el)}
                   type="text"
                   inputMode="numeric"
-                  maxLength={1}
+                  autoComplete="one-time-code" // 📱 Helps browser extract SMS code natively
+                  maxLength={6} // 📱 Allowed > 1 for alternative native auto-fill methods
                   value={digit}
                   className="otp-box"
                   onChange={(e) => handleChange(e.target.value, index)}
@@ -498,6 +521,7 @@ const Otp = () => {
               ))}
             </div>
 
+            {/* 🎯 Conditioned class and disable states */}
             <Button
               text={
                 isLoading ? (
@@ -509,9 +533,13 @@ const Otp = () => {
                 )
               }
               type="submit"
-              className="signup-submit-btn"
-              disabled={isLoading}
-              color="#c9922a"
+              className={`signup-submit-btn ${
+                isOtpComplete && !isLoading
+                  ? "active-submit-btn"
+                  : "disabled-submit-btn"
+              }`}
+              disabled={!isOtpComplete || isLoading}
+              color={isOtpComplete && !isLoading ? "#c9922a" : "#cbd5e1"}
             />
 
             <div className="otp-footer-actions">
@@ -526,7 +554,7 @@ const Otp = () => {
                   </span>
                 ) : (
                   <span className="resend-link disabled-countdown">
-                    Resend in {countdown}
+                    Resend in {countdown}s
                   </span>
                 )}
               </p>
