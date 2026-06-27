@@ -124,7 +124,7 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
       } catch (checkError) {
         const status = checkError?.response?.status;
         if (status && status !== 404) {
-          throw checkError;
+          // throw checkError;
         }
       }
 
@@ -192,6 +192,11 @@ const LinkAccountModal = ({ isOpen, onClose, onSuccessRefresh }) => {
                 <option value="access">Access Bank</option>
                 <option value="gtbank">GTBank</option>
                 <option value="zenith">Zenith Bank</option>
+                <option value="zenith">First Bank</option>
+                <option value="zenith">FCMB</option>
+                <option value="zenith">Unoin Bank</option>
+                <option value="zenith">Polaris Bank</option>
+                <option value="zenith">UBA Bank</option>
               </select>
             </div>
 
