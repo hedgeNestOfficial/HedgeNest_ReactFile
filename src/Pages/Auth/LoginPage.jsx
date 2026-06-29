@@ -471,7 +471,6 @@
 // };
 
 // export default LoginPage;
-
 import React from "react";
 import "../../Style/Signup.css";
 import Signupimg from "../../assets/Signupimg.jpg";
@@ -498,9 +497,10 @@ const LoginPage = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(loginSchema),
+    mode: "onChange", // This enables real-time validation
     defaultValues: {
       email: "",
       password: "",
@@ -509,9 +509,16 @@ const LoginPage = () => {
 
   const watchedFields = watch();
 
-  // Basic checking to see if text entry fields are filled
-  const isFormFilled =
-    watchedFields.email?.trim() && watchedFields.password?.trim();
+  // Check if form is valid and fields are filled
+  const isFormFilled = 
+    watchedFields.email?.trim() && 
+    watchedFields.password?.trim() && 
+    Object.keys(errors).length === 0;
+
+  // Button should be disabled when:
+  // 1. Form is not filled correctly OR
+  // 2. Form is submitting (loading state)
+  const isButtonDisabled = !isFormFilled || isSubmitting;
 
   const onSubmitForm = async (formDataFields) => {
     const payload = {
@@ -541,7 +548,7 @@ const LoginPage = () => {
             state: {
               email: payload.email,
               purpose: "pin-setup",
-              token: token, // Secure transient routing token context
+              token: token,
             },
           });
         }, 1500);
@@ -664,7 +671,12 @@ const LoginPage = () => {
               />
             ))}
 
-            {/* 🎯 Now disabled natively when form is loading or incomplete */}
+            {/* 
+              🎯 Button disabled logic:
+              - Disabled when form is NOT filled correctly (isFormFilled = false)
+              - Disabled when form is submitting (isSubmitting = true)
+              - Enabled only when all fields are filled AND no errors AND not submitting
+            */}
             <Button
               text={
                 isSubmitting ? (
@@ -677,9 +689,9 @@ const LoginPage = () => {
               }
               type="submit"
               className={`signup-submit-btn ${
-                isFormFilled ? "active-submit-btn" : "disabled-submit-btn"
+                !isButtonDisabled ? "active-submit-btn" : "disabled-submit-btn"
               }`}
-              disabled={!isFormFilled || isSubmitting}
+              disabled={isButtonDisabled}
             />
 
             <p
@@ -691,7 +703,7 @@ const LoginPage = () => {
             </p>
 
             <p className="auth-switch-footer" style={{ textAlign: "left" }}>
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <span
                 className="highlight-link bold-link"
                 onClick={() => navigate("/signup")}
