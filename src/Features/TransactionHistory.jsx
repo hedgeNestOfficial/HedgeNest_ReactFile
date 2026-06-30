@@ -172,7 +172,13 @@ export const TransactionHistory = ({
                     maximumFractionDigits: 2,
                   })}
                   {t.currencyCode === "USDT" && (
-                    <span className="currency-label"> USDT</span>
+                    <span
+                      className="currency-label"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {" "}
+                      USDT
+                    </span>
                   )}
                 </div>
               </div>
