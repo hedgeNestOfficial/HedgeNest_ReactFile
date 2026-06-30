@@ -55,10 +55,10 @@ const ProfilePage = () => {
   // ✅ Log user state for debugging
   useEffect(() => {
     console.log("🔵 Current User State:", {
-      tier: user?.tier,
-      isVerified1: user?.isVerified1,
-      isVerified2: user?.isVerified2,
-      user,
+      // tier: user?.tier,
+      // isVerified1: user?.isVerified1,
+      // isVerified2: user?.isVerified2,
+      // user,
     });
   }, [user]);
 

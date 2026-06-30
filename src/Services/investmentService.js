@@ -132,7 +132,7 @@ const getAuthHeader = (token) => {
  */
 export const getInvestmentPlans = async (token) => {
   try {
-    console.log("📊 Fetching investment plans...");
+    console.log(" Fetching investment plans...");
 
     if (!token) {
       throw new Error("Authorization token is required");
@@ -147,12 +147,12 @@ export const getInvestmentPlans = async (token) => {
     });
 
     console.log(
-      "✅ Investment plans loaded:",
+      "Investment plans loaded:",
       response.data.investmentPlan?.length,
     );
     return response.data;
   } catch (error) {
-    console.error("❌ Get Plans Error:", error.message);
+    console.error("Get Plans Error:", error.message);
     throw {
       message:
         error?.response?.data?.message || "Failed to load investment plans",
@@ -193,7 +193,7 @@ export const getUserInvestments = async (token) => {
       },
     );
 
-    console.log("✅ User investments loaded:", response.data.data?.length);
+    console.log(" investments loaded:", response.data.data?.length);
     return response.data;
   } catch (error) {
     console.error("❌ Get User Investments Error:", error.message);
@@ -221,7 +221,7 @@ export const getUserInvestments = async (token) => {
  */
 export const initiateInvestment = async (payload, token) => {
   try {
-    console.log("💰 Initiating investment...", { amount: payload.amount });
+    console.log("Initiating investment...");
 
     if (!token) {
       throw new Error("Authorization token is required");

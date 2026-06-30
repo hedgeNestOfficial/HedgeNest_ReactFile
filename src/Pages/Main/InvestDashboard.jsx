@@ -382,9 +382,7 @@ const InvestDashboard = () => {
       const walletData = response?.data?.[0];
 
       if (walletData) {
-        console.log("✅ Wallet updated:", {
-          availableBalance: walletData.availableBalance,
-        });
+        console.log("✅ Wallet updated:");
         dispatch(updateWallet(walletData));
       }
     } catch (error) {
@@ -402,13 +400,13 @@ const InvestDashboard = () => {
    */
   const fetchPlans = async () => {
     if (!token) {
-      console.warn("⚠️ No token available for fetching plans");
+      console.warn("No token available for fetching plans");
       return;
     }
 
     try {
       setLoadingPlans(true);
-      console.log("📊 Loading investment plans...");
+      console.log(" Loading investment plans...");
 
       const response = await getInvestmentPlans(token);
 
@@ -422,7 +420,7 @@ const InvestDashboard = () => {
             ),
         ) || [];
 
-      console.log("✅ Loaded", uniquePlans.length, "investment plans");
+      console.log(" Loaded", uniquePlans.length, "investment plans");
       setPlans(uniquePlans);
     } catch (error) {
       console.error("❌ Fetch Plans Error:", error.message);
@@ -438,13 +436,13 @@ const InvestDashboard = () => {
    */
   const fetchUserInvestments = async () => {
     if (!token) {
-      console.warn("⚠️ No token available for fetching investments");
+      console.warn(" No token available for fetching investments");
       return;
     }
 
     try {
       setLoadingInvestments(true);
-      console.log("📈 Loading user investments...");
+      console.log("Loading user investments...");
 
       const response = await getUserInvestments(token);
       const investments = response?.data || [];

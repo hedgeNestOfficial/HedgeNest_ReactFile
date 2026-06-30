@@ -168,7 +168,7 @@ export const confirmTransactionPin = async (userId, enteredPin, token) => {
       {
         headers: {
           ...API_CONFIG.headers,
-          Authorization: getAuthHeader(token),
+          Authorization: `Bearer ${token}`,
         },
         timeout: API_CONFIG.timeout,
       },

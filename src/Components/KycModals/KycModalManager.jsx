@@ -1,120 +1,3 @@
-// // import React, { useState } from "react";
-// // import "../../Style/KycModals.css";
-// // import KycStartModal from "./KycStartModal";
-// // import KycUploadModal from "./KycUploadModal";
-// // import KycPinModal from "./KycPinModal";
-// // import KycSuccessModal from "./KycSuccessModal";
-
-// // const KycModalManager = ({ isOpen, onClose }) => {
-// //   const [step, setStep] = useState(1);
-
-// //   if (!isOpen) return null;
-
-// //   const nextStep = () => setStep((prev) => prev + 1);
-// //   const prevStep = () => setStep((prev) => prev - 1);
-// //   const handleComplete = () => {
-// //     setStep(1); // Reset for next time
-// //     onClose();
-// //   };
-
-// //   return (
-// //     <div className="kyc-modal-overlay">
-// //       <div className="kyc-modal-content">
-// //         {step === 1 && (
-// //           <KycStartModal onCancel={onClose} onContinue={nextStep} />
-// //         )}
-// //         {step === 2 && (
-// //           <KycUploadModal onCancel={onClose} onVerify={nextStep} />
-// //         )}
-// //         {step === 3 && <KycPinModal onBack={prevStep} onNext={nextStep} />}
-// //         {step === 4 && <KycSuccessModal onClose={handleComplete} />}
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default KycModalManager;
-
-// import React, { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import "../../Style/KycModals.css";
-// import { updateUser } from "../../Store/UserSlice";
-
-// import KycStartModal from "./KycStartModal";
-// import KycUploadModal from "./KycUploadModal";
-// import KycPinModal from "./KycPinModal";
-// import KycSuccessModal from "./KycSuccessModal";
-
-// const KycModalManager = ({ isOpen, onClose }) => {
-//   const dispatch = useDispatch();
-//   const [step, setStep] = useState(1);
-//   const [utilityBill, setUtilityBill] = useState(null);
-//   const [kycResponseData, setKycResponseData] = useState(null);
-
-//   if (!isOpen) return null;
-
-//   const nextStep = () => setStep((prev) => prev + 1);
-
-//   const prevStep = () => setStep((prev) => prev - 1);
-
-//   const handleUploadComplete = (file) => {
-//     setUtilityBill(file);
-//     setStep(3);
-//   };
-
-//   // ✅ FIXED: Handle KYC success with proper user update
-//   const handleKycSuccess = (responseData) => {
-//     // Store the response data
-//     setKycResponseData(responseData);
-
-//     // ✅ CRITICAL: Update the user state with Tier 2 verification
-//     if (responseData) {
-//       dispatch(
-//         updateUser({
-//           tier: responseData.tier || 2,
-//           isVerified2: responseData.isVerified2 || true,
-//           utilityBill: responseData.utilityBill || null,
-//         }),
-//       );
-//     }
-
-//     // Move to success step
-//     setStep(4);
-//   };
-
-//   const handleComplete = () => {
-//     setStep(1);
-//     setUtilityBill(null);
-//     setKycResponseData(null);
-//     onClose();
-//   };
-
-//   return (
-//     <div className="kyc-modal-overlay">
-//       <div className="kyc-modal-content">
-//         {step === 1 && (
-//           <KycStartModal onCancel={onClose} onContinue={nextStep} />
-//         )}
-
-//         {step === 2 && (
-//           <KycUploadModal onCancel={onClose} onVerify={handleUploadComplete} />
-//         )}
-
-//         {step === 3 && (
-//           <KycPinModal
-//             utilityBill={utilityBill}
-//             onBack={prevStep}
-//             onNext={handleKycSuccess}
-//           />
-//         )}
-
-//         {step === 4 && <KycSuccessModal onClose={handleComplete} />}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default KycModalManager;
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -133,13 +16,11 @@ const KycModalManager = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { token, user } = useSelector((state) => state.user);
 
-  // Step management
   const [step, setStep] = useState(1);
   const [utilityBill, setUtilityBill] = useState(null);
   const [utilityName, setUtilityName] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // PIN state
   const [pin, setPin] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
 
@@ -172,14 +53,12 @@ const KycModalManager = ({ isOpen, onClose }) => {
   const handleUtilityChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error("File size must be less than 5MB");
         e.target.value = "";
         return;
       }
 
-      // Validate file type
       const validTypes = [
         "image/jpeg",
         "image/png",
@@ -206,7 +85,6 @@ const KycModalManager = ({ isOpen, onClose }) => {
         Upload a photo of your latest Utility (NEPA) Bill
       </p>
 
-      {/* Utility Bill Upload */}
       <div className="kyc-upload-group">
         <label className="kyc-upload-label">Upload Photo Of Utility Bill</label>
         <div
@@ -276,21 +154,41 @@ const KycModalManager = ({ isOpen, onClose }) => {
   const handlePinSubmit = async () => {
     const enteredPin = pin.join("");
 
+    // Validate PIN
     if (enteredPin.length !== 6) {
       return toast.error("Please enter your 6-digit transaction pin");
     }
 
+    // Validate utility bill
     if (!utilityBill) {
       return toast.error("Please upload a utility bill");
     }
 
-    const authToken = token || localStorage.getItem("authToken");
+    // Get auth token with multiple fallbacks
+    const authToken =
+      token ||
+      user?.token ||
+      user?.authToken ||
+      localStorage.getItem("authToken") ||
+      localStorage.getItem("token");
+
+    console.log("🔵 Auth Token:", authToken ? "Present" : "Missing");
 
     if (!authToken) {
       return toast.error("Session expired. Please login again.");
     }
 
-    const userId = user?._id || user?.id || user?.data?._id || user?.data?.id;
+    // Get user ID with multiple fallbacks
+    const userId =
+      user?._id ||
+      user?.id ||
+      user?.data?._id ||
+      user?.data?.id ||
+      user?.user?._id;
+
+    console.log("🔵 User ID:", userId);
+    console.log("🔵 PIN:", enteredPin);
+    console.log("🔵 Utility Bill:", utilityBill);
 
     if (!userId) {
       return toast.error("User identity not found. Please login again.");
@@ -300,56 +198,77 @@ const KycModalManager = ({ isOpen, onClose }) => {
       setIsVerifying(true);
 
       // ============================================================
-      // ✅ STEP 1: Confirm PIN first
+      // STEP 1: Confirm PIN first
       // ============================================================
+      console.log("🚀 Calling confirmTransactionPin API...");
       toast.loading("Verifying PIN...", { id: "pin-verification" });
 
-      await confirmTransactionPin(userId, enteredPin, authToken);
+      const pinResponse = await confirmTransactionPin(
+        userId,
+        enteredPin,
+        authToken,
+      );
 
+      console.log("✅ PIN Response:", pinResponse);
       toast.success("PIN verified successfully!", { id: "pin-verification" });
 
       // ============================================================
-      // ✅ STEP 2: Upload Utility Bill after PIN confirmation
+      // STEP 2: Upload Utility Bill after PIN confirmation
       // ============================================================
+      console.log("🚀 Calling uploadUtilityBill API...");
       toast.loading("Uploading utility bill...", { id: "upload-utility" });
 
-      const response = await uploadUtilityBill(utilityBill, authToken);
+      const uploadResponse = await uploadUtilityBill(utilityBill, authToken);
 
-      console.log("✅ KYC Response:", response);
-
+      console.log("✅ Upload Response:", uploadResponse);
       toast.success(
-        response?.message || "Utility bill uploaded successfully!",
-        {
-          id: "upload-utility",
-        },
+        uploadResponse?.message || "Utility bill uploaded successfully!",
+        { id: "upload-utility" },
       );
 
       // ============================================================
-      // ✅ STEP 3: Update user state with Tier 2 verification
+      // STEP 3: Update Redux store
       // ============================================================
       dispatch(
         updateUser({
-          tier: response?.tier || 2,
-          isVerified2: response?.isVerified2 || true,
-          utilityBill: response?.utilityBill || null,
+          tier: uploadResponse?.tier || 2,
+          isVerified2: uploadResponse?.isVerified2 || true,
+          utilityBill: uploadResponse?.utilityBill || null,
         }),
       );
 
       // Move to success step
       setStep(4);
     } catch (error) {
-      console.error("KYC Verification error:", error);
+      console.error("❌ KYC Verification Error:", error);
+      console.error("❌ Error Response:", error?.response?.data);
+      console.error("❌ Error Status:", error?.response?.status);
 
-      // Dismiss any loading toasts
+      // Dismiss loading toasts
       toast.dismiss("pin-verification");
       toast.dismiss("upload-utility");
 
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to verify. Please try again.";
+      // Extract meaningful error message
+      let errorMessage = "Failed to verify. Please try again.";
+
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (
+        error?.message &&
+        error.message !== "Request failed with status code 400"
+      ) {
+        errorMessage = error.message;
+      } else if (error?.response?.status === 401) {
+        errorMessage = "Invalid PIN. Please try again.";
+      } else if (error?.response?.status === 404) {
+        errorMessage =
+          "Verification service unavailable. Please try again later.";
+      }
 
       toast.error(errorMessage);
+
+      // Reset PIN on error
+      setPin(new Array(6).fill(""));
     } finally {
       setIsVerifying(false);
     }
