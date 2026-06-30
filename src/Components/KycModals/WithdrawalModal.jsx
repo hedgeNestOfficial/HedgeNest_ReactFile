@@ -24,7 +24,7 @@ const WithdrawalModal = ({
 
   useEffect(() => {
     if (isOpen) {
-      console.log("🗂️ [WithdrawalModal] Live Redux Wallet Slice:", wallet);
+      console.log("🗂️ [WithdrawalModal] Live Redux Wallet Slice");
     }
   }, [isOpen, wallet]);
 
