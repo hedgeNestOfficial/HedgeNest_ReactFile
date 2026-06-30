@@ -3,12 +3,12 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* padding-top: 40px; */
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
 }
 
+/* Button shine effect only */
 .sc-primary-btn,
 .sb-primary-btn,
 .im-action-btn {
@@ -21,6 +21,32 @@
   transition:
     opacity 0.2s ease,
     transform 0.1s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sc-primary-btn::before,
+.sb-primary-btn::before,
+.im-action-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.sc-primary-btn:hover::before,
+.sb-primary-btn:hover::before,
+.im-action-btn:hover::before {
+  left: 100%;
 }
 
 .sc-primary-btn:hover,
@@ -47,7 +73,6 @@
 
 .sc-container {
   width: 95%;
-
   display: flex;
   flex-direction: column;
   gap: 48px;
@@ -70,6 +95,20 @@
 
 .sc-highlight-text {
   color: #e5b842;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect on highlight text only */
+.sc-highlight-text::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e5b842, transparent);
+  border-radius: 2px;
 }
 
 .sc-description {
@@ -118,12 +157,12 @@
 
 .sc-image-card {
   width: 100%;
-  /* max-width: 500px; */
   height: 400px;
   background-size: cover;
   background-position: center;
   border-radius: 16px;
 }
+
 img {
   width: 100%;
   height: 100%;
@@ -142,7 +181,6 @@ img {
 
 .ss-container {
   width: 90%;
-
   display: flex;
   flex-direction: column;
   gap: 64px;
@@ -164,6 +202,20 @@ img {
   color: #0c141d;
   margin: 0 0 12px 0;
   letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect on ss headings */
+.ss-heading::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, transparent);
+  border-radius: 2px;
 }
 
 .ss-description {
@@ -195,7 +247,6 @@ img {
 
 .sb-container {
   width: 90%;
-
   display: flex;
   flex-direction: column;
   gap: 48px;
@@ -214,6 +265,20 @@ img {
   color: #ffffff;
   margin: 0 0 6px 0;
   letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect on sb heading */
+.sb-heading::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, transparent);
+  border-radius: 2px;
 }
 
 .sb-subheading {
@@ -256,7 +321,6 @@ img {
   max-width: 520px;
   height: 370px;
   background-color: #1e293b;
-
   background-size: cover;
   background-position: center;
   border-radius: 12px;
@@ -276,7 +340,6 @@ img {
   display: flex;
   flex-direction: column;
   width: 90%;
-
   background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -289,7 +352,6 @@ img {
   width: 100%;
   height: 240px;
   background-color: #f7fafc;
-
   background-size: cover;
   background-position: center;
 }
@@ -310,6 +372,21 @@ img {
   color: #0c141d;
   margin: 0 0 12px 0;
   letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 16px;
+}
+
+/* Underline effect on im heading */
+.im-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, transparent);
+  border-radius: 2px;
 }
 
 .im-subtext {

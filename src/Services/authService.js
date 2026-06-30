@@ -146,6 +146,46 @@ export const resetPassword = async (payload) => {
 //   }
 // };
 
+export const confirmTransactionPin = async (userId, enteredPin, token) => {
+  try {
+    console.log("🔐 Verifying transaction PIN...");
+
+    if (!userId) {
+      throw new Error("User ID is required for PIN verification");
+    }
+
+    if (!enteredPin || enteredPin.length !== 6) {
+      throw new Error("PIN must be 6 digits");
+    }
+
+    if (!token) {
+      throw new Error("Authorization token is required");
+    }
+
+    const response = await axios.post(
+      `${ENDPOINTS.INVESTMENT.CONFIRM_PIN}/${userId}`,
+      { enteredPin },
+      {
+        headers: {
+          ...API_CONFIG.headers,
+          Authorization: getAuthHeader(token),
+        },
+        timeout: API_CONFIG.timeout,
+      },
+    );
+
+    console.log("✅ PIN verified successfully");
+    return response.data;
+  } catch (error) {
+    console.error("❌ PIN Verification Error:", error.message);
+    throw {
+      message: error?.response?.data?.message || "PIN verification failed",
+      status: error?.response?.status,
+      data: error?.response?.data,
+    };
+  }
+};
+
 export const changeTransactionPin = async (payload, token) => {
   try {
     // 🟢 FIXED: Changed .post to .put to match the backend specification
@@ -163,12 +203,35 @@ export const changeTransactionPin = async (payload, token) => {
   }
 };
 
+// export const uploadUtilityBill = async (file, token) => {
+//   try {
+//     const formData = new FormData();
+//     formData.append("utilityBill", file);
+
+//     const response = await axios.post(
+//       ENDPOINTS.KYC.UPLOAD_UTILITY_BILL,
+//       formData,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "multipart/form-data",
+//         },
+//       },
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error?.response?.data || error;
+//   }
+// };
+
+// In authService.js - Add or update this function
+
 export const uploadUtilityBill = async (file, token) => {
   try {
     const formData = new FormData();
     formData.append("utilityBill", file);
 
-    const response = await axios.post(
+    const response = await axios.put(
       ENDPOINTS.KYC.UPLOAD_UTILITY_BILL,
       formData,
       {
@@ -176,14 +239,16 @@ export const uploadUtilityBill = async (file, token) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
+        timeout: API_CONFIG.timeout,
       },
     );
+
     return response.data;
   } catch (error) {
-    throw error?.response?.data || error;
+    console.error("Upload utility bill error:", error);
+    throw error;
   }
 };
-
 export const getTransactionHistory = async (token) => {
   try {
     const response = await axios.get(ENDPOINTS.AUTH.TRANSACTION, {

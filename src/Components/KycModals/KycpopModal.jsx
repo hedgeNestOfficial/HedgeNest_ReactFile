@@ -5,18 +5,24 @@ import { LuLock } from "react-icons/lu";
 import toast from "react-hot-toast";
 import { OrbitProgress } from "react-loading-indicators";
 import { submitKyc } from "../../Services/authService";
-import { updateUser } from "../../Store/UserSlice"; // Ensure your slice action is imported if you need to update user state locally
+import { updateUser } from "../../Store/UserSlice";
 import Button from "../../Components/Button";
-import "../../Style/KycModalGlobal.css"; // Or wherever your shared modal styles live
+import "../../Style/KycModalGlobal.css";
 
 const KycpopModal = ({ isOpen, onClose, onSuccessRefresh }) => {
   if (!isOpen) return null;
 
   const dispatch = useDispatch();
-  const { token, tempUser } = useSelector((state) => state.user);
+  const { token, tempUser, user } = useSelector((state) => state.user);
 
-  // Dynamically resolve token based on context (Settings page vs Onboarding)
-  const activeToken = token || tempUser?.authToken;
+  // ✅ FIXED: Better token resolution with multiple fallbacks
+  const activeToken =
+    token ||
+    tempUser?.authToken ||
+    tempUser?.token ||
+    user?.token ||
+    localStorage.getItem("authToken") ||
+    localStorage.getItem("onboardingToken");
 
   const [idNumber, setIdNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,39 +46,84 @@ const KycpopModal = ({ isOpen, onClose, onSuccessRefresh }) => {
     }
 
     if (!activeToken) {
+      console.error("❌ No token found. State:", { token, tempUser, user });
       return toast.error("Your session has expired. Please log in again.");
     }
 
     try {
       setIsLoading(true);
 
+      // ✅ FIXED: Using the correct payload structure for the /verify endpoint
       const payload = {
-        nin: idNumber,
-        verification_consent: true,
+        id: idNumber, // Changed from 'nin' to 'id' as per the API spec
       };
 
-      const cleanToken = activeToken.replace(/^"|"$/g, "");
-      const response = await submitKyc(payload, cleanToken);
+      // ✅ FIXED: Pass the token directly
+      const response = await submitKyc(payload, activeToken);
 
-      toast.success(response?.message || "Identity verified successfully");
+      // ✅ FIXED: Check for success and isVerified1 in the response
+      if (response?.success === true && response?.data?.isVerified1 === true) {
+        toast.success("Identity verified successfully!");
 
-      // If the backend sends updated user profile info back immediately:
-      if (response?.data || response?.user) {
-        dispatch(updateUser(response.data || response.user));
+        // Update user state with the new verification status
+        if (response?.data) {
+          dispatch(
+            updateUser({
+              ...response.data,
+              isVerified1: true,
+            }),
+          );
+        }
+
+        if (onSuccessRefresh) {
+          onSuccessRefresh();
+        }
+
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      } else if (response?.success === true) {
+        toast.success("Identity verified successfully!");
+
+        if (response?.data) {
+          dispatch(updateUser(response.data));
+        }
+
+        if (onSuccessRefresh) {
+          onSuccessRefresh();
+        }
+
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      } else {
+        toast.error(response?.message || "Unable to verify identity");
       }
-
-      if (onSuccessRefresh) {
-        onSuccessRefresh();
-      }
-
-      setTimeout(() => {
-        onClose();
-      }, 1000);
     } catch (error) {
-      console.error("KYC MODAL ERROR:", error);
-      toast.error(
-        error?.response?.data?.message || "Unable to verify identity",
-      );
+      console.error(" KYC MODAL ERROR:", error);
+      console.error(" KYC MODAL ERROR RESPONSE:", error?.response?.data);
+
+      // ✅ FIXED: Better error handling with specific messages
+      let errorMessage = "Unable to verify identity";
+
+      if (error?.response?.status === 401) {
+        errorMessage = "Your session has expired. Please log in again.";
+      } else if (error?.response?.status === 400) {
+        errorMessage =
+          error?.response?.data?.message ||
+          "Invalid NIN provided. Please check and try again.";
+      } else if (error?.response?.status === 404) {
+        errorMessage =
+          "Verification service unavailable. Please try again later.";
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

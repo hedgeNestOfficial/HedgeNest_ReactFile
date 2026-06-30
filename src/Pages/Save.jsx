@@ -1,6 +1,6 @@
 import React from "react";
 import "../Css/Save.css";
-import saveIMG1 from "../assets/saveIMG1.png";
+import saveIMG1 from "../assets/investpics.png";
 import saveIMG2 from "../assets/saveIMG2.jpg";
 import saveIMG3 from "../assets/saveIMG3.jpg";
 import saveIMG4 from "../assets/saveIMG4.jpg";

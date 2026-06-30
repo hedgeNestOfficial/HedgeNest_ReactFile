@@ -168,7 +168,9 @@ const Dashboard = () => {
               </div>
               <div className="balance">
                 <div className="total-available">
-                  <p>Available Balance</p>
+                  <p style={{ color: "white", fontWeight: "600" }}>
+                    Available Balance
+                  </p>
                   {isLoadingWallet ? (
                     <div className="dash-skel sk-dark sk-large"></div>
                   ) : (
@@ -186,6 +188,8 @@ const Dashboard = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "6px",
+                        color: "white",
+                        fontWeight: "600",
                       }}
                     >
                       <NigeriaFlagIcon />
@@ -205,6 +209,8 @@ const Dashboard = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "6px",
+                        color: "white",
+                        fontWeight: "600",
                       }}
                     >
                       <SiTether size={14} style={{ color: "#26a17b" }} />

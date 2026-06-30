@@ -40,12 +40,26 @@
 
 .highlight-text {
   color: #d2af26;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect on highlight text */
+.highlight-text::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d2af26, transparent);
+  border-radius: 2px;
 }
 
 .hero-text-description {
   font-size: 20px;
   margin-bottom: 40px;
-  color: #e5e7eb; /* FIXED: Gave it a crisp, readable light-gray color so it is visible */
+  color: #e5e7eb;
 }
 
 .hero-button {
@@ -59,10 +73,29 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-button:hover {
-  background: #ca8a04;
+/* Button shine effect */
+.hero-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.hero-button:hover::before {
+  left: 100%;
 }
 
 .hero-image-container {
@@ -84,12 +117,12 @@
    ======================================================== */
 @media screen and (max-width: 968px) {
   .hero {
-    height: auto; /* Overrides the 600px restriction so content can stack safely */
+    height: auto;
     padding: 60px 0;
   }
 
   .hero-wrap {
-    flex-direction: column; /* Safely stacks text on top, image below */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -100,13 +133,12 @@
 
   .hero-content {
     width: 100%;
-    /* align-items: center; Centers the button and layout elements */
-    text-align: left; /* Centers the actual typography text */
+    text-align: left;
   }
 
   .hero-title {
     width: 100%;
-    font-size: 2.2rem; /* Comfortably scales down typography for smaller mobile viewports */
+    font-size: 2.2rem;
     margin-bottom: 16px;
     text-align: left;
   }
@@ -114,11 +146,11 @@
   .hero-text-description {
     font-size: 16px;
     margin-bottom: 28px;
-    max-width: 550px; /* Keeps sentences tightly bounded and balanced at the top */
+    max-width: 550px;
   }
 
   .hero-image-container {
-    width: 100%; /* Expands the container to maximum width on mobile dashboards */
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,7 +158,7 @@
 
   .hero-display-img {
     width: 100%;
-    max-width: 480px; /* Forces your app mockups to look big, crisp, and beautifully centered */
+    max-width: 480px;
     height: auto;
   }
 

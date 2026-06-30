@@ -15,13 +15,13 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
+  const [riskTerm, setRiskTerm] = useState(null);
 
   const pinRefs = useRef([]);
   const modalRef = useRef(null);
 
   const { user, token } = useSelector((state) => state.user);
 
-  // Reset Modal State when opened
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -31,7 +31,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     }
   }, [isOpen]);
 
-  // Close Modal On Outside Click
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -48,11 +47,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
     };
   }, [isOpen, onClose]);
 
-  /*
-  |--------------------------------------------------------------------------
-  | Data Normalization Layer (Memoized)
-  |--------------------------------------------------------------------------
-  */
   const normalizedPlan = useMemo(() => {
     if (!product) return null;
 
@@ -70,13 +64,40 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       roi: Number(datasource?.roi || product?.roi || 0),
       term: Number(datasource?.term || product?.term || 0),
       minAmount: Number(datasource?.minAmount || product?.minAmount || 0),
+      investmentType: (
+        datasource?.investmentType ||
+        product?.investmentType ||
+        "Low"
+      ).toLowerCase(),
     };
   }, [product]);
 
-  // Derived Values
+  const getInvestmentTypeMessage = useMemo(() => {
+    if (!normalizedPlan) return "";
+
+    const isMedium = normalizedPlan.investmentType === "medium";
+
+    if (isMedium) {
+      return "Your money is been invested in Balanced Mutual Funds, Dividend Stocks, Real Estate, Government Bonds with moderate market volatility and high potential returns";
+    }
+
+    return "Your money is invested in Treasury Bills, FGN Savings Bonds, Fixed Deposits, and Money Market Mutual Funds with a 100% guarantee on safe investment returns.";
+  }, [normalizedPlan]);
+
+  const getRiskDescription = useMemo(() => {
+    if (!normalizedPlan) return "";
+
+    const isMedium = normalizedPlan.investmentType === "medium";
+
+    if (isMedium) {
+      return `Capital-growth ${normalizedPlan.term}-day balanced portfolio note. Suitable for investors comfortable with moderate risk exposure.`;
+    }
+
+    return `Capital-protected ${normalizedPlan.term}-day fixed income note. Ideal for first-time investors.`;
+  }, [normalizedPlan]);
+
   const investmentAmount = Number(amount) || 0;
 
-  // 🟢 Evaluation Flag: Validate amount inputs are structurally sound before letting users progress
   const isAmountInvalid =
     !amount || investmentAmount < (normalizedPlan?.minAmount || 0);
 
@@ -89,11 +110,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
   if (!isOpen || !product || !normalizedPlan) return null;
 
-  /*
-  |--------------------------------------------------------------------------
-  | Form Actions & Handlers
-  |--------------------------------------------------------------------------
-  */
   const handleAmountSubmit = (e) => {
     e.preventDefault();
 
@@ -151,10 +167,8 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       setIsLoading(true);
       setStep(3);
 
-      // Step 1: Security Handshake Verification
       await confirmTransactionPin(user._id, enteredPin, token);
 
-      // Step 2: Initialize Core Investment Position
       const payload = {
         investmentPlanId: normalizedPlan.id,
         amount: investmentAmount,
@@ -162,12 +176,11 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
 
       const response = await initiateInvestment(payload, token);
 
-      // Step 3: Trigger Success Notification & Callbacks
       toast.success(response?.message || "Investment created successfully");
       await onSuccess?.();
       setStep(4);
     } catch (error) {
-      console.error("❌ INVESTMENT PIPELINE FAILURE:", error);
+      console.error("INVESTMENT PIPELINE FAILURE:", error);
       toast.error(
         error?.response?.data?.message ||
           "Unable to complete investment execution",
@@ -180,28 +193,25 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
   };
 
   const isPinComplete = pin.join("").length === 6;
+  const isMediumRisk = normalizedPlan.investmentType === "medium";
 
   return (
     <div className="invest-modal-overlay">
       <div className="invest-modal-card" ref={modalRef}>
-        {/* STEP 1: AMOUNT ENTRY */}
         {step === 1 && (
           <form
             onSubmit={handleAmountSubmit}
             className="invest-modal-step-wrapper"
           >
             <h2 className="invest-modal-title">{normalizedPlan.name}</h2>
+            <p className="invest-modal-description">{getRiskDescription}</p>
             <p className="invest-modal-description">
-              Capital-protected {normalizedPlan.term}-day fixed income note.
-              Ideal for first-time investors.
-            </p>
-            <p className="invest-modal-description">
-              Your money is invested in Treasury Bills, FGN Savings Bonds, Fixed
-              Deposits, and Money Market Mutual Funds with a 100% guarantee on
-              safe investment returns.
+              {getInvestmentTypeMessage}
             </p>
 
-            <div className="invest-lock-notification-banner">
+            <div
+              className={`invest-lock-notification-banner ${isMediumRisk ? "medium-risk-banner" : ""}`}
+            >
               <HiOutlineShieldCheck className="invest-shield-icon" />
               <p className="invest-lock-banner-text">
                 Funds locked for {normalizedPlan.term} days at{" "}
@@ -217,7 +227,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
                   className="invest-numeric-text-input"
                   value={amount}
                   placeholder={normalizedPlan.minAmount.toString()}
-                  // 🟢 Programmatically clips input string to a max of 10 digits
                   onChange={(e) => {
                     const val = e.target.value;
                     if (val.length <= 10) {
@@ -250,7 +259,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               <button
                 type="submit"
                 className="invest-btn-primary-solid"
-                // 🟢 Lock button state if empty or below standard minAmount thresholds
                 disabled={isAmountInvalid}
                 style={{
                   opacity: isAmountInvalid ? 0.6 : 1,
@@ -263,7 +271,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           </form>
         )}
 
-        {/* STEP 2: PIN ENTRY */}
         {step === 2 && (
           <div className="invest-modal-step-wrapper">
             <button
@@ -302,7 +309,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
               disabled={!isPinComplete || isLoading}
               onClick={handlePinSubmit}
               className={`invest-btn-block-action margin-top-xl ${!isPinComplete || isLoading ? "disabled-btn" : ""}`}
-              // 🟢 Set structural styling fallbacks context directly for maximum UI stability
               style={{
                 opacity: !isPinComplete || isLoading ? 0.6 : 1,
                 cursor: !isPinComplete || isLoading ? "not-allowed" : "pointer",
@@ -313,7 +319,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           </div>
         )}
 
-        {/* STEP 3: PROCESSING NOTE */}
         {step === 3 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-processing-image-wrapper">
@@ -342,7 +347,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
           </div>
         )}
 
-        {/* STEP 4: SUCCESS STATE */}
         {step === 4 && (
           <div className="invest-modal-step-wrapper text-center align-center padding-vertical-lg">
             <div className="invest-success-checkmark-animated-badge">
