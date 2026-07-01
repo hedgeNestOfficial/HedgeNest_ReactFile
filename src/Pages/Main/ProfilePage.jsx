@@ -177,7 +177,7 @@ const ProfilePage = () => {
     } else if (isTier1Verified) {
       return "Tier 1";
     } else {
-      return "Tier 0";
+      return "verify";
     }
   };
 
@@ -300,7 +300,7 @@ const ProfilePage = () => {
                   <p className="user-email-text">{user?.email}</p>
                   <div className="kyc-badge-row">
                     <span className="kyc-badge">
-                      KYC:{" "}
+                      KYC:
                       <span
                         className="tier-text"
                         style={{
