@@ -550,10 +550,8 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       setIsLoading(true);
       setStep(3);
 
-      // Confirm transaction PIN
       await confirmTransactionPin(user._id, enteredPin, token);
 
-      // Initiate investment
       const payload = {
         investmentPlanId: normalizedPlan.id,
         amount: investmentAmount,
@@ -565,7 +563,6 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
       await onSuccess?.();
       setStep(4);
     } catch (error) {
-      // Only show backend error messages
       const backendMessage = error?.response?.data?.message;
       const backendError = error?.response?.data?.error;
 
@@ -573,12 +570,15 @@ const InvestModal = ({ isOpen, onClose, product, onSuccess }) => {
         toast.error(backendMessage);
       } else if (backendError) {
         toast.error(backendError);
+      } else if (
+        error?.message &&
+        error?.message !== "Request failed with status code 400"
+      ) {
+        toast.error(error.message);
       } else {
-        // Fallback only if absolutely no backend message exists
         toast.error("Something went wrong. Please try again.");
       }
 
-      // Reset PIN on error
       setPin(["", "", "", "", "", ""]);
       setStep(2);
     } finally {
