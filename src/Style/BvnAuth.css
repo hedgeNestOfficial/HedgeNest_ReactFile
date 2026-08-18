@@ -1,0 +1,156 @@
+.signup-form-wrapper h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between input rows */
+}
+
+.Auth-inputs-row {
+  width: 100%;
+}
+
+.Auth-inputs-row label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.input-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px; /* Fixed height for uniformity */
+  border: 1px solid #d1d5db;
+  border-radius: 8px; /* Slightly smoother corners */
+  padding: 0 16px;
+  background: #ffffff;
+  box-sizing: border-box; /* Crucial for equal size */
+}
+
+.input-tag input,
+.input-tag select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.form-header-mobile {
+  display: flex;
+}
+
+.otp-submit-btn {
+  border-radius: 4px !important;
+}
+
+.brand-group-mobile {
+  display: none;
+}
+@media screen and (max-width: 951px) {
+  .signup-form-wrapper {
+    padding-top: 60px;
+    padding-bottom: 60;
+  }
+  .form-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .brand-group-mobile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: 600;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .brand-group-mobile img {
+    width: 40px; /* Adjust size to fit mobile */
+  }
+
+  .back-arrow-btn {
+    margin-bottom: 0 !important;
+  }
+}
+
+.input-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes input left, icon right */
+  width: 100%;
+  height: 50px;
+  border: 1px solid #141414;
+  border-radius: 4px;
+  padding: 0 15px; /* Side padding inside the box */
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.input-tag:focus-within {
+  border-color: #c9922a;
+}
+
+.input-tag input[type="text"],
+.input-tag select {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  font-size: 14px;
+  appearance: none; /* Hides the default ugly select arrow */
+}
+
+.input-icon {
+  font-size: 18px;
+  color: #4b5563;
+  margin-left: 10px;
+}
+
+.custom-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.file-placeholder {
+  color: #9ca3af;
+  font-size: 14px;
+}
+.file-selected {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.file-upload-box {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+/* .brand-group-signup-holder {
+  display: none;
+} */
+
+@media screen and (max-width: 768px) {
+  .brand-group-signup {
+    display: flex;
+  }
+}

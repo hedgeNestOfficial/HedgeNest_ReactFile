@@ -1,0 +1,309 @@
+.topup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.topup-box {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
+  padding: 36px;
+  position: relative;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+}
+
+.topup-nav-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.topup-back-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.topup-back-btn:hover {
+  background: #f3f4f6;
+  color: #111111;
+}
+
+.top-up-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topup-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.topup-content h2,
+.topup-title,
+.topup-pin-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0e131f;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.topup-content p,
+.topup-subtext {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #555555;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+.topup-label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #111111;
+  display: block;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.topup-input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #111111;
+  box-sizing: border-box;
+  outline: none;
+  margin-bottom: 24px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.topup-input:focus {
+  border-color: #edc344;
+  box-shadow: 0 0 0 3px rgba(237, 195, 68, 0.15);
+}
+
+.pin-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.pin-box-input {
+  width: 100%;
+  height: 52px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.pin-box-input:focus {
+  border-color: #edc344;
+  box-shadow: 0 0 0 3px rgba(237, 195, 68, 0.15);
+}
+
+.topup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.topup-btn-cancel,
+.topup-btn-submit,
+.topup-btn-full {
+  height: 48px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.topup-btn-cancel {
+  flex: 1;
+  background: transparent !important;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+}
+
+.topup-btn-cancel:hover {
+  background: #f9fafb !important;
+  border-color: #9ca3af;
+}
+
+.topup-btn-submit {
+  flex: 1;
+  background: #edc344;
+  border: none;
+  color: #ffffff;
+}
+
+.topup-btn-submit:hover {
+  background-color: #d6a732;
+}
+
+.topup-btn-submit:disabled,
+.topup-btn-full:disabled {
+  background-color: #f3f4f6 !important;
+  border-color: #f3f4f6 !important;
+  color: #9ca3af !important;
+  cursor: not-allowed;
+}
+
+.topup-btn-full {
+  width: 100%;
+  background: #edc344;
+  border: none;
+  color: #ffffff;
+}
+
+.topup-btn-full:hover {
+  background-color: #d6a732;
+}
+
+.topup-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
+  width: 100%;
+}
+
+.topup-loading-container p {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555555;
+  margin: 0;
+}
+
+.fullscreen-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid #f3f4f6;
+  border-top: 3.5px solid #edc344;
+  border-radius: 50%;
+  animation: spin-kf 0.85s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin-kf {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.swal-vault-radius {
+  border-radius: 16px !important;
+  padding: 36px !important;
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal-vault-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+}
+
+.swal-vault-button {
+  width: 140px !important;
+  height: 48px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+@media screen and (max-width: 480px) {
+  .topup-overlay {
+    padding: 16px;
+  }
+
+  .topup-box {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .topup-nav-header {
+    margin-bottom: 12px;
+  }
+
+  .topup-title,
+  .topup-content h2,
+  .topup-pin-title {
+    font-size: 1.18rem;
+  }
+
+  .topup-content p,
+  .topup-subtext {
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+  }
+
+  .topup-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .topup-btn-cancel,
+  .topup-btn-submit {
+    width: 100%;
+  }
+
+  .pin-grid {
+    gap: 6px;
+  }
+
+  .pin-box-input {
+    height: 46px;
+    font-size: 1.25rem;
+  }
+}

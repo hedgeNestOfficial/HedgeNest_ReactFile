@@ -1,0 +1,56 @@
+/* Stage D Secure Pin Box Configuration Layout Elements */
+.pin-screen-title {
+  font-size: 26px;
+  margin-bottom: 40px;
+  text-align: center; /* Keeps title centered on mobile viewports */
+}
+
+.pin-input-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px; /* Slightly reduced gap to prevent edge clipping on narrow mobile screens */
+  margin-bottom: 48px;
+  box-sizing: border-box;
+}
+
+.pin-box {
+  flex: 1; /* Allows boxes to distribute evenly and scale down together */
+  max-width: 60px; /* Restricts maximum desktop width to your original style */
+  aspect-ratio: 1 / 1.2; /* Dynamically calculates height based on width to maintain proportions */
+  min-width: 0; /* Directs the browser to allow compression below default input minimums */
+
+  border: 1px solid #c4c4c4;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 28px;
+  color: #111111;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pin-box:focus {
+  border-color: #e2b93b;
+  box-shadow: 0 0 0 2px rgba(226, 185, 59, 0.2); /* Adds visual emphasis on smaller taps */
+}
+
+.pin-submit-btn {
+  width: 100%;
+  height: 52px;
+  background-color: #e2b93b;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.pin-submit-btn:disabled {
+  background-color: #e6d29b;
+  cursor: not-allowed;
+}

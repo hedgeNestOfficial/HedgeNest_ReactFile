@@ -1,0 +1,123 @@
+/* Full Viewport Workspace Canvas - Fills the entire routing workspace area */
+.payment-success-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #faf8f3; /* Signature dashboard light cream background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 60px 24px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Card wrapper turned into an open, borderless layout section */
+.payment-success-card {
+  background-color: transparent; /* Stripped away the card enclosure entirely */
+  width: 100%;
+  max-width: 600px; /* Wider footprint for a more natural full-page presentation */
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  animation: fullPageFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Prominent full-screen celebration icon ring anchor */
+.payment-success-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 96px;
+  height: 96px;
+  background-color: #fef7e7; /* Clean golden background illumination tint */
+  border-radius: 50%;
+  margin-bottom: 32px;
+}
+
+/* Core Verification Checkmark Icon */
+.payment-success-icon {
+  font-size: 48px;
+  color: #f2bf5e; /* Signature brand gold token alignment */
+}
+
+/* Expansive Full Page Header Typography */
+.payment-success-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827; /* Dark charcoal header contrast color */
+  margin: 0 0 16px 0;
+  letter-spacing: -0.75px;
+}
+
+/* Tracking/Status Descriptive Message Layout */
+.payment-success-message {
+  font-size: 16px;
+  color: #4b5563; /* High legibility muted slate gray text */
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+  max-width: 440px; /* Perfect scanning reading line bounds */
+}
+
+/* Extended Action Control Button */
+.payment-success-btn {
+  width: 100%;
+  max-width: 320px; /* Keeps the button balanced in a spacious presentation layout */
+  height: 52px;
+  background-color: #f2bf5e; /* Primary active gold theme identifier */
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Interactive States Hover Variations */
+.payment-success-btn:hover {
+  background-color: #e0ae4e; /* Clean deep golden shift response */
+}
+
+.payment-success-btn:active {
+  transform: scale(0.985); /* Snappy physical action downscale */
+}
+
+/* Clean motion entrance animation */
+@keyframes fullPageFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive view adaptions for smaller displays */
+@media (max-width: 480px) {
+  .payment-success-page {
+    padding: 40px 20px;
+  }
+  .payment-success-title {
+    font-size: 26px;
+  }
+  .payment-success-message {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+  .payment-success-btn {
+    max-width: 100%; /* Spans full width organically on tiny viewports */
+  }
+}

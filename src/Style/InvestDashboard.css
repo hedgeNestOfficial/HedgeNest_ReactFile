@@ -1,0 +1,166 @@
+.dashboard-wrapper {
+  padding: 50px;
+  max-width: 1200px;
+  margin: 0 auto; /* Centers the dashboard viewport globally */
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: #fcfcf7;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  /* 🌟 FIX: Keeps your structural content anchored to the top-left rather than squishing items center */
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+header {
+  width: 100%;
+}
+
+header h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+header p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* 🌟 FIX: Forces your sections to confidently map 100% width space of the parent container grid */
+.positions-section,
+.available-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   UNIFIED FLEXBOX LAYOUT ENGINE (2 COLUMNS PER ROW)
+   ========================================================================== */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Clean spacing gutters */
+  width: 100%;
+  align-items: stretch; /* Ensures matching card heights per row layout */
+}
+
+/* Force both standard component wrapper divs and skeletons to match dimensions */
+.flex-container > div,
+.invest-skeleton-card {
+  /* 🌟 FIX: Uses calc to precisely map clean dual columns subtracting row gaps */
+  flex: 0 1 calc(50% - 10px);
+  box-sizing: border-box;
+}
+
+.empty-positions-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.empty-positions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.empty-positions-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   INVESTMENT DASHBOARD SKELETON SPECIFICS
+   ========================================================================== */
+.invest-skeleton-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skel-row {
+  background: linear-gradient(90deg, #e5e7eb 25%, #d1d5db 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: investShimmer 1.5s infinite ease-in-out;
+  border-radius: 4px;
+}
+
+.header-skel {
+  height: 24px;
+  width: 45%;
+  margin-bottom: 6px;
+}
+.body-skel-line {
+  height: 16px;
+  width: 85%;
+}
+.body-skel-line.short-skel {
+  width: 60%;
+  margin-bottom: 10px;
+}
+.btn-skel {
+  height: 44px;
+  width: 100%;
+  border-radius: 6px;
+  margin-top: auto;
+}
+
+@keyframes investShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==========================================================================
+   📱 MOBILE & RESPONSIVE VIEWPORTS
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .dashboard-wrapper {
+    /* 🌟 FIX: Drops the crushing 50px side-padding down so components can fill mobile screens */
+    padding: 80px 20px 40px 20px;
+    gap: 32px;
+    margin-bottom: 20px;
+  }
+
+  /* Safely drops layout layers down to a single clean focus card column */
+  .flex-container > div,
+  .invest-skeleton-card {
+    flex: 0 1 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-wrapper {
+    /* 🌟 FIX: Maximum screen optimization layout for small compact phones */
+    padding: 64px 16px 32px 16px;
+  }
+}

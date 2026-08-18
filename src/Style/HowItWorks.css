@@ -1,0 +1,158 @@
+.how-section {
+  width: 100%;
+  background-color: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  padding: 90px 24px;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.how-container {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.how-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.how-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 14px;
+}
+
+/* Underline effect on heading */
+.how-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #d2af26, transparent);
+  border-radius: 2px;
+}
+
+.how-header p {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+}
+
+.how-flex-deck {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+}
+
+/* DESKTOP LAYOUT (4 items in a row) */
+.how-card-wrapper {
+  width: 23%;
+  flex-grow: 1;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.how-action-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.how-button {
+  height: 54px;
+  padding: 0 44px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--button-primaryColor, #d2af26);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button shine effect */
+.how-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.how-button:hover::before {
+  left: 100%;
+}
+
+/* TABLET LAYOUT (2 items per row - Max width: 1005px) */
+@media screen and (max-width: 1005px) {
+  .how-card-wrapper {
+    width: 47%;
+  }
+}
+
+/* MOBILE LAYOUT (1 stacked item per row - Max width: 750px) */
+@media screen and (max-width: 750px) {
+  .how-section {
+    padding: 60px 20px;
+  }
+
+  .how-container {
+    width: 95%;
+    gap: 36px;
+  }
+
+  .how-header {
+    align-items: center;
+    text-align: center;
+  }
+
+  .how-header h2 {
+    font-size: 26px;
+  }
+
+  .how-header h2::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .how-flex-deck {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .how-card-wrapper {
+    width: 95%;
+  }
+
+  .how-button {
+    width: 100%;
+    max-width: 280px;
+  }
+}

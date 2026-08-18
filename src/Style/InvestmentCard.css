@@ -1,0 +1,199 @@
+/* ==========================================================================
+   CORE STRUCTURAL CARD LAYOUT BOX (GLOBAL & DESKTOP)
+   ========================================================================== */
+.investment-product-card {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px; /* Matches your position card layout grid */
+
+  /* 🔐 FIXED SHAPE LOCK: Guarantees 1:1 visual uniformity regardless of content length */
+  height: 280px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+  position: relative;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.investment-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌟 MEDIUM TIER CONTAINER UPGRADE */
+.investment-product-card.medium-tier,
+.investment-product-card.medium-tierC {
+  background-color: #fdf8ee;
+  border: 1px solid #e6b042;
+}
+
+/* ==========================================================================
+   HEADER COMPOSITION LAYER (GRID-LOCKED NON-BREAKING ROW)
+   ========================================================================== */
+.card-header-row {
+  display: grid;
+  /* 🌟 FIX: 1fr forces title group to occupy only left-over space, auto locks the badge width */
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; /* 🌟 FIX: Tells the grid item it is allowed to shrink smaller than its text length */
+}
+
+.card-title-group h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+
+  /* Strict text truncation system */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0; /* 🌟 FIX: Stops inner text elements from expanding layout bounds on mobile webviews */
+}
+
+/* Golden Circle Framework */
+.premium-icon-container {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #e6b042;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trending-growth-icon {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+/* Risk & Tier Metadata Badge Nodes */
+.risk-badge-node {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.risk-badge-node.low {
+  background-color: #dcfee5;
+  color: #22c55e;
+}
+
+.risk-badge-node.medium {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+/* Typography Descriptions Blocks */
+.investment-product-description {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #374151;
+  margin: 0 0 12px 0;
+  text-align: left;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Balanced 3-Column Box System using Flexbox */
+.metrics-dashboard-flex-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 14px;
+  margin-top: auto;
+}
+
+.metric-data-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border: 1px solid #111827;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.medium-tier .metric-data-box,
+.medium-tierC .metric-data-box {
+  border-color: #e6b042;
+}
+
+.metric-cell-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #4b5563;
+  text-transform: uppercase;
+}
+
+.metric-cell-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Bottom Action Buttons Framework */
+.invest-action-trigger-btn {
+  width: 100%;
+  height: 42px;
+  background: linear-gradient(90deg, #e6b042 0%, #f5ce71 100%);
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.invest-action-trigger-btn:hover {
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE LAYER (480px and under)
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+  .investment-product-card {
+    padding: 20px 14px;
+    height: 280px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .card-title-group h3 {
+    font-size: 0.95rem;
+  }
+
+  .invest-action-trigger-btn {
+    height: 38px;
+    font-size: 13px;
+  }
+}

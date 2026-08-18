@@ -1,0 +1,223 @@
+.header-container {
+  width: 100%;
+  min-height: 10vh;
+  background-color: var(--primaryWhite);
+  display: flex;
+  /* background-color: #c9922a; */
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 100;
+  /* margin-top: 10px; */
+  /* padding: 0 10px; */
+  padding: 0 10px;
+}
+
+.header-wrapper {
+  width: 90%;
+  height: 100%;
+  background-color: var(--primarywhite);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+}
+.logo {
+  width: 140px;
+  height: 37px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.navigation {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0a0917;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li {
+  list-style-type: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+.navigation li:hover {
+  color: #c9922a;
+}
+
+/* Hidden on desktop views naturally */
+.mobile-dropdown-logs {
+  display: none !important;
+}
+
+.logs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.login {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #181739;
+  background: var(--primaryWhite);
+  cursor: pointer;
+  padding: 0;
+  width: auto;
+  height: auto;
+  transition: color 0.2s ease;
+}
+
+.create {
+  width: 170px;
+  height: 46px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  background: var(--button-primaryColor);
+  box-shadow: 0px 2px 4px rgba(201, 146, 42, 0.2);
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.create:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.menu {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    display: block;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 102;
+  }
+
+  .logs {
+    display: none;
+  }
+
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 5%;
+    width: 220px;
+    background-color: #ffffff;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 0px 16px;
+    height: auto;
+    align-items: flex-start;
+    gap: 0;
+    box-sizing: border-box;
+
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    overflow: hidden;
+    transition:
+      max-height 0.25s ease-out,
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .navigation.open {
+    max-height: 450px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    padding: 8px 16px 16px 16px;
+  }
+
+  .navigation li {
+    width: 100%;
+    padding: 14px 8px;
+    border-bottom: 1px solid #f5f5f7;
+  }
+
+  .navigation .mobile-dropdown-logs {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 0 4px 0;
+    border-bottom: none;
+  }
+
+  .navigation .mobile-dropdown-logs .login,
+  .navigation .mobile-dropdown-logs .create {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .navigation .mobile-dropdown-logs .login {
+    border: 1px solid rgba(24, 23, 57, 0.15);
+    border-radius: 4px;
+  }
+}
+
+/* ============================================
+   DESKTOP USER SECTION
+   ============================================ */
+
+.desktop-user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f7;
+  border: 2px solid #c9922a;
+  flex-shrink: 0;
+}
+
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar-icon {
+  color: #c9922a;
+}

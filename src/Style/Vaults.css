@@ -1,0 +1,318 @@
+.vault-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vault-card {
+  width: 48%;
+  min-width: 340px;
+  max-width: 540px;
+  height: 350px;
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
+  border-radius: 16px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.badge-text {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #111111;
+}
+
+.badge-icon {
+  font-size: 16px;
+}
+
+.icon-gold {
+  color: #e2b93b;
+}
+
+.vault-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 16px 0;
+}
+
+.amount-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  color: #111111;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.balance-main {
+  display: flex;
+  align-items: baseline;
+}
+
+.vault-currency {
+  font-size: 28px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.vault-balance {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.top-up {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.top-up h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.2;
+}
+
+.top-up div {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+}
+
+.top-currency {
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 1px;
+}
+
+.top-balance {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.timeline-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 16px 0;
+}
+
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background-color: #f7f3e3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #e2b93b;
+  border-radius: 10px;
+}
+
+.metrics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.rate-lbl,
+.freq-lbl {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: auto;
+}
+
+.btn-gold-full {
+  width: 100%;
+  height: 48px;
+  background-color: #edc344;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-gold-action {
+  width: 48%;
+  height: 48px;
+  background-color: #edc344;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-white-action {
+  width: 48%;
+  height: 48px;
+  background: #ffffff !important;
+  border: 1px solid #111111;
+  border-radius: 8px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eaeaea;
+}
+
+.footer-lbl {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555555;
+  transition: color 0.2s ease;
+}
+
+.footer-lbl.lbl-active {
+  font-weight: 600;
+  color: #111111;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #c4c4c4;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #edc344;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+@media (max-width: 768px) {
+  .vault-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 400px;
+  }
+}
+
+/* ==========================================
+   🎯 Mobile Layout Fix for 450px and down
+   ========================================== */
+@media screen and (max-width: 480px) {
+  .vault-card {
+    min-width: 100%; /* Prevent fixed min-width overflow */
+    height: auto; /* Let content expand cleanly vertically */
+    padding: 24px 16px; /* Drop padding so inner content has breathing room */
+  }
+
+  .vault-name {
+    font-size: 20px; /* Scale down long custom titles slightly */
+    margin-bottom: 12px;
+  }
+
+  /* Stack the main balance and current savings vertically to prevent overlap */
+  .amount-group {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .balance-main {
+    width: 100%;
+  }
+
+  /* Align savings text to the left since it is now stacked underneath */
+  .top-up {
+    align-items: flex-start !important;
+    text-align: left !important;
+    width: 100%;
+  }
+
+  .top-up div {
+    justify-content: flex-start !important;
+  }
+
+  .vault-balance {
+    font-size: 28px; /* Prevent big numbers from clip breaking */
+  }
+
+  /* Make sure buttons scale evenly on small screens */
+  .action-row {
+    gap: 8px;
+  }
+
+  .btn-gold-action,
+  .btn-white-action {
+    width: 50%; /* Ensure full utilization of space */
+    font-size: 14px; /* Slightly smaller text for padding safety */
+    padding: 0 4px;
+  }
+}

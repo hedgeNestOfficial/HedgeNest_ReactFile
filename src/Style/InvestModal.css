@@ -1,0 +1,458 @@
+/* ==========================================================================
+   OVERLAY & CONTAINER LAYOUT SYSTEM
+   ========================================================================== */
+
+/* Overlay Background Masking layer */
+.invest-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal Card Sizing Container - Enforced Strict 4px Corner Radii */
+.invest-modal-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 4px; /* Strict UI Uniformity */
+  padding: 32px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Loading specific utility bounds to avoid layout jumps during pipeline step transitions */
+.invest-loader-card-dims {
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Internal Steps wrappers */
+.invest-modal-step-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.align-center {
+  align-items: center;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY SYSTEM
+   ========================================================================== */
+
+.invest-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+
+.invest-modal-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  text-align: left;
+}
+
+/* ==========================================================================
+   NOTIFICATION BANNERS & ACCENTS
+   ========================================================================== */
+
+/* Locked Asset notification banner box layout - Enforced 4px Corner Radii */
+.invest-lock-notification-banner {
+  background: #fef08a; /* Custom light gold/yellow accent fill variant */
+  border-radius: 4px; /* Unified Framework Standard */
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.invest-shield-icon {
+  font-size: 16px;
+  color: #713f12;
+}
+
+.invest-lock-banner-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #713f12;
+  margin: 0;
+}
+
+/* ==========================================================================
+   INPUTS & DATA SYSTEM WRAPPERS
+   ========================================================================== */
+
+/* Input system formatting rows */
+.invest-input-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.invest-input-field-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: left;
+}
+
+.invest-input-box-wrapper {
+  width: 100%;
+  border-bottom: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+}
+
+.invest-numeric-text-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0f172a;
+  background: transparent;
+}
+
+/* Return summary pricing modules row styling rules */
+.invest-returns-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.invest-summary-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.invest-summary-value-highlight {
+  font-size: 22px;
+  font-weight: 700;
+  color: #eab308; /* Theme gold value color highlights matching Figma */
+}
+
+/* ==========================================================================
+   BUTTON CONTROL COMPONENT SYSTEM
+   ========================================================================== */
+
+.invest-modal-action-buttons-container {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+}
+
+/* Cancel Action Control Item - Enforced Strict 4px Radii */
+.invest-btn-secondary-cancel {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px; /* Enforced Design Uniformity */
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.invest-btn-secondary-cancel:hover {
+  background: #f8fafc;
+}
+
+/* Core Action Control Buttons - Enforced Strict 4px Radii */
+.invest-btn-primary-solid,
+.invest-btn-block-action {
+  flex: 1;
+  background: #f2bf5e; /* Exact theme matching yellow hue */
+  border: none;
+  border-radius: 4px; /* Uniform Corner Radii */
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.invest-btn-primary-solid:hover,
+.invest-btn-block-action:hover {
+  opacity: 0.92;
+}
+
+.invest-btn-block-action {
+  width: 100%;
+}
+
+.invest-btn-block-action:disabled {
+  background: #fef08a;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   SECURITY VERIFICATION PIN VIEW ELEMENTS
+   ========================================================================== */
+
+.invest-modal-back-navigation-arrow {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #334155;
+  cursor: pointer;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.invest-pin-box-grid-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+/* Transaction 6-digit Secure Box Fields - Enforced 4px Radii */
+.invest-square-box-input {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 4px; /* Uniform Standard Corner Mapping */
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.invest-square-box-input:focus {
+  border-color: #f2bf5e;
+}
+
+/* ==========================================================================
+   PIPELINE PROCESS LOADERS & ANIMATED SPINNERS
+   ========================================================================== */
+
+.invest-full-card-spinner-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24px 0;
+  gap: 16px;
+}
+
+.invest-numeric-text-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0f172a;
+  background: transparent;
+
+  /* 🟢 ADD THESE TO PREVENT TEXT OVERFLOW */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* CSS Live Circular Loader Asset Matching Figma Screenshots */
+.invest-circular-spinner {
+  width: 42px;
+  height: 42px;
+  border: 3.5px solid rgba(242, 191, 94, 0.25);
+  border-top: 3.5px solid #f2bf5e; /* Gold focus accent channel line */
+  border-radius: 50%; /* Maintained Circle Parameter */
+  animation: investSpin 1s linear infinite;
+}
+
+@keyframes investSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.invest-processing-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.invest-processing-button-loader-banner {
+  width: 100%;
+  background: #fef08a;
+  border-radius: 4px; /* Matching Standard */
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 36px;
+  box-sizing: border-box;
+}
+
+.invest-modal-processing-subtext {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ==========================================================================
+   SUCCESS VERIFICATION DISPLAY SYSTEM
+   ========================================================================== */
+
+.invest-success-checkmark-animated-badge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* Absolute circular definition */
+  background: #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.invest-checkmark-inner-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%; /* Absolute circular definition */
+  background: #eab308;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   UTILITY SPACING OVERRIDES
+   ========================================================================== */
+.margin-top-xs {
+  margin-top: 6px;
+}
+.margin-top-md {
+  margin-top: 16px;
+}
+.margin-top-lg {
+  margin-top: 24px;
+}
+.margin-top-xl {
+  margin-top: 36px;
+}
+.padding-vertical-lg {
+  padding: 20px 0;
+}
+.display-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.font-size-xl {
+  font-size: 26px;
+}
+.text-center-forced {
+  text-align: center !important;
+}
+.max-width-text {
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS MEDIA BREAKPOINT
+   ========================================================================== */
+@media (max-width: 520px) {
+  .invest-modal-card {
+    width: 75%; /* Leaves clean edge spaces on small viewport screens */
+    padding: 24px 20px; /* Slims container padding to maximize inner field focus */
+    margin: 0 auto;
+  }
+
+  .invest-modal-title {
+    font-size: 21px; /* Slightly tighter text boundaries */
+  }
+
+  .invest-modal-description {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .invest-lock-notification-banner {
+    padding: 8px 12px;
+    margin-bottom: 20px;
+  }
+
+  .invest-lock-banner-text {
+    font-size: 12.5px;
+  }
+
+  .invest-pin-box-grid-row {
+    gap: 8px; /* Tighter item gutters prevent 6-box wrapping or clipping overflow */
+    margin-top: 16px;
+  }
+
+  .invest-square-box-input {
+    font-size: 18px;
+    border-radius: 4px; /* Strictly preserved radius parameter mapping */
+  }
+
+  .invest-returns-summary-row {
+    margin-bottom: 24px;
+  }
+
+  .invest-summary-value-highlight {
+    font-size: 19px;
+  }
+
+  .invest-modal-action-buttons-container {
+    gap: 12px; /* Pulls controls together neatly */
+  }
+
+  .invest-btn-secondary-cancel,
+  .invest-btn-primary-solid,
+  .invest-btn-block-action {
+    padding: 10px 8px; /* Slightly lower internal button heights for smaller screens */
+    font-size: 14px;
+    border-radius: 4px; /* Strictly preserved radius parameter mapping */
+  }
+}

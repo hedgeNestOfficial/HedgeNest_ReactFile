@@ -1,0 +1,168 @@
+.hero {
+  width: 100%;
+  min-height: 350px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(#352e97, #181739);
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+.hero-wrap {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 80px 20px;
+}
+
+.hero-content {
+  height: 100%;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.highlight-text {
+  color: #d2af26;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect on highlight text */
+.highlight-text::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d2af26, transparent);
+  border-radius: 2px;
+}
+
+.hero-text-description {
+  font-size: 20px;
+  margin-bottom: 40px;
+  color: #e5e7eb;
+}
+
+.hero-button {
+  width: 170px;
+  height: 56px;
+  border: none;
+  border-radius: 4px;
+  background: var(--button-primaryColor, #d2af26);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button shine effect */
+.hero-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.hero-button:hover::before {
+  left: 100%;
+}
+
+.hero-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 60%;
+}
+
+.hero-display-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ========================================================
+   FIXED MOBILE RESPONSIVENESS (Down to small mobile phones)
+   ======================================================== */
+@media screen and (max-width: 968px) {
+  .hero {
+    height: auto;
+    padding: 60px 0;
+  }
+
+  .hero-wrap {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 48px;
+    padding: 40px 20px;
+    margin-top: 40px;
+  }
+
+  .hero-content {
+    width: 100%;
+    text-align: left;
+  }
+
+  .hero-title {
+    width: 100%;
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .hero-text-description {
+    font-size: 16px;
+    margin-bottom: 28px;
+    max-width: 550px;
+  }
+
+  .hero-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-display-img {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+  }
+
+  .hero-button {
+    align-self: flex-start;
+  }
+}

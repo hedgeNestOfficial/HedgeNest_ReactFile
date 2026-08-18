@@ -1,0 +1,61 @@
+.HeroCard-wrapper {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 32px; /* Beautiful deep padding for desktop */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.HeroCard-icon-container {
+  width: 56px;
+  height: 56px;
+  background-color: #fef8e8;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.HeroCard-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.HeroCard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.HeroCard-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.HeroCard-text {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: #475569;
+  margin: 0;
+}
+
+/* MOBILE CARD OPTIMIZATION (Max width: 768px) */
+@media screen and (max-width: 768px) {
+  .HeroCard-wrapper {
+    padding: 24px; /* FIXED: Gives the text more room to breathe inside the card boundaries */
+    gap: 16px; /* Slightly tighter gap for mobile compactness */
+  }
+}
