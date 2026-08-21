@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
+
 import "../../Css/DashBoard.css";
+
 import { IoNotificationsSharp } from "react-icons/io5";
 import { IoIosArrowRoundForward } from "react-icons/io";
+
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
 import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import SplashScreen from "../../Components/SplashScreen.jsx";
+
 import { updateWallet } from "../../Store/UserSlice.js";
 import { getTransactionHistory } from "../../Services/authService.js";
 
-// 🟢 Service Imports
 import { getMyWallet } from "../../Services/Walletservice.js";
-import { getFinancialInsight } from "../../Services/Walletinsight.js"; // ✅ Dedicated insight service import
+import { getFinancialInsight } from "../../Services/Walletinsight.js";
 
-// 🟢 Premium Currency Icons
 import { SiTether } from "react-icons/si";
 
-// 🇳🇬 Cross-platform pixel-perfect circular Nigerian Flag Icon
+// Nigerian Flag Icon
 const NigeriaFlagIcon = () => (
   <svg
     width="16"
     height="16"
     viewBox="0 0 32 32"
-    style={{ borderRadius: "50%", display: "inline-block", shrink: 0 }}
+    style={{
+      borderRadius: "50%",
+      display: "inline-block",
+      flexShrink: 0,
+    }}
   >
     <rect width="10.67" height="32" fill="#05995e" />
     <rect x="10.67" width="10.67" height="32" fill="#ffffff" />
@@ -35,9 +42,10 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const { user, token, wallet } = useSelector((state) => state.user);
+
   const [isLoadingWallet, setIsLoadingWallet] = useState(true);
-  const [isLoadingInsight, setIsLoadingInsight] = useState(true); // ✅ Loading tracker for curated text
-  const [insight, setInsight] = useState(null); // ✅ State storage for text tip
+  const [isLoadingInsight, setIsLoadingInsight] = useState(true);
+  const [insight, setInsight] = useState(null);
 
   const [showSplash, setShowSplash] = useState(() => {
     return !sessionStorage.getItem("dashboardSplashShown");
@@ -64,9 +72,10 @@ const Dashboard = () => {
 
       try {
         setIsLoadingWallet(true);
-        const walletResponse = await getMyWallet(token);
 
+        const walletResponse = await getMyWallet(token);
         const walletData = walletResponse?.data?.[0];
+
         if (walletData) {
           dispatch(updateWallet(walletData));
         }
@@ -82,13 +91,14 @@ const Dashboard = () => {
 
       try {
         setIsLoadingInsight(true);
+
         const insightResponse = await getFinancialInsight(token);
 
-        // Handles extraction clean whether matching a network object layout or returning text string directly
         const tipText =
           insightResponse?.insight ||
           insightResponse?.data?.insight ||
           insightResponse?.data;
+
         if (tipText) {
           setInsight(tipText);
         }
@@ -105,6 +115,7 @@ const Dashboard = () => {
 
   const fullName =
     `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || "User";
+
   const profileImage =
     user?.profilePicture?.url || "https://via.placeholder.com/150";
 
@@ -117,9 +128,12 @@ const Dashboard = () => {
   const availableBalance = wallet?.availableBalance ?? 0;
   const nairaBalance = wallet?.balanceInNaira ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
-
   const smartVaults = wallet?.smartVaults ?? 0;
   const investments = wallet?.investments ?? 0;
+
+  // Show info when remaining NGN is below 1 USDT equivalent.
+  // 1 USDT = ₦1,400
+  const showNairaRemainderInfo = Number(nairaBalance) < 1400;
 
   if (showSplash) {
     return <SplashScreen />;
@@ -166,9 +180,11 @@ const Dashboard = () => {
                 <p>Welcome {user?.firstName || "User"},</p>
                 <h3>Your nest, today.</h3>
               </div>
+
               <div className="balance">
                 <div className="total-available">
                   <p>Available Balance</p>
+
                   {isLoadingWallet ? (
                     <div className="dash-skel sk-dark sk-large"></div>
                   ) : (
@@ -191,10 +207,19 @@ const Dashboard = () => {
                       <NigeriaFlagIcon />
                       NGN BALANCE
                     </p>
+
                     {isLoadingWallet ? (
                       <div className="dash-skel sk-dark sk-medium"></div>
                     ) : (
-                      <h2>₦ {formatCurrency(nairaBalance)}</h2>
+                      <>
+                        <h2>₦ {formatCurrency(nairaBalance)}</h2>
+
+                        {showNairaRemainderInfo && (
+                          <p className="balance-info-text">
+                            Your remaining Naira balance is below 1 USDT.
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -210,6 +235,7 @@ const Dashboard = () => {
                       <SiTether size={14} style={{ color: "#26a17b" }} />
                       USDT BALANCE
                     </p>
+
                     {isLoadingWallet ? (
                       <div className="dash-skel sk-dark sk-medium"></div>
                     ) : (
@@ -222,10 +248,14 @@ const Dashboard = () => {
               {/* DYNAMIC FINANCIAL INSIGHT BLOCK */}
               <div className="insight">
                 <h3>Financial Insight Of The Day</h3>
+
                 {isLoadingInsight ? (
                   <div
                     className="dash-skel sk-light sk-small"
-                    style={{ marginTop: "6px", width: "85%" }}
+                    style={{
+                      marginTop: "6px",
+                      width: "85%",
+                    }}
                   ></div>
                 ) : (
                   <p>
@@ -256,13 +286,14 @@ const Dashboard = () => {
               <div className="vault">
                 <div className="upper-section">
                   <h3>Smart Vaults</h3>
+
                   <div
                     className="view-all-action"
                     onClick={() => navigate("/SmartSafe")}
                   >
                     <p>View all</p>
+
                     <div className="icon-holder">
-                      {" "}
                       <IoIosArrowRoundForward
                         className="arrow-icon"
                         style={{ alignSelf: "right" }}
@@ -277,6 +308,7 @@ const Dashboard = () => {
                   ) : (
                     <p>{smartVaults}</p>
                   )}
+
                   <p>Active Savings Plan</p>
                 </div>
               </div>
@@ -284,12 +316,13 @@ const Dashboard = () => {
               <div className="investment">
                 <div className="upper-section">
                   <h3>Investments</h3>
+
                   <div
                     className="view-all-action"
                     onClick={() => navigate("/invest")}
                   >
-                    {" "}
                     <p>View all</p>
+
                     <div className="icon-holder">
                       <IoIosArrowRoundForward
                         className="arrow-icon"
@@ -305,6 +338,7 @@ const Dashboard = () => {
                   ) : (
                     <p>{investments}</p>
                   )}
+
                   <p>Investment Plans</p>
                 </div>
               </div>
@@ -314,8 +348,10 @@ const Dashboard = () => {
             <section className="transaction-section">
               <div className="transaction-header">
                 <h3>Recent Transactions</h3>
+
                 <div className="tr-actions" onClick={() => navigate("/wallet")}>
                   <h5>View wallet</h5>
+
                   <div className="icon-holder">
                     <IoIosArrowRoundForward className="arrow-icon" />
                   </div>

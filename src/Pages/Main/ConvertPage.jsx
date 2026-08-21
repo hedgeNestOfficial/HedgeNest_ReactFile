@@ -414,11 +414,15 @@ const ConvertPage = () => {
               {activeCurrency === "NGN" ? "USDT" : "NGN"}
             </span>
           </div>
-
           <button
             type="submit"
             className="submit-conversion-btn"
-            disabled={!!inputError || !inputValue}
+            disabled={
+              !!inputError ||
+              !inputValue ||
+              (activeCurrency === "NGN" && Number(inputValue) < 1400) ||
+              (activeCurrency === "USDT" && Number(inputValue) < 1.4)
+            }
           >
             {activeCurrency === "NGN"
               ? "Convert NGN to USDT"
