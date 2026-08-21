@@ -282,7 +282,12 @@
   margin-top: 8px;
   transition: opacity 0.2s ease;
 }
-
+.submit-conversion-btn:disabled {
+  background: #f6e3a7 !important;
+  color: #fdfdfd;
+  cursor: not-allowed;
+  opacity: 1;
+}
 .submit-conversion-btn:hover {
   opacity: 0.95;
 }
@@ -647,6 +652,7 @@
   .modal-backdrop-overlay {
     display: flex !important;
     align-items: center !important;
+
     justify-content: center !important;
   }
 

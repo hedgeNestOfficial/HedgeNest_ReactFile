@@ -169,6 +169,27 @@
   letter-spacing: -0.5px;
 }
 
+/* ==========================================================================
+   REMAINING NGN BALANCE INFO
+   ========================================================================== */
+
+.balance-info-text {
+  margin: 2px 0 0 0 !important;
+  font-size: 10px !important;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  max-width: 220px;
+}
+
+@media (max-width: 768px) {
+  .balance-info-text {
+    font-size: 9.5px !important;
+    max-width: 180px;
+  }
+}
+
 /* Financial Insights Card */
 .insight {
   width: 30%;

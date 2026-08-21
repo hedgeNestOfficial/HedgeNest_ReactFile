@@ -106,15 +106,17 @@ const Vaults = ({ vaultsData = [], onTopUp, onWithdraw, onToggleAutoSave }) => {
                 </span>
               </div>
 
-              <div className="top-up">
-                <h3>Current Savings</h3>
-                <div>
-                  <span className="top-currency">₦</span>
-                  <span className="top-balance">
-                    {currentSavedBalance.toLocaleString()}
-                  </span>
+              {isFlexible && (
+                <div className="top-up">
+                  <h3>Current Savings</h3>
+                  <div>
+                    <span className="top-currency">₦</span>
+                    <span className="top-balance">
+                      {currentSavedBalance.toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="progress-container">
