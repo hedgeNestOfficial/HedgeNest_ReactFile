@@ -12,7 +12,7 @@ export const useWalletRefresh = () => {
 
       const response = await getMyWallet(token);
 
-      console.log("Wallet Response:", response);
+      console.log("Wallet Response");
 
       const walletData = response?.data?.[0];
 

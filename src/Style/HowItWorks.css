@@ -3,14 +3,13 @@
   background-color: #f4f6f9;
   display: flex;
   justify-content: center;
-  padding: 90px 24px; /* Added side padding to prevent screen edge clipping */
+  padding: 90px 24px;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
 
 .how-container {
   width: 90%;
-  /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
   gap: 48px;
@@ -24,15 +23,30 @@
 }
 
 .how-header h2 {
-  font-size: 32px; /* LOCKED to clean pixels */
+  font-size: 32px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
   letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 14px;
+}
+
+/* Underline effect on heading */
+.how-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #d2af26, transparent);
+  border-radius: 2px;
 }
 
 .how-header p {
-  font-size: 16px; /* LOCKED to clean pixels */
+  font-size: 16px;
   color: #475569;
   margin: 0;
 }
@@ -48,7 +62,7 @@
 /* DESKTOP LAYOUT (4 items in a row) */
 .how-card-wrapper {
   width: 23%;
-  flex-grow: 1; /* Automatically builds even, perfectly filled rows */
+  flex-grow: 1;
   display: flex;
   box-sizing: border-box;
 }
@@ -71,10 +85,29 @@
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.how-button:hover {
-  background: #ca8a04;
+/* Button shine effect */
+.how-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.how-button:hover::before {
+  left: 100%;
 }
 
 /* TABLET LAYOUT (2 items per row - Max width: 1005px) */
@@ -96,12 +129,17 @@
   }
 
   .how-header {
-    align-items: center; /* Centers the heading text on mobile screens */
+    align-items: center;
     text-align: center;
   }
 
   .how-header h2 {
     font-size: 26px;
+  }
+
+  .how-header h2::after {
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .how-flex-deck {
@@ -110,11 +148,11 @@
   }
 
   .how-card-wrapper {
-    width: 95%; /* Forces cards to take full safety width on mobile */
+    width: 95%;
   }
 
   .how-button {
-    width: 100%; /* Makes your action button mobile-friendly */
+    width: 100%;
     max-width: 280px;
   }
 }

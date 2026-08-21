@@ -1,81 +1,152 @@
-/* Isolated Structural Overlay Layer */
+/* ==========================================================================
+   LINK ACCOUNT MODAL - PROFESSIONAL STYLES
+   ========================================================================== */
+
+/* ==========================================================================
+   MODAL OVERLAY
+   ========================================================================== */
+
 .link-account-modal-overlay {
   position: fixed;
   inset: 0;
   width: 100%;
   min-height: 100dvh;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow-y: auto;
-  z-index: 990; /* Kept safely below toast systems */
+  z-index: 990;
+  animation: overlayFadeIn 0.25s ease-out;
 }
 
-/* Modal Card Blueprint Container */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   MODAL CARD
+   ========================================================================== */
+
 .link-account-modal-card {
   background: #ffffff;
-  width: min(100%, 480px);
-  max-width: 480px;
+  width: min(100%, 440px);
+  max-width: 440px;
   max-height: calc(100dvh - 40px);
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  padding: 28px 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
   overflow-y: auto;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: modalSlideUp 0.3s ease-out;
 }
 
-/* Layout dimensions match optimized spinner frames */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .link-account-modal-card.loading-card-dims {
-  max-width: 380px;
-  min-height: 280px;
+  max-width: 340px;
+  min-height: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Step Layout Wrapper */
+/* Custom Scrollbar */
+.link-account-modal-card::-webkit-scrollbar {
+  width: 3px;
+}
+
+.link-account-modal-card::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.link-account-modal-card::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.link-account-modal-card::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ==========================================================================
+   STEP WRAPPER
+   ========================================================================== */
+
 .link-account-step-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 2px;
 }
 
-/* Typography Assignments */
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
 .link-account-modal-title {
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 24px 0;
+  color: #0f172a;
+  margin: 0 0 4px 0;
   overflow-wrap: anywhere;
+  letter-spacing: -0.3px;
 }
 
 .link-account-modal-subtitle {
   font-size: 14px;
-  color: #4b5563;
+  color: #64748b;
   line-height: 1.5;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   overflow-wrap: anywhere;
 }
 
-/* Form Controls and Input Rows */
+/* ==========================================================================
+   FORM CONTROLS
+   ========================================================================== */
+
 .link-account-input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   width: 100%;
 }
 
-.link-account-input-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 8px;
+.link-account-input-group:last-of-type {
+  margin-bottom: 20px;
 }
 
-/* Dropdown Custom Architectures */
+.link-account-input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+}
+
+/* ==========================================================================
+   SELECT DROPDOWN
+   ========================================================================== */
+
 .link-account-select-wrapper {
   position: relative;
   width: 100%;
@@ -85,80 +156,187 @@
 
 .link-account-custom-select {
   width: 100%;
-  height: 46px;
-  padding: 0 40px 0 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  height: 44px;
+  padding: 0 40px 0 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 14px;
-  color: #111827;
-  background-color: #ffffff;
+  color: #0f172a;
+  background-color: #f8fafc;
   appearance: none;
   cursor: pointer;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.link-account-custom-select:hover {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
 }
 
 .link-account-custom-select:focus {
   outline: none;
-  border-color: #eab308;
+  border-color: #e8b943;
+  box-shadow: 0 0 0 3px rgba(232, 185, 67, 0.12);
+  background-color: #ffffff;
 }
 
 .link-account-select-chevron {
   position: absolute;
-  right: 16px;
-  color: #6b7280;
+  right: 14px;
+  color: #94a3b8;
   pointer-events: none;
-  font-size: 16px;
+  font-size: 14px;
+  transition: transform 0.2s ease;
 }
 
-/* Form Fields */
+.link-account-custom-select:focus + .link-account-select-chevron {
+  transform: rotate(180deg);
+  color: #e8b943;
+}
+
+/* ==========================================================================
+   INPUT FIELDS
+   ========================================================================== */
+
 .link-account-custom-input {
   width: 100%;
-  height: 46px;
-  padding: 0 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 14px;
-  color: #111827;
-  background: #ffffff;
+  color: #0f172a;
+  background: #f8fafc;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.link-account-custom-input:hover {
+  border-color: #cbd5e1;
+  background-color: #ffffff;
 }
 
 .link-account-custom-input:focus {
   outline: none;
-  border-color: #eab308;
+  border-color: #e8b943;
+  box-shadow: 0 0 0 3px rgba(232, 185, 67, 0.12);
+  background-color: #ffffff;
+}
+
+.link-account-custom-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
 }
 
 .link-account-custom-input:disabled {
-  background: #f9fafb;
-  color: #111827;
+  background: #f1f5f9;
+  color: #94a3b8;
   cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
-/* Embedded Verified Green Banner Layout */
+/* ==========================================================================
+   PIN INPUT ROW - DOT STYLE
+   ========================================================================== */
+
+.link-account-pin-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.link-account-pin-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 12px;
+}
+
+/* Focus state */
+.link-account-pin-box:focus {
+  border-color: #e8b943;
+  box-shadow: 0 0 0 3px rgba(232, 185, 67, 0.15);
+  background: #ffffff;
+}
+
+/* Filled state - dot becomes filled */
+.link-account-pin-box.filled {
+  background: #0f172a;
+  border-color: #0f172a;
+}
+
+.link-account-pin-box.filled:focus {
+  background: #0f172a;
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15);
+}
+
+/* Actual input hidden behind the dot */
+.link-account-pin-box-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+}
+
+/* Pin box container for proper positioning */
+.link-account-pin-box-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   VERIFIED BANNER
+   ========================================================================== */
+
 .link-account-verified-banner {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
   border-radius: 8px;
-  padding: 16px;
+  padding: 14px 16px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 10px;
+  margin-bottom: 20px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .link-account-verified-icon {
   color: #22c55e;
-  font-size: 20px;
-  margin-top: 2px;
+  font-size: 18px;
+  margin-top: 1px;
   flex-shrink: 0;
 }
 
 .link-account-verified-details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .link-account-verified-status-text {
@@ -173,22 +351,27 @@
   font-weight: 500;
 }
 
-/* Micro-transaction Data Metric Layouts */
+/* ==========================================================================
+   DATA TABLE
+   ========================================================================== */
+
 .link-account-data-table {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
   border-radius: 8px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   width: 100%;
+  border: 1px solid #f1f5f9;
+  padding: 0 4px;
 }
 
 .link-account-table-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 12px 10px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .link-account-table-row:last-child {
@@ -196,116 +379,139 @@
 }
 
 .link-account-label-text {
-  font-size: 14px;
-  color: #4b5563;
+  font-size: 13px;
+  color: #64748b;
   font-weight: 500;
 }
 
 .link-account-value-text {
-  font-size: 14px;
-  color: #111827;
+  font-size: 13px;
+  color: #0f172a;
   font-weight: 600;
   text-align: right;
 }
 
 .link-account-value-text.text-bold {
   font-weight: 700;
+  color: #0f172a;
 }
 
 .link-account-copyable-value {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .link-account-copy-icon-btn {
-  background: #f3f4f6;
+  background: #f1f5f9;
   border: none;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #4b5563;
+  color: #64748b;
   transition: all 0.2s ease;
 }
 
 .link-account-copy-icon-btn:hover {
-  background-color: #e5e7eb;
-  color: #111827;
+  background-color: #e2e8f0;
+  color: #0f172a;
 }
 
-/* Action Button Core Elements */
+/* ==========================================================================
+   ACTION BUTTONS
+   ========================================================================== */
+
 .link-account-actions-row {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 4px;
   width: 100%;
 }
 
 .link-account-btn-outline {
   flex: 1;
-  width: auto;
-  min-width: 0;
-  height: 46px;
+  height: 44px;
   background: transparent;
-  border: 1px solid #9ca3af;
-  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #475569;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .link-account-btn-outline:hover {
-  background: #f9fafb;
-  border-color: #4b5563;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.link-account-btn-outline:active {
+  transform: scale(0.98);
 }
 
 .link-account-btn-solid {
   flex: 1;
-  width: auto;
-  min-width: 0;
-  height: 46px;
-  background: var(--button-primaryColor, radial-gradient(#d2af26, #f6c15c));
+  height: 44px;
+  background: linear-gradient(135deg, #e8b943 0%, #d6a732 100%);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(232, 185, 67, 0.25);
 }
 
-.link-account-btn-solid:hover {
-  opacity: 0.92;
+.link-account-btn-solid:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(232, 185, 67, 0.35);
+}
+
+.link-account-btn-solid:active:not(:disabled) {
+  transform: scale(0.98) translateY(0);
 }
 
 .link-account-btn-solid:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* Spinner Loading Component Animations */
+/* ==========================================================================
+   LOADER / SPINNER
+   ========================================================================== */
+
 .link-account-loader-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 0;
+  padding: 30px 0;
   width: 100%;
 }
 
 .link-account-spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid #f2bf5e;
+  width: 40px;
+  height: 40px;
+  border: 3.5px solid #f1f5f9;
+  border-top: 3.5px solid #e8b943;
   border-radius: 50%;
-  animation: spinAccountLoader 1s linear infinite;
+  animation: spinAccountLoader 0.8s linear infinite;
 }
 
 @keyframes spinAccountLoader {
@@ -317,65 +523,564 @@
   }
 }
 
-/* Success Components */
+/* ==========================================================================
+   SUCCESS / CELEBRATION
+   ========================================================================== */
+
 .link-account-celebration-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: 80px;
-  background-color: #fef9c3;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
   border-radius: 50%;
-  margin: 12px auto;
+  margin: 4px auto 12px;
+  box-shadow: 0 2px 12px rgba(232, 185, 67, 0.15);
 }
 
 .link-account-party-icon {
-  font-size: 42px;
-  color: #eab308;
+  font-size: 36px;
+  color: #e8b943;
 }
 
-/* Alignment and Helper Modifiers */
+/* ==========================================================================
+   UTILITY HELPERS
+   ========================================================================== */
+
 .text-center {
   text-align: center;
 }
+
 .margin-top-sm {
-  margin-top: 16px;
+  margin-top: 10px;
 }
+
 .margin-top-md {
-  margin-top: 24px;
+  margin-top: 18px;
 }
+
 .width-full {
-  width: 100%;
+  width: 100% !important;
+  display: block !important;
+  flex: none !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box;
 }
+
 .width-narrow {
-  max-width: 320px;
+  max-width: 280px;
   margin-left: auto;
   margin-right: auto;
 }
 
-@media (max-width: 520px) {
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Tablets (769px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+  .link-account-modal-card {
+    padding: 24px 28px;
+    max-width: 420px;
+  }
+}
+
+/* Large Phones (481px - 768px) */
+@media screen and (max-width: 768px) {
   .link-account-modal-overlay {
-    align-items: center; /* Explicitly forced center alignment */
-    padding: 12px;
+    padding: 16px;
+    align-items: center;
   }
 
   .link-account-modal-card {
-    width: 100%;
-    max-height: calc(100dvh - 24px);
-    padding: 28px 20px;
+    padding: 24px 22px;
+    max-width: 100%;
+    max-height: calc(100dvh - 32px);
+    border-radius: 12px;
+  }
+
+  .link-account-modal-title {
+    font-size: 19px;
+  }
+
+  .link-account-modal-subtitle {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .link-account-input-group {
+    margin-bottom: 14px;
+  }
+
+  .link-account-input-label {
+    font-size: 13px;
+  }
+
+  .link-account-custom-select,
+  .link-account-custom-input {
+    height: 42px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .link-account-pin-row {
+    gap: 10px;
+  }
+
+  .link-account-pin-box {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+  }
+
+  .link-account-pin-box-wrapper {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  .link-account-actions-row {
+    gap: 10px;
+  }
+
+  .link-account-btn-outline,
+  .link-account-btn-solid {
+    height: 42px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+}
+
+/* Mobile Phones (480px and below) */
+@media screen and (max-width: 480px) {
+  .link-account-modal-overlay {
+    padding: 10px;
+    align-items: center;
+  }
+
+  .link-account-modal-card {
+    padding: 20px 16px;
+    max-height: calc(100dvh - 20px);
+    border-radius: 12px;
+    max-width: 100%;
+  }
+
+  .link-account-modal-title {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+
+  .link-account-modal-subtitle {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .link-account-input-group {
+    margin-bottom: 12px;
+  }
+
+  .link-account-input-label {
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+
+  .link-account-custom-select,
+  .link-account-custom-input {
+    height: 40px;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 0 12px;
+  }
+
+  .link-account-custom-select {
+    padding: 0 36px 0 12px;
+  }
+
+  .link-account-select-chevron {
+    right: 12px;
+    font-size: 13px;
+  }
+
+  .link-account-pin-row {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .link-account-pin-box {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+  }
+
+  .link-account-pin-box-wrapper {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
   }
 
   .link-account-actions-row {
     flex-direction: column-reverse;
-    gap: 12px;
+    gap: 8px;
+    margin-top: 2px;
   }
 
-  /* 🟢 FIXED: Killed 'flex: 1' from desktop so it honors fixed height metrics in a column context */
   .link-account-btn-outline,
   .link-account-btn-solid {
     flex: none !important;
     width: 100% !important;
-    height: 46px !important;
-    box-sizing: border-box;
+    height: 40px !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+    padding: 0 14px !important;
+  }
+
+  .link-account-btn-solid {
+    box-shadow: 0 2px 12px rgba(232, 185, 67, 0.2);
+  }
+
+  .link-account-verified-banner {
+    padding: 10px 12px;
+    gap: 8px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .link-account-verified-status-text,
+  .link-account-verified-user-name {
+    font-size: 13px;
+  }
+
+  .link-account-verified-icon {
+    font-size: 16px;
+  }
+
+  .link-account-data-table {
+    margin-bottom: 18px;
+    border-radius: 8px;
+  }
+
+  .link-account-table-row {
+    padding: 8px 8px;
+  }
+
+  .link-account-label-text,
+  .link-account-value-text {
+    font-size: 12px;
+  }
+
+  .link-account-celebration-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .link-account-party-icon {
+    font-size: 30px;
+  }
+
+  .link-account-loader-container {
+    padding: 20px 0;
+  }
+
+  .link-account-spinner {
+    width: 36px;
+    height: 36px;
+    border-width: 3px;
+  }
+
+  .link-account-copy-icon-btn {
+    width: 22px;
+    height: 22px;
+  }
+
+  .link-account-copy-icon-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Very Small Mobile (360px and below) */
+@media screen and (max-width: 360px) {
+  .link-account-modal-overlay {
+    padding: 8px;
+  }
+
+  .link-account-modal-card {
+    padding: 16px 12px;
+    max-height: calc(100dvh - 16px);
+    border-radius: 10px;
+  }
+
+  .link-account-modal-title {
+    font-size: 16px;
+  }
+
+  .link-account-modal-subtitle {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .link-account-input-group {
+    margin-bottom: 10px;
+  }
+
+  .link-account-input-label {
+    font-size: 12px;
+  }
+
+  .link-account-custom-select,
+  .link-account-custom-input {
+    height: 36px;
+    font-size: 12px;
+    border-radius: 6px;
+    padding: 0 10px;
+  }
+
+  .link-account-custom-select {
+    padding: 0 32px 0 10px;
+  }
+
+  .link-account-select-chevron {
+    right: 10px;
+    font-size: 12px;
+  }
+
+  .link-account-pin-row {
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .link-account-pin-box {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+  }
+
+  .link-account-pin-box-wrapper {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+
+  .link-account-btn-outline,
+  .link-account-btn-solid {
+    height: 36px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    padding: 0 10px !important;
+  }
+
+  .link-account-verified-banner {
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+
+  .link-account-verified-status-text,
+  .link-account-verified-user-name {
+    font-size: 12px;
+  }
+
+  .link-account-verified-icon {
+    font-size: 14px;
+  }
+
+  .link-account-table-row {
+    padding: 6px 6px;
+  }
+
+  .link-account-label-text,
+  .link-account-value-text {
+    font-size: 11px;
+  }
+
+  .link-account-celebration-container {
+    width: 50px;
+    height: 50px;
+  }
+
+  .link-account-party-icon {
+    font-size: 24px;
+  }
+
+  .link-account-spinner {
+    width: 30px;
+    height: 30px;
+    border-width: 2.5px;
+  }
+}
+
+/* Height-based responsive adjustments */
+@media screen and (max-height: 700px) {
+  .link-account-modal-card {
+    padding: 18px 22px;
+    max-height: calc(100dvh - 16px);
+  }
+
+  .link-account-modal-title {
+    font-size: 17px;
+    margin-bottom: 2px;
+  }
+
+  .link-account-modal-subtitle {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .link-account-input-group {
+    margin-bottom: 8px;
+  }
+
+  .link-account-input-label {
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  .link-account-custom-select,
+  .link-account-custom-input {
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .link-account-pin-box {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+  }
+
+  .link-account-pin-box-wrapper {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  .link-account-pin-row {
+    gap: 8px;
+  }
+
+  .link-account-actions-row {
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .link-account-btn-outline,
+  .link-account-btn-solid {
+    height: 36px !important;
+    font-size: 12px !important;
+  }
+
+  .link-account-data-table {
+    margin-bottom: 12px;
+  }
+
+  .link-account-table-row {
+    padding: 4px 8px;
+  }
+
+  .link-account-celebration-container {
+    width: 52px;
+    height: 52px;
+  }
+
+  .link-account-party-icon {
+    font-size: 26px;
+  }
+
+  @media screen and (max-width: 480px) {
+    .link-account-modal-card {
+      padding: 14px 14px;
+    }
+  }
+}
+
+@media screen and (max-height: 600px) {
+  .link-account-modal-card {
+    padding: 12px 16px;
+    max-height: calc(100dvh - 12px);
+  }
+
+  .link-account-modal-title {
+    font-size: 15px;
+  }
+
+  .link-account-modal-subtitle {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .link-account-input-group {
+    margin-bottom: 6px;
+  }
+
+  .link-account-custom-select,
+  .link-account-custom-input {
+    height: 32px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .link-account-pin-box {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+  }
+
+  .link-account-pin-box-wrapper {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+
+  .link-account-pin-row {
+    gap: 6px;
+  }
+
+  .link-account-btn-outline,
+  .link-account-btn-solid {
+    height: 32px !important;
+    font-size: 12px !important;
+    padding: 0 10px !important;
+  }
+
+  .link-account-verified-banner {
+    padding: 6px 10px;
+    margin-bottom: 8px;
+  }
+
+  .link-account-data-table {
+    margin-bottom: 8px;
+  }
+
+  .link-account-table-row {
+    padding: 3px 6px;
+  }
+
+  .link-account-label-text,
+  .link-account-value-text {
+    font-size: 11px;
+  }
+
+  .link-account-celebration-container {
+    width: 44px;
+    height: 44px;
+  }
+
+  .link-account-party-icon {
+    font-size: 22px;
+  }
+
+  .link-account-loader-container {
+    padding: 12px 0;
+  }
+
+  .link-account-spinner {
+    width: 28px;
+    height: 28px;
+    border-width: 2.5px;
+  }
+
+  @media screen and (max-width: 480px) {
+    .link-account-modal-card {
+      padding: 10px 12px;
+    }
   }
 }

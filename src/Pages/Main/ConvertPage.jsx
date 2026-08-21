@@ -9,6 +9,8 @@ import {
   GetLiveRate,
   confirmTransactionPin,
 } from "../../Services/Conversionservice";
+import { FiRefreshCcw } from "react-icons/fi";
+
 import { getMyWallet } from "../../Services/Walletservice";
 import { updateWallet } from "../../Store/UserSlice";
 
@@ -319,7 +321,11 @@ const ConvertPage = () => {
           </div>
           <div className="rate-timestamp">
             <span onClick={() => liveRate()} style={{ cursor: "pointer" }}>
-              {isLoadingRate ? "Syncing exchange tracking..." : "Refresh Rate"}
+              {isLoadingRate ? (
+                "Syncing exchange tracking..."
+              ) : (
+                <FiRefreshCcw size={25} />
+              )}
             </span>
           </div>
         </section>

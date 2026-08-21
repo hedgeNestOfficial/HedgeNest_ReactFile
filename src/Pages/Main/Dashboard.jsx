@@ -202,6 +202,8 @@ const Dashboard = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "6px",
+                        color: "white",
+                        fontWeight: "600",
                       }}
                     >
                       <NigeriaFlagIcon />
@@ -230,6 +232,8 @@ const Dashboard = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "6px",
+                        color: "white",
+                        fontWeight: "600",
                       }}
                     >
                       <SiTether size={14} style={{ color: "#26a17b" }} />

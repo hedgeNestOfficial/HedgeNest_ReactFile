@@ -59,8 +59,6 @@ const FAQs = () => {
                   onMouseLeave={() => !isMobile && setActiveIndex(null)}
                 />
               ))}
-
-              <Button text="See all FAQs" className="contact-support-btn" />
             </article>
           </section>
 

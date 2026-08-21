@@ -15,7 +15,7 @@
 
 .hn-modal-card {
   background-color: #ffffff;
-  border-radius: 16px;
+  border-radius: 4px;
   width: 100%;
   max-width: 440px;
   padding: 32px 36px;
@@ -67,7 +67,7 @@
   width: 100%;
   padding: 14px 16px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 1rem;
   color: #111827;
   outline: none;
@@ -105,7 +105,7 @@
   height: 56px;
   text-align: center;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 1.5rem;
   font-weight: 700;
   color: #111827;
@@ -123,7 +123,7 @@
 /* 🟢 FIXED: Anchored strictly on top-left of the absolute main surface card */
 .hn-back-arrow {
   position: absolute !important;
-  top: 28px;
+  top: 10px;
   left: 28px;
   background: transparent !important;
   border: none;
@@ -213,7 +213,7 @@
 .hn-btn-secondary {
   flex: 1;
   padding: 14px 24px;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -341,7 +341,7 @@
 
   .hn-modal-card {
     padding: 24px 20px;
-    border-radius: 12px;
+    border-radius: 4px;
   }
 
   /* 🟢 FIXED: Mobile adjustment */
