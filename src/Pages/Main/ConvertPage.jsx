@@ -41,17 +41,22 @@ const ConvertPage = () => {
   const availableBalance = wallet?.availableBalance ?? 0;
   const usdtBalance = Number(wallet?.balanceInUSDT ?? 0).toFixed(2);
 
-  const fetchLiveRate = async () => {
-    try {
-      setIsLoadingRate(true);
-      const response = await GetLiveRate();
-      setLiveRateData(response);
-    } catch (err) {
-      console.error("Live rate tracking error:", err);
-    } finally {
-      setIsLoadingRate(false);
-    }
-  };
+ const fetchLiveRate = async () => {
+  try {
+    setIsLoadingRate(true);
+
+    const response = await GetLiveRate();
+
+    setLiveRateData(response);
+
+    return response;
+  } catch (err) {
+    console.error("Live rate tracking error:", err);
+    return null;
+  } finally {
+    setIsLoadingRate(false);
+  }
+};
 
   const fetchCoversionHistory = async () => {
     if (!token) return;
@@ -98,13 +103,22 @@ const ConvertPage = () => {
       setIsLoadingWallet(false);
     }
   };
-
+  
   useEffect(() => {
     fetchLiveRate();
+  
     if (token) {
       syncWalletData();
-      fetchCoversionHistory();
+      // fetchCoversionHistory();
     }
+  
+    const rateInterval = setInterval(() => {
+      fetchLiveRate();
+    }, 2000);
+  
+    return () => {
+      clearInterval(rateInterval);
+    };
   }, [token]);
 
   const liveRate = () => {
@@ -135,17 +149,30 @@ const ConvertPage = () => {
   };
 
   const getCalculatedPreview = () => {
-    if (!inputValue || Number(inputValue) <= 0 || !liveRateData) return "0";
+  if (!inputValue || Number(inputValue) <= 0 || !liveRateData) {
+    return "0";
+  }
 
-    const numericAmount = Number(inputValue);
-    if (activeCurrency === "NGN") {
-      const rate = liveRateData.rate || 1;
-      return (numericAmount / rate).toFixed(2);
-    } else {
-      const usdtRate = liveRateData.usdtRate || 1;
-      return (numericAmount * usdtRate).toFixed(2);
+  const numericAmount = Number(inputValue);
+
+  if (activeCurrency === "NGN") {
+    const rate = Number(liveRateData.rate);
+
+    if (!rate || rate <= 0) {
+      return "0";
     }
-  };
+
+    return (numericAmount / rate).toFixed(2);
+  }
+
+  const usdtRate = Number(liveRateData.usdtRate);
+
+  if (!usdtRate || usdtRate <= 0) {
+    return "0";
+  }
+
+  return (numericAmount * usdtRate).toFixed(2);
+};
 
   const validateInputAmount = (value, currency) => {
     if (!value) {
@@ -176,24 +203,28 @@ const ConvertPage = () => {
     validateInputAmount(value, activeCurrency);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+ const handleFormSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!token) {
-      toast.error("Session expired. Please login again.");
-      return;
-    }
+  if (!token) {
+    toast.error("Session expired. Please login again.");
+    return;
+  }
 
-    const isValid = validateInputAmount(inputValue, activeCurrency);
-    if (!isValid) {
-      toast.error("Please correct the amount before proceeding");
-      return;
-    }
+  const isValid = validateInputAmount(inputValue, activeCurrency);
+  if (!isValid) {
+    toast.error("Please correct the amount before proceeding");
+    return;
+  }
 
-    setConversionData(null);
-    setTransactionPin("");
-    setIsModalOpen(true);
-  };
+  setConversionData(null);
+  setTransactionPin("");
+
+  // Get the latest rate before opening the summary
+  await fetchLiveRate();
+
+  setIsModalOpen(true);
+};
 
   const handleFinalConfirm = async () => {
     if (!transactionPin || transactionPin.length < 6) {
@@ -223,9 +254,16 @@ const ConvertPage = () => {
         amount: Number(inputValue),
       };
 
-      const response = await convertCurrency(payload, cleanToken);
-      setConversionData(response?.rate);
+     // Get the freshest rate immediately before executing the conversion
+const latestRate = await fetchLiveRate();
 
+if (latestRate) {
+  setLiveRateData(latestRate);
+  setConversionData(latestRate?.rate);
+}
+
+const response = await convertCurrency(payload, cleanToken);
+setConversionData(response?.rate);
       toast.success("Conversion successful!");
       setIsModalOpen(false);
       setInputValue("");
