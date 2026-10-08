@@ -113,6 +113,16 @@ const Header = () => {
                 </>
               ) : (
                 <>
+                  <a
+                    href="https://hedgenest-waitlist.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="waitlist-button"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Waitlist
+                  </a>
+
                   <Button
                     text="Dashboard"
                     className="create"
@@ -121,6 +131,7 @@ const Header = () => {
                       navigate("/dashboard");
                     }}
                   />
+
                   <button
                     onClick={() => setIsLogoutOpen(true)}
                     style={{
@@ -161,11 +172,21 @@ const Header = () => {
               </>
             ) : (
               <div className="desktop-user-section">
+                <a
+                  href="https://hedgenest-waitlist.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="waitlist-button"
+                >
+                  Waitlist
+                </a>
+
                 <Button
                   text="Dashboard"
                   className="create"
                   onClick={() => navigate("/dashboard")}
                 />
+
                 <div
                   className="user-avatar-container"
                   onClick={() => setIsLogoutOpen(true)}
