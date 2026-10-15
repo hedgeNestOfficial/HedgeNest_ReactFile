@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from "react";
 // import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 // import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 // import toast from "react-hot-toast";
 // import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 // import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
@@ -385,7 +385,7 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowDownLeft, FiArrowUpRight, FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import DepositModalManager from "../../Components/KycModals/DepositModalManager";
 import WithdrawalModal from "../../Components/KycModals/WithdrawalModal";
@@ -400,6 +400,7 @@ import "../../Style/Wallet.css";
 const WalletPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user, token, wallet } = useSelector((state) => state.user);
 
@@ -444,6 +445,25 @@ const WalletPage = () => {
   useEffect(() => {
     refreshWallet();
   }, [token]);
+
+  // Allow the dashboard onboarding guide to open the existing link-bank modal directly.
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+
+    if (searchParams.get("onboarding") !== "link-bank") return;
+
+    setShowAccountModal(true);
+    searchParams.delete("onboarding");
+
+    const nextSearch = searchParams.toString();
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      { replace: true },
+    );
+  }, [location.pathname, location.search, navigate]);
 
   // ✅ Comprehensive Multi-Channel Validation Engine
   const validateAmountInput = (value, currentTab) => {
