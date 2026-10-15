@@ -12,12 +12,12 @@ import { TransactionHistory } from "../../Features/TransactionHistory.jsx";
 import SplashScreen from "../../Components/SplashScreen.jsx";
 
 import { updateWallet } from "../../Store/UserSlice.js";
-import { getTransactionHistory } from "../../Services/authService.js";
 
 import { getMyWallet } from "../../Services/Walletservice.js";
 import { getFinancialInsight } from "../../Services/Walletinsight.js";
 
 import { SiTether } from "react-icons/si";
+import DashboardOnboarding from "../../Components/DashboardOnboarding.jsx";
 
 // Nigerian Flag Icon
 const NigeriaFlagIcon = () => (
@@ -51,7 +51,6 @@ const Dashboard = () => {
     return !sessionStorage.getItem("dashboardSplashShown");
   });
 
-  const [liveTransactions, setLiveTransactions] = useState([]);
 
   // Splash Screen Lifecycle
   useEffect(() => {
@@ -145,7 +144,7 @@ const Dashboard = () => {
         <section className="Dash-right">
           <section className="dr-holder">
             {/* HEADER */}
-            <article className="dr-header">
+            <article className="dr-header" data-onboarding-target="welcome">
               <div>
                 <p>Welcome {user?.firstName || "User"},</p>
                 <h3>Your nest, today.</h3>
@@ -174,9 +173,15 @@ const Dashboard = () => {
               </div>
             </article>
 
+            <DashboardOnboarding
+              userKey={user?._id || user?.id || user?.email}
+              token={token}
+              onNavigate={navigate}
+            />
+
             {/* BALANCES */}
-            <article className="dr-balance">
-              <div className="mobile-welcom-text">
+            <article className="dr-balance" data-onboarding-target="balances">
+              <div className="mobile-welcom-text" data-onboarding-target="welcome">
                 <p>Welcome {user?.firstName || "User"},</p>
                 <h3>Your nest, today.</h3>
               </div>
@@ -271,7 +276,7 @@ const Dashboard = () => {
             </article>
 
             {/* QUICK ACTIONS */}
-            <article className="dr-actions">
+            <article className="dr-actions" data-onboarding-target="actions">
               <div className="convert" onClick={() => navigate("/convert")}>
                 <p>Convert</p>
               </div>
@@ -286,7 +291,7 @@ const Dashboard = () => {
             </article>
 
             {/* VAULTS & INVESTMENTS */}
-            <article className="vault-section">
+            <article className="vault-section" data-onboarding-target="savings-investments">
               <div className="vault">
                 <div className="upper-section">
                   <h3>Smart Vaults</h3>
@@ -349,7 +354,7 @@ const Dashboard = () => {
             </article>
 
             {/* LIVE TRANSACTIONS MAPPER */}
-            <section className="transaction-section">
+            <section className="transaction-section" data-onboarding-target="transactions">
               <div className="transaction-header">
                 <h3>Recent Transactions</h3>
 
