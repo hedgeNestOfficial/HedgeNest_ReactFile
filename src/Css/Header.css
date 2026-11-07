@@ -32,7 +32,7 @@
 }
 
 .navigation {
-  width: 25%;
+  width: 20%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -65,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  gap: 16px;
 }
 
 .login {
@@ -108,14 +108,15 @@
 
 /* WAITLIST BUTTON */
 .waitlist-button {
-  width: 170px;
+  width: 154px;
   height: 46px;
   border-radius: 4px;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 7px;
   color: #000 !important;
   border: none;
   cursor: pointer;
@@ -132,8 +133,32 @@
   transform: translateY(-1px);
 }
 
+.waitlist-live-badge {
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: #c9922a;
+  color: #181739;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.waitlist-button:focus-visible,
+.menu:focus-visible {
+  outline: 2px solid #c9922a;
+  outline-offset: 3px;
+}
+
 .menu {
   display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
   font-size: 24px;
   cursor: pointer;
 }
@@ -170,7 +195,8 @@
     opacity: 0;
     pointer-events: none;
     transform: translateY(-10px);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     transition:
       max-height 0.25s ease-out,
       opacity 0.2s ease,
@@ -178,7 +204,7 @@
   }
 
   .navigation.open {
-    max-height: 450px;
+    max-height: min(520px, calc(100vh - 90px));
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
@@ -223,6 +249,10 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+  }
+
+  .menu {
+    line-height: 1;
   }
 }
 
