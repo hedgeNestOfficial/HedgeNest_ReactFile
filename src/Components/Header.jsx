@@ -9,10 +9,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Store/UserSlice";
 import Button from "./Button";
 import toast from "react-hot-toast";
-
-// Imported to synchronize premium checkout/animation layouts across landing pages
 import SignoutModal from "./KycModals/SignoutModal";
 import SplashScreen from "../Components/SplashScreen";
+
+const WAITLIST_URL = "https://hedgenest-waitlist.vercel.app";
+
+const WaitlistLink = ({ onClick }) => (
+  <a
+    href={WAITLIST_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="waitlist-button"
+    aria-label="Join the HedgeNest waitlist, now live. Opens in a new tab."
+    onClick={onClick}
+  >
+    <span>Waitlist</span>
+    <span className="waitlist-live-badge">Now Live</span>
+  </a>
+);
 
 const Header = () => {
   const navigate = useNavigate();
@@ -61,7 +75,10 @@ const Header = () => {
             onClick={() => handleNavigation("home", "/")}
           />
 
-          <ul className={`navigation ${isMenuOpen ? "open" : ""}`}>
+          <ul
+            id="primary-navigation"
+            className={`navigation ${isMenuOpen ? "open" : ""}`}
+          >
             <li
               onClick={() => handleNavigation("protect", "/protect")}
               style={{
@@ -89,8 +106,10 @@ const Header = () => {
               Invest
             </li>
 
-            {/* MOBILE BUTTONS */}
+            {/* MOBILE ACTIONS: Waitlist is public; account actions depend on auth. */}
             <li className="mobile-dropdown-logs">
+              <WaitlistLink onClick={() => setIsMenuOpen(false)} />
+
               {!isAuthenticated ? (
                 <>
                   <Button
@@ -113,16 +132,6 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <a
-                    href="https://hedgenest-waitlist.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="waitlist-button"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Waitlist
-                  </a>
-
                   <Button
                     text="Dashboard"
                     className="create"
@@ -133,6 +142,7 @@ const Header = () => {
                   />
 
                   <button
+                    type="button"
                     onClick={() => setIsLogoutOpen(true)}
                     style={{
                       width: "100%",
@@ -156,6 +166,9 @@ const Header = () => {
 
           {/* DESKTOP BUTTONS */}
           <div className="logs">
+            {/* Keep the public waitlist available to guests and signed-in users. */}
+            <WaitlistLink />
+
             {!isAuthenticated ? (
               <>
                 <Button
@@ -172,15 +185,6 @@ const Header = () => {
               </>
             ) : (
               <div className="desktop-user-section">
-                <a
-                  href="https://hedgenest-waitlist.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="waitlist-button"
-                >
-                  Waitlist
-                </a>
-
                 <Button
                   text="Dashboard"
                   className="create"
@@ -207,9 +211,18 @@ const Header = () => {
           </div>
 
           {/* MENU ICON */}
-          <div className="menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button
+            type="button"
+            className="menu"
+            aria-label={
+              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
+            aria-expanded={isMenuOpen}
+            aria-controls="primary-navigation"
+            onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+          >
             {isMenuOpen ? <IoClose /> : <CiMenuBurger />}
-          </div>
+          </button>
         </section>
       </header>
 

@@ -27,9 +27,6 @@ const FAQs = () => {
 
   return (
     <>
-      {/* 🌟 Injected complete layout ecosystem wrappers */}
-      <Header />
-
       <section className="faq-page">
         <section className="faq-page-wrapper">
           <div className="faq-Header">
@@ -77,8 +74,6 @@ const FAQs = () => {
           </section>
         </section>
       </section>
-
-      <Footer />
     </>
   );
 };
