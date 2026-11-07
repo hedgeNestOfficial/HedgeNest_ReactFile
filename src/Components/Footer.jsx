@@ -98,16 +98,40 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../Css/Footer.css";
 import WhiteLogo from "../assets/white logo.png";
-import { FaRegCopyright, FaLinkedinIn } from "react-icons/fa6";
 
+import {
+  FaRegCopyright,
+  FaFacebookF,
+  FaXTwitter,
+  FaLinkedinIn,
+  FaWhatsapp,
+} from "react-icons/fa6";
+
+// Official HedgeNest social media accounts
 const socialLinks = [
   {
+    name: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61594261858810",
+    Icon: FaFacebookF,
+  },
+  {
+    name: "X",
+    href: "https://x.com/HedgeNest",
+    Icon: FaXTwitter,
+  },
+  {
     name: "LinkedIn",
-    href: "https://ng.linkedin.com/company/hedge-nest",
+    href: "https://www.linkedin.com/company/hedge-nest/",
     Icon: FaLinkedinIn,
+  },
+  {
+    name: "WhatsApp",
+    href: "https://whatsapp.com/channel/0029Vb8WxvMKbYMVa0dihi2A",
+    Icon: FaWhatsapp,
   },
 ];
 
+// Reusable footer navigation link
 const FooterLink = ({ to, children }) => (
   <li>
     <Link className="footer-link" to={to}>
@@ -120,19 +144,24 @@ const Footer = () => {
   return (
     <footer className="footer-container">
       <section className="footer-holder">
+        {/* FOOTER TOP SECTION */}
         <article className="footer-up">
+          {/* LOGO, DESCRIPTION AND SOCIAL MEDIA */}
           <div className="Footer-logo-con">
             <div className="footer-logo">
               <img src={WhiteLogo} alt="HedgeNest logo" />
               <h3>HedgeNest</h3>
             </div>
+
             <p>
               HedgeNest helps you protect, save and grow your money with
               confidence. Convert Naira to USDT at transparent rates, build
-              disciplined savings habits, and access simple investment options;
+              disciplined savings habits, and access simple investment options,
               all in one secure platform.
             </p>
-            <div className="socials" aria-label="HedgeNest social media">
+
+            {/* SOCIAL MEDIA LINKS */}
+            <nav className="socials" aria-label="HedgeNest social media">
               {socialLinks.map(({ name, href, Icon }) => (
                 <a
                   key={name}
@@ -145,20 +174,22 @@ const Footer = () => {
                   <Icon aria-hidden="true" focusable="false" />
                 </a>
               ))}
-            </div>
+            </nav>
           </div>
 
+          {/* COMPANY */}
           <nav className="footer-box" aria-label="Company">
             <h4>Company</h4>
             <ul>
-              <FooterLink to="/contact">Contact Us</FooterLink>
               <FooterLink to="/about">About Us</FooterLink>
+              <FooterLink to="/contact">Contact Us</FooterLink>
               <FooterLink to="/save">Savings</FooterLink>
               <FooterLink to="/investPage">Investments</FooterLink>
               <FooterLink to="/convert">Currency Conversion</FooterLink>
             </ul>
           </nav>
 
+          {/* BUSINESS */}
           <nav className="footer-box" aria-label="Business">
             <h4>Business</h4>
             <ul>
@@ -168,26 +199,28 @@ const Footer = () => {
             </ul>
           </nav>
 
+          {/* LEGAL */}
           <nav className="footer-box" aria-label="Legal">
             <h4>Legal</h4>
             <ul>
               <FooterLink to="/policy">Privacy Policy</FooterLink>
-              <FooterLink to="/policy">Terms Of Service</FooterLink>
-              <FooterLink to="/policy">Cookie Policy</FooterLink>
+              <FooterLink to="/terms">Terms Of Service</FooterLink>
               <FooterLink to="/regulatory">Compliance</FooterLink>
             </ul>
           </nav>
-
+          {/* SUPPORT */}
           <nav className="footer-box" aria-label="Support">
             <h4>Support</h4>
             <ul>
               <FooterLink to="/faqs">Help Center</FooterLink>
-              <FooterLink to="/contact">Contact Us</FooterLink>
             </ul>
           </nav>
         </article>
 
+        {/* FOOTER DIVIDER */}
         <hr className="footer-divider" />
+
+        {/* FOOTER BOTTOM SECTION */}
         <article className="footer-down">
           <p className="down-disclaimer">
             HedgeNest works with trusted partners to deliver secure financial
@@ -196,11 +229,8 @@ const Footer = () => {
           </p>
 
           <div className="copyright">
-            <FaRegCopyright
-              aria-hidden="true"
-              style={{ fontSize: "16px", color: "white" }}
-            />
-            <p>2026 HedgeNest. All Rights Reserved</p>
+            <FaRegCopyright aria-hidden="true" style={{ fontSize: "16px" }} />
+            <p>{new Date().getFullYear()} HedgeNest. All Rights Reserved.</p>
           </div>
         </article>
       </section>

@@ -1,75 +1,205 @@
-import React from "react";
+// import React from "react";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Dashboard from "./Pages/Main/Dashboard";
+// import SignupPage from "./Pages/Auth/SignupPage";
+// import LoginPage from "./Pages/Auth/LoginPage";
+// import Landing from "./Pages/Landing";
+// import OtpPage from "./Pages/Auth/Otp";
+// import BvnAuth from "./Pages/Auth/BvnAuth";
+// import FAQs from "./Pages/FAQs";
+// import Protect from "./Pages/Protect";
+// import Invest from "./Pages/Invest";
+// import Save from "./Pages/Save";
+// import ConvertPage from "./Pages/Main/ConvertPage";
+// import Pin from "./Pages/Auth/Pin";
+// import ReadyComp from "./Pages/Auth/ReadyComp";
+// import ResetPass from "./Pages/Auth/ResetPass";
+// import NewPass from "./Pages/Auth/NewPass";
+// import ResetSuccessful from "./Pages/Auth/ResetSuccessful";
+// import MainLayout from "./Layout/MainLayout";
+// import WalletDashboard from "./Pages/Main/WalletDashboard";
+// import Loading from "./Components/Loading";
+// import Policy from "./Pages/Policy";
+// import Contact from "./Pages/Contact";
+// import About from "./Pages/AboutUs";
+// import RegulatoryInfo from "./Pages/RegulatoryInfo";
+// import NotFoundPage from "./Pages/NotFoundPage";
+// import DashboardLayout from "./Layout/DashboardLayout";
+// import ProfilePage from "./Pages/Main/ProfilePage";
+// import SmartSafe from "./Pages/SmartSafe";
+// import PopupCard from "./Features/PopupCard";
+// import ScrollToTop from "./Components/ScrollToTop";
+// import InvestDashboard from "./Pages/Main/InvestDashboard";
+// import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
+// import PrivateRoute from "./Routes/PrivateRoute";
+// import PublicRoute from "./Routes/PublicRoute"; // 🟢 Imported PublicRoute Guard
+// import { TransactionHistory } from "./Features/TransactionHistory";
+// import PaymentSuccess from "./Components/PaymentSuccess";
+// import SplashScreen from "./Components/SplashScreen";
+
+// const App = () => {
+//   return (
+//     <BrowserRouter>
+//       <ScrollToTop />
+//       <Routes>
+//         {/* PUBLIC MARKETING & LANDING PATHS */}
+//         <Route element={<MainLayout />}>
+//           <Route path="/" element={<Landing />} />
+//           <Route path="/faqs" element={<FAQs />} />
+//           <Route path="/protect" element={<Protect />} />
+//           <Route path="/save" element={<Save />} />
+//           <Route path="/investPage" element={<Invest />} />
+//           <Route path="/policy" element={<Policy />} />
+//           <Route path="/contact" element={<Contact />} />
+//           <Route path="/about" element={<About />} />
+//           <Route path="/regulatory" element={<RegulatoryInfo />} />
+//         </Route>
+
+//         {/* 🛡️ AUTHED USER PROTECTED DASHBOARD FLOWS */}
+//         <Route element={<PrivateRoute />}>
+//           <Route element={<DashboardLayout />}>
+//             <Route path="/payment-success" element={<PaymentSuccess />} />
+//             <Route path="/profile" element={<ProfilePage />} />
+//             <Route path="/dashboard" element={<Dashboard />} />
+//             <Route path="/convert" element={<ConvertPage />} />
+//             <Route path="/wallet" element={<WalletDashboard />} />
+//             <Route path="/notification" element={<TransactionHistory />} />
+//             <Route path="/SmartSafe" element={<SmartSafe />} />
+//             <Route path="/invest" element={<InvestDashboard />} />
+//           </Route>
+//         </Route>
+
+//         {/* 🛡️ GUEST-ONLY PROTECTED PATHS (Bounces logged-in users to /dashboard) */}
+//         <Route element={<PublicRoute />}>
+//           <Route path="/signup" element={<SignupPage />} />
+//           <Route path="/login" element={<LoginPage />} />
+//           <Route path="/otp" element={<OtpPage />} />
+//           <Route path="/pin" element={<Pin />} />
+//           <Route path="/kycauth" element={<BvnAuth />} />
+//           <Route path="/ready" element={<ReadyComp />} />
+//           <Route path="/reset" element={<ResetPass />} />
+//           <Route path="/confirm-mail" element={<ResetPass />} />
+//           <Route path="/newpass" element={<NewPass />} />
+//           <Route path="/reset-successful" element={<ResetSuccessful />} />
+//         </Route>
+
+//         {/* MISCELLANEOUS APP UTILITIES */}
+//         <Route path="/*" element={<NotFoundPage />} />
+//         <Route path="/splashscreen" element={<SplashScreen />} />
+//         <Route path="/popup" element={<PopupCard />} />
+//         <Route path="/loading" element={<Loading />} />
+//         <Route path="/google-success" element={<GoogleSuccess />} />
+//       </Routes>
+//     </BrowserRouter>
+//   );
+// };
+
+// export default App;
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./Pages/Main/Dashboard";
-import SignupPage from "./Pages/Auth/SignupPage";
-import LoginPage from "./Pages/Auth/LoginPage";
+
+// Public pages
 import Landing from "./Pages/Landing";
-import OtpPage from "./Pages/Auth/Otp";
-import BvnAuth from "./Pages/Auth/BvnAuth";
 import FAQs from "./Pages/FAQs";
 import Protect from "./Pages/Protect";
 import Invest from "./Pages/Invest";
 import Save from "./Pages/Save";
-import ConvertPage from "./Pages/Main/ConvertPage";
+import Policy from "./Pages/Policy";
+import TermsOfService from "./Pages/TermsOFService";
+import Contact from "./Pages/Contact";
+import About from "./Pages/AboutUs";
+import RegulatoryInfo from "./Pages/RegulatoryInfo";
+
+// Authentication pages
+import SignupPage from "./Pages/Auth/SignupPage";
+import LoginPage from "./Pages/Auth/LoginPage";
+import OtpPage from "./Pages/Auth/Otp";
+import BvnAuth from "./Pages/Auth/BvnAuth";
 import Pin from "./Pages/Auth/Pin";
 import ReadyComp from "./Pages/Auth/ReadyComp";
 import ResetPass from "./Pages/Auth/ResetPass";
 import NewPass from "./Pages/Auth/NewPass";
 import ResetSuccessful from "./Pages/Auth/ResetSuccessful";
-import MainLayout from "./Layout/MainLayout";
-import WalletDashboard from "./Pages/Main/WalletDashboard";
-import Loading from "./Components/Loading";
-import Policy from "./Pages/Policy";
-import Contact from "./Pages/Contact";
-import About from "./Pages/AboutUs";
-import RegulatoryInfo from "./Pages/RegulatoryInfo";
-import NotFoundPage from "./Pages/NotFoundPage";
-import DashboardLayout from "./Layout/DashboardLayout";
-import ProfilePage from "./Pages/Main/ProfilePage";
-import SmartSafe from "./Pages/SmartSafe";
-import PopupCard from "./Features/PopupCard";
-import ScrollToTop from "./Components/ScrollToTop";
-import InvestDashboard from "./Pages/Main/InvestDashboard";
 import GoogleSuccess from "./Pages/Auth/GoogleSuccess";
+
+// Dashboard pages
+import Dashboard from "./Pages/Main/Dashboard";
+import ConvertPage from "./Pages/Main/ConvertPage";
+import WalletDashboard from "./Pages/Main/WalletDashboard";
+import ProfilePage from "./Pages/Main/ProfilePage";
+import InvestDashboard from "./Pages/Main/InvestDashboard";
+import SmartSafe from "./Pages/SmartSafe";
+
+// Layouts and route protection
+import MainLayout from "./Layout/MainLayout";
+import DashboardLayout from "./Layout/DashboardLayout";
 import PrivateRoute from "./Routes/PrivateRoute";
-import PublicRoute from "./Routes/PublicRoute"; // 🟢 Imported PublicRoute Guard
-import { TransactionHistory } from "./Features/TransactionHistory";
+import PublicRoute from "./Routes/PublicRoute";
+
+// Components and utilities
+import ScrollToTop from "./Components/ScrollToTop";
+import Loading from "./Components/Loading";
 import PaymentSuccess from "./Components/PaymentSuccess";
 import SplashScreen from "./Components/SplashScreen";
+import NotFoundPage from "./Pages/NotFoundPage";
+import PopupCard from "./Features/PopupCard";
+import { TransactionHistory } from "./Features/TransactionHistory";
 
 const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+
       <Routes>
-        {/* PUBLIC MARKETING & LANDING PATHS */}
+        {/* =====================================
+            PUBLIC MARKETING PAGES
+        ===================================== */}
+
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/faqs" element={<FAQs />} />
+
           <Route path="/protect" element={<Protect />} />
           <Route path="/save" element={<Save />} />
           <Route path="/investPage" element={<Invest />} />
+
+          {/* Legal pages */}
           <Route path="/policy" element={<Policy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/regulatory" element={<RegulatoryInfo />} />
         </Route>
 
-        {/* 🛡️ AUTHED USER PROTECTED DASHBOARD FLOWS */}
+        {/* =====================================
+            AUTHENTICATED DASHBOARD
+        ===================================== */}
+
         <Route element={<PrivateRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/convert" element={<ConvertPage />} />
+
+            <Route path="/profile" element={<ProfilePage />} />
+
             <Route path="/wallet" element={<WalletDashboard />} />
+
+            <Route path="/convert" element={<ConvertPage />} />
+
             <Route path="/notification" element={<TransactionHistory />} />
+
             <Route path="/SmartSafe" element={<SmartSafe />} />
+
             <Route path="/invest" element={<InvestDashboard />} />
+
+            <Route path="/payment-success" element={<PaymentSuccess />} />
           </Route>
         </Route>
 
-        {/* 🛡️ GUEST-ONLY PROTECTED PATHS (Bounces logged-in users to /dashboard) */}
+        {/* =====================================
+            GUEST-ONLY AUTHENTICATION PAGES
+        ===================================== */}
+
         <Route element={<PublicRoute />}>
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -77,18 +207,27 @@ const App = () => {
           <Route path="/pin" element={<Pin />} />
           <Route path="/kycauth" element={<BvnAuth />} />
           <Route path="/ready" element={<ReadyComp />} />
+
           <Route path="/reset" element={<ResetPass />} />
           <Route path="/confirm-mail" element={<ResetPass />} />
           <Route path="/newpass" element={<NewPass />} />
           <Route path="/reset-successful" element={<ResetSuccessful />} />
         </Route>
 
-        {/* MISCELLANEOUS APP UTILITIES */}
-        <Route path="/*" element={<NotFoundPage />} />
+        {/* =====================================
+            MISCELLANEOUS APP UTILITIES
+        ===================================== */}
+
         <Route path="/splashscreen" element={<SplashScreen />} />
         <Route path="/popup" element={<PopupCard />} />
         <Route path="/loading" element={<Loading />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
+
+        {/* =====================================
+            404 - KEEP THIS ROUTE LAST
+        ===================================== */}
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
